@@ -1,5 +1,7 @@
 # GNAT
 /build
+obj/
+project_pragmas
 
 # Vagrant
 .vagrant
