@@ -1,3 +1,6 @@
+# GNAT
+/build
+
 # Vagrant
 .vagrant
 /downloads
