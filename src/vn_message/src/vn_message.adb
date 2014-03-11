@@ -1,32 +1,40 @@
-with VN_Header;
-
 package body VN_Message is
-
-   procedure Get_VN_Message (This: out VN_Message) is
-      VN_Msg : VN_Message := This;
+   -- Get_Version
+   function Get_Version(Message: VN_Message'Class) return VN_Version is
    begin
-      null;
-   end Get_VN_Message;
+      return Message.Header.Version;
+   end Get_Version;
 
-   function Version(This: in VN_Message) return Natural is
+   -- Set_Version
+   procedure Set_Version(Message: out VN_Message'Class; Version: VN_Version ) is
    begin
-      return This.Header.Version;
-   end Version;
-
-   procedure Set_Version(This: in out VN_Message; Version: in Natural) is
-   begin
-      This.Header.Set_Version(Version);
+      Message.Header.Version := Version;
    end Set_Version;
 
---   procedure Set_VN_Header(This: out VN_Message; Value: in Positive) is
---   begin
---      Set_Header_Value(This.Header, Value);
---   end Set_VN_Header;
+   function Get_Checksum(Message: in VN_Message'Class) return VN_Checksum is
+   begin
+      return Message.Footer.Checksum;
+   end Get_Checksum;
+
+   procedure Update_Checksum(Message: in out VN_Message'Class) is
+   begin
+      Message.Footer.Checksum := 5; -- TODO: Update the checksum with a proper
+                                    -- value.
+   end Update_Checksum;
 --
---   procedure Set_Header_Value(This: out VN_Header; Value: in Positive) is
+--   function Serialize_VN_Message(Message: VN_Message'Class;
+--                                 Output_Format: Serializiation_Type)
+--                                 return Natural is
 --   begin
---      This.Value := Value;
---   end Set_Header_Value;
+--      return 0; -- TODO: Return a proper serialization of this.
+--   end Serialize_VN_Message;
+--
+--   function Deserialize_VN_Message(Data: in Natural) -- TODO: How is Data represented? String?
+--                              return Natural is
+--                              -- return VN_Message'Class is
+--   begin
+--      -- TODO: Process the Data properly.
+--      return Data;
+--   end Deserialize_VN_Message;
 
 end VN_Message;
-

@@ -1,13 +1,14 @@
-with VN_Message;
+with VN_Message.Local_Hello;
+
+with VN_Message.Factory;
 with Text_IO;
 
 procedure Main is
-   VN_Msg : VN_Message.VN_Message;
-   package Print_Int is new Text_IO.Integer_IO (Natural);
+   VN_Msg : VN_Message.Local_Hello.VN_Message_Local_Hello;
+   package VN_Print is new Text_IO.Modular_IO(VN_Message.VN_Version);
+
 begin
 
-   VN_Message.Get_VN_Message(VN_Msg);
-   VN_Msg.Set_Version(6);
-   Print_Int.Put(VN_Msg.Version);
+   VN_Print.Put(VN_Msg.Get_Version);
 
 end Main;
