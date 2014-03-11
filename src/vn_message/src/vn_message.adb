@@ -1,4 +1,18 @@
+with VN_Message.Local_Hello;
+
 package body VN_Message is
+
+   procedure Cast_Message_To(Message: in out VN_Message'Class; Msg_Type: Message_Type) is
+   begin
+      null;
+
+--      case Msg_Type is
+--         when Local_Hello     => Message := VN_Message.Local_Hello.VN_Message_Local_Hello (Message);
+--         when Others          => null;
+--      end case;
+--
+   end Cast_Message_To;
+
    -- Get_Version
    function Get_Version(Message: VN_Message'Class) return VN_Version is
    begin

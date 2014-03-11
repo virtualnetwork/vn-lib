@@ -1,5 +1,8 @@
 package VN_Message is
 
+   -- Enum of different VN_Messages types.
+   type Message_Type is (Type_Local_Hello);
+
    type Serializiation_Types is (TXT, XML);
    type Component_Types is (CAS, LS, SM_L, SM_x, SM_Gateway, Unknown);
 
@@ -27,6 +30,8 @@ package VN_Message is
    type VN_Message is abstract tagged private;
    type VN_Message_Access is access all VN_Message'Class;
 
+   procedure Cast_Message_To(Message: in out VN_Message'Class; Msg_Type: Message_Type);
+
    -- VN_Version
    function Get_Version(Message: VN_Message'Class) return VN_Version;
    procedure Set_Version(Message: out VN_Message'Class; Version: VN_Version);
@@ -34,6 +39,7 @@ package VN_Message is
    -- VN_Checksum
    function Get_Checksum(Message: VN_Message'Class) return VN_Checksum;
    procedure Update_Checksum(Message: in out VN_Message'Class);
+
 
    -- VN_Payload
    function Get_Payload(Message: VN_Message'Class) return VN_Payload is abstract;
