@@ -1,20 +1,27 @@
 package VN_Message is
 
+   type Serializiation_Types is (TXT, XML);
+   type Component_Types is (CAS, LS, SM_L, SM_x, SM_Gateway, Unknown);
+
    type VN_Header is private;
    type VN_Payload is mod 2 ** 16;
    type VN_Footer is private;
 
+   -- VN_Header parts
    type VN_Logical_Address is mod 2 ** 32;
-
    type VN_Version is mod 2 ** 8;
    type VN_Priority is mod 2 ** 8;
    type VN_Length is mod 2 ** 16;
    type VN_Flags is mod 2 ** 16;
    type VN_Opcode is mod 2 ** 8;
 
+   -- VN_Footer parts
    type VN_Checksum is mod 2 ** 16;
 
-   type Serializiation_Type is (TXT, XML);
+   -- VN_Payload parts in derived types of VN_Mesage
+   type VN_CUUID is mod 2 ** 64; -- FIX: Should be 128 bits.
+   -- type VN_CUUID is mod 2 ** 128; -- TODO: How to represent 128 bits properly.
+   type VN_Component_Type is mod 2 ** 8;
 
    -- VN_Message
    type VN_Message is abstract tagged private;
