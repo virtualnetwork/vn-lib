@@ -1,14 +1,22 @@
-with VN_Message.Empty;
+with VN_Message.Local_Hello;
+with VN_Message.Handler_Local_Hello;
 with Text_IO;
 
 procedure Main is
-   VN_Msg   : VN_Message.Empty.VN_Message_Empty;
-   To_Type  : VN_Message.Message_Type := VN_Message.Type_Local_Hello;
-   package VN_Print is new Text_IO.Modular_IO(VN_Message.VN_Version);
+   VN_Msg   : VN_Message.Local_Hello.VN_Message_Local_Hello;
+   package VN_Version_Print is new Text_IO.Modular_IO(VN_Message.VN_Version);
+   package VN_CUUID_Print is new Text_IO.Modular_IO(VN_Message.VN_CUUID);
 begin
+   VN_Version_Print.Put(VN_Msg.Get_Version);
+   VN_Msg.Set_Version(1);
+   VN_Version_Print.Put(VN_Msg.Get_Version);
+   VN_Msg.Set_Version(2);
+   VN_Version_Print.Put(VN_Msg.Get_Version);
 
-   VN_Msg.Cast_Message_To(To_Type);
-
-   VN_Print.Put(VN_Msg.Get_Version);
-
+   VN_Msg.Set_CUUID(16#FFFF_FFFF_FFFF_FFFF#);
+   VN_CUUID_Print.Put(VN_Msg.Get_CUUID);
+   VN_Message.Handler_Local_Hello.Parse(VN_Msg);
+   VN_Msg.Set_CUUID(16#FFFF_FFFF_DEAD_BEAF#);
+   VN_CUUID_Print.Put(VN_Msg.Get_CUUID);
+   VN_Message.Handler_Local_Hello.Parse(VN_Msg);
 end Main;
