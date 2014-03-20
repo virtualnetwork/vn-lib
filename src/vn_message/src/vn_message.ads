@@ -28,6 +28,15 @@ package VN_Message is
    -- type VN_CUUID is mod 2 ** 128; -- TODO: How to represent 128 bits properly.
    type VN_Component_Type is mod 2 ** 8;
 
+   -- Communication types
+   type Send_Status is (OK,
+                        ERROR_UNKNOWN,
+                        ERROR_BUFFFER_OVERFLOW,
+                        ERROR_NO_ADDRESS_RECEIVED);
+
+   type Receive_Status is (OK,
+                           ERROR_UNKNOWN);
+
    -- VN_Message
    type VN_Message_Basic is tagged private;
 

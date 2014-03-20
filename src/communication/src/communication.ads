@@ -8,12 +8,13 @@ package Communication is
    type Com is abstract tagged private;
 
    procedure Send(This: in out Com;
-                  Message: in VN_Message.VN_Message_Basic)
+                  Message: in VN_Message.VN_Message_Basic;
+                  Status: out VN_Message.Send_Status)
                         is abstract;
 
    procedure Receive( This: in out Com;
                      Message: out VN_Message.VN_Message_Basic;
-                     Is_Received: out Boolean)
+                     Status: out VN_Message.Receive_Status)
                         is abstract;
 private
 
