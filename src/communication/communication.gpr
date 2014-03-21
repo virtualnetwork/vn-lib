@@ -1,0 +1,11 @@
+with "../vn_message/vn_message.gpr";
+
+project Communication is
+    for Source_Dirs use ("src");
+    for Object_Dir use "obj";
+
+    package Compiler is
+       for Local_Configuration_Pragmas use "project_pragmas";
+    end Compiler;
+
+end Communication;
