@@ -1,49 +1,27 @@
 package body Communication.IPC is
 
-   -- Com Send procedure
-   procedure Send(This: in out Com_IPC;
+   -- IPC Wrapper Send procedure
+   procedure Send(This: in out IPC_Wrapper;
                   Message: in VN_Message.VN_Message_Basic;
                   Status: out VN_Message.Send_Status) is
    begin
-      Message_Queue.Write(Message, Status);
+      if This.Is_From_SM_L then
+         This.PO_Access.Send_To_Other(Message, Status);
+      else
+         This.PO_Access.Send_To_SM_L(Message, Status);
+      end if;
    end Send;
 
-   -- Com Receive procedure
-   procedure Receive( This: in out Com_IPC;
+   -- IPC Wrapper Receive procedure
+   procedure Receive( This: in out IPC_Wrapper;
                      Message: out VN_Message.VN_Message_Basic;
                      Status: out VN_Message.Receive_Status) is
    begin
-      Message_Queue.Read(Message, Status);
+      if This.Is_From_SM_L then
+         This.PO_Access.Receive_From_Other(Message, Status);
+      else
+         This.PO_Access.Receive_From_SM_L(Message, Status);
+      end if;
    end Receive;
-
-   --- Protected buffer for all messages
-   protected body VN_Message_Queue is
-      procedure Read(Message: out VN_Message.VN_Message_Basic;
-                     Status: out VN_Message.Receive_Status) is
-      begin
-         if Length > 0 then
-            Message := VN_Msg_Buffer(Length);
-            Length := Length - 1;
-            Status := VN_Message.OK;
-         end if;
-            Status := VN_Message.ERROR_UNKNOWN;
-      end Read;
-
-      procedure Write(Message: in VN_Message.VN_Message_Basic;
-                      Status: out VN_Message.Send_Status) is
-      begin
-         if Length < 10 then
-            Length := Length + 1;
-            VN_Msg_Buffer(Length) := Message;
-            Status := VN_Message.OK;
-         end if;
-            Status := VN_Message.ERROR_UNKNOWN;
-      end Write;
-
-      function Get_Length return Integer is
-      begin
-         return Length;
-      end Get_Length;
-   end VN_Message_Queue;
 
 end Communication.IPC;
