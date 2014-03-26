@@ -1,4 +1,4 @@
-package VN_Message.Local_Hello is
+package VN.Message.Local_Hello is
 
    type VN_Message_Local_Hello is new VN_Message_Basic with private;
 
@@ -24,4 +24,4 @@ private
    overriding
    procedure Finalize(This: in out VN_Message_Local_Hello) is null;
 
-end VN_Message.Local_Hello;
+end VN.Message.Local_Hello;

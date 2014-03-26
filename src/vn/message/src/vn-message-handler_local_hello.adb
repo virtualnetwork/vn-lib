@@ -1,13 +1,13 @@
-with VN_Message.Local_Hello;
-with VN_Message.Local_Ack;
+with VN.Message.Local_Hello;
+with VN.Message.Local_Ack;
 with Ada.Text_IO;
 
 -- package VN_CUUID_Print is new Text_IO.Modular_IO(VN_Message.VN_CUUID);
 
-package body VN_Message.Handler_Local_Hello is
+package body VN.Message.Handler_Local_Hello is
 
    -- Parse
-   procedure Parse(Message: in VN_Message.Local_Hello.VN_Message_Local_Hello) is
+   procedure Parse(Message: in VN.Message.Local_Hello.VN_Message_Local_Hello) is
       -- Message_Local_Ack : VN_Message.Local_Ack.VN_Message_Local_Ack;
       CUUID : VN_CUUID;
    begin
@@ -26,4 +26,4 @@ package body VN_Message.Handler_Local_Hello is
 
    end Parse;
 
-end VN_Message.Handler_Local_Hello;
+end VN.Message.Handler_Local_Hello;

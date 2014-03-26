@@ -1,29 +1,29 @@
-with VN_Message;
+with VN.Message;
 
-package body Communication.PO is
+package body VN.Communication.PO is
 
    protected body VN_PO is
 
-      procedure Receive_From_SM_L(Message: out VN_Message.VN_Message_Basic;
-                     Status: out VN_Message.Receive_Status) is
+      procedure Receive_From_SM_L(Message: out VN.Message.VN_Message_Basic;
+                     Status: out VN.Message.Receive_Status) is
       begin
          null; -- TODO: Implement
       end Receive_From_SM_L;
 
-      procedure Send_To_SM_L(Message: in VN_Message.VN_Message_Basic;
-                      Status: out VN_Message.Send_Status) is
+      procedure Send_To_SM_L(Message: in VN.Message.VN_Message_Basic;
+                      Status: out VN.Message.Send_Status) is
       begin
          null; -- TODO: Implement
       end Send_To_SM_L;
 
-      procedure Receive_From_Other(Message: out VN_Message.VN_Message_Basic;
-                     Status: out VN_Message.Receive_Status) is
+      procedure Receive_From_Other(Message: out VN.Message.VN_Message_Basic;
+                     Status: out VN.Message.Receive_Status) is
       begin
          null; -- TODO: Implement
       end Receive_From_Other;
 
-      procedure Send_To_Other(Message: in VN_Message.VN_Message_Basic;
-                              Status: out VN_Message.Send_Status) is
+      procedure Send_To_Other(Message: in VN.Message.VN_Message_Basic;
+                              Status: out VN.Message.Send_Status) is
       begin
          null; -- TODO: Implement
       end Send_To_Other;
@@ -42,4 +42,4 @@ package body Communication.PO is
 
    end VN_PO;
 
-end Communication.PO;
+end VN.Communication.PO;

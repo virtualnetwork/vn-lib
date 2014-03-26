@@ -1,4 +1,4 @@
-package VN_Message.Local_Ack is
+package VN.Message.Local_Ack is
 
    type VN_Message_Local_Ack is new VN_Message_Basic with private;
 
@@ -18,4 +18,4 @@ private
    overriding
    procedure Finalize(This: in out VN_Message_Local_Ack) is null;
 
-end VN_Message.Local_Ack;
+end VN.Message.Local_Ack;

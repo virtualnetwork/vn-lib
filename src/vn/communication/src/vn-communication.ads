@@ -1,7 +1,7 @@
 with Ada.Finalization;
-with VN_Message;
+with VN.Message;
 
-package Communication is
+package VN.Communication is
 
    -- TODO: Modify code so the buffer is of variable length.
    type VN_Message_Buffer is range 1 .. 10;
@@ -12,13 +12,13 @@ package Communication is
    type Com is abstract tagged private;
 
    procedure Send(This: in out Com;
-                  Message: in VN_Message.VN_Message_Basic;
-                  Status: out VN_Message.Send_Status)
+                  Message: in VN.Message.VN_Message_Basic;
+                  Status: out VN.Message.Send_Status)
                         is abstract;
 
    procedure Receive( This: in out Com;
-                     Message: out VN_Message.VN_Message_Basic;
-                     Status: out VN_Message.Receive_Status)
+                     Message: out VN.Message.VN_Message_Basic;
+                     Status: out VN.Message.Receive_Status)
                         is abstract;
 private
 
@@ -27,4 +27,4 @@ private
          Buffer: VN_Message_Buffer := 1;
       end record;
 
-end Communication;
+end VN.Communication;

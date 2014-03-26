@@ -1,4 +1,4 @@
-package body VN_Message.Local_Hello is
+package body VN.Message.Local_Hello is
 
    -- Get_CUUID
    function Get_CUUID(Message: VN_Message_Local_Hello) return VN_CUUID is
@@ -33,4 +33,4 @@ package body VN_Message.Local_Hello is
       This.Header.Opcode := 16#20#;
    end;
 
-end VN_Message.Local_Hello;
+end VN.Message.Local_Hello;
