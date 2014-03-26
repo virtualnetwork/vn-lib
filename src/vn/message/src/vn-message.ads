@@ -1,6 +1,6 @@
 with Ada.Finalization;
 
-package VN_Message is
+package VN.Message is
 
    -- Enum of different VN_Messages types.
    type VN_Message_Type is (Type_Basic, Type_Local_Hello, Type_Local_Ack);
@@ -75,4 +75,4 @@ private
    overriding
    procedure Finalize(This: in out VN_Message_Basic) is null;
 
-end VN_Message;
+end VN.Message;

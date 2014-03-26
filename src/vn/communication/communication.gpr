@@ -1,4 +1,4 @@
-with "../vn_message/vn_message.gpr";
+with "../message/message.gpr";
 
 project Communication is
     for Source_Dirs use ("src");

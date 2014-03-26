@@ -1,4 +1,4 @@
-package body VN_Message is
+package body VN.Message is
 
    -- Get_Version
    function Get_Version(Message: VN_Message_Basic) return VN_Version is
@@ -23,4 +23,4 @@ package body VN_Message is
                                     -- value.
    end Update_Checksum;
 
-end VN_Message;
+end VN.Message;

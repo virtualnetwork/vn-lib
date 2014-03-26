@@ -5,17 +5,18 @@ ubuntu: all
 
 ravenscar: clean
 	echo "pragma Profile(Ravenscar);" > project_pragmas
-	gnatmake -d -p -P vn_message.gpr
+	gnatmake -d -p -P communication.gpr
 
 restricted: clean
 	echo "pragma Profile(Restricted);" > project_pragmas
-	gnatmake -d -p -P vn_message.gpr
+	gnatmake -d -p -P communication.gpr
 
 all: clean
 	echo "" > project_pragmas
-	gnatmake -d -p -P vn_message.gpr
+	gnatmake -d -p -P communication.gpr
 
 clean:
-	rm -rf obj/*.o
-	rm -rf obj/*.ali
-	rm -rf obj/main
+	gnat clean -P communication.gpr
+
+clean-all:
+	gnat clean -r -P communication.gpr

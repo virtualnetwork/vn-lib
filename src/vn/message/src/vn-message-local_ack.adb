@@ -1,4 +1,4 @@
-package body VN_Message.Local_Ack is
+package body VN.Message.Local_Ack is
 
    -- Get_Status
    function Get_Status(Message: VN_Message_Local_Ack) return VN_Status is
@@ -19,4 +19,4 @@ package body VN_Message.Local_Ack is
       This.Header.Opcode := 16#21#;
    end;
 
-end VN_Message.Local_Ack;
+end VN.Message.Local_Ack;
