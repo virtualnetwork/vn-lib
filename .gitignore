@@ -4,7 +4,6 @@ obj/
 project_pragmas
 *.ads~
 *.adb~
-*.gpr~
 
 # Vagrant
 .vagrant
