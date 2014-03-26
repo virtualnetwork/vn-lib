@@ -2,6 +2,8 @@
 /build
 obj/
 project_pragmas
+*.ads~
+*.adb~
 
 # Vagrant
 .vagrant
