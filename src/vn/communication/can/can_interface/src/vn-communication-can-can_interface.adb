@@ -92,7 +92,7 @@ package body VN.Communication.CAN.CAN_Interface is
             when SM_CAN =>
                if not isInitialized then
                   isInitialized := true;
-                  VN.Communication.CAN.Logic.SM.Init(data.SMDuty)
+                  VN.Communication.CAN.Logic.SM.Init(data.SMDuty);
 --                    data.SMDuty.Init;
                end if;
 
