@@ -10,7 +10,7 @@ package body VN.Communication.CAN.Logic.Receiver is
 
       freeUnit 	: Receiver_Unit_Duty_ptr;
       pending  	: VN.Communication.CAN.Logic.Receiver_Unit.Pending_Sender;
-      rec 	: VN.Communication.CAN.Logic.CAN_Address_Receiver;
+      rec 	: VN.Communication.CAN.CAN_Address_Receiver;
    begin
 
       case this.currentState is
@@ -76,7 +76,7 @@ package body VN.Communication.CAN.Logic.Receiver is
       end if;
    end ReceiveVNMessage;
 
-   procedure Activate(this : in out Receiver_Duty; address : VN.Communication.CAN.Logic.CAN_Address_Sender) is
+   procedure Activate(this : in out Receiver_Duty; address : VN.Communication.CAN.CAN_Address_Sender) is
    begin
       if this.currentState = Unactivated then
          this.currentState := Activated;

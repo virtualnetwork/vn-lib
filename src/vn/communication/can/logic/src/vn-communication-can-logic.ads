@@ -12,32 +12,29 @@ with Interfaces;
 use Interfaces;
 
 package VN.Communication.CAN.Logic is
+
+   -- Följande borde flyttas: ---
+   type Transmission_Result is (TRANSMISSION_OK, BUFFER_FULL);
+
+   type CUUID is array(1..16) of Interfaces.Unsigned_8;
+   subtype Logical_Address is Interfaces.Unsigned_32;
+
+   --------------------------------------
+
+   GIVE_DEBUG_OUTPUT : constant integer := 5;
+
+
    OFFSET_CAN_PRIORITY 	: constant Natural := 22;
    OFFSET_CAN_TYPE	: constant Natural := 15;
    OFFSET_CAN_RECEIVER 	: constant Natural := 7;
    OFFSET_CAN_SENDER 	: constant Natural := 0;
 
-   type Transmission_Result is (TRANSMISSION_OK, BUFFER_FULL);
 
-   type CAN_Message_Prio is mod 2 ** 6;
-   for CAN_Message_Prio'size use 6;
 
-   type CAN_Message_Type is mod 2 ** 7;
-   for CAN_Message_Type'size use 7;
-
-   type CAN_Address_Sender is mod 2 ** 7;
-   for CAN_Address_Sender'size use 7;
-
-   type CAN_Address_Receiver is mod 2 ** 8;
-   for CAN_Address_Receiver'size use 8;
-
-   function "=" (Left : CAN_Address_Sender; Right : CAN_Address_Receiver) return Boolean;
-
-   function "=" (Left : CAN_Address_Receiver; Right : CAN_Address_Sender) return Boolean;
 
    function Convert (x : CAN_Address_Sender) return CAN_Address_Receiver;
 
-   GIVE_DEBUG_OUTPUT : constant integer := 5;
+
    procedure DebugOutput(str : String; level : Integer; newLine : boolean := true);
 
    type DLC_Type is range 0..8;
@@ -47,11 +44,6 @@ package VN.Communication.CAN.Logic is
    for CAN_message_ID'size use 29;
 
    subtype UCID is Interfaces.Unsigned_32 range 0..268435455;
-
-   type CUUID is array(1..16) of Interfaces.Unsigned_8;
-
-   subtype Logical_Address is Interfaces.Unsigned_32;
-
 
    type Byte8 is array (DLC_Type range 1..8) of Interfaces.Unsigned_8;
    type CAN_Message_Physical is

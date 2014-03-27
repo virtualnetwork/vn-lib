@@ -73,7 +73,7 @@ package body VN.Communication.CAN.Logic.Sender is
       end case;
    end Update;
 
-   procedure Activate(this : in out Sender_Duty; address : VN.Communication.CAN.Logic.CAN_Address_Sender) is
+   procedure Activate(this : in out Sender_Duty; address : VN.Communication.CAN.CAN_Address_Sender) is
    begin
       if this.currentState = Unactivated then
          this.currentState := Activated;

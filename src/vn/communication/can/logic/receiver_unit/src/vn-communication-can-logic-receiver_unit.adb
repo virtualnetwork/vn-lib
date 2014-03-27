@@ -112,7 +112,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
    end Update;
 
    -- shall be called after a CAN address has been obtained
-   procedure Activate(this : in out Receiver_Unit_Duty; address : VN.Communication.CAN.Logic.CAN_Address_Sender;
+   procedure Activate(this : in out Receiver_Unit_Duty; address : VN.Communication.CAN.CAN_Address_Sender;
                       receiveBufferPtr : Receive_Buffer_ptr; pendingSendersPtr : Pending_Senders_ptr) is
    begin
    --   if this.currentState = Unactivated then
@@ -123,7 +123,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
      -- end if;
    end Activate;
 
-   procedure Assign(this : in out Receiver_Unit_Duty; sender : VN.Communication.CAN.Logic.CAN_Address_Sender;
+   procedure Assign(this : in out Receiver_Unit_Duty; sender : VN.Communication.CAN.CAN_Address_Sender;
                     numMessages	: Interfaces.Unsigned_16) is
    begin
       this.currentState   := Started;
@@ -139,7 +139,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
       return not (this.currentState = Idle);
    end isActive;
 
-   function Sender(this : in out Receiver_Unit_Duty) return VN.Communication.CAN.Logic.CAN_Address_Sender is
+   function Sender(this : in out Receiver_Unit_Duty) return VN.Communication.CAN.CAN_Address_Sender is
    begin
       return this.Sender;
    end Sender;

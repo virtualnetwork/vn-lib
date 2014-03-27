@@ -21,7 +21,7 @@ package VN.Communication.CAN.Logic.Receiver_Unit is
 
    type Pending_Sender is
       record
-         sender 	: VN.Communication.CAN.Logic.CAN_Address_Sender;
+         sender 	: VN.Communication.CAN.CAN_Address_Sender;
          numMessages	: Interfaces.Unsigned_16;
       end record;
 
@@ -40,16 +40,16 @@ package VN.Communication.CAN.Logic.Receiver_Unit is
 
 
    -- shall be called after a CAN address has been obtained
-   procedure Activate(this : in out Receiver_Unit_Duty; address : VN.Communication.CAN.Logic.CAN_Address_Sender;
+   procedure Activate(this : in out Receiver_Unit_Duty; address : VN.Communication.CAN.CAN_Address_Sender;
                       receiveBufferPtr : Receive_Buffer_ptr; pendingSendersPtr : Pending_Senders_ptr);
 
 
-   procedure Assign(this : in out Receiver_Unit_Duty; sender : VN.Communication.CAN.Logic.CAN_Address_Sender;
+   procedure Assign(this : in out Receiver_Unit_Duty; sender : VN.Communication.CAN.CAN_Address_Sender;
                     numMessages	: Interfaces.Unsigned_16);
 
    function isActive(this : in out Receiver_Unit_Duty) return boolean;
 
-   function Sender(this : in out Receiver_Unit_Duty) return VN.Communication.CAN.Logic.CAN_Address_Sender;
+   function Sender(this : in out Receiver_Unit_Duty) return VN.Communication.CAN.CAN_Address_Sender;
 
 private
 
@@ -59,9 +59,9 @@ private
    type Receiver_Unit_Duty is new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	: Receiver_Unit_State := Idle;
-         myCANAddress 	: VN.Communication.CAN.Logic.CAN_Address_Sender;
+         myCANAddress 	: VN.Communication.CAN.CAN_Address_Sender;
 
-         sender 	: VN.Communication.CAN.Logic.CAN_Address_Sender;
+         sender 	: VN.Communication.CAN.CAN_Address_Sender;
          receivedData	: VN.Communication.CAN.Logic.DataArray;
          numMessages	: Interfaces.Unsigned_16;
 

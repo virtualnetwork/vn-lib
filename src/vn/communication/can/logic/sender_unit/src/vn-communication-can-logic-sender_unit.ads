@@ -20,14 +20,14 @@ package VN.Communication.CAN.Logic.Sender_Unit is
                                msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean);
 
    -- shall be called after a CAN address has been obtained
-   procedure Activate(this : in out Sender_Unit_Duty; address : VN.Communication.CAN.Logic.CAN_Address_Sender);
+   procedure Activate(this : in out Sender_Unit_Duty; address : VN.Communication.CAN.CAN_Address_Sender);
 
    procedure Send(this : in out Sender_Unit_Duty;
                   message : VN.Communication.CAN.Logic.VN_Message_Internal);
 
    function isActive(this : in out Sender_Unit_Duty) return boolean;
 
-   function Receiver(this : in out Sender_Unit_Duty) return VN.Communication.CAN.Logic.CAN_Address_Receiver;
+   function Receiver(this : in out Sender_Unit_Duty) return VN.Communication.CAN.CAN_Address_Receiver;
 
 private
 
@@ -37,7 +37,7 @@ private
    type Sender_Unit_Duty is new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	: Sender_Unit_State := Idle;
-         myCANAddress 	: VN.Communication.CAN.Logic.CAN_Address_Sender;
+         myCANAddress 	: VN.Communication.CAN.CAN_Address_Sender;
          ToSend  	: VN.Communication.CAN.Logic.VN_Message_Internal;
          useFlowControl : Boolean;
          blockSize  	: Interfaces.Unsigned_16;

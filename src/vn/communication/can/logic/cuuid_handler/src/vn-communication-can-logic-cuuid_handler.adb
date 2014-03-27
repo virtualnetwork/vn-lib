@@ -57,7 +57,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
       end case;
    end Update;
 
-   procedure Activate(this : in out CUUID_Handler; theCUUID : VN.Communication.CAN.Logic.CUUID; CANAddress : VN.Communication.CAN.Logic.CAN_Address_Sender) is
+   procedure Activate(this : in out CUUID_Handler; theCUUID : VN.Communication.CAN.Logic.CUUID; CANAddress : VN.Communication.CAN.CAN_Address_Sender) is
    begin
 
       if this.currentState = Unactivated then
@@ -72,7 +72,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
       end if;
    end Activate;
 
-   procedure ReadEntry(this : in out CUUID_Handler; index : VN.Communication.CAN.Logic.CAN_Address_Sender;
+   procedure ReadEntry(this : in out CUUID_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
                        unitCUUID : out VN.Communication.CAN.Logic.CUUID; isSM_CAN : out boolean; isSet : out Boolean) is
    begin
       isSet 	:= this.units(index).isFirstCUUIDHalfSet and this.units(index).isSecondCUUIDHalfSet and this.units(index).isComponentTypeSet;

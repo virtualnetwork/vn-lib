@@ -32,7 +32,7 @@ package VN.Communication.CAN.Logic.Receiver is
    procedure ReceiveVNMessage(this : in out Receiver_Duty; msg : out VN.Communication.CAN.Logic.VN_Message_Internal;
                          msgWasReceived : out boolean);
 
-   procedure Activate(this : in out Receiver_Duty; address : VN.Communication.CAN.Logic.CAN_Address_Sender);
+   procedure Activate(this : in out Receiver_Duty; address : VN.Communication.CAN.CAN_Address_Sender);
 
 private
 
@@ -45,7 +45,7 @@ private
    type Receiver_Duty is new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	 : Receiver_State := Unactivated;
-         myCANAddress 	 : VN.Communication.CAN.Logic.CAN_Address_Sender;
+         myCANAddress 	 : VN.Communication.CAN.CAN_Address_Sender;
          receiveBuffer 	 : Receive_Buffer_ptr :=
          			new VN.Communication.CAN.Logic.Receiver_Unit.Receive_Buffer_pack.Buffer(VN.Communication.CAN.Logic.Receiver_Unit.SIZE);
 

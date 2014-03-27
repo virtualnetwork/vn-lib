@@ -32,7 +32,7 @@ package body VN.Communication.CAN.Logic.CAN_Address_Assignment is
                   VN.Communication.CAN.Logic.Message_Utils.RequestCANAddressFromMessage(msgIn, receivedUCID, bWasSMCAN);
 
                   declare
-                     temp : VN.Communication.CAN.Logic.CAN_Address_Sender := this.AssignCANAddress(receivedUCID);
+                     temp : VN.Communication.CAN.CAN_Address_Sender := this.AssignCANAddress(receivedUCID);
                   begin
                      VN.Communication.CAN.Logic.Message_Utils.AssignCANAddressToMessage(msgOut, receivedUCID, temp);
                      VN.Communication.CAN.Logic.DebugOutput("Assigned CAN address " & temp'Img & " to UCID " & receivedUCID'Img, 4);
@@ -57,8 +57,8 @@ package body VN.Communication.CAN.Logic.CAN_Address_Assignment is
       end if;
    end Activate;
 
-   function AssignCANAddress(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.Logic.UCID) return VN.Communication.CAN.Logic.CAN_Address_Sender is
-      i : VN.Communication.CAN.Logic.CAN_Address_Sender := 0;
+   function AssignCANAddress(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.Logic.UCID) return VN.Communication.CAN.CAN_Address_Sender is
+      i : VN.Communication.CAN.CAN_Address_Sender := 0;
       GetCANAddress_ERROR : exception;
    begin
       for i in this.addresses'First + 1 .. this.addresses'Last loop

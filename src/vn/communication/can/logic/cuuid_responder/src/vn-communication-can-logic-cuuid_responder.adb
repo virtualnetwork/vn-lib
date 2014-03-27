@@ -52,7 +52,7 @@ package body VN.Communication.CAN.Logic.CUUID_Responder is
       end case;
    end Update;
 
-   procedure Activate(this : in out CUUID_Responder; theCUUID : VN.Communication.CAN.Logic.CUUID; CANAddress : VN.Communication.CAN.Logic.CAN_Address_Sender; isSM_CAN : boolean) is
+   procedure Activate(this : in out CUUID_Responder; theCUUID : VN.Communication.CAN.Logic.CUUID; CANAddress : VN.Communication.CAN.CAN_Address_Sender; isSM_CAN : boolean) is
    begin
       if this.currentState = Unactivated then
          VN.Communication.CAN.Logic.DebugOutput("CUUID_Responder at address " & CANAddress'Img & " activated", 5);

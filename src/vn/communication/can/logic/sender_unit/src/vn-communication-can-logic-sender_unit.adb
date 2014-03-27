@@ -38,8 +38,8 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
                if msgIn.Receiver = this.myCANAddress then
 
                   declare
-                     sentTo : VN.Communication.CAN.Logic.CAN_Address_Receiver;
-                     sentBy : VN.Communication.CAN.Logic.CAN_Address_Sender;
+                     sentTo : VN.Communication.CAN.CAN_Address_Receiver;
+                     sentBy : VN.Communication.CAN.CAN_Address_Sender;
                   begin
                      VN.Communication.CAN.Logic.Message_Utils.FlowControlFromMessage(msgIn, sentTo, sentBy, this.useFlowControl, this.blockSize);
 
@@ -124,7 +124,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
       this.ToSend := message;
    end Send;
 
-   procedure Activate(this : in out Sender_Unit_Duty; address : VN.Communication.CAN.Logic.CAN_Address_Sender) is
+   procedure Activate(this : in out Sender_Unit_Duty; address : VN.Communication.CAN.CAN_Address_Sender) is
    begin
        this.myCANAddress := address;
    end Activate;
@@ -134,7 +134,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
      return not (this.currentState = Idle);
    end isActive;
 
-   function Receiver(this : in out Sender_Unit_Duty) return VN.Communication.CAN.Logic.CAN_Address_Receiver is
+   function Receiver(this : in out Sender_Unit_Duty) return VN.Communication.CAN.CAN_Address_Receiver is
    begin
       return this.ToSend.Receiver;
    end Receiver;

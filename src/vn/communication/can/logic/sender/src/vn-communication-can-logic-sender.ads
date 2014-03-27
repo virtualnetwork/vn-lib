@@ -32,7 +32,7 @@ package VN.Communication.CAN.Logic.Sender is
    procedure SendVNMessage(this : in out Sender_Duty; msg : VN_Message_Internal;
                            result : out VN.Communication.CAN.Logic.Transmission_Result);
 
-   procedure Activate(this : in out Sender_Duty; address : VN.Communication.CAN.Logic.CAN_Address_Sender);
+   procedure Activate(this : in out Sender_Duty; address : VN.Communication.CAN.CAN_Address_Sender);
 
 private
 
@@ -48,7 +48,7 @@ private
    type Sender_Duty is new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	: Sender_State := Unactivated;
-         myCANAddress 	: VN.Communication.CAN.Logic.CAN_Address_Sender;
+         myCANAddress 	: VN.Communication.CAN.CAN_Address_Sender;
          sendBuffer   	: Send_Buffer_pack.Buffer(SIZE);
          units		: UnitArray := (others => new VN.Communication.CAN.Logic.Sender_Unit.Sender_Unit_Duty);
          iterator	: Integer := UnitArray'First;

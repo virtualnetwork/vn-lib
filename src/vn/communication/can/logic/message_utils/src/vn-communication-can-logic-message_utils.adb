@@ -10,9 +10,9 @@ with Interfaces;
 package body VN.Communication.CAN.Logic.Message_Utils is
 
 
-   procedure AddressQuestionToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : VN.Communication.CAN.Logic.CAN_Address_Receiver;
-                                      sender : VN.Communication.CAN.Logic.CAN_Address_Sender; logicalAddress : VN.Communication.CAN.Logic.Logical_Address;
-                                      prio : CAN_Message_Prio) is
+   procedure AddressQuestionToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
+                                      sender : VN.Communication.CAN.CAN_Address_Sender; logicalAddress : VN.Communication.CAN.Logic.Logical_Address;
+                                      prio : VN.Communication.CAN.CAN_Message_Prio) is
    begin
       msg.isNormal := true;
       msg.msgPrio  := prio;
@@ -36,8 +36,8 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       end if;
    end AddressQuestionFromMessage;
 
-   procedure AddressAnswerToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : VN.Communication.CAN.Logic.CAN_Address_Receiver; sender : VN.Communication.CAN.Logic.CAN_Address_Sender;
-                                    CANAddress : VN.Communication.CAN.Logic.CAN_Address_Sender; logicalAddress : VN.Communication.CAN.Logic.Logical_Address; prio : CAN_Message_Prio) is
+   procedure AddressAnswerToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
+                                    CANAddress : VN.Communication.CAN.CAN_Address_Sender; logicalAddress : VN.Communication.CAN.Logic.Logical_Address; prio : VN.Communication.CAN.CAN_Message_Prio) is
    begin
       msg.isNormal := true;
       msg.msgPrio  := prio;
@@ -51,7 +51,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    end AddressAnswerToMessage;
 
 
-   procedure AddressAnswerFromMessage(msg : VN.Communication.CAN.Logic.CAN_Message_Logical; CANAddress : out VN.Communication.CAN.Logic.CAN_Address_Sender;
+   procedure AddressAnswerFromMessage(msg : VN.Communication.CAN.Logic.CAN_Message_Logical; CANAddress : out VN.Communication.CAN.CAN_Address_Sender;
                                       logicalAddress : out VN.Communication.CAN.Logic.Logical_Address) is
       INCORRECT_MESSAGE_AddressAnswer : exception;
       temp : Interfaces.Unsigned_16;
@@ -60,15 +60,15 @@ package body VN.Communication.CAN.Logic.Message_Utils is
          DataToU16(msg.Data, temp);
          logicalAddress := VN.Communication.CAN.Logic.Logical_Address(temp);
 
-         CANAddress := VN.Communication.CAN.Logic.CAN_Address_Sender(msg.Data(msg.Data'First + 4));
+         CANAddress := VN.Communication.CAN.CAN_Address_Sender(msg.Data(msg.Data'First + 4));
       else
          raise INCORRECT_MESSAGE_AddressAnswer;
       end if;
    end AddressAnswerFromMessage;
 
 
-   procedure AssignLogicalAddressToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : VN.Communication.CAN.Logic.CAN_Address_Receiver; sender : VN.Communication.CAN.Logic.CAN_Address_Sender;
-                                           prio : CAN_Message_Prio; logicalAddress : VN.Communication.CAN.Logic.Logical_Address) is
+   procedure AssignLogicalAddressToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
+                                           prio : VN.Communication.CAN.CAN_Message_Prio; logicalAddress : VN.Communication.CAN.Logic.Logical_Address) is
    begin
       msg.isNormal := true;
       msg.msgPrio  := prio;
@@ -94,7 +94,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    end AssignLogicalAddressFromMessage;
 
 
-   procedure ComponentTypeToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical;  sender : VN.Communication.CAN.Logic.CAN_Address_Sender; prio : CAN_Message_Prio; isSM_CAN : boolean) is
+   procedure ComponentTypeToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical;  sender : VN.Communication.CAN.CAN_Address_Sender; prio : VN.Communication.CAN.CAN_Message_Prio; isSM_CAN : boolean) is
    begin
       msg.isNormal := true;
       msg.msgPrio  := prio;
@@ -125,7 +125,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       end if;
    end ComponentTypeFromMessage;
 
-   procedure RequestCUUIDToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical;  sender : VN.Communication.CAN.Logic.CAN_Address_Sender; prio : CAN_Message_Prio) is
+   procedure RequestCUUIDToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical;  sender : VN.Communication.CAN.CAN_Address_Sender; prio : VN.Communication.CAN.CAN_Message_Prio) is
    begin
       msg.isNormal := true;
       msg.msgPrio  := prio;
@@ -136,7 +136,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    end RequestCUUIDToMessage;
 
 
-   procedure CUUIDHalfToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical;  sender : VN.Communication.CAN.Logic.CAN_Address_Sender;
+   procedure CUUIDHalfToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical;  sender : VN.Communication.CAN.CAN_Address_Sender;
                                 theCUUID : VN.Communication.CAN.Logic.CUUID; firstHalf : Boolean) is
       offset : VN.Communication.CAN.Logic.DLC_Type;
    begin
@@ -184,8 +184,8 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    end CUUIDHalfFromMessage;
 
 
-   procedure TransmissionToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : VN.Communication.CAN.Logic.CAN_Address_Receiver;
-                                   sender : VN.Communication.CAN.Logic.CAN_Address_Sender) is
+   procedure TransmissionToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
+                                   sender : VN.Communication.CAN.CAN_Address_Sender) is
    begin
       msg.isNormal 	:= true;
       msg.msgPrio 	:= 0;
@@ -195,16 +195,16 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    end TransmissionToMessage;
 
 
---     procedure TransmissionFromMessage(msg : VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : out VN.Communication.CAN.Logic.CAN_Address_Receiver;
---                                       sender : out VN.Communication.CAN.Logic.CAN_Address_Sender; numMessages : out Interfaces.Unsigned_16) is
+--     procedure TransmissionFromMessage(msg : VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : out VN.Communication.CAN.CAN_Address_Receiver;
+--                                       sender : out VN.Communication.CAN.CAN_Address_Sender; numMessages : out Interfaces.Unsigned_16) is
 --
 --     begin
 --
 --     end TransmissionFromMessage;
 
 
-   procedure FlowControlToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : VN.Communication.CAN.Logic.CAN_Address_Receiver;
-                                  sender : VN.Communication.CAN.Logic.CAN_Address_Sender; useFlowControl : boolean;
+   procedure FlowControlToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
+                                  sender : VN.Communication.CAN.CAN_Address_Sender; useFlowControl : boolean;
                                   blockSize : Interfaces.Unsigned_16) is
    begin
       msg.isNormal 	:= true;
@@ -221,8 +221,8 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       end if;
    end FlowControlToMessage;
 
-   procedure FlowControlFromMessage(msg : VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : out VN.Communication.CAN.Logic.CAN_Address_Receiver;
-                                    sender : out VN.Communication.CAN.Logic.CAN_Address_Sender; useFlowControl : out boolean;
+   procedure FlowControlFromMessage(msg : VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : out VN.Communication.CAN.CAN_Address_Receiver;
+                                    sender : out VN.Communication.CAN.CAN_Address_Sender; useFlowControl : out boolean;
                                     blockSize : out Interfaces.Unsigned_16) is
       INCORRECT_MESSAGE_FlowControl : exception;
    begin
@@ -244,8 +244,8 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       end if;
    end FlowControlFromMessage;
 
-   procedure StartTransmissionToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : VN.Communication.CAN.Logic.CAN_Address_Receiver;
-                                        sender : VN.Communication.CAN.Logic.CAN_Address_Sender; numMessages : Interfaces.Unsigned_16) is
+   procedure StartTransmissionToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
+                                        sender : VN.Communication.CAN.CAN_Address_Sender; numMessages : Interfaces.Unsigned_16) is
    begin
       msg.isNormal 	:= true;
       msg.msgPrio 	:= 0;
@@ -258,8 +258,8 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    end StartTransmissionToMessage;
 
 
-   procedure StartTransmissionFromMessage(msg : VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : out VN.Communication.CAN.Logic.CAN_Address_Receiver;
-                                          sender : out VN.Communication.CAN.Logic.CAN_Address_Sender; numMessages : out Interfaces.Unsigned_16) is
+   procedure StartTransmissionFromMessage(msg : VN.Communication.CAN.Logic.CAN_Message_Logical; receiver : out VN.Communication.CAN.CAN_Address_Receiver;
+                                          sender : out VN.Communication.CAN.CAN_Address_Sender; numMessages : out Interfaces.Unsigned_16) is
 
       INCORRECT_MESSAGE_StartTransmission : exception;
    begin
@@ -276,7 +276,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
 
 
    procedure AssignCANAddressToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical;
-                                       theUCID : VN.Communication.CAN.Logic.UCID; theCANAddr : VN.Communication.CAN.Logic.CAN_Address_Sender) is
+                                       theUCID : VN.Communication.CAN.Logic.UCID; theCANAddr : VN.Communication.CAN.CAN_Address_Sender) is
       x : FourBytes;
       y : VN.Communication.CAN.Logic.UCID;
       for x'Address use y'Address;
@@ -297,7 +297,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    end AssignCANAddressToMessage;
 
    procedure AssignCANAddressFromMessage(msg : VN.Communication.CAN.Logic.CAN_Message_Logical;
-                                         theUCID : out VN.Communication.CAN.Logic.UCID; theCANAddr : out VN.Communication.CAN.Logic.CAN_Address_Sender) is
+                                         theUCID : out VN.Communication.CAN.Logic.UCID; theCANAddr : out VN.Communication.CAN.CAN_Address_Sender) is
       INCORRECT_MESSAGE_AssignCANAddress : exception;
       x : FourBytes;
       y : VN.Communication.CAN.Logic.UCID;
@@ -308,7 +308,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
             x(i) := msg.Data(VN.Communication.CAN.Logic.DLC_Type(i));
          end loop;
          theUCID := y;
-         theCANAddr := VN.Communication.CAN.Logic.CAN_Address_Sender(msg.Data(msg.Data'First + 4));
+         theCANAddr := VN.Communication.CAN.CAN_Address_Sender(msg.Data(msg.Data'First + 4));
       else
          raise INCORRECT_MESSAGE_AssignCANAddress;
       end if;
@@ -342,7 +342,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       bIs_SM_CAN := false;
    end RequestCANAddressFromMessage;
 
-   procedure CANMasterAssignedToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; prio : CAN_Message_Prio) is
+   procedure CANMasterAssignedToMessage(msg : out VN.Communication.CAN.Logic.CAN_Message_Logical; prio : VN.Communication.CAN.CAN_Message_Prio) is
    begin
       msg.Sender   := 0;
       msg.Receiver := 255;
@@ -352,8 +352,8 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.msgType  := VN.Communication.CAN.Logic.CAN_MASTER_ASSIGNED;
    end CANMasterAssignedToMessage;
 
-   function GetMessageID(msgPrio : VN.Communication.CAN.Logic.CAN_Message_Prio; msgType : VN.Communication.CAN.Logic.CAN_Message_Type;
-                         receiver : VN.Communication.CAN.Logic.CAN_Address_Receiver; myAddress : VN.Communication.CAN.Logic.CAN_Address_Sender) return VN.Communication.CAN.Logic.CAN_message_ID is
+   function GetMessageID(msgPrio : VN.Communication.CAN.CAN_Message_Prio; msgType : VN.Communication.CAN.CAN_Message_Type;
+                         receiver : VN.Communication.CAN.CAN_Address_Receiver; myAddress : VN.Communication.CAN.CAN_Address_Sender) return VN.Communication.CAN.Logic.CAN_message_ID is
 
       u32Prio     : Interfaces.Unsigned_32 := Interfaces.Unsigned_32(msgPrio);
       u32Type 	  : Interfaces.Unsigned_32 := Interfaces.Unsigned_32(msgType);

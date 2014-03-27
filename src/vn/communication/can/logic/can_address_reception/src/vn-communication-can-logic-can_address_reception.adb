@@ -15,7 +15,7 @@ package body VN.Communication.CAN.Logic.CAN_Address_Reception is
    overriding procedure Update(this : in out CAN_Assignment_Node; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
                                msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean) is
       msgUCID : VN.Communication.CAN.Logic.UCID;
-      msgCANAddr : VN.Communication.CAN.Logic.CAN_Address_Sender;
+      msgCANAddr : VN.Communication.CAN.CAN_Address_Sender;
 
       use Ada.Real_Time;
 

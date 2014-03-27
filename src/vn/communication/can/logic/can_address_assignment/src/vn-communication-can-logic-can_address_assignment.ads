@@ -23,7 +23,7 @@ package VN.Communication.CAN.Logic.CAN_Address_Assignment is
       end record;
 
    --ToDo: Address tables (routing tables) need to be revised
-   type Address_Table is array(VN.Communication.CAN.Logic.CAN_Address_Sender) of Address_Entry;
+   type Address_Table is array(VN.Communication.CAN.CAN_Address_Sender) of Address_Entry;
 
    overriding procedure Update(this : in out CAN_Assignment_Master; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
                                msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean);
@@ -38,11 +38,11 @@ private
       record
          currentState 	: CAN_Assignment_Master_State := Unactivated;
          addresses 	: Address_Table;
-         numUnitsFound  : VN.Communication.CAN.Logic.CAN_Address_Sender := 0;
+         numUnitsFound  : VN.Communication.CAN.CAN_Address_Sender := 0;
          myUCID 	: VN.Communication.CAN.Logic.UCID;
       end record;
 
-  function AssignCANAddress(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.Logic.UCID) return VN.Communication.CAN.Logic.CAN_Address_Sender;
+  function AssignCANAddress(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.Logic.UCID) return VN.Communication.CAN.CAN_Address_Sender;
 
 end VN.Communication.CAN.Logic.CAN_Address_Assignment;
 

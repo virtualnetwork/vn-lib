@@ -19,7 +19,7 @@ package VN.Communication.CAN.Logic.CUUID_Responder is
                                msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean);
 
    procedure Activate(this : in out CUUID_Responder; theCUUID : VN.Communication.CAN.Logic.CUUID;
-                      CANAddress : VN.Communication.CAN.Logic.CAN_Address_Sender; isSM_CAN : boolean);
+                      CANAddress : VN.Communication.CAN.CAN_Address_Sender; isSM_CAN : boolean);
 
 private
 
@@ -29,7 +29,7 @@ private
       record
          currentState 	: CUUID_Responder_State := Unactivated;
          myCUUID 	: VN.Communication.CAN.Logic.CUUID;
-         myCANAddress   : VN.Communication.CAN.Logic.CAN_Address_Sender;
+         myCANAddress   : VN.Communication.CAN.CAN_Address_Sender;
          isSM_CAN	: boolean;
       end record;
 end VN.Communication.CAN.Logic.CUUID_Responder;
