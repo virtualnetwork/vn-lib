@@ -20,8 +20,8 @@ package VN.Communication.CAN.CAN_Interface is
 
 
       ----------- FUNCTIONS FOR CAN_task ---------------------
-      procedure Update(msgsBuffer : in out VN.Communication.CAN.Logic.SM.CAN_Message_Buffers.Buffer;
-                       ret : out VN.Communication.CAN.Logic.SM.CAN_Message_Buffers.Buffer);
+      procedure Update(msgsBuffer : in out VN.Communication.CAN.CAN_Message_Buffers.Buffer;
+                       ret : out VN.Communication.CAN.CAN_Message_Buffers.Buffer);
       --------------------------------------------------------
 
    private

@@ -1,5 +1,6 @@
 
 with Interfaces;
+with Buffers;
 
 package VN.Communication.CAN is
 
@@ -42,5 +43,7 @@ package VN.Communication.CAN is
          Data     	: Byte8;
       end record;
 
+
+   package CAN_Message_Buffers is new Buffers(VN.Communication.CAN.CAN_Message_Logical);
 
 end VN.Communication.CAN;

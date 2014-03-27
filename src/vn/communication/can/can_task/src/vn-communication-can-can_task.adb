@@ -14,12 +14,13 @@ with Ada.Text_IO;
 
 --with UartWrapper;
 --  with Physical_Logical;
+with VN.Communication.CAN;
 with VN.Communication.CAN.Logic.SM;
 
 
 package body VN.Communication.CAN.Can_Task is
 
-   package buf renames VN.Communication.CAN.Logic.SM.CAN_Message_Buffers;
+   package buf renames VN.Communication.CAN.CAN_Message_Buffers;
 
    task body CAN_Task_Type is
       use Ada.Real_Time;

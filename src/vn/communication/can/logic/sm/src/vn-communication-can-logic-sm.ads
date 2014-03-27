@@ -20,8 +20,7 @@ with Buffers;
 
 package VN.Communication.CAN.Logic.SM is
 
-   package CAN_Message_Buffers is new Buffers(VN.Communication.CAN.CAN_Message_Logical);
-   use CAN_Message_Buffers;
+   use VN.Communication.CAN.CAN_Message_Buffers;
 
    type Unit is
       record
