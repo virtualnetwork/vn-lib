@@ -42,7 +42,7 @@ private
             when SM_CAN =>
                SMDuty : VN.Communication.CAN.Logic.SM.SM_Duty(theUCID, theCUUID);
             when Node =>
-               nodeDuty : integer; -- VN.Communication.CAN.Logic.Node.Node_Duty(theUCID, theCUUID);
+               nodeDuty : VN.Communication.CAN.Logic.SM.SM_Duty(theUCID, theCUUID); -- VN.Communication.CAN.Logic.Node.Node_Duty(theUCID, theCUUID);
          end case;
       end record;
 
