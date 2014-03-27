@@ -4,8 +4,8 @@ with VN.Communication.CAN.Logic.Message_Utils;
 
 package body VN.Communication.CAN.Logic.Receiver is
 
-   overriding procedure Update(this : in out Receiver_Duty; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                               msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean) is
+   overriding procedure Update(this : in out Receiver_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                               msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean) is
     --  use Ada.Containers;
 
       freeUnit 	: Receiver_Unit_Duty_ptr;

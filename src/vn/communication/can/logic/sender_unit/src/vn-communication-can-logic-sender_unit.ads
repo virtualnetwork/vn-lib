@@ -16,8 +16,8 @@ package VN.Communication.CAN.Logic.Sender_Unit is
    type Sender_Unit_Duty is new VN.Communication.CAN.Logic.Duty with private;
    type Sender_Unit_Duty_ptr is access all Sender_Unit_Duty'Class;
 
-   overriding procedure Update(this : in out Sender_Unit_Duty; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                               msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean);
+   overriding procedure Update(this : in out Sender_Unit_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                               msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean);
 
    -- shall be called after a CAN address has been obtained
    procedure Activate(this : in out Sender_Unit_Duty; address : VN.Communication.CAN.CAN_Address_Sender);
@@ -49,7 +49,7 @@ private
    function NumMessagesToSend(messageLength : Interfaces.Unsigned_16) return Interfaces.Unsigned_16;
 
    procedure Fragment(VNMessage : VN.Communication.CAN.Logic.VN_Message_Internal; seqNumber : in out Interfaces.Unsigned_16;
-                      CANMessage : in out VN.Communication.CAN.Logic.CAN_Message_Logical; isLastMessage : out boolean);
+                      CANMessage : in out VN.Communication.CAN.CAN_Message_Logical; isLastMessage : out boolean);
 
 end VN.Communication.CAN.Logic.Sender_Unit;
 

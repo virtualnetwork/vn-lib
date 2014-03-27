@@ -18,17 +18,17 @@ package VN.Communication.CAN.Logic.CAN_Address_Assignment is
 
    type Address_Entry is
       record
-         unitUCID  : VN.Communication.CAN.Logic.UCID;
+         unitUCID  : VN.Communication.CAN.UCID;
          isUsed	   : Boolean := false;
       end record;
 
    --ToDo: Address tables (routing tables) need to be revised
    type Address_Table is array(VN.Communication.CAN.CAN_Address_Sender) of Address_Entry;
 
-   overriding procedure Update(this : in out CAN_Assignment_Master; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                               msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean);
+   overriding procedure Update(this : in out CAN_Assignment_Master; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                               msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean);
 
-   procedure Activate(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.Logic.UCID);
+   procedure Activate(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.UCID);
 
 private
 
@@ -39,10 +39,10 @@ private
          currentState 	: CAN_Assignment_Master_State := Unactivated;
          addresses 	: Address_Table;
          numUnitsFound  : VN.Communication.CAN.CAN_Address_Sender := 0;
-         myUCID 	: VN.Communication.CAN.Logic.UCID;
+         myUCID 	: VN.Communication.CAN.UCID;
       end record;
 
-  function AssignCANAddress(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.Logic.UCID) return VN.Communication.CAN.CAN_Address_Sender;
+  function AssignCANAddress(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.UCID) return VN.Communication.CAN.CAN_Address_Sender;
 
 end VN.Communication.CAN.Logic.CAN_Address_Assignment;
 

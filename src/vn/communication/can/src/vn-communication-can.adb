@@ -13,4 +13,10 @@ package body VN.Communication.CAN is
       return u8Left = u8Right;
    end "=";
 
+   function Convert (x : CAN_Address_Sender) return CAN_Address_Receiver is
+      y : integer := Integer(x);
+   begin
+      return CAN_Address_Receiver(y);
+   end Convert;
+
 end VN.Communication.CAN;

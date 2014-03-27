@@ -26,8 +26,8 @@ package VN.Communication.CAN.Logic.Sender is
    type Sender_Duty is new VN.Communication.CAN.Logic.Duty with private;
    type Sender_Duty_ptr is access all Sender_Duty'Class;
 
-   overriding procedure Update(this : in out Sender_Duty; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                               msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean);
+   overriding procedure Update(this : in out Sender_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                               msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean);
 
    procedure SendVNMessage(this : in out Sender_Duty; msg : VN_Message_Internal;
                            result : out VN.Communication.CAN.Logic.Transmission_Result);

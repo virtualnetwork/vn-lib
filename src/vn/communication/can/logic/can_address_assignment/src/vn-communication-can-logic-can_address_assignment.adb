@@ -14,10 +14,10 @@ with VN.Communication.CAN.Logic.Message_Utils;
 
 package body VN.Communication.CAN.Logic.CAN_Address_Assignment is
 
-   overriding procedure Update(this : in out CAN_Assignment_Master; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                               msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean) is
+   overriding procedure Update(this : in out CAN_Assignment_Master; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                               msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean) is
 
-      receivedUCID : VN.Communication.CAN.Logic.UCID;
+      receivedUCID : VN.Communication.CAN.UCID;
       bWasSMCAN    : boolean;
    begin
 
@@ -49,7 +49,7 @@ package body VN.Communication.CAN.Logic.CAN_Address_Assignment is
       end case;
    end Update;
 
-   procedure Activate(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.Logic.UCID) is
+   procedure Activate(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.UCID) is
    begin
       if this.currentState = Unactivated then
          this.currentState := Started;
@@ -57,7 +57,7 @@ package body VN.Communication.CAN.Logic.CAN_Address_Assignment is
       end if;
    end Activate;
 
-   function AssignCANAddress(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.Logic.UCID) return VN.Communication.CAN.CAN_Address_Sender is
+   function AssignCANAddress(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.UCID) return VN.Communication.CAN.CAN_Address_Sender is
       i : VN.Communication.CAN.CAN_Address_Sender := 0;
       GetCANAddress_ERROR : exception;
    begin

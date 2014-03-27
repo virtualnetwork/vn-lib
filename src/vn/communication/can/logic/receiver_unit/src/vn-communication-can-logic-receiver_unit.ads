@@ -35,8 +35,8 @@ package VN.Communication.CAN.Logic.Receiver_Unit is
    use Receive_Buffer_pack;
    type Receive_Buffer_ptr is access all Receive_Buffer_pack.Buffer(SIZE);
 
-   overriding procedure Update(this : in out Receiver_Unit_Duty; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                               msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean);
+   overriding procedure Update(this : in out Receiver_Unit_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                               msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean);
 
 
    -- shall be called after a CAN address has been obtained
@@ -74,7 +74,7 @@ private
          pendingSenders : Pending_Senders_ptr 	:= null;
       end record;
 
-   procedure DeFragment(seqNumber : Interfaces.Unsigned_16; CANMessage : VN.Communication.CAN.Logic.CAN_Message_Logical;
+   procedure DeFragment(seqNumber : Interfaces.Unsigned_16; CANMessage : VN.Communication.CAN.CAN_Message_Logical;
                           VNMessageContent : in out VN.Communication.CAN.Logic.DataArray; currentLength : out Interfaces.Unsigned_16);
 
 end VN.Communication.CAN.Logic.Receiver_Unit;

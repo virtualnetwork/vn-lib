@@ -26,8 +26,8 @@ package VN.Communication.CAN.Logic.Receiver is
    type Receiver_Duty is new VN.Communication.CAN.Logic.Duty with private;
    type Receiver_Duty_ptr is access all Receiver_Duty'Class;
 
-   overriding procedure Update(this : in out Receiver_Duty; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                               msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean);
+   overriding procedure Update(this : in out Receiver_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                               msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean);
 
    procedure ReceiveVNMessage(this : in out Receiver_Duty; msg : out VN.Communication.CAN.Logic.VN_Message_Internal;
                          msgWasReceived : out boolean);

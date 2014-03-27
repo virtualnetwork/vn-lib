@@ -16,11 +16,11 @@ with VN.Communication.CAN.Logic;
 
 package VN.Communication.CAN.Logic.CAN_Address_Reception is
 
-   type CAN_Assignment_Node(theUCID : access VN.Communication.CAN.Logic.UCID) is new VN.Communication.CAN.Logic.Duty with private;
+   type CAN_Assignment_Node(theUCID : access VN.Communication.CAN.UCID) is new VN.Communication.CAN.Logic.Duty with private;
    type CAN_Assignment_Node_ptr is access all CAN_Assignment_Node'Class;
 
-   overriding procedure Update(this : in out CAN_Assignment_Node; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                               msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean);
+   overriding procedure Update(this : in out CAN_Assignment_Node; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                               msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean);
 
    procedure Activate(this : in out CAN_Assignment_Node);
 
@@ -35,11 +35,11 @@ private
 
    TIME_TO_WAIT_FOR_ADDRESS : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(1000);
 
-   type CAN_Assignment_Node(theUCID : access VN.Communication.CAN.Logic.UCID) is new VN.Communication.CAN.Logic.Duty with
+   type CAN_Assignment_Node(theUCID : access VN.Communication.CAN.UCID) is new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	: CAN_Assignment_Node_State := Unactivated;
          timer 		: Ada.Real_Time.Time;
-         myUCID 	: VN.Communication.CAN.Logic.UCID := theUCID.all;
+         myUCID 	: VN.Communication.CAN.UCID := theUCID.all;
          myCANAddress 	: CAN_Address_Sender;
       end record;
 

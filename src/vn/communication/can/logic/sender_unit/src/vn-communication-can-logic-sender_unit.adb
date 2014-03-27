@@ -12,8 +12,8 @@ with VN.Communication.CAN.Logic.Message_Utils;
 
 package body VN.Communication.CAN.Logic.Sender_Unit is
 
-   overriding procedure Update(this : in out Sender_Unit_Duty; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                               msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean) is
+   overriding procedure Update(this : in out Sender_Unit_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                               msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean) is
       use VN.Communication.CAN.Logic;
       use Ada.Real_Time;
    begin
@@ -150,7 +150,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
 
 
    procedure Fragment(VNMessage : VN.Communication.CAN.Logic.VN_Message_Internal; seqNumber : in out Interfaces.Unsigned_16;
-                      CANMessage : in out VN.Communication.CAN.Logic.CAN_Message_Logical; isLastMessage : out  boolean) is
+                      CANMessage : in out VN.Communication.CAN.CAN_Message_Logical; isLastMessage : out  boolean) is
 
       procedure CharTou8(u8 : out Interfaces.Unsigned_8; c : in Character) is
          x : Character;
@@ -180,12 +180,12 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
          isLastMessage := true;
       end if;
 
-      CANMessage.Length := VN.Communication.CAN.Logic.DLC_Type(Last + 1);
+      CANMessage.Length := VN.Communication.CAN.DLC_Type(Last + 1);
 
       for i in 0..Last loop
          --           CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.Logic.DLC_Type(i)) :=
          --             VNMessage.Data(VNMessage.Data'First + Integer(seqNumber) * 8 + i);
-         CharTou8(CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.Logic.DLC_Type(i)),
+         CharTou8(CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)),
                   VNMessage.Data(VNMessage.Data'First + Integer(seqNumber) * 8 + i));
       end loop;
 

@@ -19,5 +19,28 @@ package VN.Communication.CAN is
 
    function "=" (Left : CAN_Address_Receiver; Right : CAN_Address_Sender) return Boolean;
 
+   function Convert (x : CAN_Address_Sender) return CAN_Address_Receiver;
+
+   type DLC_Type is range 0..8;
+   for DLC_Type'size use 4;
+
+   type CAN_message_ID is mod 2 ** 29;
+   for CAN_message_ID'size use 29;
+
+   subtype UCID is Interfaces.Unsigned_32 range 0..268435455;
+   type Byte8 is array (DLC_Type range 1..8) of Interfaces.Unsigned_8;
+
+   type CAN_Message_Logical is
+      record
+         isNormal 	: boolean; --Normal or Request CAN address
+         SenderUCID  	: UCID;    		--relevant only if isNormal=false
+         msgPrio  	: CAN_Message_Prio;	--relevant only if isNormal=true
+         msgType 	: CAN_Message_Type;	--relevant only if isNormal=true
+         Receiver 	: CAN_Address_Receiver;	--relevant only if isNormal=true
+         Sender   	: CAN_Address_Sender;	--relevant only if isNormal=true
+         Length   	: DLC_Type;
+         Data     	: Byte8;
+      end record;
+
 
 end VN.Communication.CAN;

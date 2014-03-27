@@ -9,8 +9,8 @@ with VN.Communication.CAN.Logic.Message_Utils;
 
 package body VN.Communication.CAN.Logic.CUUID_Responder is
 
-   overriding procedure Update(this : in out CUUID_Responder; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                               msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean) is
+   overriding procedure Update(this : in out CUUID_Responder; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                               msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean) is
    begin
       case this.currentState is
          when Unactivated =>

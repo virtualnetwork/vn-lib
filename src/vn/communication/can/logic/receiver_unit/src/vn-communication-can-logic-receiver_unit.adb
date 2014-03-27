@@ -14,8 +14,8 @@ with VN.Communication.CAN.Logic.Message_Utils;
 
 package body VN.Communication.CAN.Logic.Receiver_Unit is
 
-   overriding procedure Update(this : in out Receiver_Unit_Duty; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                               msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean) is
+   overriding procedure Update(this : in out Receiver_Unit_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                               msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean) is
 
       currentLength : Interfaces.Unsigned_16;
       VN_msg : VN.Communication.CAN.Logic.VN_Message_Internal;
@@ -39,7 +39,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
             this.sequenceNumber := 0;
             this.currentState := Transmitting;
 
-            VN.Communication.CAN.Logic.Message_Utils.FlowControlToMessage(msgOut, VN.Communication.CAN.Logic.Convert(this.sender),
+            VN.Communication.CAN.Logic.Message_Utils.FlowControlToMessage(msgOut, VN.Communication.CAN.Convert(this.sender),
                                                         this.myCANAddress, this.useFlowControl,
                                                         this.blockSize);
 
@@ -67,7 +67,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
                   if this.useFlowControl and this.blockCount >= this.blockSize and this.sequenceNumber < this.numMessages then
 
-                     VN.Communication.CAN.Logic.Message_Utils.FlowControlToMessage(msgOut, VN.Communication.CAN.Logic.Convert(this.sender),
+                     VN.Communication.CAN.Logic.Message_Utils.FlowControlToMessage(msgOut, VN.Communication.CAN.Convert(this.sender),
                                                                  this.myCANAddress, false, this.blockSize);
                      bWillSend := true;
                      this.blockCount := 0;
@@ -81,7 +81,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
                      --write the VN message to the receive buffer:
                      VN_msg.Data     := this.receivedData;
                      VN_msg.NumBytes := currentLength;
-                     VN_msg.Receiver := VN.Communication.CAN.Logic.Convert(this.myCANAddress);
+                     VN_msg.Receiver := VN.Communication.CAN.Convert(this.myCANAddress);
                      VN_msg.Sender   := this.sender;
 
 --                       this.receiveBuffer.Append(VN_msg);
@@ -144,7 +144,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
       return this.Sender;
    end Sender;
 
-   procedure DeFragment(seqNumber : Interfaces.Unsigned_16; CANMessage : VN.Communication.CAN.Logic.CAN_Message_Logical;
+   procedure DeFragment(seqNumber : Interfaces.Unsigned_16; CANMessage : VN.Communication.CAN.CAN_Message_Logical;
                         VNMessageContent : in out VN.Communication.CAN.Logic.DataArray; currentLength : out Interfaces.Unsigned_16) is
 
       procedure u8ToChar(c : out Character; u8 : in Interfaces.Unsigned_8) is

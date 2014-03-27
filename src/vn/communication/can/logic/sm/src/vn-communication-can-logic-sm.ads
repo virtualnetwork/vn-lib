@@ -21,7 +21,7 @@ with Buffers;
 
 package VN.Communication.CAN.Logic.SM is
 
-   package CAN_Message_Buffers is new Buffers(VN.Communication.CAN.Logic.CAN_Message_Logical);
+   package CAN_Message_Buffers is new Buffers(VN.Communication.CAN.CAN_Message_Logical);
    use CAN_Message_Buffers;
 
    type Unit is
@@ -34,7 +34,7 @@ package VN.Communication.CAN.Logic.SM is
    package Unit_Buffers is new Buffers(Unit);
    use Unit_Buffers;
 
-   type SM_Duty(theUCID : access VN.Communication.CAN.Logic.UCID; theCUUID : access VN.Communication.CAN.Logic.CUUID) is
+   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.Communication.CAN.Logic.CUUID) is
      new Ada.Finalization.Limited_Controlled with private;
 
    type SM_Duty_ptr is access all SM_Duty;
@@ -74,10 +74,10 @@ private
    NUM_DUTIES : constant integer := 7;
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
-   type SM_Duty(theUCID : access VN.Communication.CAN.Logic.UCID; theCUUID : access VN.Communication.CAN.Logic.CUUID) is new Ada.Finalization.Limited_Controlled with
+   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.Communication.CAN.Logic.CUUID) is new Ada.Finalization.Limited_Controlled with
       record
 
-         myUCID  : VN.Communication.CAN.Logic.UCID  := theUCID.all;
+         myUCID  : VN.Communication.CAN.UCID  := theUCID.all;
          myCUUID : VN.Communication.CAN.Logic.CUUID := theCUUID.all;
 
          masterNegotiation : VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty_ptr :=

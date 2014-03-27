@@ -19,8 +19,8 @@ package VN.Communication.CAN.Logic.CUUID_Handler is
    type CUUID_Handler is new VN.Communication.CAN.Logic.Duty with private;
    type CUUID_Handler_ptr is access all CUUID_Handler'Class;
 
-   overriding procedure Update(this : in out CUUID_Handler; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                               msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean);
+   overriding procedure Update(this : in out CUUID_Handler; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                               msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean);
 
    procedure Activate(this : in out CUUID_Handler; theCUUID : VN.Communication.CAN.Logic.CUUID;
                       CANAddress : VN.Communication.CAN.CAN_Address_Sender);

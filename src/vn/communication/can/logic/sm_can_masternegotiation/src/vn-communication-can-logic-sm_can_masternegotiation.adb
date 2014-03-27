@@ -13,8 +13,8 @@ use Ada.Real_Time;
 
 package body VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation is
 
-   procedure Update(this : in out SM_CAN_MN_Duty; msgIn : VN.Communication.CAN.Logic.CAN_Message_Logical; bMsgReceived : boolean;
-                    msgOut : out VN.Communication.CAN.Logic.CAN_Message_Logical; bWillSend : out boolean) is
+   procedure Update(this : in out SM_CAN_MN_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+                    msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean) is
 
       bHasMessage : Boolean := bMsgReceived;
    begin
@@ -46,7 +46,7 @@ package body VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation is
                   return;
                elsif not msgIn.isNormal then
                   declare
-                     theUCID : VN.Communication.CAN.Logic.UCID;
+                     theUCID : VN.Communication.CAN.UCID;
                      bIs_SM_CAN : boolean;
                   begin
                      VN.Communication.CAN.Logic.Message_Utils.RequestCANAddressFromMessage(msgIn, theUCID, bIs_SM_CAN);
