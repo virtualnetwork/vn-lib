@@ -1,0 +1,10 @@
+with "../logic.gpr";
+
+project Message_Utils is
+
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+  -- for Main use ("main.adb");
+
+end Message_Utils;
+

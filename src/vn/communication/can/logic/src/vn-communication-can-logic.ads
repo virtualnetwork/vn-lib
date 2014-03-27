@@ -1,0 +1,114 @@
+-- Copyright (c) 2014 All Rights Reserved
+-- Author: Nils Brynedal Ignell
+-- Date: 2014-XX-XX
+-- Summary:
+-- Definition of lowlevel datatypes, constants and operations as well as
+-- definition of abstract base class Duty. Duty is a base class for
+-- each of the state machines that constitute the implementation of
+-- the VN-CAN protocol.
+
+
+with Interfaces;
+use Interfaces;
+
+package VN.Communication.CAN.Logic is
+   OFFSET_CAN_PRIORITY 	: constant Natural := 22;
+   OFFSET_CAN_TYPE	: constant Natural := 15;
+   OFFSET_CAN_RECEIVER 	: constant Natural := 7;
+   OFFSET_CAN_SENDER 	: constant Natural := 0;
+
+   type Transmission_Result is (TRANSMISSION_OK, BUFFER_FULL);
+
+   type CAN_Message_Prio is mod 2 ** 6;
+   for CAN_Message_Prio'size use 6;
+
+   type CAN_Message_Type is mod 2 ** 7;
+   for CAN_Message_Type'size use 7;
+
+   type CAN_Address_Sender is mod 2 ** 7;
+   for CAN_Address_Sender'size use 7;
+
+   type CAN_Address_Receiver is mod 2 ** 8;
+   for CAN_Address_Receiver'size use 8;
+
+   function "=" (Left : CAN_Address_Sender; Right : CAN_Address_Receiver) return Boolean;
+
+   function "=" (Left : CAN_Address_Receiver; Right : CAN_Address_Sender) return Boolean;
+
+   function Convert (x : CAN_Address_Sender) return CAN_Address_Receiver;
+
+   GIVE_DEBUG_OUTPUT : constant integer := 5;
+   procedure DebugOutput(str : String; level : Integer; newLine : boolean := true);
+
+   type DLC_Type is range 0..8;
+   for DLC_Type'size use 4;
+
+   type CAN_message_ID is mod 2 ** 29;
+   for CAN_message_ID'size use 29;
+
+   subtype UCID is Interfaces.Unsigned_32 range 0..268435455;
+
+   type CUUID is array(1..16) of Interfaces.Unsigned_8;
+
+   subtype Logical_Address is Interfaces.Unsigned_32;
+
+
+   type Byte8 is array (DLC_Type range 1..8) of Interfaces.Unsigned_8;
+   type CAN_Message_Physical is
+      record
+         ID     : CAN_message_ID;
+         Length : DLC_Type;
+         Data   : Byte8;
+      end record;
+
+   type CAN_Message_Logical is
+      record
+         isNormal 	: boolean; --Normal or Request CAN address
+         SenderUCID  	: UCID;    		--relevant only if isNormal=false
+         msgPrio  	: CAN_Message_Prio;	--relevant only if isNormal=true
+         msgType 	: CAN_Message_Type;	--relevant only if isNormal=true
+         Receiver 	: CAN_Address_Receiver;	--relevant only if isNormal=true
+         Sender   	: CAN_Address_Sender;	--relevant only if isNormal=true
+         Length   	: DLC_Type;
+         Data     	: Byte8;
+      end record;
+
+   ASSIGN_CAN_ADDRESS 	: CAN_Message_Type := 0;
+   CAN_MASTER_ASSIGNED 	: CAN_Message_Type := 1;
+   ADDRESS_QUESTION 	: CAN_Message_Type := 2;
+   ADDRESS_ANSWER 	: CAN_Message_Type := 3;
+   PING 		: CAN_Message_Type := 4;
+   PONG 		: CAN_Message_Type := 5;
+   START_TRANSMISSION 	: CAN_Message_Type := 6;
+   FLOW_CONTROL 	: CAN_Message_Type := 7;
+   TRANSMISSION 	: CAN_Message_Type := 8;
+   REQUEST_CUUID	: CAN_Message_Type := 9;
+   FIRST_CUUID_HALF 	: CAN_Message_Type := 10;
+   SECOND_CUUID_HALF 	: CAN_Message_Type := 11;
+   COMPONENT_TYPE	: CAN_Message_Type := 12;
+   ASSIGN_LOGICAL_ADDR	: CAN_Message_Type := 13;
+
+--     type DataArray is array(1..10) of Interfaces.Unsigned_8;
+   type DataArray is new String(1..50);
+
+   type VN_Message_Internal is
+      record
+         Data 		: DataArray;
+         NumBytes	: Interfaces.Unsigned_16;
+         Receiver 	: CAN_Address_Receiver;
+         Sender		: CAN_Address_Sender;
+      end record;
+
+   type Duty is abstract tagged private;
+
+   procedure Update(me : in out Duty; msg : CAN_Message_Logical; bMsgReceived : boolean;
+                    msgOut : out CAN_Message_Logical; bWillSend : out boolean) is abstract;
+
+   type Duty_Ptr is access all Duty'Class;
+
+private
+     type Duty is abstract tagged
+      record
+         null;
+      end record;
+end VN.Communication.CAN.Logic;

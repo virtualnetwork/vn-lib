@@ -1,5 +1,6 @@
 with "../../../vn.gpr";
 with "../../communication.gpr";
+with "../can.gpr";
 
 project Logic is
     for Source_Dirs use ("src");
