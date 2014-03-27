@@ -30,7 +30,7 @@ package VN.Communication.CAN.Logic.Sender is
                                msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean);
 
    procedure SendVNMessage(this : in out Sender_Duty; msg : VN_Message_Internal;
-                           result : out VN.Communication.CAN.Logic.Transmission_Result);
+                           result : out VN.Send_Status);
 
    procedure Activate(this : in out Sender_Duty; address : VN.Communication.CAN.CAN_Address_Sender);
 

@@ -13,12 +13,12 @@ package VN.Communication is
 
    procedure Send(This: in out Com;
                   Message: in VN.Message.VN_Message_Basic;
-                  Status: out VN.Message.Send_Status)
+                  Status: out VN.Send_Status)
                         is abstract;
 
    procedure Receive( This: in out Com;
                      Message: out VN.Message.VN_Message_Basic;
-                     Status: out VN.Message.Receive_Status)
+                     Status: out VN.Receive_Status)
                         is abstract;
 --private
 

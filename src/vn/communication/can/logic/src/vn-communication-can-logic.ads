@@ -14,7 +14,7 @@ use Interfaces;
 package VN.Communication.CAN.Logic is
 
    -- Följande borde flyttas: ---
-   type Transmission_Result is (TRANSMISSION_OK, BUFFER_FULL);
+ --  type Transmission_Result is (TRANSMISSION_OK, BUFFER_FULL);
 
 --     type CUUID is array(1..16) of Interfaces.Unsigned_8;
 --     subtype Logical_Address is Interfaces.Unsigned_32;

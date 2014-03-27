@@ -29,13 +29,13 @@ package VN.Message is
   -- type VN_Component_Type is mod 2 ** 8;  
 
    -- Communication types
-   type Send_Status is (OK,
-                        ERROR_UNKNOWN,
-                        ERROR_BUFFFER_OVERFLOW,
-                        ERROR_NO_ADDRESS_RECEIVED);
+--   type Send_Status is (OK, -- MOVED TO VN.ADS!!!
+--                        ERROR_UNKNOWN,
+--                        ERROR_BUFFFER_OVERFLOW,
+--                        ERROR_NO_ADDRESS_RECEIVED);
 
-   type Receive_Status is (OK,
-                           ERROR_UNKNOWN);
+--   type Receive_Status is (OK, -- MOVED TO VN.ADS!!!
+--                           ERROR_UNKNOWN);
 
    -- VN_Message
    type VN_Message_Basic is tagged private;

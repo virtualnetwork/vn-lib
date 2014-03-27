@@ -86,13 +86,14 @@ package body VN.Communication.CAN.Logic.Sender is
    end Activate;
 
    procedure SendVNMessage(this : in out Sender_Duty; msg : VN_Message_Internal;
-                           result : out VN.Communication.CAN.Logic.Transmission_Result) is
+                           result : out VN.Send_Status) is
    begin
 
       if Send_Buffer_pack.Full(this.sendBuffer) then
-         result := BUFFER_FULL;
+         result := VN.ERROR_BUFFER_FULL;
       else
          Send_Buffer_pack.Insert(msg, this.sendBuffer);
+         result := VN.OK;
       end if;
    end SendVNMessage;
 

@@ -45,7 +45,7 @@ package VN.Communication.CAN.Logic.SM is
    procedure Discover(this : in out SM_Duty; discoveredUnits : out Unit_Buffers.Buffer);
 
    procedure Send(this : in out SM_Duty; msg : VN.Communication.CAN.Logic.VN_Message_Internal;
-                                result : out VN.Communication.CAN.Logic.Transmission_Result);
+                                result : out VN.Send_Status);
 
    procedure Receive(this : in out SM_Duty; msg : out VN.Communication.CAN.Logic.VN_Message_Internal;
                      hasReceived : out boolean);
