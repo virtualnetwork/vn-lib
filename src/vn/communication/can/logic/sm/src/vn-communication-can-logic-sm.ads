@@ -27,14 +27,14 @@ package VN.Communication.CAN.Logic.SM is
    type Unit is
       record
          unitCANAddress : VN.Communication.CAN.CAN_Address_Sender;
-         unitCUUID 	: VN.Communication.CAN.Logic.CUUID;
+         unitCUUID 	: VN.VN_CUUID;
          isSM_CAN	: Boolean;
       end record;
 
    package Unit_Buffers is new Buffers(Unit);
    use Unit_Buffers;
 
-   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.Communication.CAN.Logic.CUUID) is
+   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is
      new Ada.Finalization.Limited_Controlled with private;
 
    type SM_Duty_ptr is access all SM_Duty;
@@ -54,15 +54,15 @@ package VN.Communication.CAN.Logic.SM is
 
 
    --THIS IS JUST TESTING FUNCTIONALLITY FOR NODES, NOT SM-CANs
---     procedure GetLogicalAddress(this : in out SM_Duty; LogicalAddress : out VN.Communication.CAN.Logic.Logical_Address;
+--     procedure GetLogicalAddress(this : in out SM_Duty; LogicalAddress : out VN.VN_Logical_Address;
 --                                 isAssigned : out boolean);
 --
---     procedure SetMyAddress(this : in out SM_Duty; LogicalAddress : VN.Communication.CAN.Logic.Logical_Address);
+--     procedure SetMyAddress(this : in out SM_Duty; LogicalAddress : VN.VN_Logical_Address);
 --
 --     procedure Assign(this : in out SM_Duty; CANAddress : CAN_Address_Sender;
---                      LogicalAddress : VN.Communication.CAN.Logic.Logical_Address);
+--                      LogicalAddress : VN.VN_Logical_Address);
 --
---     procedure AddressQuestion(this : in out SM_Duty; LogicalAddress : VN.Communication.CAN.Logic.Logical_Address;
+--     procedure AddressQuestion(this : in out SM_Duty; LogicalAddress : VN.VN_Logical_Address;
 --                               CANAddress : out CAN_Address_Sender; wasFound : out boolean);
 
 
@@ -74,11 +74,11 @@ private
    NUM_DUTIES : constant integer := 7;
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
-   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.Communication.CAN.Logic.CUUID) is new Ada.Finalization.Limited_Controlled with
+   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is new Ada.Finalization.Limited_Controlled with
       record
 
          myUCID  : VN.Communication.CAN.UCID  := theUCID.all;
-         myCUUID : VN.Communication.CAN.Logic.CUUID := theCUUID.all;
+         myCUUID : VN.VN_CUUID := theCUUID.all;
 
          masterNegotiation : VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty_ptr :=
            new VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);

@@ -31,20 +31,20 @@ package VN.Communication.CAN.Logic.Message_Utils is
 
 
    procedure AddressQuestionToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
-                                      sender : VN.Communication.CAN.CAN_Address_Sender; logicalAddress : VN.Communication.CAN.Logic.Logical_Address; prio : CAN_Message_Prio);
+                                      sender : VN.Communication.CAN.CAN_Address_Sender; logicalAddress : VN.VN_Logical_Address; prio : CAN_Message_Prio);
 
-   procedure AddressQuestionFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.Communication.CAN.Logic.Logical_Address);
+   procedure AddressQuestionFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.VN_Logical_Address);
 
    procedure AddressAnswerToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
-                                    CANAddress : VN.Communication.CAN.CAN_Address_Sender; logicalAddress : VN.Communication.CAN.Logic.Logical_Address; prio : CAN_Message_Prio);
+                                    CANAddress : VN.Communication.CAN.CAN_Address_Sender; logicalAddress : VN.VN_Logical_Address; prio : CAN_Message_Prio);
 
    procedure AddressAnswerFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; CANAddress : out VN.Communication.CAN.CAN_Address_Sender;
-                                      logicalAddress : out VN.Communication.CAN.Logic.Logical_Address);
+                                      logicalAddress : out VN.VN_Logical_Address);
 
    procedure AssignLogicalAddressToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
-                                           prio : CAN_Message_Prio; logicalAddress : VN.Communication.CAN.Logic.Logical_Address);
+                                           prio : CAN_Message_Prio; logicalAddress : VN.VN_Logical_Address);
 
-   procedure AssignLogicalAddressFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.Communication.CAN.Logic.Logical_Address);
+   procedure AssignLogicalAddressFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.VN_Logical_Address);
 
    procedure ComponentTypeToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; sender : VN.Communication.CAN.CAN_Address_Sender; prio : CAN_Message_Prio; isSM_CAN : boolean);
 
@@ -53,9 +53,9 @@ package VN.Communication.CAN.Logic.Message_Utils is
    procedure RequestCUUIDToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; sender : VN.Communication.CAN.CAN_Address_Sender; prio : CAN_Message_Prio);
 
    procedure CUUIDHalfToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; sender : VN.Communication.CAN.CAN_Address_Sender;
-                                theCUUID : VN.Communication.CAN.Logic.CUUID; firstHalf : Boolean);
+                                theCUUID : VN.VN_CUUID; firstHalf : Boolean);
 
-   procedure CUUIDHalfFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; theCUUID : in out VN.Communication.CAN.Logic.CUUID; firstHalf : Boolean);
+   procedure CUUIDHalfFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; theCUUID : in out VN.VN_CUUID; firstHalf : Boolean);
 
    procedure TransmissionToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
                                         sender : VN.Communication.CAN.CAN_Address_Sender);

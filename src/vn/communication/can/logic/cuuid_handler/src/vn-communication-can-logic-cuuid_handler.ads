@@ -22,17 +22,17 @@ package VN.Communication.CAN.Logic.CUUID_Handler is
    overriding procedure Update(this : in out CUUID_Handler; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
                                msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean);
 
-   procedure Activate(this : in out CUUID_Handler; theCUUID : VN.Communication.CAN.Logic.CUUID;
+   procedure Activate(this : in out CUUID_Handler; theCUUID : VN.VN_CUUID;
                       CANAddress : VN.Communication.CAN.CAN_Address_Sender);
 
    procedure ReadEntry(this : in out CUUID_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
-                       unitCUUID : out VN.Communication.CAN.Logic.CUUID; isSM_CAN : out boolean; isSet : out Boolean);
+                       unitCUUID : out VN.VN_CUUID; isSM_CAN : out boolean; isSet : out Boolean);
 
 private
 
    type Unit_Entry is
       record
-         unitCUUID : VN.Communication.CAN.Logic.CUUID;
+         unitCUUID : VN.VN_CUUID;
          isSM_CAN  : Boolean;
          isFirstCUUIDHalfSet  : Boolean := false;
          isSecondCUUIDHalfSet : Boolean := false;
@@ -48,7 +48,7 @@ private
    type CUUID_Handler is new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	: CUUID_Responder_State := Unactivated;
-         myCUUID 	: VN.Communication.CAN.Logic.CUUID;
+         myCUUID 	: VN.VN_CUUID;
          myCANAddress   : VN.Communication.CAN.CAN_Address_Sender;
          units		: Unit_Table;
          hasRequested   : boolean := false;

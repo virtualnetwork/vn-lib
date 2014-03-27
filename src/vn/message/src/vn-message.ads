@@ -13,7 +13,7 @@ package VN.Message is
    type VN_Checksum is mod 2 ** 16;
 
    -- VN_Header parts
-   type VN_Logical_Address is mod 2 ** 32;
+ --  type VN_Logical_Address is mod 2 ** 32; -- MOVED TO VN.ADS!!!
    type VN_Version is mod 2 ** 8;
    type VN_Priority is mod 2 ** 8;
    type VN_Length is mod 2 ** 16;
@@ -24,9 +24,9 @@ package VN.Message is
    type VN_Status is mod 2 ** 8;
 
    -- VN_Payload parts in derived types of VN_Mesage
-   type VN_CUUID is mod 2 ** 64; -- FIX: Should be 128 bits.
-   -- type VN_CUUID is mod 2 ** 128; -- TODO: How to represent 128 bits properly.
-   type VN_Component_Type is mod 2 ** 8;
+  -- type VN_CUUID is mod 2 ** 64; -- FIX: Should be 128 bits.  -- MOVED TO VN.ADS!!!
+   -- type VN_CUUID is mod 2 ** 128; -- TODO: How to represent 128 bits properly. 
+  -- type VN_Component_Type is mod 2 ** 8;  
 
    -- Communication types
    type Send_Status is (OK,

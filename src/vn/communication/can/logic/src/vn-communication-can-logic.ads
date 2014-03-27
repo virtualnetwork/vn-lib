@@ -16,8 +16,8 @@ package VN.Communication.CAN.Logic is
    -- Följande borde flyttas: ---
    type Transmission_Result is (TRANSMISSION_OK, BUFFER_FULL);
 
-   type CUUID is array(1..16) of Interfaces.Unsigned_8;
-   subtype Logical_Address is Interfaces.Unsigned_32;
+--     type CUUID is array(1..16) of Interfaces.Unsigned_8;
+--     subtype Logical_Address is Interfaces.Unsigned_32;
 
    --------------------------------------
 
@@ -28,12 +28,6 @@ package VN.Communication.CAN.Logic is
    OFFSET_CAN_TYPE	: constant Natural := 15;
    OFFSET_CAN_RECEIVER 	: constant Natural := 7;
    OFFSET_CAN_SENDER 	: constant Natural := 0;
-
-
-
-
-
-
 
    procedure DebugOutput(str : String; level : Integer; newLine : boolean := true);
 

@@ -11,7 +11,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
 
 
    procedure AddressQuestionToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
-                                      sender : VN.Communication.CAN.CAN_Address_Sender; logicalAddress : VN.Communication.CAN.Logic.Logical_Address;
+                                      sender : VN.Communication.CAN.CAN_Address_Sender; logicalAddress : VN.VN_Logical_Address;
                                       prio : VN.Communication.CAN.CAN_Message_Prio) is
    begin
       msg.isNormal := true;
@@ -24,20 +24,20 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       U16ToData(Interfaces.Unsigned_16(logicalAddress), msg.Data);
    end AddressQuestionToMessage;
 
-   procedure AddressQuestionFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.Communication.CAN.Logic.Logical_Address) is
+   procedure AddressQuestionFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.VN_Logical_Address) is
       INCORRECT_MESSAGE_AddressQuestion : exception;
       temp : Interfaces.Unsigned_16;
    begin
       if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ADDRESS_QUESTION and msg.Length = 4 then
          DataToU16(msg.Data, temp);
-         logicalAddress := VN.Communication.CAN.Logic.Logical_Address(temp);
+         logicalAddress := VN.VN_Logical_Address(temp);
       else
          raise INCORRECT_MESSAGE_AddressQuestion;
       end if;
    end AddressQuestionFromMessage;
 
    procedure AddressAnswerToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
-                                    CANAddress : VN.Communication.CAN.CAN_Address_Sender; logicalAddress : VN.Communication.CAN.Logic.Logical_Address; prio : VN.Communication.CAN.CAN_Message_Prio) is
+                                    CANAddress : VN.Communication.CAN.CAN_Address_Sender; logicalAddress : VN.VN_Logical_Address; prio : VN.Communication.CAN.CAN_Message_Prio) is
    begin
       msg.isNormal := true;
       msg.msgPrio  := prio;
@@ -52,13 +52,13 @@ package body VN.Communication.CAN.Logic.Message_Utils is
 
 
    procedure AddressAnswerFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; CANAddress : out VN.Communication.CAN.CAN_Address_Sender;
-                                      logicalAddress : out VN.Communication.CAN.Logic.Logical_Address) is
+                                      logicalAddress : out VN.VN_Logical_Address) is
       INCORRECT_MESSAGE_AddressAnswer : exception;
       temp : Interfaces.Unsigned_16;
    begin
       if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ADDRESS_ANSWER and msg.Length = 5 then
          DataToU16(msg.Data, temp);
-         logicalAddress := VN.Communication.CAN.Logic.Logical_Address(temp);
+         logicalAddress := VN.VN_Logical_Address(temp);
 
          CANAddress := VN.Communication.CAN.CAN_Address_Sender(msg.Data(msg.Data'First + 4));
       else
@@ -68,7 +68,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
 
 
    procedure AssignLogicalAddressToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
-                                           prio : VN.Communication.CAN.CAN_Message_Prio; logicalAddress : VN.Communication.CAN.Logic.Logical_Address) is
+                                           prio : VN.Communication.CAN.CAN_Message_Prio; logicalAddress : VN.VN_Logical_Address) is
    begin
       msg.isNormal := true;
       msg.msgPrio  := prio;
@@ -81,13 +81,13 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    end AssignLogicalAddressToMessage;
 
 
-   procedure AssignLogicalAddressFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.Communication.CAN.Logic.Logical_Address) is
+   procedure AssignLogicalAddressFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.VN_Logical_Address) is
       INCORRECT_MESSAGE_AssignLogicalAddress : exception;
       temp : Interfaces.Unsigned_16;
    begin
       if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ASSIGN_LOGICAL_ADDR and msg.Length = 4 then
          DataToU16(msg.Data, temp);
-         logicalAddress := VN.Communication.CAN.Logic.Logical_Address(temp);
+         logicalAddress := VN.VN_Logical_Address(temp);
       else
          raise INCORRECT_MESSAGE_AssignLogicalAddress;
       end if;
@@ -137,7 +137,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
 
 
    procedure CUUIDHalfToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical;  sender : VN.Communication.CAN.CAN_Address_Sender;
-                                theCUUID : VN.Communication.CAN.Logic.CUUID; firstHalf : Boolean) is
+                                theCUUID : VN.VN_CUUID; firstHalf : Boolean) is
       offset : VN.Communication.CAN.DLC_Type;
    begin
       msg.isNormal := true;
@@ -160,7 +160,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    end CUUIDHalfToMessage;
 
 
-   procedure CUUIDHalfFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; theCUUID : in out VN.Communication.CAN.Logic.CUUID; firstHalf : Boolean) is
+   procedure CUUIDHalfFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; theCUUID : in out VN.VN_CUUID; firstHalf : Boolean) is
 
       INCORRECT_MESSAGE_CUUID_Half : exception;
       offset : VN.Communication.CAN.DLC_Type;
