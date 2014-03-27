@@ -100,7 +100,25 @@ package body VN.Communication.CAN.CAN_Interface is
 
       procedure Init is
       begin
-         null;
+         case data.unitType is
+            when SM_CAN =>
+               if isInitialized then
+                  data.SMDuty.Init;
+               else
+                  isInitialized := true;
+                  Init;
+                  data.SMDuty.Init;
+               end if;
+
+            when Node =>
+               if isInitialized then
+                  data.nodeDuty.Init;
+               else
+                  isInitialized := true;
+                  Init;
+                  data.nodeDuty.Init;
+               end if;
+         end case;
       end Init;
 
    end CAN_Interface_Type;

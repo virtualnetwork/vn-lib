@@ -170,7 +170,7 @@ package body VN.Communication.CAN.Logic.SM is
 --     end AddressQuestion;
 
 
-   procedure Initialize (this : in out SM_Duty) is
+   procedure Init(this : in out SM_Duty) is
    begin
       VN.Communication.CAN.Logic.DebugOutput("SM_Duty initialized", 4);
 
@@ -181,7 +181,7 @@ package body VN.Communication.CAN.Logic.SM is
                          VN.Communication.CAN.Logic.Duty_Ptr(this.receiver),
                          VN.Communication.CAN.Logic.Duty_Ptr(this.cuuidResponder),
                          VN.Communication.CAN.Logic.Duty_Ptr(this.cuuidHandler));
-   end Initialize;
+   end Init;
 
 end VN.Communication.CAN.Logic.SM;
 

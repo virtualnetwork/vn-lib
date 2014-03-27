@@ -16,7 +16,6 @@ with VN.Communication.CAN.Logic.Receiver;
 with VN.Communication.CAN.Logic.CUUID_Responder;
 with VN.Communication.CAN.Logic.CUUID_Handler;
 
-with Ada.Finalization;
 with Buffers;
 
 package VN.Communication.CAN.Logic.SM is
@@ -34,8 +33,7 @@ package VN.Communication.CAN.Logic.SM is
    package Unit_Buffers is new Buffers(Unit);
    use Unit_Buffers;
 
-   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is
-     new Ada.Finalization.Limited_Controlled with private;
+   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is private;
 
    type SM_Duty_ptr is access all SM_Duty;
 
@@ -53,6 +51,8 @@ package VN.Communication.CAN.Logic.SM is
    procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender; isAssigned : out boolean);
 
 
+   procedure Init(this : in out SM_Duty); -- has to be called before any other procedure
+
    --THIS IS JUST TESTING FUNCTIONALLITY FOR NODES, NOT SM-CANs
 --     procedure GetLogicalAddress(this : in out SM_Duty; LogicalAddress : out VN.VN_Logical_Address;
 --                                 isAssigned : out boolean);
@@ -68,13 +68,10 @@ package VN.Communication.CAN.Logic.SM is
 
 private
 
-    overriding procedure Initialize (this : in out SM_Duty);
-    overriding procedure Finalize   (this : in out SM_Duty) is null;
-
    NUM_DUTIES : constant integer := 7;
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
-   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is new Ada.Finalization.Limited_Controlled with
+   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is
       record
 
          myUCID  : VN.Communication.CAN.UCID  := theUCID.all;
