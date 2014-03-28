@@ -120,16 +120,22 @@ package body VN.Communication.CAN.Logic.SM is
       end loop;
    end Discover;
 
-   procedure Send(this : in out SM_Duty; msg : VN.Communication.CAN.Logic.VN_Message_Internal;
+   procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
                   result : out VN.Send_Status) is
+      internal : VN.Communication.CAN.Logic.VN_Message_Internal;
    begin
-      this.sender.SendVNMessage(msg, result);
+      internal.Data := msg;
+      this.sender.SendVNMessage(internal, result);
    end Send;
 
-   procedure Receive(this : in out SM_Duty; msg : out VN.Communication.CAN.Logic.VN_Message_Internal;
+   procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
                      hasReceived : out boolean) is
+      internal : VN.Communication.CAN.Logic.VN_Message_Internal;
    begin
-      this.receiver.ReceiveVNMessage(msg, hasReceived);
+      this.receiver.ReceiveVNMessage(internal, hasReceived);
+      if hasReceived then
+         msg := internal.Data;
+      end if;
    end Receive;
 
    procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender;
