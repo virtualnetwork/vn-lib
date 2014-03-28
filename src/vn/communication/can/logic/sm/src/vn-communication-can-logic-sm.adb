@@ -129,11 +129,14 @@ package body VN.Communication.CAN.Logic.SM is
    end Send;
 
    procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
-                     hasReceived : out boolean) is
+                     status : out VN.Receive_Status) is
       internal : VN.Communication.CAN.Logic.VN_Message_Internal;
    begin
-      this.receiver.ReceiveVNMessage(internal, hasReceived);
-      if hasReceived then
+      this.receiver.ReceiveVNMessage(internal, status);
+
+      --TODO, this will need to be updated if more options for VN.Receive_Status are added:
+      if status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
+        status = VN.MSG_RECEIVED_MORE_AVAILABLE then
          msg := internal.Data;
       end if;
    end Receive;

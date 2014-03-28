@@ -45,7 +45,7 @@ package VN.Communication.CAN.Logic.SM is
                                 result : out VN.Send_Status);
 
    procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
-                     hasReceived : out boolean);
+                     status : out VN.Receive_Status);
 
    procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender; isAssigned : out boolean);
 

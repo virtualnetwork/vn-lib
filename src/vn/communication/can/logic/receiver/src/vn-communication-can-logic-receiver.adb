@@ -65,15 +65,20 @@ package body VN.Communication.CAN.Logic.Receiver is
    end Update;
 
    procedure ReceiveVNMessage(this : in out Receiver_Duty; msg : out VN_Message_Internal;
-                              msgWasReceived : out boolean) is
+                              status : out VN.Receive_Status) is
    begin
       if Receive_Buffer_pack.Empty(this.receiveBuffer.all) then --this.receiveBuffer.Is_Empty then
-         msgWasReceived := false;
+         status := VN.NO_MSG_RECEIVED;
       else
-         msgWasReceived := true;
          Receive_Buffer_pack.Remove(msg, this.receiveBuffer.all);
+
+         if Receive_Buffer_pack.Empty(this.receiveBuffer.all) then
+            status := VN.MSG_RECEIVED_NO_MORE_AVAILABLE;
+         else
+            status := VN.MSG_RECEIVED_MORE_AVAILABLE;
 --           msg := this.receiveBuffer.First_Element;
 --           this.receiveBuffer.Delete_First;
+         end if;
       end if;
    end ReceiveVNMessage;
 

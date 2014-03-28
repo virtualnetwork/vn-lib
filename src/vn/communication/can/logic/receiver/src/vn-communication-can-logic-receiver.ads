@@ -30,7 +30,7 @@ package VN.Communication.CAN.Logic.Receiver is
                                msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean);
 
    procedure ReceiveVNMessage(this : in out Receiver_Duty; msg : out VN.Communication.CAN.Logic.VN_Message_Internal;
-                         msgWasReceived : out boolean);
+                              status : out VN.Receive_Status);
 
    procedure Activate(this : in out Receiver_Duty; address : VN.Communication.CAN.CAN_Address_Sender);
 
