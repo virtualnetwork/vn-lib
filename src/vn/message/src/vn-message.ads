@@ -1,4 +1,8 @@
-with Ada.Finalization;
+--  with Ada.Finalization;
+
+with Interfaces;	--for testing with temporary VN_Message
+--  with VN.Communication.CAN; --for testing with temporary VN_Message
+
 
 package VN.Message is
 
@@ -37,8 +41,27 @@ package VN.Message is
 --   type Receive_Status is (OK, -- MOVED TO VN.ADS!!!
 --                           ERROR_UNKNOWN);
 
-   -- VN_Message
-   type VN_Message_Basic is tagged private;
+   -- VN_Message:
+      type VN_Message_Basic is tagged private;
+   
+ -- <for testing with temporary VN_Message: >-------------
+--     type CAN_Address_Sender is mod 2 ** 7;
+--     for CAN_Address_Sender'size use 7;
+--  
+--     type CAN_Address_Receiver is mod 2 ** 8;
+--     for CAN_Address_Receiver'size use 8;
+--  
+ --     type DataArray is new String(1..50);
+ 
+--     type VN_Message_Basic is 
+--        record
+--           Data 		: DataArray;
+--           NumBytes	: Interfaces.Unsigned_16;
+--           Receiver 	: CAN_Address_Receiver;
+--           Sender		: CAN_Address_Sender;
+--        end record;
+
+ -- </ for testing with temporary VN_Message >----------------------
 
    -- VN_Version
    function Get_Version(Message: VN_Message_Basic) return VN_Version;
@@ -49,7 +72,7 @@ package VN.Message is
    procedure Update_Checksum(Message: in out VN_Message_Basic);
 
 private
-   type VN_Message_Basic is new Ada.Finalization.Controlled with
+     type VN_Message_Basic is tagged --new Ada.Finalization.Controlled with
       record
          Header   : VN_Header;
          Checksum : VN_Checksum;
@@ -69,10 +92,10 @@ private
          Value          : Positive := 1;
       end record;
 
-   overriding
-   procedure Initialize(This: in out VN_Message_Basic) is null;
-
-   overriding
-   procedure Finalize(This: in out VN_Message_Basic) is null;
+--     overriding
+--     procedure Initialize(This: in out VN_Message_Basic) is null;
+--  
+--     overriding
+--     procedure Finalize(This: in out VN_Message_Basic) is null;
 
 end VN.Message;

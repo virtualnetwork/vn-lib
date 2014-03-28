@@ -4,11 +4,15 @@ with Buffers;
 
 package VN.Communication.CAN is
 
+
    type CAN_Message_Prio is mod 2 ** 6;
    for CAN_Message_Prio'size use 6;
 
    type CAN_Message_Type is mod 2 ** 7;
    for CAN_Message_Type'size use 7;
+
+--     type CAN_Address_Sender is new VN.Message.CAN_Address_Sender;
+--     type CAN_Address_Receiver is new VN.Message.CAN_Address_Receiver;
 
    type CAN_Address_Sender is mod 2 ** 7;
    for CAN_Address_Sender'size use 7;

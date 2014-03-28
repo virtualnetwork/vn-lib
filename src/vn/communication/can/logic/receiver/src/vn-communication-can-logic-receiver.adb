@@ -64,7 +64,8 @@ package body VN.Communication.CAN.Logic.Receiver is
       end case;
    end Update;
 
-   procedure ReceiveVNMessage(this : in out Receiver_Duty; msg : out VN_Message_Internal; msgWasReceived : out boolean) is
+   procedure ReceiveVNMessage(this : in out Receiver_Duty; msg : out VN_Message_Internal;
+                              msgWasReceived : out boolean) is
    begin
       if Receive_Buffer_pack.Empty(this.receiveBuffer.all) then --this.receiveBuffer.Is_Empty then
          msgWasReceived := false;

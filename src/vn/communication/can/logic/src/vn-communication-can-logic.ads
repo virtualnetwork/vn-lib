@@ -56,11 +56,12 @@ package VN.Communication.CAN.Logic is
    ASSIGN_LOGICAL_ADDR	: CAN_Message_Type := 13;
 
 --     type DataArray is array(1..10) of Interfaces.Unsigned_8;
-   type DataArray is new String(1..50);
+--     type DataArray is new String(1..50);
 
    type VN_Message_Internal is
       record
-         Data 		: DataArray;
+--           Data 		: DataArray;
+         Data		: VN.Message.VN_Message_Basic;
          NumBytes	: Interfaces.Unsigned_16;
          Receiver 	: CAN_Address_Receiver;
          Sender		: CAN_Address_Sender;

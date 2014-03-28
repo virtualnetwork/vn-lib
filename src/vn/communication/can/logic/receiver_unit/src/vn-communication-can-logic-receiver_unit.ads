@@ -62,7 +62,7 @@ private
          myCANAddress 	: VN.Communication.CAN.CAN_Address_Sender;
 
          sender 	: VN.Communication.CAN.CAN_Address_Sender;
-         receivedData	: VN.Communication.CAN.Logic.DataArray;
+         receivedData	: VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.DataArray;
          numMessages	: Interfaces.Unsigned_16;
 
          useFlowControl : Boolean;
@@ -75,6 +75,7 @@ private
       end record;
 
    procedure DeFragment(seqNumber : Interfaces.Unsigned_16; CANMessage : VN.Communication.CAN.CAN_Message_Logical;
-                          VNMessageContent : in out VN.Communication.CAN.Logic.DataArray; currentLength : out Interfaces.Unsigned_16);
+                        VNMessageContent : in out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.DataArray;
+                        currentLength : out Interfaces.Unsigned_16);
 
 end VN.Communication.CAN.Logic.Receiver_Unit;

@@ -145,7 +145,8 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
    end Sender;
 
    procedure DeFragment(seqNumber : Interfaces.Unsigned_16; CANMessage : VN.Communication.CAN.CAN_Message_Logical;
-                        VNMessageContent : in out VN.Communication.CAN.Logic.DataArray; currentLength : out Interfaces.Unsigned_16) is
+                        VNMessageContent : in out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.DataArray;
+                        currentLength : out Interfaces.Unsigned_16) is
 
       procedure u8ToChar(c : out Character; u8 : in Interfaces.Unsigned_8) is
          x : Interfaces.Unsigned_8;

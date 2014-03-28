@@ -149,7 +149,8 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
    end NumMessagesToSend;
 
 
-   procedure Fragment(VNMessage : VN.Communication.CAN.Logic.VN_Message_Internal; seqNumber : in out Interfaces.Unsigned_16;
+   procedure Fragment(VNMessage : VN.Communication.CAN.Logic.VN_Message_Internal; 
+                      seqNumber : in out Interfaces.Unsigned_16;
                       CANMessage : in out VN.Communication.CAN.CAN_Message_Logical; isLastMessage : out  boolean) is
 
       procedure CharTou8(u8 : out Interfaces.Unsigned_8; c : in Character) is
