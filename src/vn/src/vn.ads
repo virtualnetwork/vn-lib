@@ -1,7 +1,10 @@
 with Interfaces;
 
+with Ada.Text_IO;
 
 package VN is
+
+   package Text_IO renames Ada.Text_IO;
 
    type VN_CUUID is Array(1..16) of Interfaces.Unsigned_8;
 

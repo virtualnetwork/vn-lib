@@ -14,7 +14,7 @@
 -- interface of CAN_SM_Type. This would however violate the NO_TASK_HIERARCY
 -- restriction that the Ravenscar profile imposes.
 
-with Ada.Text_IO;
+--  with VN.Text_IO;
 
 package body VN.Communication.CAN.CAN_Interface is
 

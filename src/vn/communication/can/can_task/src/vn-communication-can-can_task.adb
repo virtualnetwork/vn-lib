@@ -10,7 +10,7 @@
 -- access variable (pointer).
 
 with Ada.Real_Time;
-with Ada.Text_IO;
+with VN;
 
 --with UartWrapper;
 --  with Physical_Logical;
@@ -64,7 +64,7 @@ package body VN.Communication.CAN.Can_Task is
 
    begin
 
-      Ada.Text_IO.Put_Line("CAN_Task started");
+      VN.Text_IO.Put_Line("CAN_Task started");
 
       myPeriod := thePeriod.all;
       Next_Period := Ada.Real_Time.Clock;
