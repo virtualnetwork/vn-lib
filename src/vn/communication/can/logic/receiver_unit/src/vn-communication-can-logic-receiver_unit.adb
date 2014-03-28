@@ -157,15 +157,18 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
    begin
 
-      for i in 0 .. CANMessage.Length - 1 loop
---           VNMessageContent(VNMessageContent'First + Integer(seqNumber) * 8 + Integer(i)) :=
---             CANMessage.Data(CANMessage.Data'First + i);
+      null;
+--TODO: Get this to work, needs redoing VN.Message.VN_Message_Basic
 
-         u8ToChar(VNMessageContent(VNMessageContent'First + Integer(seqNumber) * 8 + Integer(i)),
-                  CANMessage.Data(CANMessage.Data'First + i));
-      end loop;
-
-      currentLength := seqNumber * 8 + Interfaces.Unsigned_16(CANMessage.Length);
+--        for i in 0 .. CANMessage.Length - 1 loop
+--  --           VNMessageContent(VNMessageContent'First + Integer(seqNumber) * 8 + Integer(i)) :=
+--  --             CANMessage.Data(CANMessage.Data'First + i);
+--
+--           u8ToChar(VNMessageContent(VNMessageContent'First + Integer(seqNumber) * 8 + Integer(i)),
+--                    CANMessage.Data(CANMessage.Data'First + i));
+--        end loop;
+--
+--        currentLength := seqNumber * 8 + Interfaces.Unsigned_16(CANMessage.Length);
    end DeFragment;
 
 end VN.Communication.CAN.Logic.Receiver_Unit;

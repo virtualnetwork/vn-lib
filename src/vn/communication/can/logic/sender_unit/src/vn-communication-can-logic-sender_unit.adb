@@ -163,7 +163,6 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
       Last : integer;
    begin
 
-
       -- if the next Transmission message should be full (contain 8 bytes)
       --but this is not the last CAN message to be sent
       if (seqNumber + 1) * 8 < VNMessage.NumBytes then
@@ -183,12 +182,15 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
 
       CANMessage.Length := VN.Communication.CAN.DLC_Type(Last + 1);
 
-      for i in 0..Last loop
-         --           CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.Logic.DLC_Type(i)) :=
-         --             VNMessage.Data(VNMessage.Data'First + Integer(seqNumber) * 8 + i);
-         CharTou8(CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)),
-                  VNMessage.Data(VNMessage.Data'First + Integer(seqNumber) * 8 + i));
-      end loop;
+
+--TODO: Get this to work, needs redoing VN.Message.VN_Message_Basic
+
+--        for i in 0..Last loop
+--           --           CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.Logic.DLC_Type(i)) :=
+--           --             VNMessage.Data(VNMessage.Data'First + Integer(seqNumber) * 8 + i);
+--           CharTou8(CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)),
+--                    VNMessage.Data(VNMessage.Data'First + Integer(seqNumber) * 8 + i));
+--        end loop;
 
       seqNumber := seqNumber + 1;
    end Fragment;
