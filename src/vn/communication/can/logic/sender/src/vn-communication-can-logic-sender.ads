@@ -54,6 +54,6 @@ private
          iterator	: Integer := UnitArray'First;
       end record;
 
-   function GetFreeUnit(this : in out Sender_Duty) return Sender_Unit_Duty_ptr;
+   function GetFreeUnit(this : in Sender_Duty) return Sender_Unit_Duty_ptr;
 
 end VN.Communication.CAN.Logic.Sender;

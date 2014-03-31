@@ -42,7 +42,7 @@ private
          myUCID 	: VN.Communication.CAN.UCID;
       end record;
 
-  function AssignCANAddress(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.UCID) return VN.Communication.CAN.CAN_Address_Sender;
+  function AssignCANAddress(this : in CAN_Assignment_Master; theUCID : VN.Communication.CAN.UCID) return VN.Communication.CAN.CAN_Address_Sender;
 
 end VN.Communication.CAN.Logic.CAN_Address_Assignment;
 

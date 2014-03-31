@@ -25,9 +25,9 @@ package VN.Communication.CAN.Logic.Sender_Unit is
    procedure Send(this : in out Sender_Unit_Duty;
                   message : VN.Communication.CAN.Logic.VN_Message_Internal);
 
-   function isActive(this : in out Sender_Unit_Duty) return boolean;
+   function isActive(this : in Sender_Unit_Duty) return boolean;
 
-   function Receiver(this : in out Sender_Unit_Duty) return VN.Communication.CAN.CAN_Address_Receiver;
+   function Receiver(this : in Sender_Unit_Duty) return VN.Communication.CAN.CAN_Address_Receiver;
 
 private
 

@@ -134,12 +134,12 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
       VN.Communication.CAN.Logic.DebugOutput("Reciever unit assigned, sender= " & this.Sender'Img & " numMessages= " & this.numMessages'img, 4);
    end Assign;
 
-   function isActive(this : in out Receiver_Unit_Duty) return boolean is
+   function isActive(this : in Receiver_Unit_Duty) return boolean is
    begin
       return not (this.currentState = Idle);
    end isActive;
 
-   function Sender(this : in out Receiver_Unit_Duty) return VN.Communication.CAN.CAN_Address_Sender is
+   function Sender(this : in Receiver_Unit_Duty) return VN.Communication.CAN.CAN_Address_Sender is
    begin
       return this.Sender;
    end Sender;

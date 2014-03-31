@@ -129,12 +129,12 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
        this.myCANAddress := address;
    end Activate;
 
-   function isActive(this : in out Sender_Unit_Duty) return boolean is
+   function isActive(this : in Sender_Unit_Duty) return boolean is
    begin
      return not (this.currentState = Idle);
    end isActive;
 
-   function Receiver(this : in out Sender_Unit_Duty) return VN.Communication.CAN.CAN_Address_Receiver is
+   function Receiver(this : in Sender_Unit_Duty) return VN.Communication.CAN.CAN_Address_Receiver is
    begin
       return this.ToSend.Receiver;
    end Receiver;

@@ -57,7 +57,7 @@ package body VN.Communication.CAN.Logic.CAN_Address_Assignment is
       end if;
    end Activate;
 
-   function AssignCANAddress(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.UCID) return VN.Communication.CAN.CAN_Address_Sender is
+   function AssignCANAddress(this : in CAN_Assignment_Master; theUCID : VN.Communication.CAN.UCID) return VN.Communication.CAN.CAN_Address_Sender is
       i : VN.Communication.CAN.CAN_Address_Sender := 0;
       GetCANAddress_ERROR : exception;
    begin

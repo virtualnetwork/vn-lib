@@ -55,6 +55,6 @@ private
            			new Pending_Senders_pack.Buffer(VN.Communication.CAN.Logic.Receiver_Unit.SIZE);
       end record;
 
-  function GetFreeUnit(this : in out Receiver_Duty) return Receiver_Unit_Duty_ptr;
+  function GetFreeUnit(this : in Receiver_Duty) return Receiver_Unit_Duty_ptr;
 
 end VN.Communication.CAN.Logic.Receiver;

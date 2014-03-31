@@ -92,7 +92,7 @@ package body VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation is
       end case;
    end Update;
 
-   function CurrentMode(this : in out SM_CAN_MN_Duty) return SM_CAN_Mode is
+   function CurrentMode(this : in SM_CAN_MN_Duty) return SM_CAN_Mode is
    begin
       if this.currentState = Master then
          return MASTER;

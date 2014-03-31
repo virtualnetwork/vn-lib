@@ -47,9 +47,9 @@ package VN.Communication.CAN.Logic.Receiver_Unit is
    procedure Assign(this : in out Receiver_Unit_Duty; sender : VN.Communication.CAN.CAN_Address_Sender;
                     numMessages	: Interfaces.Unsigned_16);
 
-   function isActive(this : in out Receiver_Unit_Duty) return boolean;
+   function isActive(this : in Receiver_Unit_Duty) return boolean;
 
-   function Sender(this : in out Receiver_Unit_Duty) return VN.Communication.CAN.CAN_Address_Sender;
+   function Sender(this : in Receiver_Unit_Duty) return VN.Communication.CAN.CAN_Address_Sender;
 
 private
 

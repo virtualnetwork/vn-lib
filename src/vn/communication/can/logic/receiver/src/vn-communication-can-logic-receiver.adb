@@ -94,7 +94,7 @@ package body VN.Communication.CAN.Logic.Receiver is
       end if;
    end Activate;
 
-   function GetFreeUnit(this : in out Receiver_Duty) return Receiver_Unit_Duty_ptr is
+   function GetFreeUnit(this : in Receiver_Duty) return Receiver_Unit_Duty_ptr is
    begin
       for i in this.units'range loop
          if not this.units(i).isActive then

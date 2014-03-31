@@ -23,7 +23,7 @@ package VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation is
    overriding procedure Update(this : in out SM_CAN_MN_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
                                msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean);
 
-   function CurrentMode(this : in out SM_CAN_MN_Duty) return SM_CAN_Mode;
+   function CurrentMode(this : in SM_CAN_MN_Duty) return SM_CAN_Mode;
 
 private
 

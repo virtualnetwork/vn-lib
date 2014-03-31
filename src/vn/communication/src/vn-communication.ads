@@ -9,7 +9,7 @@ package VN.Communication is
    -- TODO: Fix this VN_Buffer so it's a buffer of access variables to
    -- VN_Message'Class instead.
 
-   type Com is protected interface;
+   type Com is interface; --removed "protected"
 
    procedure Send(This: in out Com;
                   Message: in VN.Message.VN_Message_Basic;

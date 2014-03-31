@@ -97,7 +97,7 @@ package body VN.Communication.CAN.Logic.Sender is
       end if;
    end SendVNMessage;
 
-   function GetFreeUnit(this : in out Sender_Duty) return Sender_Unit_Duty_ptr is
+   function GetFreeUnit(this : in Sender_Duty) return Sender_Unit_Duty_ptr is
    begin
       for i in this.units'range loop
          if not this.units(i).isActive then
