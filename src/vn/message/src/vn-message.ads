@@ -72,12 +72,6 @@ package VN.Message is
    procedure Update_Checksum(Message: in out VN_Message_Basic);
 
 private
-     type VN_Message_Basic is tagged --new Ada.Finalization.Controlled with
-      record
-         Header   : VN_Header;
-         Checksum : VN_Checksum;
-      end record;
-
    type VN_Header is
       record
          -- Extended Header not implemented.
@@ -91,6 +85,14 @@ private
          Opcode         : VN_Opcode;
          Value          : Positive := 1;
       end record;
+
+   type VN_Message_Basic is tagged --new Ada.Finalization.Controlled with
+      record
+         Header   : VN_Header;
+         Checksum : VN_Checksum;
+      end record;
+
+
 
 --     overriding
 --     procedure Initialize(This: in out VN_Message_Basic) is null;
