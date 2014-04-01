@@ -5,6 +5,10 @@ project_pragmas
 *.ads~
 *.adb~
 *.gpr~
+.gitignore~
+.bin
+.bin~
+makefile~
 
 # Vagrant
 .vagrant
