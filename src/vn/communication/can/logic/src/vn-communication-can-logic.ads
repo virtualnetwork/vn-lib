@@ -10,6 +10,7 @@
 
 with Interfaces;
 use Interfaces;
+with VN.Message;
 
 package VN.Communication.CAN.Logic is
 
