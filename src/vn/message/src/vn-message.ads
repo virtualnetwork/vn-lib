@@ -42,7 +42,7 @@ package VN.Message is
 --                           ERROR_UNKNOWN);
 
    -- VN_Message:
-      type VN_Message_Basic is tagged private;
+      type VN_Message_Basic is tagged limited private;
    
  -- <for testing with temporary VN_Message: >-------------
 --     type CAN_Address_Sender is mod 2 ** 7;
@@ -86,7 +86,7 @@ private
          Value          : Positive := 1;
       end record;
 
-   type VN_Message_Basic is tagged --new Ada.Finalization.Controlled with
+   type VN_Message_Basic is tagged limited --new Ada.Finalization.Controlled with
       record
          Header   : VN_Header;
          Checksum : VN_Checksum;
