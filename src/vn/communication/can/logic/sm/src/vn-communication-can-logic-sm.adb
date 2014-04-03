@@ -6,6 +6,9 @@
 -- SM_Duty holds instances of the classes that implement the state machines
 -- of the VN-CAN protcol.
 
+--ToDo: THE RECEIVER ADDRESS OF internal MUST BE ASSIGNED, A ROUTING ADDRESS IS NEEDED!!!!
+--ToDo: Update the routing table whenever the Send-function is called or when a VN-message is received!!!
+
 pragma Profile (Ravenscar);
 
 package body VN.Communication.CAN.Logic.SM is
@@ -124,6 +127,8 @@ package body VN.Communication.CAN.Logic.SM is
                   result : out VN.Send_Status) is
       internal : VN.Communication.CAN.Logic.VN_Message_Internal;
    begin
+
+      --ToDo: THE RECEIVER ADDRESS OF internal MUST BE ASSIGNED, A ROUTING ADDRESS IS NEEDED!!!!
 --        internal.Data := msg;
       VN.Message.Assignment(internal.Data, msg);
       this.sender.SendVNMessage(internal, result);
