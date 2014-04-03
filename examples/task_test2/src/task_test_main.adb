@@ -3,6 +3,7 @@
 --With Task_Test;
 
 with GNAT.IO;
+with System.BB.Interrupts;
 
 procedure Task_Test_Main is
 
