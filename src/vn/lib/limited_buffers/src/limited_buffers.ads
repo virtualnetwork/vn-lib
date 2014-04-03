@@ -71,7 +71,7 @@ private
 
    type Buffer (Capacity : Positive) is limited
       record
-         Values   : aliased Content (1 .. Capacity);
+         Values   : Content (1 .. Capacity);
          Next_In  : Positive := 1;
          Next_Out : Positive := 1;
          Count    : Natural  := 0;
