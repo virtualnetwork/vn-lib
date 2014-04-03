@@ -24,6 +24,11 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+
+-- This package has been modified to be able to handle limited types.
+-- When using this package one must provide an assignment function
+-- for the type that is to be used.
+
 package body Limited_Buffers is
 
    ------------
