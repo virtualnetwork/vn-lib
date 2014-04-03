@@ -27,4 +27,10 @@ package body VN.Message is
       null;
    end Update_Checksum;
 
+   procedure Assignment (destination : out VN_Message_Basic; source : in VN_Message_Basic) is
+   begin
+      destination.Header := source.Header;
+      destination.Checksum := source.Checksum;
+   end Assignment;
+
 end VN.Message;
