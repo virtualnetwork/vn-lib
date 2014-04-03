@@ -13,6 +13,7 @@ pragma Profile (Ravenscar);
 with VN.Communication.CAN.Logic;
 with Interfaces;
 with Buffers;
+with Limited_Buffers;
 
 package VN.Communication.CAN.Logic.Receiver_Unit is
 
@@ -31,7 +32,7 @@ package VN.Communication.CAN.Logic.Receiver_Unit is
    use Pending_Senders_pack;
    type Pending_Senders_ptr is access all Pending_Senders_pack.Buffer(SIZE);
 
-   package Receive_Buffer_pack is new Buffers(VN.Communication.CAN.Logic.VN_Message_Internal);
+   package Receive_Buffer_pack is new Limited_Buffers(VN.Communication.CAN.Logic.VN_Message_Internal, VN.Communication.CAN.Logic.Assignment);
    use Receive_Buffer_pack;
    type Receive_Buffer_ptr is access all Receive_Buffer_pack.Buffer(SIZE);
 

@@ -1,3 +1,4 @@
+with "../../../../lib/limited_buffers/limited_buffers.gpr";
 with "../../../../lib/buffers/buffers.gpr";
 with "../message_utils/message_utils.gpr";
 with "../logic.gpr";
@@ -6,7 +7,7 @@ project Receiver_Unit is
 
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
- --  for Main use ("main.adb");
+   --  for Main use ("main.adb");
 
 end Receiver_Unit;
 

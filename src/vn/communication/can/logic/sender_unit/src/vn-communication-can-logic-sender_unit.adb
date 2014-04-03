@@ -121,7 +121,8 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
                   message : VN.Communication.CAN.Logic.VN_Message_Internal) is
    begin
       this.currentState := Initiated;
-      this.ToSend := message;
+      --this.ToSend := message;
+      VN.Communication.CAN.Logic.Assignment(this.ToSend, message);
    end Send;
 
    procedure Activate(this : in out Sender_Unit_Duty; address : VN.Communication.CAN.CAN_Address_Sender) is

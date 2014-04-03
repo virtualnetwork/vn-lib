@@ -2,7 +2,7 @@ with "../can_task/can_task.gpr";
 with "../can_interface/can_interface.gpr";
 
 project Task_Test_Qemu is
-   for Source_Dirs use ("src", "../../../../../../../bap-arm-ravenscar-repository-rev271/externals/lm3s811-includes");
+   for Source_Dirs use ("src", "src2", "../../../../../../../bap-arm-ravenscar-repository-rev271/externals/lm3s811-includes");
    for Object_Dir use "obj";
    for Exec_Dir use ".";
    for Main use ("task_test_main.adb");
