@@ -43,6 +43,8 @@ package VN.Message is
 
    -- VN_Message:
       type VN_Message_Basic is tagged limited private;
+
+   procedure Assignment (destination : out VN_Message_Basic; source : in VN_Message_Basic);
    
  -- <for testing with temporary VN_Message: >-------------
 --     type CAN_Address_Sender is mod 2 ** 7;
@@ -70,6 +72,8 @@ package VN.Message is
    -- VN_Checksum
    function Get_Checksum(Message: VN_Message_Basic) return VN_Checksum;
    procedure Update_Checksum(Message: in out VN_Message_Basic);
+   
+   
 
 private
    type VN_Header is
