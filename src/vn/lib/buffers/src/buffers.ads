@@ -66,7 +66,7 @@ private
 
    type Content is array (Positive range <>) of Element;
 
-   type Buffer (Capacity : Positive)  is
+   type Buffer (Capacity : Positive) is
       record
          Values   : Content (1 .. Capacity);
          Next_In  : Positive := 1;
