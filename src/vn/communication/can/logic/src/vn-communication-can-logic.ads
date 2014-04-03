@@ -68,6 +68,8 @@ package VN.Communication.CAN.Logic is
          Sender		: CAN_Address_Sender;
       end record;
 
+   procedure Assignment (destination : out VN_Message_Internal; source : in VN_Message_Internal);
+
    type Duty is abstract tagged limited private;
 
    procedure Update(me : in out Duty; msg : CAN_Message_Logical; bMsgReceived : boolean;
