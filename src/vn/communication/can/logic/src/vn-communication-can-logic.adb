@@ -1,3 +1,10 @@
+-- Copyright (c) 2014 All Rights Reserved
+-- Author: Nils Brynedal Ignell
+-- Date: 2014-XX-XX
+-- Summary:
+-- VN.Communication.CAN.Logic is a package that implements the logic 
+-- of the VN-CAN protocol itself. 
+
 with VN;
 
 package body VN.Communication.CAN.Logic is

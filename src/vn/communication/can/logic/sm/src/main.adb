@@ -1,8 +1,15 @@
+-- Copyright (c) 2014 All Rights Reserved
+-- Author: Nils Brynedal Ignell
+-- Date: 2014-XX-XX
+-- Summary:
+-- Test implementation of the whole VN.Communication.CAN.Logic package.
+-- Several instances of VN.Communication.CAN.Logic.SM.SM_Duty are 
+-- are used and the communication between them is simulated.
+
 pragma Profile (Ravenscar);
 
 with VN.Communication.CAN.Logic.SM;
 
-with Ada.Text_IO;
 with Ada.Real_Time;
 use Ada.Real_Time;
 
@@ -35,9 +42,6 @@ procedure main is
       new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C2'Unchecked_Access),
       new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C3'Unchecked_Access));
 
-
-
-
    type BufferArray is array(DutyArray'Range) of VN.Communication.CAN.CAN_Message_Buffers.Buffer(100);
    messagesIn : BufferArray;
    messagesOut : BufferArray;
@@ -59,7 +63,7 @@ begin
       for i in DutyArray'Range loop
          VN.Communication.CAN.CAN_Message_Buffers.Clear(messagesOut(i));
          VN.Communication.CAN.Logic.SM.Update(DutyArray(i).all, messagesIn(i), messagesOut(i));
-     --    DutyArray(i).Update(messagesIn(i), messagesOut(i));
+
          VN.Communication.CAN.CAN_Message_Buffers.Clear(messagesIn(i));
       end loop;
 

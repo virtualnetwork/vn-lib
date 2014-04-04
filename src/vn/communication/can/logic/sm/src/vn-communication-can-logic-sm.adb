@@ -5,6 +5,8 @@
 -- for VN messages that are to be sent, or have been received, over the CAN network.
 -- SM_Duty holds instances of the classes that implement the state machines
 -- of the VN-CAN protcol.
+-- Please also note that this functionality is regarding a Subnet Manager for CAN (SM-CAN),
+-- not an ordinary node.
 
 --ToDo: THE RECEIVER ADDRESS OF internal MUST BE ASSIGNED, A ROUTING ADDRESS IS NEEDED!!!!
 --ToDo: Update the routing table whenever the Send-function is called or when a VN-message is received!!!

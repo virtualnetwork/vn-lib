@@ -3,7 +3,7 @@
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
 -- Summary: CAN_Task is a task that sends and receives CAN messages.
---  that are to be sent, or have been received, over the CAN network.
+-- that are to be sent, or have been received, over the CAN network.
 -- Main_Duty holds instances of the classes that implement the state machines
 -- of the VN-CAN protcol.
 

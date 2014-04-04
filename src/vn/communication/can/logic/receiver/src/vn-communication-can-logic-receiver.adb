@@ -1,4 +1,15 @@
---  pragma Profile (Ravenscar);
+-- Copyright (c) 2014 All Rights Reserved
+-- Author: Nils Brynedal Ignell
+-- Date: 2014-XX-XX
+-- Summary:
+-- Implements the state machine for receiving VN messages. Receiver_Duty will
+-- use an instane of Receiver_Unit_Duty to send a VN message.
+-- Before it can be used, Receiver_Duty will need to be activated. This cannot
+-- be done until one has been assigned a CAN address.
+-- Receiver_Duty has a receive buffer. Each Receiver_Unit_Duty has a pointer
+-- (access variable) to this received. When a Receiver_Unit_Duty has received
+-- a VN message, it will write it to this buffer.
+
 
 with VN.Communication.CAN.Logic.Message_Utils;
 

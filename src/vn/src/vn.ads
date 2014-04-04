@@ -1,15 +1,16 @@
+
+-- Copyright (c) 2014 All Rights Reserved
+-- Author: Nils Brynedal Ignell
+-- Date: 2014-XX-XX
+-- Summary:
+-- This package implements the VN protocol.
+
 with Interfaces;
-
---  with Ada.Text_IO;
---with System.Text_IO;
-
 with GNAT.IO;
 
 package VN is
 
-   --package Text_IO renames Ada.Text_IO;
-
- package Text_IO renames GNAT.IO;
+   package Text_IO renames GNAT.IO;
 
    type VN_CUUID is Array(1..16) of Interfaces.Unsigned_8;
 

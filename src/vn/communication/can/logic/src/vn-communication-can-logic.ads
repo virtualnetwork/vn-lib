@@ -2,6 +2,9 @@
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
 -- Summary:
+-- VN.Communication.CAN.Logic is a package that implements the logic 
+-- of the VN-CAN protocol itself. 
+-- This file includes:
 -- Definition of lowlevel datatypes, constants and operations as well as
 -- definition of abstract base class Duty. Duty is a base class for
 -- each of the state machines that constitute the implementation of
@@ -14,16 +17,7 @@ with VN.Message;
 
 package VN.Communication.CAN.Logic is
 
-   -- Följande borde flyttas: ---
- --  type Transmission_Result is (TRANSMISSION_OK, BUFFER_FULL);
-
---     type CUUID is array(1..16) of Interfaces.Unsigned_8;
---     subtype Logical_Address is Interfaces.Unsigned_32;
-
-   --------------------------------------
-
    GIVE_DEBUG_OUTPUT : constant integer := 5;
-
 
    OFFSET_CAN_PRIORITY 	: constant Natural := 22;
    OFFSET_CAN_TYPE	: constant Natural := 15;
