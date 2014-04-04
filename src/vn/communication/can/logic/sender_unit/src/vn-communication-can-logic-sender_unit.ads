@@ -7,6 +7,8 @@
 -- Before it can be used, Sender_Unit_Duty will need to be activated. This cannot
 -- be done until one has been assigned a CAN address.
 
+-- ToDo: Fragment must be implemented further
+
 with VN.Communication.CAN.Logic;
 with Interfaces;
 with Ada.Real_Time;
