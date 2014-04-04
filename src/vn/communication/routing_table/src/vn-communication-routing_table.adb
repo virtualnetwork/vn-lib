@@ -5,21 +5,54 @@
 -- Simple implementation of routing table. A better implementation is recommended in the future.
 -- ToDo: Only started.
 
+with Interfaces;
+use Interfaces;
+
 package body VN.Communication.Routing_Table is
 
-   procedure Insert(this : in out Table_Type;
-                    Abstract_Address : Abstract_Address_Type;
-                    Concrete_Address : Concrete_Address_Type) is
+   function NumberOfEntries(this : in out Table_Type) return Natural is
    begin
-      null;
+      return this.count;
+   end NumberOfEntries;
+
+   procedure Insert(this : in out Table_Type;
+                    Logical_Address : VN.VN_Logical_Address;
+                    Generic_Address : Generic_Address_Type) is
+
+      ROUTING_TABLE_OVERFLOW : exception;
+      index : VN.VN_Logical_Address := Logical_Address rem this.Capacity;
+   begin
+      for i in index..this.Values'Last loop
+         if not this.Values(i).isUsed then
+            this.Values(i).isUsed := true;
+            this.Values(i).Logical_Address := Logical_Address;
+            this.Values(i).Generic_Address := Generic_Address;
+
+            return;
+         end if;
+      end loop;
+
+      raise ROUTING_TABLE_OVERFLOW;
    end Insert;
 
-   procedure Search(this : in out Table_Type;
-                    Abstract_Address : Abstract_Address_Type;
-                    Concrete_Address : out Concrete_Address_Type;
+   procedure Search(this : in Table_Type;
+                    Logical_Address : VN.VN_Logical_Address;
+                    Generic_Address : out Generic_Address_Type;
                     found : out Boolean) is
+
+      index : VN.VN_Logical_Address := Logical_Address rem this.Capacity;
    begin
-      null;
+      for i in index..this.Values'Last loop
+         if this.Values(i).isUsed then
+            if this.Values(i).Logical_Address = Logical_Address then
+               Generic_Address := this.Values(i).Generic_Address;
+               found := true;
+
+               return;
+            end if;
+         end if;
+      end loop;
+      found := false;
    end Search;
 
 end VN.Communication.Routing_Table;
