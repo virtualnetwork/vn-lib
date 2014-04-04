@@ -73,7 +73,12 @@ package VN.Message is
    function Get_Checksum(Message: VN_Message_Basic) return VN_Checksum;
    procedure Update_Checksum(Message: in out VN_Message_Basic);
    
-   
+   function Get_Source(Message: VN_Message_Basic) return VN_Logical_Address;
+   procedure Update_Source(Message: in out VN_Message_Basic; Local_Address : VN_Logical_Address);
+
+   function Get_Destination(Message: VN_Message_Basic) return VN_Logical_Address;
+   procedure Update_Destination(Message: in out VN_Message_Basic; Local_Address : VN_Logical_Address);
+
 
 private
    type VN_Header is
