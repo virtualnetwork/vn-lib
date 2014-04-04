@@ -27,6 +27,26 @@ package body VN.Message is
       null;
    end Update_Checksum;
 
+   function Get_Source(Message: VN_Message_Basic) return VN_Logical_Address is
+   begin
+      return Message.Header.Source;
+   end Get_Source;
+
+   procedure Update_Source(Message: in out VN_Message_Basic; Local_Address : VN_Logical_Address) is
+   begin
+      Message.Header.Source := Local_Address;
+   end Update_Source;
+
+   function Get_Destination(Message: VN_Message_Basic) return VN_Logical_Address is
+   begin
+      return Message.Header.Destination;
+   end Get_Destination;
+
+   procedure Update_Destination(Message: in out VN_Message_Basic; Local_Address : VN_Logical_Address) is
+   begin
+      Message.Header.Destination := Local_Address;
+   end Update_Destination;
+
    procedure Assignment (destination : out VN_Message_Basic; source : in VN_Message_Basic) is
    begin
       destination.Header := source.Header;
