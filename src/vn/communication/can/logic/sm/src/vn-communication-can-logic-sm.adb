@@ -221,6 +221,15 @@ package body VN.Communication.CAN.Logic.SM is
                          VN.Communication.CAN.Logic.Duty_Ptr(this.cuuidHandler));
    end Init;
 
+   procedure HelloProc(CANAddress : VN.Communication.CAN.CAN_Address_Sender;
+                       isSM_CAN : Boolean) is
+   begin
+      VN.Communication.CAN.Logic.DebugOutput("SM_Duty discovered a unit, CANAddress= " &
+                                               CANAddress'Img & " isSM_CAN = " &
+                                               isSM_CAN'img, 4);
+      -- ToDo: Send LocalHello message etc.
+   end HelloProc;
+
 end VN.Communication.CAN.Logic.SM;
 
 

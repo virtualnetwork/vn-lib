@@ -54,6 +54,7 @@ package VN.Communication.CAN.Logic.SM is
    procedure Update(this : in out SM_Duty; msgsBuffer : in out CAN_Message_Buffers.Buffer;
                     ret : out CAN_Message_Buffers.Buffer);
 
+   --This function should be private sooner or later?
    procedure Discover(this : in out SM_Duty; discoveredUnits : out Unit_Buffers.Buffer);
 
    procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
@@ -87,6 +88,9 @@ private
    CAN_ROUTING_TABLE_SIZE : constant VN.VN_Logical_Address := 500;
    NUM_DUTIES : constant integer := 7;
 
+   procedure HelloProc(CANAddress : VN.Communication.CAN.CAN_Address_Sender;
+                    isSM_CAN : Boolean);
+
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
    type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is
@@ -115,7 +119,7 @@ private
            new VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder;
 
          cuuidHandler : VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler_ptr :=
-           new VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler;
+           new VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler(HelloProc'Access);
 
          DutyArray : ArrayOfDuties;
 

@@ -43,6 +43,8 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
                      this.units(msgIn.Sender).isSM_CAN := wasSM_CAN;
                      this.units(msgIn.Sender).isComponentTypeSet := true;
                      VN.Communication.CAN.Logic.DebugOutput("Recieved ComponentType from address " & msgIn.Sender'Img, 5);
+
+                     this.HelloProc.all(msgIn.Sender, wasSM_CAN); --
                   end if;
                end if;
             end if;
