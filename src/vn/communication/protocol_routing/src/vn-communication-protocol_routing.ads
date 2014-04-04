@@ -10,6 +10,10 @@
 -- delivered to the application layer or sent to another
 -- subnet, and if so, which one.
 
+-- ToDo: Protocol_Routing_Type might not need to be protected?
+-- ToDo: Only CAN subnet added so far.
+-- ToDo: Some special cases not handled.
+
 with VN;
 with VN.Communication;
 with VN.Communication.CAN;
@@ -18,7 +22,7 @@ with VN.Communication.Routing_Table;
 
 package VN.Communication.Protocol_Routing is
 
-   type Protocol_Address_Type is (CAN_Subnet, Application, Other_Address); --Other_Address is just a placeholder, for testing
+   type Protocol_Address_Type is (CAN_Subnet, Application_Layer);
    
    package Protocol_Router is new VN.Communication.Routing_Table(Protocol_Address_Type);
    use Protocol_Router;
@@ -36,8 +40,10 @@ package VN.Communication.Protocol_Routing is
                                    Status: out VN.Receive_Status);
 
    private
-      myCANInterface : VN.Communication.CAN.CAN_Interface.CAN_Interface_Access := theCANInterface;
-      myTable : Protocol_Router.Table_Type(PROTOCOL_ROUTING_TABLE_SIZE);
+
+      myCANInterface 	 : VN.Communication.CAN.CAN_Interface.CAN_Interface_Access := theCANInterface;
+      myTable 		 : Protocol_Router.Table_Type(PROTOCOL_ROUTING_TABLE_SIZE);
+      nextProtocolInTurn : Protocol_Address_Type;
    end Protocol_Routing_Type;
 
 private
