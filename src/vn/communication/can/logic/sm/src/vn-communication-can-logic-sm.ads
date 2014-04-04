@@ -8,9 +8,9 @@
 -- Please also note that this functionality is regarding a Subnet Manager for CAN (SM-CAN),
 -- not an ordinary node.
 
---ToDo: THE RECEIVER ADDRESS OF internal MUST BE ASSIGNED, A ROUTING ADDRESS IS NEEDED!!!!
---ToDo: Update the routing table whenever the Send-function is called or when a VN-message is received!!!
-
+--ToDo: Right now no routing information is retreived from DistributeRoute messages!!
+--ToDo: Send LocalHello messages when detecting a new SM-CAN
+--ToDo: Send LocalAck messages when receiving a LocalHello message
 
 with VN.Communication.CAN.Logic;
 with VN.Communication.CAN.Logic.CAN_Address_Assignment;
