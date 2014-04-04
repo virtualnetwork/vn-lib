@@ -8,8 +8,9 @@
 -- Please also note that this functionality is regarding a Subnet Manager for CAN (SM-CAN),
 -- not an ordinary node.
 
---ToDo: THE RECEIVER ADDRESS OF internal MUST BE ASSIGNED, A ROUTING ADDRESS IS NEEDED!!!!
---ToDo: Update the routing table whenever the Send-function is called or when a VN-message is received!!!
+--ToDo: Right now no routing information is retreived from DistributeRoute messages!!
+--ToDo: Send LocalHello messages when detecting a new SM-CAN
+--ToDo: Send LocalAck messages when receiving a LocalHello message
 
 pragma Profile (Ravenscar);
 
@@ -128,12 +129,27 @@ package body VN.Communication.CAN.Logic.SM is
    procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
                   result : out VN.Send_Status) is
       internal : VN.Communication.CAN.Logic.VN_Message_Internal;
+      receiver : VN.Communication.CAN.CAN_Address_Sender;
+      found : boolean;
    begin
 
-      --ToDo: THE RECEIVER ADDRESS OF internal MUST BE ASSIGNED, A ROUTING ADDRESS IS NEEDED!!!!
---        internal.Data := msg;
-      VN.Message.Assignment(internal.Data, msg);
-      this.sender.SendVNMessage(internal, result);
+      --The SPA protocol says that messages addressed to logical address 0 shall be thrown away
+      if msg.Get_Destination = 0 then
+         result := OK;
+         return;
+      end if;
+
+      CAN_Routing.Search(this.myTable, msg.Get_Destination, receiver, found);
+
+      if found then
+         internal.Receiver := VN.Communication.CAN.Convert(receiver);
+         VN.Message.Assignment(internal.Data, msg);
+         this.sender.SendVNMessage(internal, result);
+         result := OK;
+      else
+         result := ERROR_NO_ADDRESS_RECEIVED;
+      end if;
+      --ToDo: Right now the message is thrown away if the receiver address isn't found
    end Send;
 
    procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
@@ -145,6 +161,10 @@ package body VN.Communication.CAN.Logic.SM is
       --TODO, this will need to be updated if more options for VN.Receive_Status are added:
       if status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
         status = VN.MSG_RECEIVED_MORE_AVAILABLE then
+
+      --Store information about the sender of the message:
+      CAN_Routing.Insert(this.myTable, internal.Data.Get_Source, internal.Sender);
+
 --           msg := internal.Data;
          VN.Message.Assignment(msg, internal.Data);
       end if;

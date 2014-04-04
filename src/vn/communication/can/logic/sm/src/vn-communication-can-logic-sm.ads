@@ -21,9 +21,18 @@ with VN.Communication.CAN.Logic.Receiver;
 with VN.Communication.CAN.Logic.CUUID_Responder;
 with VN.Communication.CAN.Logic.CUUID_Handler;
 
+with VN.Communication.Routing_Table;
+
 with Buffers;
 
 package VN.Communication.CAN.Logic.SM is
+
+   -- The routing table will map logical addresses to CAN_Address_Sender, not CAN_Address_Receiver
+   -- The reason for this is that no VN-message will be sent to an address not referring to a
+   -- single unit (as opposed to broadcast addresses) on the CAN network,
+   -- i.e. to an address outside the CAN_Address_Sender range.
+   package CAN_Routing is new VN.Communication.Routing_Table(VN.Communication.CAN.CAN_Address_Sender);
+   use CAN_Routing;
 
    use VN.Communication.CAN.CAN_Message_Buffers;
 
@@ -36,6 +45,7 @@ package VN.Communication.CAN.Logic.SM is
 
    package Unit_Buffers is new Buffers(Unit);
    use Unit_Buffers;
+
 
    type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is private;
 
@@ -52,6 +62,7 @@ package VN.Communication.CAN.Logic.SM is
    procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
                      status : out VN.Receive_Status);
 
+   --This function is most likely obsolete:
    procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender; isAssigned : out boolean);
 
 
@@ -72,7 +83,10 @@ package VN.Communication.CAN.Logic.SM is
 
 private
 
+   --ToDo: These constants should be put in a config file of some sort
+   CAN_ROUTING_TABLE_SIZE : constant VN.VN_Logical_Address := 500;
    NUM_DUTIES : constant integer := 7;
+
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
    type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is
@@ -80,6 +94,7 @@ private
 
          myUCID  : VN.Communication.CAN.UCID  := theUCID.all;
          myCUUID : VN.VN_CUUID := theCUUID.all;
+         myTable : CAN_Routing.Table_Type(CAN_ROUTING_TABLE_SIZE);
 
          masterNegotiation : VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty_ptr :=
            new VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);
@@ -104,7 +119,7 @@ private
 
          DutyArray : ArrayOfDuties;
 
-         hasSent : boolean := true; --for testing
+         hasSent : boolean := true; --for testing only
       end record;
 
 end VN.Communication.CAN.Logic.SM;

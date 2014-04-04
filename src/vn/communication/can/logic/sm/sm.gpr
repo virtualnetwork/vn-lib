@@ -1,3 +1,4 @@
+with "../../../routing_table/routing_table.gpr";
 with "../../../../lib/buffers/buffers.gpr";
 with "../cuuid_handler/cuuid_handler.gpr";
 with "../cuuid_responder/cuuid_responder.gpr";
