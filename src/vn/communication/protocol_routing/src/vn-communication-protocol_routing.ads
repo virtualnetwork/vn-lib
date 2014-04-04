@@ -10,5 +10,37 @@
 -- delivered to the application layer or sent to another
 -- subnet, and if so, which one.
 
+with VN;
+with VN.Communication;
+with VN.Communication.CAN;
+with VN.Communication.CAN.CAN_Interface;
+with VN.Communication.Routing_Table;
+
 package VN.Communication.Protocol_Routing is
+
+   type Protocol_Address_Type is (CAN_Address, Other_Address); --Other_Address is just a placeholder, for testing
+
+   package Protocol_Router is new VN.Communication.Routing_Table(Protocol_Address_Type);
+   use Protocol_Router;
+
+   --ToDo: These constants should be put in a config file of some sort
+   PROTOCOL_ROUTING_TABLE_SIZE : constant VN.VN_Logical_Address := 500;
+
+   protected type Protocol_Routing_Type(theCANInterface : VN.Communication.CAN.CAN_Interface.CAN_Interface_Access) is 
+        new VN.Communication.Com with
+      
+      overriding procedure Send(Message: in VN.Message.VN_Message_Basic;
+                                Status: out VN.Send_Status);
+
+      overriding procedure Receive(Message : out VN.Message.VN_Message_Basic;
+                                   Status: out VN.Receive_Status);
+
+   private
+      myCANInterface : VN.Communication.CAN.CAN_Interface.CAN_Interface_Access := theCANInterface;
+      myTable : Protocol_Router.Table_Type(PROTOCOL_ROUTING_TABLE_SIZE);
+   end Protocol_Routing_Type;
+
+private
+
+
 end VN.Communication.Protocol_Routing;
