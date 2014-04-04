@@ -18,8 +18,8 @@ with VN.Communication.Routing_Table;
 
 package VN.Communication.Protocol_Routing is
 
-   type Protocol_Address_Type is (CAN_Address, Other_Address); --Other_Address is just a placeholder, for testing
-
+   type Protocol_Address_Type is (CAN_Subnet, Application, Other_Address); --Other_Address is just a placeholder, for testing
+   
    package Protocol_Router is new VN.Communication.Routing_Table(Protocol_Address_Type);
    use Protocol_Router;
 
