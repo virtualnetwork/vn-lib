@@ -12,7 +12,7 @@ package VN.Communication.Routing_Table is
 
    type Table_Type (Capacity : VN.VN_Logical_Address) is private;
 
-   function NumberOfEntries(this : in out Table_Type) return Natural;
+   function NumberOfEntries(this : in Table_Type) return Natural;
 
    procedure Insert(this : in out Table_Type;
                     Logical_Address : VN.VN_Logical_Address;

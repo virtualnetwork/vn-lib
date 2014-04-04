@@ -10,7 +10,7 @@ use Interfaces;
 
 package body VN.Communication.Routing_Table is
 
-   function NumberOfEntries(this : in out Table_Type) return Natural is
+   function NumberOfEntries(this : in Table_Type) return Natural is
    begin
       return this.count;
    end NumberOfEntries;
