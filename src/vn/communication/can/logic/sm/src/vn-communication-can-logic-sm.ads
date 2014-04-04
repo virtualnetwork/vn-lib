@@ -89,7 +89,7 @@ private
    NUM_DUTIES : constant integer := 7;
 
    procedure HelloProc(CANAddress : VN.Communication.CAN.CAN_Address_Sender;
-                    isSM_CAN : Boolean);
+                       isSM_CAN : Boolean);
 
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
