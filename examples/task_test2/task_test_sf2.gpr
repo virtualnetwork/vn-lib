@@ -36,7 +36,7 @@ project Task_Test_SF2 is
 
    package Linker is
       for Default_Switches ("ada") use ("-nostartfiles", "-nodefaultlibs", "-nostdlib", "-lc", "-lgcc", "obj/libtask_test_main_c.a", "-v", "-mcpu=cortex-m3", "-mthumb" 
-   --   ,"-Wl,--gc-sections"
+    --  ,"-Wl,--gc-sections"
       );
    end Linker;
 
