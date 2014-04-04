@@ -23,10 +23,13 @@ package body VN.Communication.Routing_Table is
       index : VN.VN_Logical_Address := Logical_Address rem this.Capacity;
    begin
       for i in index..this.Values'Last loop
-         if not this.Values(i).isUsed then
+         if not this.Values(i).isUsed or else
+           this.Values(i).Logical_Address = Logical_Address then
+
             this.Values(i).isUsed := true;
             this.Values(i).Logical_Address := Logical_Address;
             this.Values(i).Generic_Address := Generic_Address;
+            this.count := this.count + 1;
 
             return;
          end if;
