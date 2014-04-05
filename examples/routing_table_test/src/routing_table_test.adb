@@ -1,3 +1,4 @@
+Pragma Profile (Ravenscar);
 
 with GNAT.IO;
 use GNAT.IO;
