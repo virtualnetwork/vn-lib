@@ -99,6 +99,8 @@ package body VN.Communication.CAN.Logic.Receiver is
          this.currentState := Activated;
          this.myCANAddress := address;
 
+         DebugOutput("Receiver activated with CAN address " & address'Img, 5);
+
          for i in this.units'range loop
             this.units(i).Activate(address, this.receiveBuffer, this.pendingSenders);
          end loop;
