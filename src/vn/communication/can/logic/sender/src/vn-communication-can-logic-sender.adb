@@ -79,6 +79,8 @@ package body VN.Communication.CAN.Logic.Sender is
          this.currentState := Activated;
          this.myCANAddress := address;
 
+         DebugOutput("Sender activated with CAN address " & address'Img, 5);
+
          for i in this.units'range loop
             this.units(i).Activate(address);
          end loop;
