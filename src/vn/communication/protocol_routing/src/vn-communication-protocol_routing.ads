@@ -41,9 +41,13 @@ package VN.Communication.Protocol_Routing is
 
    private
 
+      procedure Init; -- ToDo: For testing only!!!
+
       myCANInterface 	 : VN.Communication.CAN.CAN_Interface.CAN_Interface_Access := theCANInterface;
       myTable 		 : Protocol_Router.Table_Type(PROTOCOL_ROUTING_TABLE_SIZE);
       nextProtocolInTurn : Protocol_Address_Type;
+
+      Initiated : Boolean := false; -- ToDo: for testing only!!!
    end Protocol_Routing_Type;
 
 private

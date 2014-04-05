@@ -23,6 +23,11 @@ package body VN.Communication.Protocol_Routing is
          found : Boolean;
          address : Protocol_Address_Type;
       begin
+
+         if not Initiated then
+            Init;
+         end if;
+
          Protocol_Router.Insert(myTable, Message.Get_Source, Application_Layer);
 
          Protocol_Router.Search(myTable, Message.Get_Destination, address, found);
@@ -70,6 +75,12 @@ package body VN.Communication.Protocol_Routing is
 
          Status := tempStatus;
       end Receive;
+
+      procedure Init is -- ToDo: For testing only!!!!!!!!!!
+      begin
+         Initiated := true;
+         Protocol_Router.Insert(myTable, 1337, CAN_Subnet);
+      end Init;
 
    end Protocol_Routing_Type;
 end VN.Communication.Protocol_Routing;
