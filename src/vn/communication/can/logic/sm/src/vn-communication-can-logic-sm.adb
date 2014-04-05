@@ -219,6 +219,9 @@ package body VN.Communication.CAN.Logic.SM is
                          VN.Communication.CAN.Logic.Duty_Ptr(this.receiver),
                          VN.Communication.CAN.Logic.Duty_Ptr(this.cuuidResponder),
                          VN.Communication.CAN.Logic.Duty_Ptr(this.cuuidHandler));
+
+      --ToDo: For testing only!!!!
+      CAN_Routing.Insert(this.myTable, 1337, 42);
    end Init;
 
    procedure HelloProc(CANAddress : VN.Communication.CAN.CAN_Address_Sender;
