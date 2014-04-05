@@ -3,7 +3,7 @@
 -- Date: 2014-XX-XX
 -- Summary:
 -- Simple implementation of routing table. A better implementation is recommended in the future.
--- ToDo: Only started.
+-- ToDo: Only a simple implementation, could be optimized.
 
 with Interfaces;
 use Interfaces;

@@ -3,7 +3,7 @@
 -- Date: 2014-XX-XX
 -- Summary:
 -- Simple implementation of routing table. A better implementation is recommended in the future.
--- ToDo: Only started.
+-- ToDo: Only a simple implementation, could be optimized.
 
 generic
    type Generic_Address_Type is private; -- e.g. CAN address, UDP-port, etc.
@@ -22,7 +22,6 @@ package VN.Communication.Routing_Table is
                     Logical_Address : VN.VN_Logical_Address;
                     Generic_Address : out Generic_Address_Type;
                     found : out Boolean);
-
 private
 
    type Element_Type is
@@ -39,7 +38,5 @@ private
          count  : Natural := 0;
          Values : Content (0 .. Capacity); --and yes, the length of Values will be Capacity+1
       end record;
-
--- := (others => (false,
 
 end VN.Communication.Routing_Table;
