@@ -4,6 +4,8 @@ with VN.Communication;
 with VN.Communication.CAN;
 With Task_Test;
 
+with Malloc;
+
 with GNAT.IO;
 --with System.BB.Interrupts;
 

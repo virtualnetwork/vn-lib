@@ -5,18 +5,19 @@ NAME		?=	task_test_main
 ########################################
 # Ada project file
 ADAPRJ		?=	task_test_sf2.gpr
+ADAPRJFOLDER	?=	
 
 ########################################
 # Path to support folder
-SPTPATH		=	../../../../bap-arm-ravenscar-repository-rev280/support
+SPTPATH		=	$(shell pwd)/../../../../bap-arm-ravenscar-repository-rev280/support
 # Path to Microsemi drivers
 DRVPATH		=	$(SPTPATH)/microsemi-drivers
-# Path to Ada RTS
+# Path to Ada RTS ????????????
 RTS_DIR		=	$(shell pwd)/../../../../bap-arm-ravenscar-repository-rev280/rts/boards/sf2-starter-kit-010
 
 ########################################
 # Link command file, set defaults
-LDFILE		?=	../$(SPTPATH)/link-dbg-in-microsemi-sf2-esram.ld
+LDFILE		?=	$(SPTPATH)/link-dbg-in-microsemi-sf2-esram.ld
 # Programming target address (in SF2, make sure to use correct link file)
 PRGADR		?=	0x20000000
 
@@ -39,7 +40,7 @@ INCPATH		+=	$(SPTPATH)/bap-drivers/
 ASRC		+=	$(DRVPATH)/CMSIS/startup_gcc/startup_m2sxxx.s
 CSRC		+=	$(DRVPATH)/CMSIS/startup_gcc/newlib_stubs.c
 CSRC		+=	$(DRVPATH)/CMSIS/system_m2sxxx.c
-CSRC		+=  $(RTS_DIR)/adainclude/context_switch-bb.c
+CSRC		+=	$(RTS_DIR)/adainclude/context_switch-bb.c
 
 
 # Include paths
@@ -48,9 +49,9 @@ INCPATH		+=	$(dir $(CSRC))
 INCPATH		+=	$(DRVPATH)/armgcc-extra-includes
 INCPATH		+=	$(DRVPATH)/drivers_config/sys_config
 
-CC			=	arm-none-eabi-gcc
+CC		=	arm-none-eabi-gcc
 OBJCPY		= 	arm-none-eabi-objcopy
-AR			= 	arm-none-eabi-ar
+AR		= 	arm-none-eabi-ar
 CFLAGS		=	-c -Wall -O2 -mcpu=cortex-m3 -mthumb
 ADAMAKE		=	arm-none-eabi-gnatmake
 ADAFLAGS	= 	--RTS=$(RTS_DIR) -P$(ADAPRJ) -XLDFILE=$(LDFILE)
@@ -70,15 +71,15 @@ VPATH 		+= 	$(dir $(CSRC))
 EXIT 		= 	0
 PRGPAR 		=	-p $(PRGTTY)
 ifeq "$(TARGET_ADR)" "ESRAM"
-	LDFILE	=	../$(SPTPATH)/link-dbg-in-microsemi-sf2-esram.ld
+	LDFILE	=	$(SPTPATH)/link-dbg-in-microsemi-sf2-esram.ld
 	PRGADR	= 	0x20000000
 # If adr == 0xa0000000 => DDR mirrored to 0x0
 else ifeq "$(TARGET_ADR)" "EXTRAM"
-	LDFILE	=	../$(SPTPATH)/link-microsemi-sf2-extram.ld
+	LDFILE	=	$(SPTPATH)/link-microsemi-sf2-extram.ld
 	PRGADR	= 	0xA0000000
 # Id adr == 0x60000000 => ENVM (FlashRam) mirrored to 0x0
 else ifeq "$(TARGET_ADR)" "ENVM"
-	LDFILE	=	../$(SPTPATH)/link-microsemi-sf2-envm.ld
+	LDFILE	=	$(SPTPATH)/link-microsemi-sf2-envm.ld
 	PRGADR	= 	0x60000000
 	PRGPAR 	+= 	-w 128
 else
@@ -129,7 +130,7 @@ clean:
 	@echo
 	@echo
 	@echo "*** Clean project"
-	@echo
+	@echo	
 	@-rm obj/*.o obj/*.a obj/*.ali $(NAME) $(NAME).bin
 
 
