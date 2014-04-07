@@ -64,7 +64,7 @@ private
          Source         : VN_Logical_Address;
          Flags          : VN_Flags := 0;
          Opcode         : VN_Opcode;
-         Ext_Header	: VN_Ext_Header_Length := 1; --Value          : Positive := 1;????????
+         Ext_Header	: VN_Ext_Header_Length := 0; --Value          : Positive := 1;????????
       end record;
 
    for VN_Header use record
