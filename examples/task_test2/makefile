@@ -5,14 +5,13 @@ NAME		?=	task_test_main
 ########################################
 # Ada project file
 ADAPRJ		?=	task_test_sf2.gpr
-ADAPRJFOLDER	?=	
 
 ########################################
 # Path to support folder
 SPTPATH		=	$(shell pwd)/../../../../bap-arm-ravenscar-repository-rev280/support
 # Path to Microsemi drivers
 DRVPATH		=	$(SPTPATH)/microsemi-drivers
-# Path to Ada RTS ????????????
+# Path to Ada RTS
 RTS_DIR		=	$(shell pwd)/../../../../bap-arm-ravenscar-repository-rev280/rts/boards/sf2-starter-kit-010
 
 ########################################
@@ -22,8 +21,6 @@ LDFILE		?=	$(SPTPATH)/link-dbg-in-microsemi-sf2-esram.ld
 PRGADR		?=	0x20000000
 
 PRGTTY		?=	/dev/ttyUSB0
-
-#TARGET_ADR 	?= ESRAM
 
 ########################################
 # Driver sources
@@ -58,6 +55,7 @@ ADAFLAGS	= 	--RTS=$(RTS_DIR) -P$(ADAPRJ) -XLDFILE=$(LDFILE)
 
 # Add "-I" to all includes
 INCLUDES	=	$(addprefix -I, $(INCPATH))
+
 # Make sure objects (.o) will be placed in obj/
 OBJECTS		+=	$(patsubst %.c, obj/%.o, $(notdir $(CSRC)))
 OBJECTS		+=	$(patsubst %.s, obj/%.o, $(notdir $(ASRC)))
