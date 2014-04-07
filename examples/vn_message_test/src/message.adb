@@ -9,7 +9,7 @@ package body Message is
       null;
    end Serialize;
 
-   procedure DeSerialize(Message : out VN_Message_Basic; buffer : in out Buffer_Array_Type) is
+   procedure DeSerialize(Message : out VN_Message_Basic; buffer : in Buffer_Array_Type) is
       tempMsg : VN_Message_Basic;
       for tempMsg'Address use buffer'Address;
    begin
