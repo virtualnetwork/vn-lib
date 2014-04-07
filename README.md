@@ -1,8 +1,8 @@
 VN-Lib
 =======
-Library parts of the "Virtual Network" implementation.
 [![Build
 Status](https://travis-ci.org/virtualnetwork/vn-lib.png?branch=development)](https://travis-ci.org/virtualnetwork/vn-lib)
+Library parts of the "Virtual Network" implementation.
 
 ### Keywords
 Space plug-and-play Avionics, Space plug-and-play Architecture, Ada,
