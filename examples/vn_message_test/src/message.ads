@@ -37,34 +37,24 @@ package Message is
    type VN_Ext_Header_Length is mod 2 ** 8;
    for VN_Ext_Header_Length'Size use 8;
 
-   type VN_Header(Payload_Size : VN_Length) is private;
-
    -- Other VN fields used in multiple derived types
    type VN_Status is mod 2 ** 8;
    for VN_Status'Size use 8;
 
-   type VN_Message_Basic(Payload_Size : VN_Length) is tagged private;
+   MAX_PAYLOAD_SIZE : constant integer := 1024;
 
-   type Buffer_Array_Type is array (VN_Length range <>) of Interfaces.Unsigned_8;
-
-   procedure Serialize(Message : in VN_Message_Basic; buffer : out Buffer_Array_Type);
-
-   procedure DeSerialize(Message : out VN_Message_Basic; buffer : in Buffer_Array_Type);
-
-private 
-
-   type VN_Header(Payload_Size : VN_Length) is
+   type VN_Header is
       record
          -- Extended Header not implemented.
          Message_Type   : VN_Message_Type := Type_Basic;
          Version        : VN_Version := 1;
          Priority       : VN_Priority;
-         Payload_Length : VN_Length := Payload_Size;
+         Payload_Length : VN_Length;
          Destination    : VN_Logical_Address;
          Source         : VN_Logical_Address;
          Flags          : VN_Flags := 0;
          Opcode         : VN_Opcode;
-         Ext_Header	: VN_Ext_Header_Length := 0; --Value          : Positive := 1;????????
+         Ext_Header	: VN_Ext_Header_Length := 0;
       end record;
 
    for VN_Header use record
@@ -79,15 +69,28 @@ private
       Ext_Header 	at 0 range 0 .. 7;
    end record;
 
+   type VN_Payload_Byte_Array is array (1 .. MAX_PAYLOAD_SIZE) of Interfaces.Unsigned_8;
 
-   type VN_Message_Basic(Payload_Size : VN_Length) is tagged --new Ada.Finalization.Controlled with
+   type VN_Message_Basic is
       record
-         Header   : VN_Header(Payload_Size);
-         Payload  : Buffer_Array_Type(VN_Length(1)..Payload_Size);
+         Header   : VN_Header;
+         Payload  : VN_Payload_Byte_Array;
          Checksum : VN_Checksum;
       end record;
+  
+   for VN_Message_Basic use record
+      Header 		at 0 range 16 + MAX_PAYLOAD_SIZE * 8 .. 16 + MAX_PAYLOAD_SIZE * 8 + 135;
+      Payload 		at 0 range 16 .. 15 + MAX_PAYLOAD_SIZE * 8;
+      Checksum 		at 0 range 0 .. 15;
+   end record; 
 
-   pragma Pack(VN_Message_Basic);
+   for VN_Message_Basic'Alignment use 1;
+   
+   type VN_Message_Byte_Array is array (1 .. VN_Message_Basic'Size) of Interfaces.Unsigned_8;
+
+   procedure Serialize(Message : in VN_Message_Basic; buffer : out VN_Message_Byte_Array);
+
+   procedure DeSerialize(Message : out VN_Message_Basic; buffer : in VN_Message_Byte_Array);
    
 end Message;
 
