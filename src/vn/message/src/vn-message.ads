@@ -1,4 +1,5 @@
 with Ada.Finalization;
+with Ada.Unchecked_Deallocation;
 
 package VN.Message is
 
@@ -39,14 +40,17 @@ package VN.Message is
 
    -- VN_Message
    type VN_Message_Basic is tagged private;
+   type VN_Message_Access is access VN_Message_Basic'Class;
 
    -- VN_Version
-   function Get_Version(Message: VN_Message_Basic) return VN_Version;
-   procedure Set_Version(Message: out VN_Message_Basic; Version: VN_Version);
+   function Get_Version(Message: VN_Message_Access) return VN_Version;
+   procedure Set_Version(Message: in out VN_Message_Access; Version: VN_Version);
 
    -- VN_Checksum
-   function Get_Checksum(Message: VN_Message_Basic) return VN_Checksum;
-   procedure Update_Checksum(Message: in out VN_Message_Basic);
+   function Get_Checksum(Message: VN_Message_Access) return VN_Checksum;
+   procedure Update_Checksum(Message: in out VN_Message_Access);
+
+   procedure Free(Message: in out VN_Message_Access);
 
 private
    type VN_Message_Basic is new Ada.Finalization.Controlled with
@@ -74,5 +78,8 @@ private
 
    overriding
    procedure Finalize(This: in out VN_Message_Basic) is null;
+
+   procedure Free_Message_Access is new Ada.Unchecked_Deallocation
+               (VN_Message_Basic'Class, VN_Message_Access);
 
 end VN.Message;
