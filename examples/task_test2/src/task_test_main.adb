@@ -1,4 +1,6 @@
 
+pragma Profile(Ravenscar);
+
 with VN;
 with VN.Communication;
 with VN.Communication.CAN;
