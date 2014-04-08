@@ -1,63 +1,47 @@
-with Ada.Finalization;
-with Ada.Unchecked_Deallocation;
+with Interfaces;
 
 package VN.Message is
 
    -- Enum of different VN_Messages types.
    type VN_Message_Type is (Type_Basic, Type_Local_Hello, Type_Local_Ack);
+   for VN_Message_Type'Size use 8;
 
    type VN_Serializiation_Types is (TXT, XML);
    type VN_Component_Types is (CAS, LS, SM_L, SM_x, SM_Gateway, Unknown);
 
-   type VN_Header is private;
-   type VN_Payload is mod 2 ** 8;
-   type VN_Checksum is mod 2 ** 16;
-
    -- VN_Header parts
    type VN_Logical_Address is mod 2 ** 32;
+   for VN_Logical_Address'Size use 32;
+
    type VN_Version is mod 2 ** 8;
+   for VN_Version'Size use 8;
+
    type VN_Priority is mod 2 ** 8;
+   for VN_Priority'Size use 8;
+
    type VN_Length is mod 2 ** 16;
+   for VN_Length'Size use 16;
+
    type VN_Flags is mod 2 ** 16;
+   for VN_Flags'Size use 16;
+
    type VN_Opcode is mod 2 ** 8;
+   for VN_Opcode'Size use 8;
+
+   type VN_Payload is mod 2 ** 8;
+   for VN_Payload'Size use 8;
+
+   type VN_Checksum is mod 2 ** 16;
+   for VN_Checksum'Size use 16;
+
+   type VN_Ext_Header_Length is mod 2 ** 8;
+   for VN_Ext_Header_Length'Size use 8;
 
    -- Other VN fields used in multiple derived types
    type VN_Status is mod 2 ** 8;
+   for VN_Status'Size use 8;
 
-   -- VN_Payload parts in derived types of VN_Mesage
-   type VN_CUUID is mod 2 ** 64; -- FIX: Should be 128 bits.
-   -- type VN_CUUID is mod 2 ** 128; -- TODO: How to represent 128 bits properly.
-   type VN_Component_Type is mod 2 ** 8;
-
-   -- Communication types
-   type Send_Status is (OK,
-                        ERROR_UNKNOWN,
-                        ERROR_BUFFFER_OVERFLOW,
-                        ERROR_NO_ADDRESS_RECEIVED);
-
-   type Receive_Status is (OK,
-                           ERROR_UNKNOWN);
-
-   -- VN_Message
-   type VN_Message_Basic is tagged private;
-   type VN_Message_Access is access VN_Message_Basic'Class;
-
-   -- VN_Version
-   function Get_Version(Message: VN_Message_Access) return VN_Version;
-   procedure Set_Version(Message: in out VN_Message_Access; Version: VN_Version);
-
-   -- VN_Checksum
-   function Get_Checksum(Message: VN_Message_Access) return VN_Checksum;
-   procedure Update_Checksum(Message: in out VN_Message_Access);
-
-   procedure Free(Message: in out VN_Message_Access);
-
-private
-   type VN_Message_Basic is new Ada.Finalization.Controlled with
-      record
-         Header   : VN_Header;
-         Checksum : VN_Checksum;
-      end record;
+   MAX_PAYLOAD_SIZE : constant integer := 1024;
 
    type VN_Header is
       record
@@ -70,16 +54,46 @@ private
          Source         : VN_Logical_Address;
          Flags          : VN_Flags := 0;
          Opcode         : VN_Opcode;
-         Value          : Positive := 1;
+         Ext_Header : VN_Ext_Header_Length := 0;
       end record;
 
-   overriding
-   procedure Initialize(This: in out VN_Message_Basic) is null;
+   for VN_Header use record
+      Message_Type  at 0 range 128 .. 135;
+      Version       at 0 range 120 .. 127;
+      Priority      at 0 range 112 .. 119;
+      Payload_Length    at 0 range 96 .. 111;
+      Destination   at 0 range 64 .. 95;
+      Source        at 0 range 32 .. 63;
+      Flags         at 0 range 16 .. 31;
+      Opcode        at 0 range 8 .. 15;
+      Ext_Header    at 0 range 0 .. 7;
+   end record;
 
-   overriding
-   procedure Finalize(This: in out VN_Message_Basic) is null;
+   type VN_Payload_Byte_Array is array (1 .. MAX_PAYLOAD_SIZE)
+                                    of Interfaces.Unsigned_8;
 
-   procedure Free_Message_Access is new Ada.Unchecked_Deallocation
-               (VN_Message_Basic'Class, VN_Message_Access);
+   type VN_Message_Basic is
+      record
+         Header   : VN_Header;
+         Payload  : VN_Payload_Byte_Array;
+         Checksum : VN_Checksum;
+      end record;
+
+   for VN_Message_Basic use record
+      Header        at 0 range 16 + MAX_PAYLOAD_SIZE * 8 .. 16 + MAX_PAYLOAD_SIZE * 8 + 135;
+      Payload       at 0 range 16 .. 15 + MAX_PAYLOAD_SIZE * 8;
+      Checksum      at 0 range 0 .. 15;
+   end record;
+
+   for VN_Message_Basic'Alignment use 1;
+
+   type VN_Message_Byte_Array is array (1 .. VN_Message_Basic'Size)
+                                          of Interfaces.Unsigned_8;
+
+   procedure Serialize(Message : in VN_Message_Basic;
+                       buffer : out VN_Message_Byte_Array);
+
+   procedure Deserialize(Message : out VN_Message_Basic;
+                         buffer : in VN_Message_Byte_Array);
 
 end VN.Message;
