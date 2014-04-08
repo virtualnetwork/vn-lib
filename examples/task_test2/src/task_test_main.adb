@@ -1,23 +1,15 @@
 
 pragma Profile(Ravenscar);
 
-with VN;
-with VN.Communication;
-with VN.Communication.CAN;
-With Task_Test;
+with System;
+with Ada.Real_Time;
 
-with Malloc;
+with Task_Test;
 
 with GNAT.IO;
 
-with VN.Communication.CAN.Logic.SM;
-
 procedure Task_Test_Main is
 
-   theUCID : aliased VN.Communication.CAN.UCID;
-   theCUUID : aliased VN.VN_CUUID;
-
-   d : VN.Communication.CAN.Logic.SM.SM_Duty(theUCID'Access, theCUUID'Access);
 
 begin
 
