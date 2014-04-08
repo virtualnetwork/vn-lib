@@ -80,8 +80,9 @@ package VN.Message is
       end record;
 
    for VN_Message_Basic use record
-      Header        at 0 range 16 + MAX_PAYLOAD_SIZE * 8 .. 16 + MAX_PAYLOAD_SIZE * 8 + 135;
-      Payload       at 0 range 16 .. 15 + MAX_PAYLOAD_SIZE * 8;
+      Header        at 0 range (16 + MAX_PAYLOAD_SIZE * 8) ..
+                               (16 + MAX_PAYLOAD_SIZE * 8 + 135);
+      Payload       at 0 range 16 .. (15 + MAX_PAYLOAD_SIZE * 8);
       Checksum      at 0 range 0 .. 15;
    end record;
 
