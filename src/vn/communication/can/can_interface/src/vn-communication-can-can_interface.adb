@@ -26,16 +26,11 @@ package body VN.Communication.CAN.CAN_Interface is
 
          case data.unitType is
             when SM_CAN =>
-               if not isInitialized then
-                  Init;
-               end if;
                VN.Communication.CAN.Logic.SM.Send(data.SMDuty, Message, Status);
                 --  data.SMDuty.Send(Message, Status);
 
             when Node =>
-               if not isInitialized then
-                  Init;
-               end if;
+               null;
              --  VN.Communication.CAN.Logic.Node.Send(data.nodeDuty, Message, Status);
 --                 data.nodeDuty.Send(Message, Status);
          end case;
@@ -46,16 +41,11 @@ package body VN.Communication.CAN.CAN_Interface is
       begin
          case data.unitType is
             when SM_CAN =>
-               if not isInitialized then
-                  Init;
-               end if;
                VN.Communication.CAN.Logic.SM.Receive(data.SMDuty, Message, Status);
                --  data.SMDuty.Receive(Message, Status);
 
             when Node =>
-               if not isInitialized then
-                  Init;
-               end if;
+               null;
               -- VN.Communication.CAN.Logic.Node.Receive(data.nodeDuty, Message, Status);
                --     data.nodeDuty.Receive(Message, Status);
          end case;
@@ -69,41 +59,15 @@ package body VN.Communication.CAN.CAN_Interface is
       begin
          case data.unitType is
             when SM_CAN =>
-               if not isInitialized then
-                  Init;
-               end if;
                VN.Communication.CAN.Logic.SM.Update(data.SMDuty, msgsBuffer, ret);
 --                 data.SMDuty.Update(msgsBuffer, ret);
 
             when Node =>
-               if not isInitialized then
-                  Init;
-               end if;
+               null;
 --                 VN.Communication.CAN.Logic.Node.Update(data.nodeDuty, msgsBuffer, ret);
 --       data.nodeDuty.Update(msgsBuffer, ret);
          end case;
-      end Update;
-
-      --------------------------------------------------------
-
-      procedure Init is
-      begin
-         case data.unitType is
-            when SM_CAN =>
-               if not isInitialized then
-                  isInitialized := true;
-                  VN.Communication.CAN.Logic.SM.Init(data.SMDuty);
---                    data.SMDuty.Init;
-               end if;
-
-            when Node =>
-               if not isInitialized then
-                  isInitialized := true;
---                    VN.Communication.CAN.Logic.Node.Init(data.SMDuty)
---                    data.nodeDuty.Init;
-               end if;
-         end case;
-      end Init;
+   end Update;
 
    end CAN_Interface_Type;
 

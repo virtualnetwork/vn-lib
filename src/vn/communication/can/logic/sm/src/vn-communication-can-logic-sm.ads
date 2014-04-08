@@ -66,9 +66,6 @@ package VN.Communication.CAN.Logic.SM is
    --This function is most likely obsolete:
    procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender; isAssigned : out boolean);
 
-
-   procedure Init(this : in out SM_Duty); -- has to be called before any other procedure
-
    --THIS IS JUST TESTING FUNCTIONALLITY FOR NODES, NOT SM-CANs
 --     procedure GetLogicalAddress(this : in out SM_Duty; LogicalAddress : out VN.VN_Logical_Address;
 --                                 isAssigned : out boolean);
@@ -83,6 +80,8 @@ package VN.Communication.CAN.Logic.SM is
 
 
 private
+
+   procedure Init(this : in out SM_Duty);
 
    --ToDo: These constants should be put in a config file of some sort
    CAN_ROUTING_TABLE_SIZE : constant VN.VN_Logical_Address := 500;

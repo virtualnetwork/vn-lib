@@ -52,10 +52,6 @@ begin
 
    Next_Period := Ada.Real_Time.Clock;
 
-   for i in DutyArray'Range loop
-      VN.Communication.CAN.Logic.SM.Init(DutyArray(i).all);
-   end loop;
-
    loop
       Next_Period := Next_Period + Period;
       delay until Next_Period;

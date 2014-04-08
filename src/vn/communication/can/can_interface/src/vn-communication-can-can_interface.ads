@@ -40,9 +40,6 @@ package VN.Communication.CAN.CAN_Interface is
       --------------------------------------------------------
 
    private
-
-      procedure Init;
-
       isInitialized : Boolean := false;
       data : Private_Data(theUCID, theCUUID, unitType);
    end CAN_Interface_Type;
