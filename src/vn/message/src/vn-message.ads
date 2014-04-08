@@ -6,12 +6,15 @@ package VN.Message is
    type VN_Message_Type is (Type_Basic, Type_Local_Hello, Type_Local_Ack);
    for VN_Message_Type'Size use 8;
 
-   type VN_Serializiation_Types is (TXT, XML);
-   type VN_Component_Types is (CAS, LS, SM_L, SM_x, SM_Gateway, Unknown);
+   type VN_Serializiation_Type is (TXT, XML);
+   for VN_Serializiation_Type'Size use 8;
+
+   type VN_Component_Type is (CAS, LS, SM_L, SM_x, SM_Gateway, Unknown);
+   for VN_Component_Type'Size use 8;
 
    -- VN_Header parts
-   type VN_Logical_Address is mod 2 ** 32;
-   for VN_Logical_Address'Size use 32;
+   -- type VN_Logical_Address is mod 2 ** 32;
+   -- for VN_Logical_Address'Size use 32;
 
    type VN_Version is mod 2 ** 8;
    for VN_Version'Size use 8;
@@ -45,7 +48,6 @@ package VN.Message is
 
    type VN_Header is
       record
-         -- Extended Header not implemented.
          Message_Type   : VN_Message_Type := Type_Basic;
          Version        : VN_Version := 1;
          Priority       : VN_Priority;
@@ -54,19 +56,19 @@ package VN.Message is
          Source         : VN_Logical_Address;
          Flags          : VN_Flags := 0;
          Opcode         : VN_Opcode;
-         Ext_Header : VN_Ext_Header_Length := 0;
+         Ext_Header     : VN_Ext_Header_Length := 0;
       end record;
 
    for VN_Header use record
-      Message_Type  at 0 range 128 .. 135;
-      Version       at 0 range 120 .. 127;
-      Priority      at 0 range 112 .. 119;
+      Message_Type      at 0 range 128 .. 135;
+      Version           at 0 range 120 .. 127;
+      Priority          at 0 range 112 .. 119;
       Payload_Length    at 0 range 96 .. 111;
-      Destination   at 0 range 64 .. 95;
-      Source        at 0 range 32 .. 63;
-      Flags         at 0 range 16 .. 31;
-      Opcode        at 0 range 8 .. 15;
-      Ext_Header    at 0 range 0 .. 7;
+      Destination       at 0 range 64 .. 95;
+      Source            at 0 range 32 .. 63;
+      Flags             at 0 range 16 .. 31;
+      Opcode            at 0 range 8 .. 15;
+      Ext_Header        at 0 range 0 .. 7;
    end record;
 
    type VN_Payload_Byte_Array is array (1 .. MAX_PAYLOAD_SIZE)
