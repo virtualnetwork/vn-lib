@@ -18,11 +18,11 @@ package body VN.Message is
    end DeSerialize;
 
 
---   procedure Update_Checksum(Message: in out VN_Message_Access) is
---   begin
---      Message.Checksum := 5; -- TODO: Update the checksum with a proper
---                                    -- value.
---   end Update_Checksum;
---
+   procedure Update_Checksum(Message: in out VN_Message_Basic) is
+   begin
+      Message.Checksum := 5; -- TODO: Update the checksum with a proper
+                                    -- calculation and value.
+   end Update_Checksum;
+
 
 end VN.Message;

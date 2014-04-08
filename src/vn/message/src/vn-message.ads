@@ -96,4 +96,6 @@ package VN.Message is
    procedure Deserialize(Message : out VN_Message_Basic;
                          buffer : in VN_Message_Byte_Array);
 
+   procedure Update_Checksum(Message: in out VN_Message_Basic);
+
 end VN.Message;
