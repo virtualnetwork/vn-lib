@@ -9,7 +9,7 @@ with VN.Message;
 with VN.Communication;
 with VN.Communication.CAN;
 
-with Malloc;
+--with Malloc;
 
 with GNAT.IO;
 

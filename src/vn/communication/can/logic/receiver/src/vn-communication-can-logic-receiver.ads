@@ -39,22 +39,25 @@ private
 
    NUM_UNITS : constant integer := 2;  --ToDO: Put this in a config file of some sort
 
-   type UnitArray is array(1..NUM_UNITS) of VN.Communication.CAN.Logic.Receiver_Unit.Receiver_Unit_Duty_ptr;
+   --type UnitArray is array(1..NUM_UNITS) of VN.Communication.CAN.Logic.Receiver_Unit.Receiver_Unit_Duty_ptr;
+   type UnitArray is array(1..NUM_UNITS) of aliased VN.Communication.CAN.Logic.Receiver_Unit.Receiver_Unit_Duty;
 
    type Receiver_State is (Unactivated, Activated);
    type Receiver_Duty is new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	 : Receiver_State := Unactivated;
          myCANAddress 	 : VN.Communication.CAN.CAN_Address_Sender;
-         receiveBuffer 	 : Receive_Buffer_ptr :=
-         			new VN.Communication.CAN.Logic.Receiver_Unit.Receive_Buffer_pack.Buffer(VN.Communication.CAN.Logic.Receiver_Unit.SIZE);
+         receiveBuffer   : aliased Receive_Buffer_pack.Buffer(SIZE);
+--           receiveBuffer 	 : Receive_Buffer_ptr :=
+--           			new VN.Communication.CAN.Logic.Receiver_Unit.Receive_Buffer_pack.Buffer(VN.Communication.CAN.Logic.Receiver_Unit.SIZE);
 
-         units		 : UnitArray := (others => new VN.Communication.CAN.Logic.Receiver_Unit.Receiver_Unit_Duty);
+         units		 : UnitArray; -- := (others => new VN.Communication.CAN.Logic.Receiver_Unit.Receiver_Unit_Duty);
 
-         pendingSenders  : Pending_Senders_ptr :=
-           			new Pending_Senders_pack.Buffer(VN.Communication.CAN.Logic.Receiver_Unit.SIZE);
+         pendingSenders  : aliased Pending_Senders_pack.Buffer(VN.Communication.CAN.Logic.Receiver_Unit.SIZE);
+--           pendingSenders  : Pending_Senders_ptr :=
+--             			new Pending_Senders_pack.Buffer(VN.Communication.CAN.Logic.Receiver_Unit.SIZE);
       end record;
 
-  function GetFreeUnit(this : in Receiver_Duty) return Receiver_Unit_Duty_ptr;
+  procedure GetFreeUnit(this : in out Receiver_Duty; ret : out Receiver_Unit_Duty_ptr);
 
 end VN.Communication.CAN.Logic.Receiver;

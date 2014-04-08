@@ -32,7 +32,7 @@ package body VN.Communication.CAN.Logic.Receiver is
             if bMsgReceived and then msgIn.isNormal and then msgIn.Receiver = this.myCANAddress then
                if msgIn.msgType = VN.Communication.CAN.Logic.START_TRANSMISSION then
 
-                  if not Pending_Senders_pack.Full(this.pendingSenders.all) then --if pendingSenders is not full
+                  if not Pending_Senders_pack.Full(this.pendingSenders) then --if pendingSenders is not full
                      VN.Communication.CAN.Logic.Message_Utils.StartTransmissionFromMessage(msgIn, rec, pending.sender, pending.numMessages);
                      if rec = this.myCANAddress then
 
@@ -41,9 +41,9 @@ package body VN.Communication.CAN.Logic.Receiver is
 
                         --Check whether this StartTransmission has been recieved eariler (the sender might resend the StartTransmission message)
                         -- if not, add it as a pending transmission:
-                        if not Pending_Senders_pack.Find(pending, this.pendingSenders.all) then
+                        if not Pending_Senders_pack.Find(pending, this.pendingSenders) then
 --                             this.pendingSenders.Append(pending);
-                           Pending_Senders_pack.Insert(pending, this.pendingSenders.all);
+                           Pending_Senders_pack.Insert(pending, this.pendingSenders);
                         end if;
                      end if;
                   end if;
@@ -59,12 +59,12 @@ package body VN.Communication.CAN.Logic.Receiver is
                end if;
             end if;
 
-            if not Pending_Senders_pack.Empty(this.pendingSenders.all) then
-               freeUnit := this.GetFreeUnit;
+            if not Pending_Senders_pack.Empty(this.pendingSenders) then
+               this.GetFreeUnit(freeUnit);
 
                if freeUnit /= null then
 --                 pending  := this.pendingSenders.First_Element;
-                  Pending_Senders_pack.Remove(pending, this.pendingSenders.all);
+                  Pending_Senders_pack.Remove(pending, this.pendingSenders);
 
             --   if freeUnit /= null then
                   freeUnit.Assign(pending.sender, pending.numMessages);
@@ -78,12 +78,12 @@ package body VN.Communication.CAN.Logic.Receiver is
    procedure ReceiveVNMessage(this : in out Receiver_Duty; msg : out VN_Message_Internal;
                               status : out VN.Receive_Status) is
    begin
-      if Receive_Buffer_pack.Empty(this.receiveBuffer.all) then --this.receiveBuffer.Is_Empty then
+      if Receive_Buffer_pack.Empty(this.receiveBuffer) then --this.receiveBuffer.Is_Empty then
          status := VN.NO_MSG_RECEIVED;
       else
-         Receive_Buffer_pack.Remove(msg, this.receiveBuffer.all);
+         Receive_Buffer_pack.Remove(msg, this.receiveBuffer);
 
-         if Receive_Buffer_pack.Empty(this.receiveBuffer.all) then
+         if Receive_Buffer_pack.Empty(this.receiveBuffer) then
             status := VN.MSG_RECEIVED_NO_MORE_AVAILABLE;
          else
             status := VN.MSG_RECEIVED_MORE_AVAILABLE;
@@ -102,19 +102,21 @@ package body VN.Communication.CAN.Logic.Receiver is
          DebugOutput("Receiver activated with CAN address " & address'Img, 5);
 
          for i in this.units'range loop
-            this.units(i).Activate(address, this.receiveBuffer, this.pendingSenders);
+            this.units(i).Activate(address, this.receiveBuffer'Unchecked_Access, this.pendingSenders'Unchecked_Access);
          end loop;
       end if;
    end Activate;
 
-   function GetFreeUnit(this : in Receiver_Duty) return Receiver_Unit_Duty_ptr is
+   procedure GetFreeUnit(this : in out Receiver_Duty; ret : out Receiver_Unit_Duty_ptr) is
    begin
       for i in this.units'range loop
          if not this.units(i).isActive then
-            return  this.units(i);
+            ret := this.units(i)'Unchecked_Access;
+            return;
          end if;
       end loop;
-      return null;
+      ret := null;
+      return;
    end GetFreeUnit;
 
 end VN.Communication.CAN.Logic.Receiver;

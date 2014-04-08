@@ -39,9 +39,10 @@ package body VN.Communication.CAN.Logic.Sender is
             --If there is a VN message to send, assign it to a Sender Unit (if available):
             if not Send_Buffer_pack.Empty(this.sendBuffer) then
                declare
-                  freeUnit : Sender_Unit_Duty_ptr := this.GetFreeUnit;
+                  freeUnit : Sender_Unit_Duty_ptr; -- := this.GetFreeUnit;
                   msg : VN.Communication.CAN.Logic.VN_Message_Internal;
                begin
+                  this.GetFreeUnit(freeUnit);
 
                   if freeUnit /= null then
                      Send_Buffer_pack.Remove(msg, this.sendBuffer);
@@ -99,14 +100,16 @@ package body VN.Communication.CAN.Logic.Sender is
       end if;
    end SendVNMessage;
 
-   function GetFreeUnit(this : in Sender_Duty) return Sender_Unit_Duty_ptr is
+   procedure GetFreeUnit(this : in out Sender_Duty; ret : out Sender_Unit_Duty_ptr) is
    begin
       for i in this.units'range loop
          if not this.units(i).isActive then
-            return  this.units(i);
+            ret := this.units(i)'Unchecked_Access;
+            return;
          end if;
       end loop;
-      return null;
+      ret := null;
+      return;
    end GetFreeUnit;
 
 end VN.Communication.CAN.Logic.Sender;

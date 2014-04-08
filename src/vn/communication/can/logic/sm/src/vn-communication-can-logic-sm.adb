@@ -25,6 +25,9 @@ package body VN.Communication.CAN.Logic.SM is
       msgIn, msgOut : CAN_Message_Logical;
 
    begin
+      if not this.isInitialized then
+         Init(this);
+      end if;
 
       if CAN_Message_Buffers.Extent(msgsBuffer) = 0 then
          for i in this.DutyArray'Range loop
@@ -111,6 +114,9 @@ package body VN.Communication.CAN.Logic.SM is
       aUnit  : Unit;
       isSM_CAN  : boolean;
    begin
+      if not this.isInitialized then
+         Init(this);
+      end if;
 
       Unit_Buffers.Clear(discoveredUnits);
 
@@ -132,6 +138,9 @@ package body VN.Communication.CAN.Logic.SM is
       receiver : VN.Communication.CAN.CAN_Address_Sender;
       found : boolean;
    begin
+      if not this.isInitialized then
+         Init(this);
+      end if;
 
       --The SPA protocol says that messages addressed to logical address 0 shall be thrown away
       if msg.Get_Destination = 0 then
@@ -156,6 +165,10 @@ package body VN.Communication.CAN.Logic.SM is
                      status : out VN.Receive_Status) is
       internal : VN.Communication.CAN.Logic.VN_Message_Internal;
    begin
+      if not this.isInitialized then
+         Init(this);
+      end if;
+
       this.receiver.ReceiveVNMessage(internal, status);
 
       --TODO, this will need to be updated if more options for VN.Receive_Status are added:
@@ -174,6 +187,10 @@ package body VN.Communication.CAN.Logic.SM is
                      isAssigned : out boolean) is
       use VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation;
    begin
+      if not this.isInitialized then
+         Init(this);
+      end if;
+
       if this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.MASTER then
          address := 0;
          isAssigned := true;
@@ -212,13 +229,23 @@ package body VN.Communication.CAN.Logic.SM is
    begin
       VN.Communication.CAN.Logic.DebugOutput("SM_Duty initialized", 4);
 
-      this.DutyArray := (VN.Communication.CAN.Logic.Duty_Ptr(this.masterNegotiation),
-                         VN.Communication.CAN.Logic.Duty_Ptr(this.addressReceiver),
-                         VN.Communication.CAN.Logic.Duty_Ptr(this.assigner),
-                         VN.Communication.CAN.Logic.Duty_Ptr(this.sender),
-                         VN.Communication.CAN.Logic.Duty_Ptr(this.receiver),
-                         VN.Communication.CAN.Logic.Duty_Ptr(this.cuuidResponder),
-                         VN.Communication.CAN.Logic.Duty_Ptr(this.cuuidHandler));
+      this.isInitialized := true;
+
+      this.DutyArray(this.DutyArray'First) := this.masterNegotiation'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 1) := this.addressReceiver'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 2) := this.assigner'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 3) := this.sender'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 4) := this.receiver'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 5) := this.cuuidResponder'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 6) := this.cuuidHandler'Unchecked_Access;
+
+--        this.DutyArray := (VN.Communication.CAN.Logic.Duty_Ptr(this.masterNegotiation),
+--                           VN.Communication.CAN.Logic.Duty_Ptr(this.addressReceiver),
+--                           VN.Communication.CAN.Logic.Duty_Ptr(this.assigner),
+--                           VN.Communication.CAN.Logic.Duty_Ptr(this.sender),
+--                           VN.Communication.CAN.Logic.Duty_Ptr(this.receiver),
+--                           VN.Communication.CAN.Logic.Duty_Ptr(this.cuuidResponder),
+--                           VN.Communication.CAN.Logic.Duty_Ptr(this.cuuidHandler));
 
       --ToDo: For testing only!!!!
       CAN_Routing.Insert(this.myTable, 1337, 42);

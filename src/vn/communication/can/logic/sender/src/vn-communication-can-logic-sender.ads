@@ -43,7 +43,8 @@ private
    SIZE : constant Integer := 20;      --ToDO: Put this in a config file of some sort
    NUM_UNITS : constant integer := 4;  --ToDO: Put this in a config file of some sort
 
-   type UnitArray is array(1..NUM_UNITS) of VN.Communication.CAN.Logic.Sender_Unit.Sender_Unit_Duty_ptr;
+   type UnitArray is array(1..NUM_UNITS) of aliased VN.Communication.CAN.Logic.Sender_Unit.Sender_Unit_Duty;
+   --type UnitArray is array(1..NUM_UNITS) of VN.Communication.CAN.Logic.Sender_Unit.Sender_Unit_Duty_ptr;
 
    type Sender_State is (Unactivated, Activated);
    type Sender_Duty is new VN.Communication.CAN.Logic.Duty with
@@ -51,10 +52,10 @@ private
          currentState 	: Sender_State := Unactivated;
          myCANAddress 	: VN.Communication.CAN.CAN_Address_Sender;
          sendBuffer   	: Send_Buffer_pack.Buffer(SIZE);
-         units		: UnitArray := (others => new VN.Communication.CAN.Logic.Sender_Unit.Sender_Unit_Duty);
+         units		: UnitArray; -- := (others => new VN.Communication.CAN.Logic.Sender_Unit.Sender_Unit_Duty);
          iterator	: Integer := UnitArray'First;
       end record;
 
-   function GetFreeUnit(this : in Sender_Duty) return Sender_Unit_Duty_ptr;
+   procedure GetFreeUnit(this : in out Sender_Duty; ret : out Sender_Unit_Duty_ptr);
 
 end VN.Communication.CAN.Logic.Sender;

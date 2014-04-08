@@ -47,7 +47,7 @@ package VN.Communication.CAN.Logic.SM is
    use Unit_Buffers;
 
 
-   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is private;
+   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is limited private;
 
    type SM_Duty_ptr is access all SM_Duty;
 
@@ -93,33 +93,43 @@ private
 
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
-   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is
+   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is limited
       record
+
+         isInitialized : Boolean := false;
 
          myUCID  : VN.Communication.CAN.UCID  := theUCID.all;
          myCUUID : VN.VN_CUUID := theCUUID.all;
          myTable : CAN_Routing.Table_Type(CAN_ROUTING_TABLE_SIZE);
 
-         masterNegotiation : VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty_ptr :=
-           new VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);
 
-         addressReceiver : VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node_ptr :=
-           new VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node(theUCID);
+           masterNegotiation : aliased VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);
+--           masterNegotiation : VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty_ptr :=
+--             new VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);
 
-         assigner : VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master_ptr :=
-           new VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master;
+         addressReceiver : aliased VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node(theUCID);
+--           addressReceiver : VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node_ptr :=
+--             new VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node(theUCID);
 
-         sender : VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr :=
-           new VN.Communication.CAN.Logic.Sender.Sender_Duty;
+         assigner : aliased VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master;
+--           assigner : VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master_ptr :=
+--             new VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master;
 
-         receiver : VN.Communication.CAN.Logic.Receiver.Receiver_Duty_ptr :=
-           new VN.Communication.CAN.Logic.Receiver.Receiver_Duty;
+         sender : aliased VN.Communication.CAN.Logic.Sender.Sender_Duty;
+--           sender : VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr :=
+--             new VN.Communication.CAN.Logic.Sender.Sender_Duty;
 
-         cuuidResponder : VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder_ptr :=
-           new VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder;
+         receiver : aliased VN.Communication.CAN.Logic.Receiver.Receiver_Duty;
+--           receiver : VN.Communication.CAN.Logic.Receiver.Receiver_Duty_ptr :=
+--             new VN.Communication.CAN.Logic.Receiver.Receiver_Duty;
 
-         cuuidHandler : VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler_ptr :=
-           new VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler(HelloProc'Access);
+         cuuidResponder : aliased VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder;
+--           cuuidResponder : VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder_ptr :=
+--             new VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder;
+
+         cuuidHandler : aliased VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler(HelloProc'Access);
+--           cuuidHandler : VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler_ptr :=
+--             new VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler(HelloProc'Access);
 
          DutyArray : ArrayOfDuties;
 
