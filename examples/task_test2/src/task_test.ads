@@ -21,6 +21,4 @@ package Task_Test is
    myTask : aliased VN.Communication.CAN.Can_Task.CAN_Task_Type
      (myInterface'Access, System.Priority'Last, thePeriod'Access);
 
-   procedure Nothing;
-
 end Task_Test;
