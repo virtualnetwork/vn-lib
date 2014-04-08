@@ -19,6 +19,6 @@ package Task_Test is
      (U1'Unchecked_Access, C1'Unchecked_Access, VN.Communication.CAN.CAN_Interface.SM_CAN);
 
    myTask : aliased VN.Communication.CAN.Can_Task.CAN_Task_Type
-     (myInterface'Access, System.Priority'Last, thePeriod'Access);
+     (myInterface'Access, 7, thePeriod'Access);
 
 end Task_Test;
