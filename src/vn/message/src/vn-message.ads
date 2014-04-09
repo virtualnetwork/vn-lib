@@ -50,6 +50,7 @@ package VN.Message is
 
    COMPONENT_TYPE_SIZE  : constant integer := 1;
    CUUID_SIZE           : constant integer := 16;
+   STATUS_SIZE          : constant integer := 1;
 
    type VN_Header is
       record
