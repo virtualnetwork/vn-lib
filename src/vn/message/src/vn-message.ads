@@ -44,8 +44,12 @@ package VN.Message is
    type VN_Status is mod 2 ** 8;
    for VN_Status'Size use 8;
 
-   CHECKSUM_SIZE    : constant integer := 16;
+   HEADER_SIZE      : constant integer := 17;
+   CHECKSUM_SIZE    : constant integer := 2;
    MAX_PAYLOAD_SIZE : constant integer := 1024;
+
+   COMPONENT_TYPE_SIZE  : constant integer := 1;
+   CUUID_SIZE           : constant integer := 16;
 
    type VN_Header is
       record
@@ -83,10 +87,13 @@ package VN.Message is
       end record;
 
    for VN_Message_Basic use record
-      Header        at 0 range (16 + MAX_PAYLOAD_SIZE * 8) ..
-                               (16 + MAX_PAYLOAD_SIZE * 8 + 135);
-      Payload       at 0 range 16 .. ((CHECKSUM_SIZE - 1) + MAX_PAYLOAD_SIZE * 8);
-      Checksum      at 0 range 0 .. (CHECKSUM_SIZE - 1);
+      Header        at 0 range (CHECKSUM_SIZE * 8 + MAX_PAYLOAD_SIZE * 8) ..
+                               (CHECKSUM_SIZE * 8 +
+                                MAX_PAYLOAD_SIZE * 8 +
+                                HEADER_SIZE * 8 - 1);
+      Payload       at 0 range (CHECKSUM_SIZE * 8) ..
+                               (CHECKSUM_SIZE * 8 + MAX_PAYLOAD_SIZE * 8 - 1);
+      Checksum      at 0 range 0 .. (CHECKSUM_SIZE * 8 - 1);
    end record;
 
    for VN_Message_Basic'Alignment use 1;
