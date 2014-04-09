@@ -13,10 +13,12 @@ package CAN_Driver is
       end record;
    pragma Convention (C, CAN_Message_Physical);
 
-   procedure Send(msg : CAN_Message_Physical);
+   type CAN_Message_Physical_Access is access all CAN_Message_Physical;
+
+   procedure Send(msg : CAN_Message_Physical_Access);
    pragma Import(C, Send, "Send_CAN_Message");
 
-   function Receive(msg : CAN_Message_Physical) return Interfaces.C.int;
+   function Receive(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
    pragma Import(C, Receive, "Receive_CAN_Message");
 
    function Test return Interfaces.C.int;
