@@ -30,6 +30,6 @@ begin
 
    Protocol_Routing_Test.myInterface.Send(msg, Status);
 
-   GNAT.IO.Put_Line("Message sent, Status= " & Status'Img);
+   GNAT.IO.Put_Line("Message sent");
 
 end Protocol_Routing_Test_Main;
