@@ -59,7 +59,7 @@ project Protocol_Routing_Test_SF2 is
             "-nostdlib",
             "-lc",
             "-lgcc",
-            "obj/libprotocol_routing_test_sf2_c.a",
+            "obj/libprotocol_routing_test_main_c.a",
             "-v",
             "-mcpu=cortex-m3",
             "-mthumb",
