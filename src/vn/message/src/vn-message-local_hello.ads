@@ -1,27 +1,59 @@
 package VN.Message.Local_Hello is
 
-   type VN_Message_Local_Hello is new VN_Message_Basic with private;
+   LOCAL_HELLO_UNKNOWN_PAYLOAD_SIZE : constant integer := MAX_PAYLOAD_SIZE - 17;
 
-   function Get_CUUID(Message: VN_Message_Local_Hello) return VN_CUUID;
-   procedure Set_CUUID(Message: out VN_Message_Local_Hello; CUUID: VN_CUUID);
+   type VN_Local_Hello_Unknown_Payload is Array(1 ..
+                                          LOCAL_HELLO_UNKNOWN_PAYLOAD_SIZE) of
+                                          Interfaces.Unsigned_8;
 
-   function Get_Component_Type(Message: VN_Message_Local_Hello)
-                                 return VN_Component_Types;
-
-   procedure Set_Component_Type(Message: out VN_Message_Local_Hello;
-                                 Component_Type: VN_Component_Types);
-private
-
-   type VN_Message_Local_Hello is new VN_Message_Basic with
+   type VN_Message_Local_Hello is
       record
-        CUUID: VN_CUUID := 0;
-        Component_Type: VN_Component_Types := Unknown;
+         Header           : VN_Header;
+         Unknown_Payload  : VN_Local_Hello_Unknown_Payload;
+         CUUID            : VN_CUUID;
+         Component_Type   : VN_Component_Type;
+         Checksum         : VN_Checksum;
       end record;
 
-   overriding
-   procedure Initialize(This: in out VN_Message_Local_Hello);
+   for VN_Message_Local_Hello use record
+      Header            at 0 range (CHECKSUM_SIZE * 8 +
+                                    COMPONENT_TYPE_SIZE * 8 +
+                                    CUUID_SIZE * 8 +
+                                    LOCAL_HELLO_UNKNOWN_PAYLOAD_SIZE * 8) ..
+                                   (CHECKSUM_SIZE * 8 +
+                                    COMPONENT_TYPE_SIZE * 8 +
+                                    CUUID_SIZE * 8 +
+                                    LOCAL_HELLO_UNKNOWN_PAYLOAD_SIZE * 8 +
+                                    HEADER_SIZE * 8 - 1);
 
-   overriding
-   procedure Finalize(This: in out VN_Message_Local_Hello) is null;
+      Unknown_Payload   at 0 range (CHECKSUM_SIZE * 8 +
+                                    COMPONENT_TYPE_SIZE * 8 +
+                                    CUUID_SIZE * 8) ..
+                                   (CHECKSUM_SIZE * 8 +
+                                    COMPONENT_TYPE_SIZE * 8 +
+                                    CUUID_SIZE * 8 +
+                                    LOCAL_HELLO_UNKNOWN_PAYLOAD_SIZE * 8 - 1);
+
+      CUUID             at 0 range (CHECKSUM_SIZE * 8 +
+                                    COMPONENT_TYPE_SIZE * 8) ..
+                                   (CHECKSUM_SIZE * 8 +
+                                    COMPONENT_TYPE_SIZE * 8 +
+                                    CUUID_SIZE * 8 - 1);
+
+      Component_Type    at 0 range (CHECKSUM_SIZE * 8) ..
+                                   (CHECKSUM_SIZE * 8 +
+                                    COMPONENT_TYPE_SIZE * 8 - 1);
+
+      Checksum      at 0 range 0 .. (CHECKSUM_SIZE * 8 - 1);
+   end record;
+
+   for VN_Message_Local_Hello'Alignment use 1;
+
+   procedure To_Basic(Local_Hello_VN_Msg: in VN_Message_Local_Hello;
+                      Basic_VN_Msg: out VN_Message_Basic);
+
+   procedure To_Local_Hello(Basic_VN_Msg: in VN_Message_Basic;
+                            Local_Hello_VN_Msg: out VN_Message_Local_Hello);
 
 end VN.Message.Local_Hello;
+

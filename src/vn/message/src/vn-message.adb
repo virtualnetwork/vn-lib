@@ -1,26 +1,28 @@
 package body VN.Message is
 
-   -- Get_Version
-   function Get_Version(Message: VN_Message_Basic) return VN_Version is
+   procedure Serialize(Message : in VN_Message_Basic; buffer : out VN_Message_Byte_Array) is
+      tempMsg : VN_Message_Basic := Message;
+      for tempMsg'Address use buffer'Address;
    begin
-      return Message.Header.Version;
-   end Get_Version;
+      null;
+   end Serialize;
 
-   -- Set_Version
-   procedure Set_Version(Message: out VN_Message_Basic; Version: VN_Version ) is
+   procedure Deserialize(Message : out VN_Message_Basic; buffer : in VN_Message_Byte_Array) is
+      tempMsg : VN_Message_Basic;
+      -- TODO: Fix this warning.
+      -- Use pragma Import for "tempMsg" to suppress initialization
+      -- Pragma Import(tempMsg);
+      for tempMsg'Address use buffer'Address;
    begin
-      Message.Header.Version := Version;
-   end Set_Version;
+      Message := tempMsg;
+   end DeSerialize;
 
-   function Get_Checksum(Message: in VN_Message_Basic) return VN_Checksum is
-   begin
-      return Message.Checksum;
-   end Get_Checksum;
 
    procedure Update_Checksum(Message: in out VN_Message_Basic) is
    begin
       Message.Checksum := 5; -- TODO: Update the checksum with a proper
-                                    -- value.
+                                    -- calculation and value.
    end Update_Checksum;
+
 
 end VN.Message;
