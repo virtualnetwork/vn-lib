@@ -3,7 +3,12 @@ with Interfaces;
 package VN.Message is
 
    -- Enum of different VN_Messages types.
-   type VN_Message_Type is (Type_Basic, Type_Local_Hello, Type_Local_Ack);
+   type VN_Message_Type is (Type_Basic,
+                            Type_Local_Hello,
+                            Type_Local_Ack,
+                            Type_Request_Address_Block,
+                            Type_Assign_Address_Block,
+                            Type_Assign_Address);
    for VN_Message_Type'Size use 8;
 
    type VN_Serializiation_Type is (TXT, XML);
