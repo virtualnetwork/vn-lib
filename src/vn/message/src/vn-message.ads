@@ -8,7 +8,8 @@ package VN.Message is
                             Type_Local_Ack,
                             Type_Request_Address_Block,
                             Type_Assign_Address_Block,
-                            Type_Assign_Address);
+                            Type_Assign_Address,
+                            Type_Distribute_Route);
    for VN_Message_Type'Size use 8;
 
    type VN_Serializiation_Type is (TXT, XML);

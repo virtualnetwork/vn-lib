@@ -8,6 +8,8 @@ with VN.Message.Assign_Address_Block;
 use VN.Message.Assign_Address_Block;
 with VN.Message.Request_Address_Block;
 use VN.Message.Request_Address_Block;
+with VN.Message.Distribute_Route;
+use VN.Message.Distribute_Route;
 
 package body VN.Message.Factory is
 
@@ -49,6 +51,13 @@ package body VN.Message.Factory is
                Temp_Msg: VN_Message_Assign_Address_Block;
             begin
                To_Assign_Address_Block(VN_Msg, Temp_Msg);
+               To_Basic(Temp_Msg, VN_Msg);
+            end;
+         when Type_Distribute_Route => null;
+            declare
+               Temp_Msg: VN_Message_Distribute_Route;
+            begin
+               To_Distribute_Route(VN_Msg, Temp_Msg);
                To_Basic(Temp_Msg, VN_Msg);
             end;
       end case;
