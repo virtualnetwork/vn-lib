@@ -5,7 +5,7 @@ package body VN.Message.Local_Hello is
       tempMsg : VN_Message_Local_Hello := Local_Hello_VN_Msg;
       for tempMsg'Address use Basic_VN_Msg'Address;
    begin
-      null;
+      Basic_VN_Msg.Header.Message_Type := Type_Basic;
    end To_Basic;
 
    procedure To_Local_Hello(
@@ -13,8 +13,12 @@ package body VN.Message.Local_Hello is
                            Local_Hello_VN_Msg: out VN_Message_Local_Hello) is
       tempMsg : VN_Message_Basic := Basic_VN_Msg;
       for tempMsg'Address use Local_Hello_VN_Msg'Address;
+      Payload_Length : VN_Length := VN_Length(MAX_PAYLOAD_SIZE -
+                                    LOCAL_HELLO_UNKNOWN_PAYLOAD_SIZE);
    begin
-      null;
+      Local_Hello_VN_Msg.Header.Message_Type    := Type_Local_Hello;
+      Local_Hello_VN_Msg.Header.Opcode          := 16#20#;
+      Local_Hello_VN_Msg.Header.Payload_Length  := Payload_Length;
    end To_Local_Hello;
 
 end VN.Message.Local_Hello;

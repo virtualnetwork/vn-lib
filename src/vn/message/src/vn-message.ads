@@ -17,10 +17,6 @@ package VN.Message is
    type VN_Component_Type is (CAS, LS, SM_L, SM_x, SM_Gateway, Unknown);
    for VN_Component_Type'Size use 8;
 
-   -- VN_Header parts
-   -- type VN_Logical_Address is mod 2 ** 32;
-   -- for VN_Logical_Address'Size use 32;
-
    type VN_Version is mod 2 ** 8;
    for VN_Version'Size use 8;
 
@@ -65,14 +61,14 @@ package VN.Message is
    type VN_Header is
       record
          Message_Type   : VN_Message_Type := Type_Basic;
-         Version        : VN_Version := 1;
+         Version        : VN_Version := 16#01#;
          Priority       : VN_Priority;
          Payload_Length : VN_Length;
          Destination    : VN_Logical_Address;
          Source         : VN_Logical_Address;
-         Flags          : VN_Flags := 0;
+         Flags          : VN_Flags := 16#0000#;
          Opcode         : VN_Opcode;
-         Ext_Header     : VN_Ext_Header_Length := 0;
+         Ext_Header     : VN_Ext_Header_Length := 16#00#;
       end record;
 
    for VN_Header use record
