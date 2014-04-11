@@ -47,7 +47,7 @@ typedef struct C_CAN_Msg_T {
 
 int test() {return 42;}
 
-void Send_CAN_Message(C_CAN_Message_Type *msg) {
+int Send_CAN_Message(C_CAN_Message_Type *msg) {
     int i;
 
     pMsg.ID  = msg->ID;
@@ -62,7 +62,7 @@ void Send_CAN_Message(C_CAN_Message_Type *msg) {
     pMsg.RTR = 1; //regular message (not remote frame)
     pMsg.NA1 = 0; //padding?
 
-    MSS_CAN_send_message_n(&g_can0, 0, &pMsg);
+    return MSS_CAN_send_message_n(&g_can0, 0, &pMsg);
 }
 
 int Receive_CAN_Message(C_CAN_Message_Type *msg) { //returns 1 if message was received, 0 otherwise
@@ -91,7 +91,7 @@ void Init_CAN() {
                  6,
                  6);
 
-    MSS_CAN_set_mode(&g_can0,CANOP_MODE_NORMAL);
+    MSS_CAN_set_mode(&g_can0, CANOP_MODE_NORMAL);
 
     MSS_CAN_start(&g_can0);
 

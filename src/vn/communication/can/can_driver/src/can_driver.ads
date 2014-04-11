@@ -31,14 +31,12 @@ package CAN_Driver is
 --MSS_CAN_start(&g_can0);
 --MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
 
+   function Send(msg : CAN_Message_Physical_Access) return Interfaces.C.int;  --will return 1 on success
+   pragma Import(C, Send, "Send_CAN_Message");
 
+   function Receive(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
+   pragma Import(C, Receive, "Receive_CAN_Message");
 
---     procedure Send(msg : CAN_Message_Physical_Access);
---     pragma Import(C, Send, "Send_CAN_Message");
---
---     function Receive(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
---     pragma Import(C, Receive, "Receive_CAN_Message");
---
    function Test return Interfaces.C.int;
    pragma Import(C, Test, "test");
 

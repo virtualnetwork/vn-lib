@@ -105,22 +105,33 @@ package CAN_Driver is
 --CAN_SPEED_32M_500K
 --PCAN_CONFIG_REG
 
---MSS_CAN_set_mode(&g_can0,CANOP_MODE_NORMAL);
---MSS_CAN_start(&g_can0);
---MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
---MSS_CAN_set_int_ebl()
---MSS_CAN_set_global_int_ebl
+   --MSS_CAN_set_mode(&g_can0,CANOP_MODE_NORMAL);
+   --MSS_CAN_start(&g_can0);
+   --MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
+   --MSS_CAN_set_int_ebl()
+   --MSS_CAN_set_global_int_ebl
 
    --MSS_CAN_get_global_int_ebl??
    --MSS_CAN_clear_int_status()??
 
+   type Data_Array is array(0..7) of Interfaces.C.signed_char;
 
---     procedure Send(msg : CAN_Message_Physical_Access);
---     pragma Import(C, Send, "Send_CAN_Message");
---
---     function Receive(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
---     pragma Import(C, Receive, "Receive_CAN_Message");
---
+   type CAN_Message_Physical is
+      record
+         ID		: Interfaces.C.unsigned; --??
+         Length   	: Interfaces.C.unsigned; --??
+         Data     	: Data_Array;
+      end record;
+   pragma Convention (C, CAN_Message_Physical);
+
+   type CAN_Message_Physical_Access is access all CAN_Message_Physical;
+
+   function Send(msg : CAN_Message_Physical_Access) return Interfaces.C.int;  --will return 1 on success
+   pragma Import(C, Send, "Send_CAN_Message");
+
+   function Receive(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
+   pragma Import(C, Receive, "Receive_CAN_Message");
+
    function Test return Interfaces.C.int;
    pragma Import(C, Test, "test");
 
