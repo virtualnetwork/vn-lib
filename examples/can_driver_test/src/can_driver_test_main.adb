@@ -16,22 +16,24 @@ with CAN_Driver;
 procedure CAN_Driver_Test_Main is
    now : Ada.Real_Time.Time;
 
-   physMsgSend : aliased CAN_Driver.CAN_Message_Physical;
-   physMsgReceive  : aliased CAN_Driver.CAN_Message_Physical;
+--     physMsgSend : aliased CAN_Driver.CAN_Message_Physical;
+--     physMsgReceive  : aliased CAN_Driver.CAN_Message_Physical;
+   t : integer := 0;
+
 
 begin
 
-   physMsgSend.ID := 1337;
-   physMsgSend.Length := 8;
-
-   physMsgSend.Data(0) := 1;
-   physMsgSend.Data(1) := 1;
-   physMsgSend.Data(2) := 1;
-   physMsgSend.Data(3) := 1;
-   physMsgSend.Data(4) := 1;
-   physMsgSend.Data(5) := 1;
-   physMsgSend.Data(6) := 1;
-   physMsgSend.Data(7) := 1;
+--     physMsgSend.ID := 1337;
+--     physMsgSend.Length := 8;
+--
+--     physMsgSend.Data(0) := 1;
+--     physMsgSend.Data(1) := 1;
+--     physMsgSend.Data(2) := 1;
+--     physMsgSend.Data(3) := 1;
+--     physMsgSend.Data(4) := 1;
+--     physMsgSend.Data(5) := 1;
+--     physMsgSend.Data(6) := 1;
+--     physMsgSend.Data(7) := 1;
 
    now := Ada.Real_Time.Clock;
    delay until now + Ada.Real_Time.Milliseconds(4000);
@@ -40,8 +42,10 @@ begin
       now := Ada.Real_Time.Clock;
       delay until now + Ada.Real_Time.Milliseconds(1000);
 
+      t := Integer(CAN_Driver.Test);
+      GNAT.IO.Put_Line("Test= " & t'img);
 
-      CAN_Driver.CAN_Get_Msg_Filter_Mask(1, 2, 3);
+--        CAN_Driver.CAN_Get_Msg_Filter_Mask(1, 2, 3);
 
 --        CAN_Driver.Send(physMsgSend'Unchecked_Access);
 --        GNAT.IO.Put_Line("Message sent");

@@ -26,6 +26,7 @@ PRGTTY		?=	/dev/ttyUSB0
 # Driver sources
 CSRC		+=	$(DRVPATH)/drivers/mss_uart/mss_uart.c
 CSRC		+=	$(DRVPATH)/drivers/mss_can/mss_can.c
+CSRC		+=	src/main.c
 #CSRC		+=	$(DRVPATH)/drivers/mss_usb/mss_usb_device.c
 #CSRC		+=	$(DRVPATH)/drivers/mss_ethernet_mac/mss_ethernet_mac.c
 CSRC		+=	$(SPTPATH)/bap-drivers/uart/uart.c

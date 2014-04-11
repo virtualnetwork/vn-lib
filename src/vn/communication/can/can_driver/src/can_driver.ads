@@ -15,8 +15,8 @@ package CAN_Driver is
 
    type CAN_Message_Physical_Access is access all CAN_Message_Physical;
 
-   procedure CAN_Get_Msg_Filter_Mask(x : Interfaces.C.int; y : Interfaces.C.unsigned_char; z : Interfaces.C.unsigned_char);
-   pragma Import(C, CAN_Get_Msg_Filter_Mask, "MSS_CAN_get_msg_filter_mask");
+--     procedure CAN_Get_Msg_Filter_Mask(x : Interfaces.C.int; y : Interfaces.C.unsigned_char; z : Interfaces.C.unsigned_char);
+--     pragma Import(C, CAN_Get_Msg_Filter_Mask, "MSS_CAN_get_msg_filter_mask");
 
 --CAN_MSGOBJECT
 --CAN_RXMSGOBJECT
@@ -39,8 +39,8 @@ package CAN_Driver is
 --     function Receive(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
 --     pragma Import(C, Receive, "Receive_CAN_Message");
 --
---     function Test return Interfaces.C.int;
---     pragma Import(C, Test, "test");
+   function Test return Interfaces.C.int;
+   pragma Import(C, Test, "test");
 
    procedure Temp(msg : CAN_Message_Physical);
 
