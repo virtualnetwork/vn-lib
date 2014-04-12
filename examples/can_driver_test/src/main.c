@@ -100,7 +100,7 @@ void Init_CAN() {
     rx_msg.ID = 0x200;
     rx_msg.DATAHIGH = 0u;
     rx_msg.DATALOW = 0u;
-    rx_msg.AMR.L = 0xFFFFFFFF;
+    rx_msg.AMR.L = 0x00000000; //0xFFFFFFFF;
     rx_msg.ACR.L = 0x00000000;
     rx_msg.AMR_D = 0xFFFFFFFF;
     rx_msg.ACR_D = 0x00000000;

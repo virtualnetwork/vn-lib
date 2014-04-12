@@ -21,19 +21,23 @@ procedure CAN_Driver_Test_Main is
    t : integer := 0;
 
    sendStatus : Integer;
+   x : Interfaces.C.signed_char;
 begin
 
    physMsgSend.ID := 1338;
    physMsgSend.Length := 8;
 
-   physMsgSend.Data(0) := 2;
-   physMsgSend.Data(1) := 3;
-   physMsgSend.Data(2) := 4;
-   physMsgSend.Data(3) := 5;
-   physMsgSend.Data(4) := 1;
-   physMsgSend.Data(5) := 1;
-   physMsgSend.Data(6) := 1;
-   physMsgSend.Data(7) := 1;
+
+   x := 2;
+
+   physMsgSend.Data(0) := x;
+   physMsgSend.Data(1) := x;
+   physMsgSend.Data(2) := x;
+   physMsgSend.Data(3) := x;
+   physMsgSend.Data(4) := x;
+   physMsgSend.Data(5) := x;
+   physMsgSend.Data(6) := x;
+   physMsgSend.Data(7) := x;
 
    now := Ada.Real_Time.Clock;
    delay until now + Ada.Real_Time.Milliseconds(4000);
