@@ -12,7 +12,6 @@ procedure Test is
 begin
 
    msg1 := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
-
    msg1.Header.Priority := 2;
    msg1.Header.Payload_Length := 3;
    msg1.Header.Destination := 4;
@@ -23,6 +22,8 @@ begin
    msg1.Checksum := 9;
 
    VN.Message.Serialize(msg1, arr);
+
+   arr(arr'Last) := 0;
 
    VN.Message.DeSerialize(msg2, arr);
 
