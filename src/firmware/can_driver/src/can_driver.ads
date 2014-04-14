@@ -135,6 +135,8 @@ package CAN_Driver is
    function Test return Interfaces.C.int;
    pragma Import(C, Test, "test");
 
-   procedure Init;
+   procedure Temp(msg : CAN_Message_Physical);
+
+  -- procedure Init;
 
 end CAN_Driver;
