@@ -7,7 +7,7 @@
 -- Before it can be used, Receiver_Unit_Duty will need to be activated. This cannot
 -- be done until one has been assigned a CAN address.
 
--- ToDo: DeFragment must be implemented further
+-- ToDo: DeFragment must be tested
 
 pragma Profile (Ravenscar);
 
@@ -64,7 +64,7 @@ private
          myCANAddress 	: VN.Communication.CAN.CAN_Address_Sender;
 
          sender 	: VN.Communication.CAN.CAN_Address_Sender;
-         receivedData	: VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.DataArray;
+         receivedData	: VN.Message.VN_Message_Byte_Array;
          numMessages	: Interfaces.Unsigned_16;
 
          useFlowControl : Boolean;
@@ -76,8 +76,10 @@ private
          pendingSenders : Pending_Senders_ptr 	:= null;
       end record;
 
-   procedure DeFragment(seqNumber : Interfaces.Unsigned_16; CANMessage : VN.Communication.CAN.CAN_Message_Logical;
-                        VNMessageContent : in out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.DataArray;
-                        currentLength : out Interfaces.Unsigned_16);
+   procedure DeFragment(seqNumber 	 : Interfaces.Unsigned_16;
+                        numMessages	 : Interfaces.Unsigned_16; --total number of CAN messages that are to be received
+                        CANMessage 	 : VN.Communication.CAN.CAN_Message_Logical;
+                        VNMessageContent : in out VN.Message.VN_Message_Byte_Array;
+                        currentLength 	 : out Interfaces.Unsigned_16);
 
 end VN.Communication.CAN.Logic.Receiver_Unit;

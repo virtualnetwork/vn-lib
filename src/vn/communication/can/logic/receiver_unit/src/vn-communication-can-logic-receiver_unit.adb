@@ -30,15 +30,15 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
          when Started =>
 
-            --här borde egentligen man göra en kontroll att inga Transmission-meddelanden tas emot
+            --ToDo: Check that no Transmission messages are received in this state
 
             this.blockSize := DEFAULT_BLOCK_SIZE;
 
-            bWillSend := true;
+            bWillSend 		:= true;
             this.useFlowControl := true;
             this.blockCount     := 0;
             this.sequenceNumber := 0;
-            this.currentState := Transmitting;
+            this.currentState   := Transmitting;
 
             VN.Communication.CAN.Logic.Message_Utils.FlowControlToMessage(msgOut, VN.Communication.CAN.Convert(this.sender),
                                                         this.myCANAddress, this.useFlowControl,
@@ -48,15 +48,12 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
          when Transmitting =>
 
-         --    Ada.Text_IO.Put_Line("Receiver_Unit, Transmitting: received message");
-
             if bMsgReceived and then msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.TRANSMISSION then
---                 Ada.Text_IO.Put_Line("Transmission message received, sender="
---                                      & msgIn.Sender'img & " Receiver= " & msgIn.Receiver'img);
 
-               if msgIn.Sender =  this.sender and msgIn.Receiver = this.myCANAddress then
 
-                  DeFragment(this.sequenceNumber, msgIn, this.receivedData, currentLength);
+               if msgIn.Sender = this.sender and msgIn.Receiver = this.myCANAddress then
+
+                  DeFragment(this.sequenceNumber, this.numMessages, msgIn, this.receivedData, currentLength);
 
                   this.sequenceNumber := this.sequenceNumber + 1;
                   this.blockCount     := this.blockCount + 1;
@@ -76,26 +73,25 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
                      return;
 
                   elsif this.sequenceNumber >= this.numMessages then
-                     --
+
                      VN.Communication.CAN.Logic.DebugOutput("Receiver unit: Transmission complete, ", 4, false);
 
                      --write the VN message to the receive buffer:
-                     VN_msg.Data     := this.receivedData; --VN.Message.Assignment(VN_msg.Data, this.receivedData);
+                     VN.Message.Deserialize(VN_msg.Data, this.receivedData);
                      VN_msg.NumBytes := currentLength;
                      VN_msg.Receiver := VN.Communication.CAN.Convert(this.myCANAddress);
                      VN_msg.Sender   := this.sender;
 
---                       this.receiveBuffer.Append(VN_msg);
                      Receive_Buffer_pack.Insert(VN_msg, this.receiveBuffer.all);
 
---                       if not this.pendingSenders.Is_Empty then
+                     --if there are more messages to be sent, take another messae from the
+                     --buffer and send it:
                      if not Pending_Senders_pack.Empty(this.pendingSenders.all) then
-
 
                         Pending_Senders_pack.Remove(tempSender, this.pendingSenders.all);
                         this.Assign(tempSender.sender, tempSender.numMessages);
 
-                      --  this.pendingSenders.Delete_First;
+
                         VN.Communication.CAN.Logic.DebugOutput("started new transmission", 4);
 
                         this.Update(msgIn, false, msgOut, bWillSend);
@@ -131,7 +127,6 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
       this.Sender  	  := sender;
       this.numMessages    := numMessages;
 
-     -- Ada.Text_IO.Put("myCANAddress=" & this.myCANAddress'Img);
       VN.Communication.CAN.Logic.DebugOutput("Reciever unit assigned, sender= " & this.Sender'Img & " numMessages= " & this.numMessages'img, 4);
    end Assign;
 
@@ -145,31 +140,35 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
       return this.Sender;
    end Sender;
 
-   procedure DeFragment(seqNumber : Interfaces.Unsigned_16; CANMessage : VN.Communication.CAN.CAN_Message_Logical;
-                        VNMessageContent : in out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.DataArray;
-                        currentLength : out Interfaces.Unsigned_16) is
+   procedure DeFragment(seqNumber 	 : Interfaces.Unsigned_16;
+                        numMessages	 : Interfaces.Unsigned_16;
+                        CANMessage 	 : VN.Communication.CAN.CAN_Message_Logical;
+                        VNMessageContent : in out VN.Message.VN_Message_Byte_Array;
+                        currentLength 	 : out Interfaces.Unsigned_16) is
 
-      procedure u8ToChar(c : out Character; u8 : in Interfaces.Unsigned_8) is
-         x : Interfaces.Unsigned_8;
-         for x'Address use c'Address;
-      begin
-         x := u8;
-      end u8ToChar;
-
+      index, startIndex, lastIndex : Integer; -- zerobased
    begin
 
-      null;
---TODO: Get this to work, needs redoing VN.Message.VN_Message_Basic
+      startIndex := Integer(seqNumber) * 8;
 
---        for i in 0 .. CANMessage.Length - 1 loop
---  --           VNMessageContent(VNMessageContent'First + Integer(seqNumber) * 8 + Integer(i)) :=
---  --             CANMessage.Data(CANMessage.Data'First + i);
---
---           u8ToChar(VNMessageContent(VNMessageContent'First + Integer(seqNumber) * 8 + Integer(i)),
---                    CANMessage.Data(CANMessage.Data'First + i));
---        end loop;
---
---        currentLength := seqNumber * 8 + Interfaces.Unsigned_16(CANMessage.Length);
+      for i in 0 .. CANMessage.Length - 1 loop
+         index := startIndex + Integer(i);
+
+         VNMessageContent(VNMessageContent'First + index) :=
+           CANMessage.Data(CANMessage.Data'First + i);
+      end loop;
+
+      currentLength := seqNumber * 8 + Interfaces.Unsigned_16(CANMessage.Length);
+
+      -- If the last CAN message has been received, move the
+      -- two last received bytes to the end of the array.
+      -- These two bytes are the checksum and should allways be put at the end of the array.
+      if seqNumber = numMessages then
+         lastIndex := startIndex + Integer(CANMessage.Length) - 1;
+
+         VNMessageContent(VNMessageContent'Last)     :=  VNMessageContent(lastIndex);
+         VNMessageContent(VNMessageContent'Last - 1) :=  VNMessageContent(lastIndex - 1);
+      end if;
    end DeFragment;
 
 end VN.Communication.CAN.Logic.Receiver_Unit;

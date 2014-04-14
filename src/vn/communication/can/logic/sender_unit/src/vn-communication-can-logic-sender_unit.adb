@@ -7,7 +7,7 @@
 -- Before it can be used, Sender_Unit_Duty will need to be activated. This cannot
 -- be done until one has been assigned a CAN address.
 
--- ToDo: Fragment must be implemented further
+-- ToDo: Fragment must be tested 
 
 with VN.Communication.CAN.Logic.Message_Utils;
 
@@ -25,10 +25,10 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
 
          when Initiated =>
             VN.Communication.CAN.Logic.Message_Utils.StartTransmissionToMessage(msgOut, this.receiver, this.myCANAddress,
-                                                              NumMessagesToSend(this.ToSend.NumBytes));
+                                                              NumMessagesToSend(this.numBytesToSend));
 
             VN.Communication.CAN.Logic.DebugOutput("StartTransmission message sent from address " & this.myCANAddress'img
-                                 & " to " & this.receiver'img & " numMessages= " & NumMessagesToSend(this.ToSend.NumBytes)'img, 4);
+                                 & " to " & this.receiver'img & " numMessages= " & NumMessagesToSend(this.numBytesToSend)'img, 4);
 
             this.currentState := Started;
             this.time := Ada.Real_Time.Clock;
@@ -61,10 +61,10 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
             --resends the StartTransmission message if no FlowControl message is received
             if this.currentState = Started and Ada.Real_Time.Clock - this.time > WAIT_TIME then
                VN.Communication.CAN.Logic.Message_Utils.StartTransmissionToMessage(msgOut, this.receiver, this.myCANAddress,
-                                                                 NumMessagesToSend(this.ToSend.NumBytes));
+                                                                 NumMessagesToSend(this.numBytesToSend));
 
                VN.Communication.CAN.Logic.DebugOutput("StartTransmission message was resent from address " & this.myCANAddress'img
-                                    & " to " & this.receiver'img & " numMessages= " & NumMessagesToSend(this.ToSend.NumBytes)'img, 4);
+                                    & " to " & this.receiver'img & " numMessages= " & NumMessagesToSend(this.numBytesToSend)'img, 4);
 
                this.time := Ada.Real_Time.Clock;
                this.currentState := Started;
@@ -79,7 +79,8 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
             begin
 
                VN.Communication.CAN.Logic.Message_Utils.TransmissionToMessage(msgOut, this.receiver, this.myCANAddress);
-               Fragment(this.ToSend, this.sequenceNumber, msgOut, isLastMessage); --this also increments sequenceNumber
+               
+               Fragment(this.ToSend, this.sequenceNumber, this.numBytesToSend, msgOut, isLastMessage); --this also increments sequenceNumber
                bWillSend := true;
 
                VN.Communication.CAN.Logic.DebugOutput("Sender_Unit sent Transmission message", 4);
@@ -122,8 +123,9 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
                   message : VN.Communication.CAN.Logic.VN_Message_Internal) is
    begin
       this.currentState := Initiated;
-      this.ToSend := message;
---        VN.Communication.CAN.Logic.Assignment(this.ToSend, message);
+      VN.Message.Serialize(message.Data, this.ToSend);
+      this.numBytesToSend := message.NumBytes;   
+      this.Receiver := message.Receiver;     
    end Send;
 
    procedure Activate(this : in out Sender_Unit_Duty; address : VN.Communication.CAN.CAN_Address_Sender) is
@@ -138,7 +140,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
 
    function Receiver(this : in Sender_Unit_Duty) return VN.Communication.CAN.CAN_Address_Receiver is
    begin
-      return this.ToSend.Receiver;
+      return this.Receiver;
    end Receiver;
 
    function NumMessagesToSend(messageLength : Interfaces.Unsigned_16) return Interfaces.Unsigned_16 is
@@ -151,48 +153,49 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
    end NumMessagesToSend;
 
 
-   procedure Fragment(VNMessage : VN.Communication.CAN.Logic.VN_Message_Internal; 
+   procedure Fragment(msgArray : VN.Message.VN_Message_Byte_Array; 
                       seqNumber : in out Interfaces.Unsigned_16;
+                      NumBytes : in Interfaces.Unsigned_16;
                       CANMessage : in out VN.Communication.CAN.CAN_Message_Logical; isLastMessage : out  boolean) is
-
-      procedure CharTou8(u8 : out Interfaces.Unsigned_8; c : in Character) is
-         x : Character;
-         for x'Address use u8'Address;
-      begin
-         x := c;
-      end CharTou8;
-
-      Last : integer;
+      
+      Last, index, startIndex : integer; -- 0-based indices
    begin
 
       -- if the next Transmission message should be full (contain 8 bytes)
       --but this is not the last CAN message to be sent
-      if (seqNumber + 1) * 8 < VNMessage.NumBytes then
+      if (seqNumber + 1) * 8 < NumBytes then
          Last := 7;
          isLastMessage := false;
 
          -- if the next Transmission message should be full (contain 8 bytes)
          --and this is the last CAN message to be sent
-      elsif (seqNumber + 1) * 8 = VNMessage.NumBytes then
+      elsif (seqNumber + 1) * 8 = NumBytes then
          Last := 7;
          isLastMessage := true;
 
       else -- if the next Transmission message should contain less than 8 bytes
-         Last := Integer(VNMessage.NumBytes - seqNumber * 8) - 1;
+         Last := Integer(NumBytes - seqNumber * 8) - 1;
          isLastMessage := true;
       end if;
 
       CANMessage.Length := VN.Communication.CAN.DLC_Type(Last + 1);
 
+      startIndex := Integer(seqNumber) * 8; --where in the msgArray the first byte should be taken
 
---TODO: Get this to work, needs redoing VN.Message.VN_Message_Basic
-
---        for i in 0..Last loop
---           --           CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.Logic.DLC_Type(i)) :=
---           --             VNMessage.Data(VNMessage.Data'First + Integer(seqNumber) * 8 + i);
---           CharTou8(CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)),
---                    VNMessage.Data(VNMessage.Data'First + Integer(seqNumber) * 8 + i));
---        end loop;
+      for i in 0..Last loop
+         index := i + startIndex;
+         
+         -- If we are to take the last two bytes (the Checksums) these are always placed 
+         -- at the last to indices of the array.
+         if index = Integer(NumBytes) - 1 then
+            index := msgArray'Last;
+         elsif index = Integer(NumBytes) - 2 then
+            index := msgArray'Last - 1;
+         end if;
+            
+         CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)) :=
+           msgArray(msgArray'First + index);
+      end loop;
 
       seqNumber := seqNumber + 1;
    end Fragment;

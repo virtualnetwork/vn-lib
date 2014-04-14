@@ -7,7 +7,7 @@
 -- Before it can be used, Sender_Unit_Duty will need to be activated. This cannot
 -- be done until one has been assigned a CAN address.
 
--- ToDo: Fragment must be implemented further
+-- ToDo: Fragment must be tested
 
 with VN.Communication.CAN.Logic;
 with Interfaces;
@@ -40,7 +40,9 @@ private
       record
          currentState 	: Sender_Unit_State := Idle;
          myCANAddress 	: VN.Communication.CAN.CAN_Address_Sender;
-         ToSend  	: VN.Communication.CAN.Logic.VN_Message_Internal;
+         Receiver 	: VN.Communication.CAN.CAN_Address_Receiver;
+         ToSend  	: VN.Message.VN_Message_Byte_Array;
+         numBytesToSend	: Interfaces.Unsigned_16;
          useFlowControl : Boolean;
          blockSize  	: Interfaces.Unsigned_16;
          blockCount	: Interfaces.Unsigned_16; -- counts the number of Transmission message sent in this block
@@ -50,9 +52,11 @@ private
 
    function NumMessagesToSend(messageLength : Interfaces.Unsigned_16) return Interfaces.Unsigned_16;
 
-   procedure Fragment(VNMessage : VN.Communication.CAN.Logic.VN_Message_Internal;
+   procedure Fragment(msgArray 	: VN.Message.VN_Message_Byte_Array;
                       seqNumber : in out Interfaces.Unsigned_16;
-                      CANMessage : in out VN.Communication.CAN.CAN_Message_Logical; isLastMessage : out boolean);
+                      NumBytes 		: in Interfaces.Unsigned_16;
+                      CANMessage 	: in out VN.Communication.CAN.CAN_Message_Logical;
+                      isLastMessage 	: out boolean);
 
 end VN.Communication.CAN.Logic.Sender_Unit;
 
