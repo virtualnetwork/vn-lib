@@ -1,5 +1,5 @@
-with VN_Message.Local_Hello;
-with VN_Message.Handler_Local_Hello;
+with VN.Message.Local_Hello;
+with VN.Message.Handler_Local_Hello;
 with Text_IO;
 
 procedure Main is
