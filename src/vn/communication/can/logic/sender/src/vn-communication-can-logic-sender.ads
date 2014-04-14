@@ -36,8 +36,10 @@ package VN.Communication.CAN.Logic.Sender is
 
 private
 
-   package Send_Buffer_pack is new Limited_Buffers(VN.Communication.CAN.Logic.VN_Message_Internal,
-                                                   VN.Communication.CAN.Logic.Assignment);
+--     package Send_Buffer_pack is new Limited_Buffers(VN.Communication.CAN.Logic.VN_Message_Internal,
+--                                                     VN.Communication.CAN.Logic.Assignment);
+
+   package Send_Buffer_pack is new Buffers(VN.Communication.CAN.Logic.VN_Message_Internal);
    use Send_Buffer_pack;
 
    SIZE : constant Integer := 20;      --ToDO: Put this in a config file of some sort

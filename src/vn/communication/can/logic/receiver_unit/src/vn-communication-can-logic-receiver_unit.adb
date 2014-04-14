@@ -80,8 +80,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
                      VN.Communication.CAN.Logic.DebugOutput("Receiver unit: Transmission complete, ", 4, false);
 
                      --write the VN message to the receive buffer:
-                     VN.Message.Assignment(VN_msg.Data, this.receivedData);
-                     --VN_msg.Data     := this.receivedData;
+                     VN_msg.Data     := this.receivedData; --VN.Message.Assignment(VN_msg.Data, this.receivedData);
                      VN_msg.NumBytes := currentLength;
                      VN_msg.Receiver := VN.Communication.CAN.Convert(this.myCANAddress);
                      VN_msg.Sender   := this.sender;

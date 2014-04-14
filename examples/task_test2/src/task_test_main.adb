@@ -37,11 +37,11 @@ begin
 
 
       t := t + Ada.Real_Time.Milliseconds(1000);
-      -- delay until t;
-      while Clock < t loop
-         System.Machine_Code.Asm ("wfe", Volatile => True);
-         null;
-      end loop;
+      delay until t;
+--        while Clock < t loop
+--           System.Machine_Code.Asm ("wfe", Volatile => True);
+--           null;
+--        end loop;
 
       Test_No_Tasks.Update;
 

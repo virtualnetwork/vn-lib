@@ -110,7 +110,7 @@ package VN.Message is
    type VN_Message_Byte_Array is array (1 .. VN_Message_Basic'Size)
                                           of Interfaces.Unsigned_8;
 
-   procedure Assignment (destination : out VN_Message_Basic; source : in VN_Message_Basic);
+ --  procedure Assignment (destination : out VN_Message_Basic; source : in VN_Message_Basic);
 
    procedure Serialize(Message : in VN_Message_Basic;
                        buffer : out VN_Message_Byte_Array);

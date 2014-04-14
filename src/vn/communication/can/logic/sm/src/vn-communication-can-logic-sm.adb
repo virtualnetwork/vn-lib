@@ -152,7 +152,8 @@ package body VN.Communication.CAN.Logic.SM is
 
       if found then
          internal.Receiver := VN.Communication.CAN.Convert(receiver);
-         VN.Message.Assignment(internal.Data, msg);
+
+         internal.Data := msg; --VN.Message.Assignment(internal.Data, msg);
          this.sender.SendVNMessage(internal, result);
          result := OK;
       else
@@ -178,8 +179,8 @@ package body VN.Communication.CAN.Logic.SM is
       --Store information about the sender of the message:
       CAN_Routing.Insert(this.myTable, internal.Data.Header.Source, internal.Sender);
 
---           msg := internal.Data;
-         VN.Message.Assignment(msg, internal.Data);
+         msg := internal.Data;
+--         VN.Message.Assignment(msg, internal.Data);
       end if;
    end Receive;
 

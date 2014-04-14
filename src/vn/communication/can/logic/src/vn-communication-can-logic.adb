@@ -19,14 +19,14 @@ package body VN.Communication.CAN.Logic is
       end if;
    end DebugOutput;
 
-   procedure Assignment (destination : out VN_Message_Internal; source : in VN_Message_Internal) is
-   begin
-
-      VN.Message.Assignment(destination.Data, source.Data);
-
-      destination.NumBytes := source.NumBytes;
-      destination.Receiver := source.Receiver;
-      destination.Sender := source.Sender;
-   end Assignment;
+--     procedure Assignment (destination : out VN_Message_Internal; source : in VN_Message_Internal) is
+--     begin
+--  
+--        VN.Message.Assignment(destination.Data, source.Data);
+--  
+--        destination.NumBytes := source.NumBytes;
+--        destination.Receiver := source.Receiver;
+--        destination.Sender := source.Sender;
+--     end Assignment;
 
 end VN.Communication.CAN.Logic;

@@ -66,7 +66,7 @@ package body VN.Communication.Protocol_Routing is
 
                   Protocol_Router.Insert(myTable, tempMsg.Header.Source, CAN_Subnet);
                   Status := tempStatus;
-                  VN.Message.Assignment(Message, tempMsg);
+                  Message := tempMsg; -- VN.Message.Assignment(Message, tempMsg);
                end if;
 
             when Application_Layer =>  -- TODO, add more cases as more Subnets are added
