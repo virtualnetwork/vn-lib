@@ -25,8 +25,8 @@ begin
    now := Ada.Real_Time.Clock;
    delay until now + Ada.Real_Time.Milliseconds(4000);
 
-   msg.Update_Source(5);
-   msg.Update_Destination(1337);
+   msg.Header.Source := 5;
+   msg.Header.Destination := 1337;
 
    Protocol_Routing_Test.myInterface.Send(msg, Status);
 

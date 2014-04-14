@@ -143,12 +143,12 @@ package body VN.Communication.CAN.Logic.SM is
       end if;
 
       --The SPA protocol says that messages addressed to logical address 0 shall be thrown away
-      if msg.Get_Destination = 0 then
+      if msg.Header.Destination = 0 then
          result := OK;
          return;
       end if;
 
-      CAN_Routing.Search(this.myTable, msg.Get_Destination, receiver, found);
+      CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found);
 
       if found then
          internal.Receiver := VN.Communication.CAN.Convert(receiver);
@@ -176,7 +176,7 @@ package body VN.Communication.CAN.Logic.SM is
         status = VN.MSG_RECEIVED_MORE_AVAILABLE then
 
       --Store information about the sender of the message:
-      CAN_Routing.Insert(this.myTable, internal.Data.Get_Source, internal.Sender);
+      CAN_Routing.Insert(this.myTable, internal.Data.Header.Source, internal.Sender);
 
 --           msg := internal.Data;
          VN.Message.Assignment(msg, internal.Data);

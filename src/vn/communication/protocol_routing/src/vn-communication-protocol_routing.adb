@@ -28,9 +28,9 @@ package body VN.Communication.Protocol_Routing is
             Init;
          end if;
 
-         Protocol_Router.Insert(myTable, Message.Get_Source, Application_Layer);
+         Protocol_Router.Insert(myTable, Message.Header.Source, Application_Layer);
 
-         Protocol_Router.Search(myTable, Message.Get_Destination, address, found);
+         Protocol_Router.Search(myTable, Message.Header.Destination, address, found);
 
          if found then
             case address is
@@ -64,7 +64,7 @@ package body VN.Communication.Protocol_Routing is
                if tempStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
                  tempStatus = VN.MSG_RECEIVED_MORE_AVAILABLE then
 
-                  Protocol_Router.Insert(myTable, tempMsg.Get_Source, CAN_Subnet);
+                  Protocol_Router.Insert(myTable, tempMsg.Header.Source, CAN_Subnet);
                   Status := tempStatus;
                   VN.Message.Assignment(Message, tempMsg);
                end if;
