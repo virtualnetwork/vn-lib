@@ -1,21 +1,48 @@
 package VN.Message.Local_Ack is
 
-   type VN_Message_Local_Ack is new VN_Message_Basic with private;
+   LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE : constant integer := MAX_PAYLOAD_SIZE - 1;
 
-   function Get_Status(Message: VN_Message_Local_Ack) return VN_Status;
-   procedure Set_Status(Message: out VN_Message_Local_Ack; Status: VN_Status);
+   type VN_Local_Ack_Unknown_Payload is Array(1 ..
+                                       LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE) of
+                                       Interfaces.Unsigned_8;
 
-private
-
-   type VN_Message_Local_Ack is new VN_Message_Basic with
+   type VN_Message_Local_Ack is
       record
-        Status: VN_Status := 0;
+         Header           : VN_Header;
+         Unknown_Payload  : VN_Local_Ack_Unknown_Payload;
+         Status           : VN_Status;
+         Checksum         : VN_Checksum;
       end record;
 
-   overriding
-   procedure Initialize(This: in out VN_Message_Local_Ack);
+   for VN_Message_Local_Ack use record
+      Header            at 0 range (CHECKSUM_SIZE * 8 +
+                                    STATUS_SIZE * 8 +
+                                    LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE * 8) ..
+                                   (CHECKSUM_SIZE * 8 +
+                                    STATUS_SIZE * 8 +
+                                    LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE * 8 +
+                                    HEADER_SIZE * 8 - 1);
 
-   overriding
-   procedure Finalize(This: in out VN_Message_Local_Ack) is null;
+      Unknown_Payload   at 0 range (CHECKSUM_SIZE * 8 +
+                                    STATUS_SIZE * 8) ..
+                                   (CHECKSUM_SIZE * 8 +
+                                    STATUS_SIZE * 8 +
+                                    LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE * 8 - 1);
+
+      Status            at 0 range (CHECKSUM_SIZE * 8) ..
+                                   (CHECKSUM_SIZE * 8 +
+                                    STATUS_SIZE * 8 - 1);
+
+      Checksum          at 0 range 0 .. (CHECKSUM_SIZE * 8 - 1);
+   end record;
+
+   for VN_Message_Local_Ack'Alignment use 1;
+
+   procedure To_Basic(Local_Ack_VN_Msg: in VN_Message_Local_Ack;
+                      Basic_VN_Msg: out VN_Message_Basic);
+
+   procedure To_Local_Ack(Basic_VN_Msg: in VN_Message_Basic;
+                          Local_Ack_VN_Msg: out VN_Message_Local_Ack);
 
 end VN.Message.Local_Ack;
+

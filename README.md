@@ -1,5 +1,8 @@
 VN-Lib
 =======
+[![Build
+Status](https://travis-ci.org/virtualnetwork/vn-lib.png?branch=development)](https://travis-ci.org/virtualnetwork/vn-lib)
+
 Library parts of the "Virtual Network" implementation.
 
 ### Keywords
