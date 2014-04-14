@@ -1,6 +1,5 @@
-
 -- Copyright (c) 2014 All Rights Reserved
--- Author: Nils Brynedal Ignell
+-- Author: Nils Brynedal Ignell and Christoffer Holmstedt
 -- Date: 2014-XX-XX
 -- Summary:
 -- This package implements the VN protocol.
