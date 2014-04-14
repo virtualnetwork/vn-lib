@@ -156,6 +156,10 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
          VNMessageContent(VNMessageContent'First + index) :=
            CANMessage.Data(CANMessage.Data'First + i);
+
+         --reverse index on VNMessageContent:
+--           VNMessageContent(VNMessageContent'Last - index) :=
+--             CANMessage.Data(CANMessage.Data'First + i);
       end loop;
 
       currentLength := seqNumber * 8 + Interfaces.Unsigned_16(CANMessage.Length);
@@ -168,6 +172,10 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
          VNMessageContent(VNMessageContent'Last)     :=  VNMessageContent(lastIndex);
          VNMessageContent(VNMessageContent'Last - 1) :=  VNMessageContent(lastIndex - 1);
+
+         --reverse index on VNMessageContent:
+--           VNMessageContent(VNMessageContent'First)     :=  VNMessageContent(VNMessageContent'Last - lastIndex);
+--           VNMessageContent(VNMessageContent'First + 1) :=  VNMessageContent(VNMessageContent'Last - lastIndex - 1);
       end if;
    end DeFragment;
 

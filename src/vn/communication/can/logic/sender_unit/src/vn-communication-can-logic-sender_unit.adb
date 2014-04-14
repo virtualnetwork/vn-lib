@@ -11,6 +11,8 @@
 
 with VN.Communication.CAN.Logic.Message_Utils;
 
+with Ada.Exceptions; --ToDo: only for testing
+
 package body VN.Communication.CAN.Logic.Sender_Unit is
 
    overriding procedure Update(this : in out Sender_Unit_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
@@ -126,6 +128,10 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
       VN.Message.Serialize(message.Data, this.ToSend);
       this.numBytesToSend := message.NumBytes;   
       this.Receiver := message.Receiver;     
+
+--        VN.Communication.CAN.Logic.DebugOutput("", 4);
+--        VN.Communication.CAN.Logic.DebugOutput("Sender_Unit_Duty.Send, opcode= " & message.Data.Header.Opcode'Img, 4);
+--        VN.Communication.CAN.Logic.DebugOutput("", 4);
    end Send;
 
    procedure Activate(this : in out Sender_Unit_Duty; address : VN.Communication.CAN.CAN_Address_Sender) is
@@ -153,12 +159,15 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
    end NumMessagesToSend;
 
 
-   procedure Fragment(msgArray : VN.Message.VN_Message_Byte_Array; 
-                      seqNumber : in out Interfaces.Unsigned_16;
-                      NumBytes : in Interfaces.Unsigned_16;
-                      CANMessage : in out VN.Communication.CAN.CAN_Message_Logical; isLastMessage : out  boolean) is
+   procedure Fragment(msgArray 		: VN.Message.VN_Message_Byte_Array; 
+                      seqNumber 	: in out Interfaces.Unsigned_16;
+                      NumBytes 		: in Interfaces.Unsigned_16;
+                      CANMessage 	: in out VN.Communication.CAN.CAN_Message_Logical; 
+                      isLastMessage 	: out  boolean) is
       
       Last, index, startIndex : integer; -- 0-based indices
+
+      Fragment_Error : exception;
    begin
 
       -- if the next Transmission message should be full (contain 8 bytes)
@@ -188,13 +197,25 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
          -- If we are to take the last two bytes (the Checksums) these are always placed 
          -- at the last to indices of the array.
          if index = Integer(NumBytes) - 1 then
-            index := msgArray'Last;
+            index := msgArray'Last - msgArray'First;
          elsif index = Integer(NumBytes) - 2 then
-            index := msgArray'Last - 1;
+            index := msgArray'Last - msgArray'First - 1;
          end if;
+
+--           if CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i) > CANMessage.Data'Last then
+--              Ada.Exceptions.Raise_Exception(Fragment_Error'Identity, "CANMessage error, i= " & i'Img);
+--           end if;
+--           
+--           if msgArray'First + index > msgArray'Last then 
+--               Ada.Exceptions.Raise_Exception(Fragment_Error'Identity, "msgArray error, index= " & index'Img & " seqNumber= " & seqNumber'img);
+--           end if;
             
          CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)) :=
            msgArray(msgArray'First + index);
+
+         --reverse index on msgArray:
+--           CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)) :=
+--             msgArray(msgArray'Last - index);
       end loop;
 
       seqNumber := seqNumber + 1;

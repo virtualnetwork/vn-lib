@@ -123,8 +123,14 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
       if isSM_CAN then
          VN.Message.Local_Hello.To_Local_Hello(msgBasic, msgLocalHello);
 
+         -- msgBasic.Header.Source := --ToDo
+         -- msgBasic.Header.Destination := --ToDo
+
+         VN.Communication.CAN.Logic.DebugOutput("msgBasic LocalHello sent, Opcode= " & msgBasic.Header.Opcode'Img, 4);
+
          msgLocalHello.CUUID := this.myCUUID;
          msgLocalHello.Component_Type := VN.Message.SM_x;
+
          VN.Message.Local_Hello.To_Basic(msgLocalHello, msg.Data);
 
          msg.Receiver := VN.Communication.CAN.Convert(CANAddress);
