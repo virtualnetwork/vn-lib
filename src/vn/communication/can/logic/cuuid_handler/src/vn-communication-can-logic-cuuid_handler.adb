@@ -10,6 +10,9 @@
 
 with VN.Communication.CAN.Logic.Message_Utils;
 
+with VN.Message.Factory;
+with VN.Message.Local_Hello;
+
 package body VN.Communication.CAN.Logic.CUUID_Handler is
 
    overriding procedure Update(this : in out CUUID_Handler; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
@@ -44,7 +47,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
                      this.units(msgIn.Sender).isComponentTypeSet := true;
                      VN.Communication.CAN.Logic.DebugOutput("Recieved ComponentType from address " & msgIn.Sender'Img, 5);
 
-                     this.HelloProc.all(msgIn.Sender, wasSM_CAN); --
+                     this.HelloProc(this.mySender, msgIn.Sender, wasSM_CAN); -- Send LocalHello etc.
                   end if;
                end if;
             end if;
@@ -59,13 +62,18 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
       end case;
    end Update;
 
-   procedure Activate(this : in out CUUID_Handler; theCUUID : VN.VN_CUUID; CANAddress : VN.Communication.CAN.CAN_Address_Sender) is
+   procedure Activate(this : in out CUUID_Handler;
+                      theCUUID : VN.VN_CUUID;
+                      CANAddress : VN.Communication.CAN.CAN_Address_Sender;
+                      sender : VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr) is
    begin
 
       if this.currentState = Unactivated then
          this.timer := Ada.Real_Time.Clock;
          VN.Communication.CAN.Logic.DebugOutput("CUUID_Handler at address " & CANAddress'Img & " activated", 5);
 
+         this.mySender     := sender;
+         this.myCUUID      := theCUUID;
          this.currentState := Activated;
          this.myCANAddress := CANAddress;
          this.units(this.myCANAddress).unitCUUID := theCUUID;
@@ -73,6 +81,14 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
          this.units(this.myCANAddress).isSecondCUUIDHalfSet := true;
       end if;
    end Activate;
+
+   procedure Init(this     : in out CUUID_Handler;
+                  sender   : VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr;
+                  theCUUID : VN.VN_CUUID) is
+   begin
+      this.myCUUID := theCUUID;
+      this.mySender := sender;
+   end Init;
 
    procedure ReadEntry(this : in out CUUID_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
                        unitCUUID : out VN.VN_CUUID; isSM_CAN : out boolean; isSet : out Boolean) is
@@ -84,5 +100,40 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
          isSM_CAN  := this.units(index).isSM_CAN;
       end if;
    end ReadEntry;
+
+   procedure HelloProc(this 	  : in out CUUID_Handler;
+                       sender     : in VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr;
+                       CANAddress : VN.Communication.CAN.CAN_Address_Sender;
+                       isSM_CAN   : Boolean) is
+
+      msgBasic : VN.Message.VN_Message_Basic:=
+        VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
+
+      msgLocalHello : VN.Message.Local_Hello.VN_Message_Local_Hello;
+
+      msg : VN.Communication.CAN.Logic.VN_Message_Internal;
+      result : VN.Send_Status;
+   begin
+
+      VN.Communication.CAN.Logic.DebugOutput("SM_Duty discovered a unit, CANAddress= " &
+                                               CANAddress'Img & " isSM_CAN = " &
+                                               isSM_CAN'img, 4);
+
+      -- Send LocalHello message:
+      if isSM_CAN then
+         VN.Message.Local_Hello.To_Local_Hello(msgBasic, msgLocalHello);
+
+         msgLocalHello.CUUID := this.myCUUID;
+         msgLocalHello.Component_Type := VN.Message.SM_x;
+         VN.Message.Local_Hello.To_Basic(msgLocalHello, msg.Data);
+
+         msg.Receiver := VN.Communication.CAN.Convert(CANAddress);
+         msg.NumBytes := Interfaces.Unsigned_16(Integer(msgLocalHello.Header.Payload_Length) +
+                                                  VN.Message.HEADER_SIZE + VN.Message.CHECKSUM_SIZE);
+         sender.SendVNMessage(msg, result);
+
+         --ToDo: If result is not equal to OK we have a problem
+      end if;
+   end HelloProc;
 end VN.Communication.CAN.Logic.CUUID_Handler;
 

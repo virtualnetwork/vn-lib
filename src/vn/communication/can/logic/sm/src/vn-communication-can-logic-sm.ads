@@ -87,9 +87,6 @@ private
    CAN_ROUTING_TABLE_SIZE : constant VN.VN_Logical_Address := 500;
    NUM_DUTIES : constant integer := 7;
 
-   procedure HelloProc(CANAddress : VN.Communication.CAN.CAN_Address_Sender;
-                       isSM_CAN : Boolean);
-
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
    type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is limited
@@ -126,13 +123,13 @@ private
 --           cuuidResponder : VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder_ptr :=
 --             new VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder;
 
-         cuuidHandler : aliased VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler(HelloProc'Access);
+         cuuidHandler : aliased VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler;
 --           cuuidHandler : VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler_ptr :=
 --             new VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler(HelloProc'Access);
 
          DutyArray : ArrayOfDuties;
 
-         hasSent : boolean := true; --for testing only
+         hasSent : boolean := false; --for testing only, set false to do the test
       end record;
 
 end VN.Communication.CAN.Logic.SM;

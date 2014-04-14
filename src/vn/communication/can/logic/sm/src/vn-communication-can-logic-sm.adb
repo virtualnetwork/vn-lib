@@ -14,13 +14,14 @@
 
 pragma Profile (Ravenscar);
 
+--  with VN.Message.Factory;
+
 package body VN.Communication.CAN.Logic.SM is
 
    procedure Update(this : in out SM_Duty; msgsBuffer : in out CAN_Message_Buffers.Buffer; ret : out CAN_Message_Buffers.Buffer) is
 
       use VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation; -- needed for =-sign for SM_CAN_Mode
 
---        theCursor : CAN_Message_Buffers.Cursor := msgsBuffer.First;
       bWillSend : boolean;
       msgIn, msgOut : CAN_Message_Logical;
 
@@ -50,7 +51,6 @@ package body VN.Communication.CAN.Logic.SM is
                   CAN_Message_Buffers.Insert(msgOut, ret);
                end if;
             end loop;
-            --CAN_Message_Buffers.Next(theCursor);
          end loop;
       end if;
 
@@ -59,7 +59,7 @@ package body VN.Communication.CAN.Logic.SM is
          this.sender.Activate(0);
          this.receiver.Activate(0);
          this.cuuidResponder.Activate(this.myCUUID, 0, true);
-         this.cuuidHandler.Activate(this.myCUUID, 0);
+         this.cuuidHandler.Activate(this.myCUUID, 0, this.sender'Unchecked_Access);
          --this.logicalAddressHandler.Activate(0, true);
 
       elsif this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SLAVE then
@@ -75,7 +75,7 @@ package body VN.Communication.CAN.Logic.SM is
             this.sender.Activate(address);
             this.receiver.Activate(address);
             this.cuuidResponder.Activate(this.myCUUID, address, true);
-            this.cuuidHandler.Activate(this.myCUUID, address);
+            this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
            -- this.logicalAddressHandler.Activate(address, false); --isSM_CAN is set to false here in some cases of testing
 
             --FOR TESTING:
@@ -153,13 +153,16 @@ package body VN.Communication.CAN.Logic.SM is
       if found then
          internal.Receiver := VN.Communication.CAN.Convert(receiver);
 
-         internal.Data := msg; --VN.Message.Assignment(internal.Data, msg);
+         internal.Data := msg;
+
+         -- ToDo: test if this is right:
+         internal.NumBytes := Interfaces.Unsigned_16(Integer(msg.Header.Payload_Length) + VN.Message.HEADER_SIZE + VN.Message.CHECKSUM_SIZE);
+
          this.sender.SendVNMessage(internal, result);
          result := OK;
       else
          result := ERROR_NO_ADDRESS_RECEIVED;
       end if;
-      --ToDo: Right now the message is thrown away if the receiver address isn't found
    end Send;
 
    procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
@@ -176,11 +179,10 @@ package body VN.Communication.CAN.Logic.SM is
       if status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
         status = VN.MSG_RECEIVED_MORE_AVAILABLE then
 
-      --Store information about the sender of the message:
-      CAN_Routing.Insert(this.myTable, internal.Data.Header.Source, internal.Sender);
+         --Store information about the sender of the message:
+         CAN_Routing.Insert(this.myTable, internal.Data.Header.Source, internal.Sender);
 
          msg := internal.Data;
---         VN.Message.Assignment(msg, internal.Data);
       end if;
    end Receive;
 
@@ -240,26 +242,9 @@ package body VN.Communication.CAN.Logic.SM is
       this.DutyArray(this.DutyArray'First + 5) := this.cuuidResponder'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 6) := this.cuuidHandler'Unchecked_Access;
 
---        this.DutyArray := (VN.Communication.CAN.Logic.Duty_Ptr(this.masterNegotiation),
---                           VN.Communication.CAN.Logic.Duty_Ptr(this.addressReceiver),
---                           VN.Communication.CAN.Logic.Duty_Ptr(this.assigner),
---                           VN.Communication.CAN.Logic.Duty_Ptr(this.sender),
---                           VN.Communication.CAN.Logic.Duty_Ptr(this.receiver),
---                           VN.Communication.CAN.Logic.Duty_Ptr(this.cuuidResponder),
---                           VN.Communication.CAN.Logic.Duty_Ptr(this.cuuidHandler));
-
       --ToDo: For testing only!!!!
       CAN_Routing.Insert(this.myTable, 1337, 42);
    end Init;
-
-   procedure HelloProc(CANAddress : VN.Communication.CAN.CAN_Address_Sender;
-                       isSM_CAN : Boolean) is
-   begin
-      VN.Communication.CAN.Logic.DebugOutput("SM_Duty discovered a unit, CANAddress= " &
-                                               CANAddress'Img & " isSM_CAN = " &
-                                               isSM_CAN'img, 4);
-      -- ToDo: Send LocalHello message etc.
-   end HelloProc;
 
 end VN.Communication.CAN.Logic.SM;
 

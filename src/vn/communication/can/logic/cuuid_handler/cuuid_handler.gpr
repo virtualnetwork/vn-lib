@@ -1,3 +1,5 @@
+with "../../../../message/message.gpr";
+with "../sender/sender.gpr";
 with "../message_utils/message_utils.gpr";
 with "../logic.gpr";
 

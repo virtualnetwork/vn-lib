@@ -8,6 +8,9 @@
 
 pragma Profile (Ravenscar);
 
+with VN;
+use VN;
+
 with VN.Communication.CAN.Logic.SM;
 
 with Ada.Real_Time;
@@ -17,6 +20,8 @@ with VN.Communication.CAN.Logic;
 use VN.Communication.CAN.Logic;
 
 with VN.Communication.CAN.Logic.SM;
+with VN.Message;
+
 
 with Interfaces;
 
@@ -48,6 +53,9 @@ procedure main is
 
 
    tempTest : boolean := false;--for testing
+
+   msg : VN.Message.VN_Message_Basic;
+   status : VN.Receive_Status;
 begin
 
    Next_Period := Ada.Real_Time.Clock;
@@ -78,6 +86,15 @@ begin
                end loop;
             end loop;
          end;
+      end loop;
+
+      for i in DutyArray'Range loop
+         VN.Communication.CAN.Logic.SM.Receive(DutyArray(i).all, msg, status);
+         
+         if status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or status = VN.MSG_RECEIVED_MORE_AVAILABLE then
+            VN.Text_IO.Put_Line("VN message received by duty no " & i'Img & " type= " & msg.Header.Message_Type'img);
+         end if;
+            
       end loop;
    end loop;
 end main;
