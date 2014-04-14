@@ -33,8 +33,6 @@ package VN.Message is
 
    type VN_Opcode is mod 2 ** 8;
    for VN_Opcode'Size use 8;
-
-   procedure Assignment (destination : out VN_Message_Basic; source : in VN_Message_Basic);
    
    type VN_Payload is mod 2 ** 8;
    for VN_Payload'Size use 8;
@@ -62,8 +60,6 @@ package VN.Message is
    RESPONSE_TYPE_SIZE      : constant integer := 1;
    VN_LOGICAL_ADDRESS_SIZE : constant integer := 4;
 
-
-private
    type VN_Header is
       record
          Message_Type   : VN_Message_Type := Type_Basic;
@@ -113,6 +109,8 @@ private
 
    type VN_Message_Byte_Array is array (1 .. VN_Message_Basic'Size)
                                           of Interfaces.Unsigned_8;
+
+   procedure Assignment (destination : out VN_Message_Basic; source : in VN_Message_Basic);
 
    procedure Serialize(Message : in VN_Message_Basic;
                        buffer : out VN_Message_Byte_Array);
