@@ -13,8 +13,6 @@ use GNAT.IO;
 with CAN_Driver;
 with CAN_Driver_Test;
 
-with Ada.Text_IO.Modular_IO;
-
 
 procedure CAN_Driver_Test_Main is
    now : Ada.Real_Time.Time;
@@ -26,15 +24,12 @@ procedure CAN_Driver_Test_Main is
    sendStatus : Integer;
    x : Interfaces.C.signed_char;
 
-   package CAN_Text is new Ada.Text_IO.Modular_IO(Interfaces.C.unsigned);
-
 begin
 
    CAN_Driver_Test.Init;
 
    physMsgSend.ID := 1338;
    physMsgSend.Length := 8;
-
 
    x := 2;
 
@@ -49,8 +44,6 @@ begin
 
    now := Ada.Real_Time.Clock;
    delay until now + Ada.Real_Time.Milliseconds(4000);
-
-   GNAT.IO.Put_Line("physMsgSend.ID= " & CAN_Text.Put(physMsgSend.ID));
 
    loop
       now := Ada.Real_Time.Clock;
