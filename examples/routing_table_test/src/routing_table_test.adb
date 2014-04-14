@@ -3,6 +3,9 @@ Pragma Profile (Ravenscar);
 with GNAT.IO;
 use GNAT.IO;
 
+with VN;
+use VN;
+
 with VN.Communication;
 with VN.Communication.CAN;
 use VN.Communication.CAN;
