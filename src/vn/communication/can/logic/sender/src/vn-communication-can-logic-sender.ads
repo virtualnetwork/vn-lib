@@ -18,7 +18,7 @@ use VN.Communication.CAN.Logic.Sender_Unit;
 
 with Interfaces;
 
-with Limited_Buffers;
+with Buffers;
 
 package VN.Communication.CAN.Logic.Sender is
 

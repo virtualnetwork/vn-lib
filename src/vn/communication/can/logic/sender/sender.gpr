@@ -1,4 +1,4 @@
-with "../../../../lib/limited_buffers/limited_buffers.gpr";
+with "../../../../lib/buffers/buffers.gpr";
 with "../sender_unit/sender_unit.gpr";
 with "../logic.gpr";
 

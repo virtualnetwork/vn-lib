@@ -14,7 +14,6 @@ pragma Profile (Ravenscar);
 with VN.Communication.CAN.Logic;
 with Interfaces;
 with Buffers;
-with Limited_Buffers;
 
 package VN.Communication.CAN.Logic.Receiver_Unit is
 
