@@ -34,7 +34,7 @@ package body VN.Communication.CAN.Logic.CAN_Address_Reception is
                   this.currentState := Started;
 
                   --VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": Requested CAN address, this.currentState=" & this.currentState'Img, 4);
-                  VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & "Requested CAN address", 4);
+                  VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": Requested CAN address", 4);
 
                  this.timer := Ada.Real_Time.Clock;
 

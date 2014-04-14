@@ -21,7 +21,7 @@ use VN.Communication.CAN.Logic;
 
 with VN.Communication.CAN.Logic.SM;
 with VN.Message;
-
+with VN.Message.Local_Hello;
 
 with Interfaces;
 
@@ -42,11 +42,15 @@ procedure main is
    C3 : aliased VN.VN_CUUID := (3, others => 5);
 
 
-   DutyArray : Array(1..3) of VN.Communication.CAN.Logic.SM.SM_Duty_ptr :=
-     (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C1'Unchecked_Access),
-      new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C2'Unchecked_Access),
-      new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C3'Unchecked_Access));
+--     DutyArray : Array(1..3) of VN.Communication.CAN.Logic.SM.SM_Duty_ptr :=
+--       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C1'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C2'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C3'Unchecked_Access));
 
+   DutyArray : Array(1..2) of VN.Communication.CAN.Logic.SM.SM_Duty_ptr :=
+     (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C1'Unchecked_Access),
+      new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C2'Unchecked_Access));
+   
    type BufferArray is array(DutyArray'Range) of VN.Communication.CAN.CAN_Message_Buffers.Buffer(100);
    messagesIn : BufferArray;
    messagesOut : BufferArray;
@@ -55,6 +59,7 @@ procedure main is
    tempTest : boolean := false;--for testing
 
    msg : VN.Message.VN_Message_Basic;
+   msgLocalHello : VN.Message.Local_Hello.VN_Message_Local_Hello;
    status : VN.Receive_Status;
 begin
 
@@ -92,7 +97,15 @@ begin
          VN.Communication.CAN.Logic.SM.Receive(DutyArray(i).all, msg, status);
          
          if status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or status = VN.MSG_RECEIVED_MORE_AVAILABLE then
-            VN.Text_IO.Put_Line("VN message received by duty no " & i'Img & " type= " & msg.Header.Message_Type'img);
+            VN.Text_IO.New_Line;
+            
+            VN.Text_IO.Put_Line("VN message received by duty no " & i'Img & " type= " & msg.Header.Message_Type'img & " Opcode= " & msg.Header.Opcode'img);
+
+            VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
+            VN.Text_IO.Put_Line("LocalHello type= " & msgLocalHello.Header.Message_Type'Img & 
+                                  " CUUID(1)= " & msgLocalHello.CUUID(1)'img & " component type = " & msgLocalHello.Component_Type'img);
+            
+            VN.Text_IO.New_Line;
          end if;
             
       end loop;
