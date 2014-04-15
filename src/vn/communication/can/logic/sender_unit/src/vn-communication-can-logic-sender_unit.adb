@@ -198,19 +198,19 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
          
          -- If we are to take the last two bytes (the Checksum), these are always placed 
          -- at the last to indices of the array.
---           if index = Integer(NumBytes) - 1 then
---              index := msgArray'Last - msgArray'First;
---           elsif index = Integer(NumBytes) - 2 then
---              index := msgArray'Last - msgArray'First - 1;
---           end if;
+         if index = Integer(NumBytes) - 1 then
+            index := msgArray'Last - msgArray'First;
+         elsif index = Integer(NumBytes) - 2 then
+            index := msgArray'Last - msgArray'First - 1;
+         end if;
 
---           if CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i) > CANMessage.Data'Last then
---              Ada.Exceptions.Raise_Exception(Fragment_Error'Identity, "CANMessage error, i= " & i'Img);
---           end if;
---           
---           if msgArray'First + index > msgArray'Last then 
---               Ada.Exceptions.Raise_Exception(Fragment_Error'Identity, "msgArray error, index= " & index'Img & " seqNumber= " & seqNumber'img);
---           end if;
+         if CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i) > CANMessage.Data'Last then
+            Ada.Exceptions.Raise_Exception(Fragment_Error'Identity, "CANMessage error, i= " & i'Img);
+         end if;
+         
+         if msgArray'First + index > msgArray'Last then 
+             Ada.Exceptions.Raise_Exception(Fragment_Error'Identity, "msgArray error, index= " & index'Img & " seqNumber= " & seqNumber'img);
+         end if;
             
          CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)) :=
            msgArray(msgArray'First + index);

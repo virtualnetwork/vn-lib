@@ -27,7 +27,7 @@ begin
 
    arr(arr'First + 1) := 0;
 
---   arr(arr'Last) := 0;
+   --arr(arr'Last) := 0;
 
    VN.Message.DeSerialize(msg2, arr);
 
