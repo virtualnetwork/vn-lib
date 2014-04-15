@@ -140,7 +140,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
 
          VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img &
                                                   " sent LocalHello to CAN address " &
-                                                  CANAddress'img, 3);
+                                                  CANAddress'img, 2);
 
          --ToDo: If result is not equal to OK we have a problem
       end if;

@@ -162,7 +162,9 @@ package body VN.Communication.CAN.Logic.SM is
          internal.Data := msg;
 
          -- ToDo: test if this is right:
-         internal.NumBytes := Interfaces.Unsigned_16(Integer(msg.Header.Payload_Length) + VN.Message.HEADER_SIZE + VN.Message.CHECKSUM_SIZE);
+         internal.NumBytes := Interfaces.Unsigned_16(Integer(msg.Header.Payload_Length) +
+                                                       VN.Message.HEADER_SIZE +
+                                                         VN.Message.CHECKSUM_SIZE);
 
          this.sender.SendVNMessage(internal, result);
          result := OK;
@@ -203,53 +205,69 @@ package body VN.Communication.CAN.Logic.SM is
       begin
          VN.Message.Distribute_Route.To_Distribute_Route(internalMsg.Data, msgDistribute);
          CAN_Routing.Insert(this.myTable, msgDistribute.Component_Address, internalMsg.Sender);
+         VN.Communication.CAN.Logic.DebugOutput("CAN address " & internalMsg.Receiver'Img &
+                                                  " received Distribute Route message regarding logical address " &
+                                                  msgDistribute.Component_Address'Img &
+                                                  " from CAN address " &
+                                                  internalMsg.Sender'Img, 2);
       end Handle_Distribute_Route;
 
       internal 	    : VN.Communication.CAN.Logic.VN_Message_Internal;
       msgLocalHello : VN.Message.Local_Hello.VN_Message_Local_Hello;
 
-      stop 	    : boolean := false;
+      --stop 	    : boolean := false;
    begin
 
       if not this.isInitialized then
          Init(this);
       end if;
 
-      while not stop loop
-         this.receiver.ReceiveVNMessage(internal, status);
+      -- while not stop loop
+      this.receiver.ReceiveVNMessage(internal, status);
 
-         if status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or --TODO, this will need to be updated if more options for VN.Receive_Status are added
-           status = VN.MSG_RECEIVED_MORE_AVAILABLE then
+      if status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or --TODO, this will need to be updated if more options for VN.Receive_Status are added
+        status = VN.MSG_RECEIVED_MORE_AVAILABLE then
 
-            msg := internal.Data;
+         msg := internal.Data;
 
-            -- ToDo: Add more special cases
-            -- Some special cases:
-            if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
+         -- ToDo: Add more special cases
+         -- Some special cases:
+         if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
 
-               VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
-               CUUID_CAN_Routing.Insert(msgLocalHello.CUUID, internal.Sender);
+            VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
+            CUUID_CAN_Routing.Insert(msgLocalHello.CUUID, internal.Sender);
 
-               Local_Ack_Response(internal); -- Respond with a LocalAck
-               stop := false;
+            Local_Ack_Response(internal); -- Respond with a LocalAck
+            --   stop := false;
 
-            elsif msg.Header.Opcode = VN.Message.OPCODE_LOCAL_ACK then
-               -- ToDo: We should remember that our Local_Hello was acknowledged
-               stop := false;
+            VN.Communication.CAN.Logic.DebugOutput("TEST: borde ha svarat, LocalHello",0);
+            VN.Communication.CAN.Logic.DebugOutput("CAN address " & internal.Receiver'Img &
+                                                     " received LocalHello from CAN address " &
+                                                     internal.Sender'Img &
+                                                     " responded with LocalAck", 2);
 
-            else -- messages that are received from units that have a logical address:
+         elsif msg.Header.Opcode = VN.Message.OPCODE_LOCAL_ACK then
+            -- ToDo: We should remember that our Local_Hello was acknowledged
+            --stop := false;
 
-               --Store information about the sender of the message:
-               CAN_Routing.Insert(this.myTable, internal.Data.Header.Source, internal.Sender);
+            VN.Communication.CAN.Logic.DebugOutput("CAN address " & internal.Receiver'Img &
+                                                     " received LocalAck from CAN address " &
+                                                     internal.Sender'Img, 2);
 
-               if msg.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
-                  Handle_Distribute_Route(internal);
-               end if;
+         else -- messages that are received from units that have a logical address:
+
+            --Store information about the sender of the message:
+            CAN_Routing.Insert(this.myTable, internal.Data.Header.Source, internal.Sender);
+
+            if msg.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
+               Handle_Distribute_Route(internal);
             end if;
-         else
-            stop := true;
+            --     stop := true;
          end if;
-      end loop;
+         --   else
+         --    stop := true;
+      end if;
+      --end loop;
    end Receive;
 
    procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender;
