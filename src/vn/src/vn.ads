@@ -15,6 +15,7 @@ package VN is
 
    type VN_Logical_Address is mod 2 ** 32;
    for VN_Logical_Address'Size use 32;
+   LOGICAL_ADDRES_UNKNOWN : VN_Logical_Address := 2;
 
    type Send_Status is (OK,
                         ERROR_UNKNOWN,

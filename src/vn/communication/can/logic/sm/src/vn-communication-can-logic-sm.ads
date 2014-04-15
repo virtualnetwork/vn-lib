@@ -12,6 +12,7 @@
 --ToDo: Send LocalHello messages when detecting a new SM-CAN
 --ToDo: Send LocalAck messages when receiving a LocalHello message
 
+with VN.Message;
 with VN.Communication.CAN.Logic;
 with VN.Communication.CAN.Logic.CAN_Address_Assignment;
 with VN.Communication.CAN.Logic.CAN_Address_Reception;
@@ -22,6 +23,7 @@ with VN.Communication.CAN.Logic.CUUID_Responder;
 with VN.Communication.CAN.Logic.CUUID_Handler;
 
 with VN.Communication.Routing_Table;
+with VN.Communication.CUUID_Routing;
 
 with Buffers;
 
@@ -33,6 +35,10 @@ package VN.Communication.CAN.Logic.SM is
    -- i.e. to an address outside the CAN_Address_Sender range.
    package CAN_Routing is new VN.Communication.Routing_Table(VN.Communication.CAN.CAN_Address_Sender);
    use CAN_Routing;
+
+   -- This routing table will map CUUIDs to CAN-addresses (CAN_Address_Sender, see above)
+   package CUUID_CAN_Routing is new VN.Communication.CUUID_Routing(VN.Communication.CAN.CAN_Address_Sender);
+   use CUUID_CAN_Routing;
 
    use VN.Communication.CAN.CAN_Message_Buffers;
 

@@ -14,7 +14,13 @@
 
 pragma Profile (Ravenscar);
 
---  with VN.Message.Factory;
+with VN.Message;
+use VN.Message;
+
+with VN.Message.Factory;
+with VN.Message.Local_Hello;
+with VN.Message.Local_Ack;
+with VN.Message.Distribute_Route;
 
 package body VN.Communication.CAN.Logic.SM is
 
@@ -167,23 +173,83 @@ package body VN.Communication.CAN.Logic.SM is
 
    procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
                      status : out VN.Receive_Status) is
-      internal : VN.Communication.CAN.Logic.VN_Message_Internal;
+
+      procedure Local_Ack_Response(internalMsg : VN.Communication.CAN.Logic.VN_Message_Internal) is
+         msgLocalAck   	: VN.Message.Local_Ack.VN_Message_Local_Ack;
+         msgBasic      	: VN.Message.VN_Message_Basic  := VN.Message.Factory.Create(VN.Message.Type_Local_Ack);
+         ackMessage    	: VN.Communication.CAN.Logic.VN_Message_Internal;
+         result        	: VN.Send_Status;
+      begin
+
+         VN.Message.Local_Ack.To_Local_Ack(msgBasic, msgLocalAck);
+         msgLocalAck.Status := VN.Message.ACK_OK;
+
+         msgLocalAck.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
+         msgLocalAck.Header.Source 	:= VN.LOGICAL_ADDRES_UNKNOWN;
+
+         VN.Message.Local_Ack.To_Basic(msgLocalAck, ackMessage.Data);
+         ackMessage.NumBytes := Interfaces.Unsigned_16(Integer(msgLocalAck.Header.Payload_Length) +
+                                                         VN.Message.CHECKSUM_SIZE +
+                                                         VN.Message.HEADER_SIZE);
+
+         ackMessage.Receiver := VN.Communication.CAN.Convert(internalMsg.Sender);
+
+         this.sender.SendVNMessage(ackMessage, result);
+      end Local_Ack_Response;
+
+
+      procedure Handle_Distribute_Route(internalMsg : VN.Communication.CAN.Logic.VN_Message_Internal) is
+         msgDistribute : VN.Message.Distribute_Route.VN_Message_Distribute_Route;
+      begin
+         VN.Message.Distribute_Route.To_Distribute_Route(internalMsg.Data, msgDistribute);
+         CAN_Routing.Insert(this.myTable, msgDistribute.Component_Address, internalMsg.Sender);
+      end Handle_Distribute_Route;
+
+      internal 	    : VN.Communication.CAN.Logic.VN_Message_Internal;
+      msgLocalHello : VN.Message.Local_Hello.VN_Message_Local_Hello;
+
+      stop 	    : boolean := false;
    begin
+
       if not this.isInitialized then
          Init(this);
       end if;
 
-      this.receiver.ReceiveVNMessage(internal, status);
+      while not stop loop
+         this.receiver.ReceiveVNMessage(internal, status);
 
-      --TODO, this will need to be updated if more options for VN.Receive_Status are added:
-      if status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
-        status = VN.MSG_RECEIVED_MORE_AVAILABLE then
+         if status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or --TODO, this will need to be updated if more options for VN.Receive_Status are added
+           status = VN.MSG_RECEIVED_MORE_AVAILABLE then
 
-         --Store information about the sender of the message:
-         CAN_Routing.Insert(this.myTable, internal.Data.Header.Source, internal.Sender);
+            msg := internal.Data;
 
-         msg := internal.Data;
-      end if;
+            -- ToDo: Add more special cases
+            -- Some special cases:
+            if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
+
+               VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
+               CUUID_CAN_Routing.Insert(msgLocalHello.CUUID, internal.Sender);
+
+               Local_Ack_Response(internal); -- Respond with a LocalAck
+               stop := false;
+
+            elsif msg.Header.Opcode = VN.Message.OPCODE_LOCAL_ACK then
+               -- ToDo: We should remember that our Local_Hello was acknowledged
+               stop := false;
+
+            else -- messages that are received from units that have a logical address:
+
+               --Store information about the sender of the message:
+               CAN_Routing.Insert(this.myTable, internal.Data.Header.Source, internal.Sender);
+
+               if msg.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
+                  Handle_Distribute_Route(internal);
+               end if;
+            end if;
+         else
+            stop := true;
+         end if;
+      end loop;
    end Receive;
 
    procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender;

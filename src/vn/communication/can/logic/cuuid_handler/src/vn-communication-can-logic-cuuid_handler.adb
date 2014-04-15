@@ -126,7 +126,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
          -- msgBasic.Header.Source := --ToDo
          -- msgBasic.Header.Destination := --ToDo
 
-         VN.Communication.CAN.Logic.DebugOutput("msgBasic LocalHello sent, Opcode= " & msgBasic.Header.Opcode'Img, 4);
+         VN.Communication.CAN.Logic.DebugOutput("msgBasic LocalHello sent, Opcode= " & msgBasic.Header.Opcode'Img, 6);
 
          msgLocalHello.CUUID := this.myCUUID;
          msgLocalHello.Component_Type := VN.Message.SM_x;

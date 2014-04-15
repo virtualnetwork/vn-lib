@@ -17,7 +17,7 @@ with VN.Message;
 
 package VN.Communication.CAN.Logic is
 
-   GIVE_DEBUG_OUTPUT : constant integer := 4;
+   GIVE_DEBUG_OUTPUT : constant integer := 3;
 
    OFFSET_CAN_PRIORITY 	: constant Natural := 22;
    OFFSET_CAN_TYPE	: constant Natural := 15;

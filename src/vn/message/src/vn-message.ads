@@ -46,6 +46,10 @@ package VN.Message is
    -- Other VN fields used in multiple derived types
    type VN_Status is mod 2 ** 8;
    for VN_Status'Size use 8;
+   ACK_OK 	: constant VN_Status := 0;
+   ACK_ERROR 	: constant VN_Status := 1;
+
+
 
    type VN_Response_Type is (Valid, Invalid);
    for VN_Response_Type'Size use 8;
@@ -59,6 +63,12 @@ package VN.Message is
    STATUS_SIZE             : constant integer := 1;
    RESPONSE_TYPE_SIZE      : constant integer := 1;
    VN_LOGICAL_ADDRESS_SIZE : constant integer := 4;
+
+   OPCODE_LOCAL_HELLO 		: constant VN_Opcode := 16#20#;
+   OPCODE_LOCAL_ACK 		: constant VN_Opcode := 16#21#;  
+   OPCODE_DISTRIBUTE_ROUTE 	: constant VN_Opcode := 16#72#;  
+   OPCODE_ASSIGN_ADDR_BLOCK	: constant VN_Opcode := 16#4D#;
+   OPCODE_ASSIGN_ADDR		: constant VN_Opcode := 16#7B#;
 
    type VN_Header is
       record
