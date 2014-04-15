@@ -1,5 +1,5 @@
 
-with GNAT.HTable;
+with System.HTable;
 with VN;
 
 generic
@@ -47,7 +47,7 @@ private
    function Get_Key (E : Element_ptr) 		return VN.VN_CUUID;
    function Hash    (F : VN.VN_CUUID)      	return Header_Num;
 
-   package CUUID_Hashing is new GNAT.HTable.Static_HTable(Header_Num => Header_Num, Element => Element,
+   package CUUID_Hashing is new System.HTable.Static_HTable(Header_Num => Header_Num, Element => Element,
                                                             Elmt_Ptr => Element_ptr, Null_Ptr => NULL_PTR,
                                                             Set_Next => Set_Next, Next => Next, Key => VN.VN_CUUID,
                                                             Get_Key => Get_Key, Hash => Hash, Equal => "=");
