@@ -6,11 +6,16 @@ with GNAT.IO;
 with VN;
 use VN;
 
+with Ada.Real_Time;
+use Ada.Real_Time;
+
 with VN.Communication.CAN;
 use VN.Communication.CAN;
 
 with Interfaces;
 with VN.Communication.CUUID_Routing;
+
+with System.BB.Interrupts; -- Remove when compiling for PC, keep when compiling for SmartFusion2
 
 procedure CUUID_Routing_Test_Main is
 
@@ -23,7 +28,20 @@ procedure CUUID_Routing_Test_Main is
    d : array(1..127) of VN.VN_CUUID;
 
    found : boolean;
+
+   wait : Ada.Real_Time.Time_Span := Ada.Real_Time.Seconds(2);
+   now  : Ada.Real_Time.Time;
+
 begin
+
+
+   now := Ada.Real_Time.Clock;
+   delay until now + wait;
+
+   GNAT.IO.Put_Line("Start");
+
+   now := Ada.Real_Time.Clock;
+   delay until now + wait;
 
    for i in c'Range loop
       c(i) := (others => Interfaces.Unsigned_8(i));
@@ -53,5 +71,10 @@ begin
    end loop;
 
    GNAT.IO.Put_Line("Test done");
+
+   loop
+      now := Ada.Real_Time.Clock;
+      delay until now + wait;
+   end loop;
 
 end CUUID_Routing_Test_Main;
