@@ -12,6 +12,7 @@ procedure Test is
 begin
 
    msg1 := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
+   msg1.Header.Version := 56;
    msg1.Header.Priority := 2;
    msg1.Header.Payload_Length := 3;
    msg1.Header.Destination := 4;
@@ -27,7 +28,7 @@ begin
 
    VN.Message.DeSerialize(msg2, arr);
 
-
+   VN.Text_IO.Put_Line("Version= " & msg2.Header.Version'Img);
    VN.Text_IO.Put_Line("Priority= " & msg2.Header.Priority'Img);
    VN.Text_IO.Put_Line("Payload_Length= " & msg2.Header.Payload_Length'Img);
    VN.Text_IO.Put_Line("Destination= " & msg2.Header.Destination'Img);
