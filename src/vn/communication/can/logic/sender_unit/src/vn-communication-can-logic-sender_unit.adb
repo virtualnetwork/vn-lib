@@ -129,6 +129,8 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
       this.numBytesToSend := message.NumBytes;   
       this.Receiver := message.Receiver;     
 
+      VN.Communication.CAN.Logic.DebugOutput("Send VN Message: NumBytes= " & message.NumBytes'Img & " Opcode= " & message.Data.Header.Opcode'img, 4);
+
 --        VN.Communication.CAN.Logic.DebugOutput("", 4);
 --        VN.Communication.CAN.Logic.DebugOutput("Sender_Unit_Duty.Send, opcode= " & message.Data.Header.Opcode'Img, 4);
 --        VN.Communication.CAN.Logic.DebugOutput("", 4);
@@ -194,13 +196,13 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
       for i in 0..Last loop
          index := i + startIndex;
          
-         -- If we are to take the last two bytes (the Checksums) these are always placed 
+         -- If we are to take the last two bytes (the Checksum), these are always placed 
          -- at the last to indices of the array.
-         if index = Integer(NumBytes) - 1 then
-            index := msgArray'Last - msgArray'First;
-         elsif index = Integer(NumBytes) - 2 then
-            index := msgArray'Last - msgArray'First - 1;
-         end if;
+--           if index = Integer(NumBytes) - 1 then
+--              index := msgArray'Last - msgArray'First;
+--           elsif index = Integer(NumBytes) - 2 then
+--              index := msgArray'Last - msgArray'First - 1;
+--           end if;
 
 --           if CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i) > CANMessage.Data'Last then
 --              Ada.Exceptions.Raise_Exception(Fragment_Error'Identity, "CANMessage error, i= " & i'Img);

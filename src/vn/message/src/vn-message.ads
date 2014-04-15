@@ -135,8 +135,8 @@ package VN.Message is
       Header        at 0 range 0 .. (HEADER_SIZE * 8 - 1);
       Payload       at 0 range (HEADER_SIZE * 8) ..
                                (HEADER_SIZE * 8 + MAX_PAYLOAD_SIZE * 8 - 1);
-      Checksum      at 0 range (HEADER_SIZE * 8) + (MAX_PAYLOAD_SIZE * 8) .. 
-                               (HEADER_SIZE * 8 + (MAX_PAYLOAD_SIZE * 8) + (CHECKSUM_SIZE * 8) - 1);
+      Checksum      at 0 range (HEADER_SIZE + MAX_PAYLOAD_SIZE) * 8 .. 
+                               (HEADER_SIZE + MAX_PAYLOAD_SIZE + CHECKSUM_SIZE) * 8 - 1;
    end record;
    
    for VN_Message_Basic'Alignment use 1;

@@ -167,16 +167,16 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
       -- If the last CAN message has been received, move the
       -- two last received bytes to the end of the array.
       -- These two bytes are the checksum and should allways be put at the end of the array.
-      if seqNumber = numMessages then
-         lastIndex := startIndex + Integer(CANMessage.Length) - 1;
-
-         VNMessageContent(VNMessageContent'Last)     :=  VNMessageContent(lastIndex);
-         VNMessageContent(VNMessageContent'Last - 1) :=  VNMessageContent(lastIndex - 1);
-
-         --reverse index on VNMessageContent:
---           VNMessageContent(VNMessageContent'First)     :=  VNMessageContent(VNMessageContent'Last - lastIndex);
---           VNMessageContent(VNMessageContent'First + 1) :=  VNMessageContent(VNMessageContent'Last - lastIndex - 1);
-      end if;
+--        if seqNumber = numMessages then
+--           lastIndex := startIndex + Integer(CANMessage.Length) - 1;
+--
+--           VNMessageContent(VNMessageContent'Last)     :=  VNMessageContent(lastIndex);
+--           VNMessageContent(VNMessageContent'Last - 1) :=  VNMessageContent(lastIndex - 1);
+--
+--           --reverse index on VNMessageContent:
+--  --           VNMessageContent(VNMessageContent'First)     :=  VNMessageContent(VNMessageContent'Last - lastIndex);
+--  --           VNMessageContent(VNMessageContent'First + 1) :=  VNMessageContent(VNMessageContent'Last - lastIndex - 1);
+--        end if;
    end DeFragment;
 
 end VN.Communication.CAN.Logic.Receiver_Unit;

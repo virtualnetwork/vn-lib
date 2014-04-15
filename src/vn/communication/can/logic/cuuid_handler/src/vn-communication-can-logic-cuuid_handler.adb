@@ -106,11 +106,10 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
                        CANAddress : VN.Communication.CAN.CAN_Address_Sender;
                        isSM_CAN   : Boolean) is
 
-      msgBasic : VN.Message.VN_Message_Basic:=
+      msgBasic : VN.Message.VN_Message_Basic :=
         VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
 
       msgLocalHello : VN.Message.Local_Hello.VN_Message_Local_Hello;
-
       msg : VN.Communication.CAN.Logic.VN_Message_Internal;
       result : VN.Send_Status;
    begin
@@ -123,24 +122,28 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
       if isSM_CAN then
          VN.Message.Local_Hello.To_Local_Hello(msgBasic, msgLocalHello);
 
-         msgBasic.Header.Source 	:= VN.LOGICAL_ADDRES_UNKNOWN;
-         msgBasic.Header.Destination 	:= VN.LOGICAL_ADDRES_UNKNOWN;
-
-         VN.Communication.CAN.Logic.DebugOutput("msgBasic LocalHello sent, Opcode= " & msgBasic.Header.Opcode'Img, 6);
-
+         msgLocalHello.Header.Source 		:= VN.LOGICAL_ADDRES_UNKNOWN;
+         msgLocalHello.Header.Destination 	:= VN.LOGICAL_ADDRES_UNKNOWN;
          msgLocalHello.CUUID := this.myCUUID;
          msgLocalHello.Component_Type := VN.Message.SM_x;
 
+         VN.Communication.CAN.Logic.DebugOutput("Opcode= " & msgLocalHello.Header.Opcode'img, 2);
+
          VN.Message.Local_Hello.To_Basic(msgLocalHello, msg.Data);
+
+         VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img &
+                                                  " sent LocalHello to CAN address " &
+                                                  CANAddress'img &
+                                                  " Opcode= " & msg.Data.Header.Opcode'img, 2);
 
          msg.Receiver := VN.Communication.CAN.Convert(CANAddress);
          msg.NumBytes := Interfaces.Unsigned_16(Integer(msgLocalHello.Header.Payload_Length) +
                                                   VN.Message.HEADER_SIZE + VN.Message.CHECKSUM_SIZE);
+
+
          sender.SendVNMessage(msg, result);
 
-         VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img &
-                                                  " sent LocalHello to CAN address " &
-                                                  CANAddress'img, 2);
+
 
          --ToDo: If result is not equal to OK we have a problem
       end if;
