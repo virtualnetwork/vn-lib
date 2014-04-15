@@ -117,7 +117,7 @@ package VN.Message is
 
    for VN_Message_Basic'Alignment use 1;
 
-   type VN_Message_Byte_Array is array (1 .. VN_Message_Basic'Size)
+   type VN_Message_Byte_Array is array (1 .. VN_Message_Basic'Size / 8) --VN_Message_Basic'Size is in bits
                                           of Interfaces.Unsigned_8;
 
  --  procedure Assignment (destination : out VN_Message_Basic; source : in VN_Message_Basic);
