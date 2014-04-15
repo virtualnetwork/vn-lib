@@ -70,7 +70,7 @@ package body VN.Communication.CUUID_Routing is
    end CUUID_To_String;
 
    function Hash_CUUID(cuuid : in VN.VN_CUUID) return Header_Num is
-      function Hash_my_CUUID is new GNAT.HTable.Hash(Header_Num);
+      function Hash_my_CUUID is new System.HTable.Hash(Header_Num);
 
       str : String(1 .. 16);
    begin
