@@ -123,8 +123,8 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
       if isSM_CAN then
          VN.Message.Local_Hello.To_Local_Hello(msgBasic, msgLocalHello);
 
-         -- msgBasic.Header.Source := --ToDo
-         -- msgBasic.Header.Destination := --ToDo
+         msgBasic.Header.Source 	:= VN.LOGICAL_ADDRES_UNKNOWN;
+         msgBasic.Header.Destination 	:= VN.LOGICAL_ADDRES_UNKNOWN;
 
          VN.Communication.CAN.Logic.DebugOutput("msgBasic LocalHello sent, Opcode= " & msgBasic.Header.Opcode'Img, 6);
 
@@ -137,6 +137,10 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
          msg.NumBytes := Interfaces.Unsigned_16(Integer(msgLocalHello.Header.Payload_Length) +
                                                   VN.Message.HEADER_SIZE + VN.Message.CHECKSUM_SIZE);
          sender.SendVNMessage(msg, result);
+
+         VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img &
+                                                  " sent LocalHello to CAN address " &
+                                                  CANAddress'img, 3);
 
          --ToDo: If result is not equal to OK we have a problem
       end if;
