@@ -74,7 +74,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
                   elsif this.sequenceNumber >= this.numMessages then
 
-                     VN.Communication.CAN.Logic.DebugOutput("Receiver unit: Transmission complete, ", 4, false);
+                     VN.Communication.CAN.Logic.DebugOutput("Receiver unit: Transmission complete, ", 3, false);
 
                      --write the VN message to the receive buffer:
                      VN.Message.Deserialize(VN_msg.Data, this.receivedData);
@@ -92,13 +92,13 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
                         this.Assign(tempSender.sender, tempSender.numMessages);
 
 
-                        VN.Communication.CAN.Logic.DebugOutput("started new transmission", 4);
+                        VN.Communication.CAN.Logic.DebugOutput("started new transmission", 3);
 
                         this.Update(msgIn, false, msgOut, bWillSend);
                         return;
                      else
                         this.currentState := Idle;
-                         VN.Communication.CAN.Logic.DebugOutput("went idle.", 4);
+                         VN.Communication.CAN.Logic.DebugOutput("went idle.", 3);
                      end if;
                   end if;
                end if;

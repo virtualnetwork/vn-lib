@@ -30,7 +30,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
                                                               NumMessagesToSend(this.numBytesToSend));
 
             VN.Communication.CAN.Logic.DebugOutput("StartTransmission message sent from address " & this.myCANAddress'img
-                                 & " to " & this.receiver'img & " numMessages= " & NumMessagesToSend(this.numBytesToSend)'img, 4);
+                                 & " to " & this.receiver'img & " numMessages= " & NumMessagesToSend(this.numBytesToSend)'img, 3);
 
             this.currentState := Started;
             this.time := Ada.Real_Time.Clock;
@@ -66,7 +66,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
                                                                  NumMessagesToSend(this.numBytesToSend));
 
                VN.Communication.CAN.Logic.DebugOutput("StartTransmission message was resent from address " & this.myCANAddress'img
-                                    & " to " & this.receiver'img & " numMessages= " & NumMessagesToSend(this.numBytesToSend)'img, 4);
+                                    & " to " & this.receiver'img & " numMessages= " & NumMessagesToSend(this.numBytesToSend)'img, 3);
 
                this.time := Ada.Real_Time.Clock;
                this.currentState := Started;
@@ -88,7 +88,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
                VN.Communication.CAN.Logic.DebugOutput("Sender_Unit sent Transmission message", 4);
                if isLastMessage then
                   this.currentState := Idle;
-                   VN.Communication.CAN.Logic.DebugOutput("Sender_Unit: Transmission done, went Idle", 4);
+                   VN.Communication.CAN.Logic.DebugOutput("Sender_Unit: Transmission done, went Idle", 3);
                else
 
                   this.blockCount := this.blockCount + 1;
