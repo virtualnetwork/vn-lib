@@ -12,7 +12,8 @@ procedure Test is
 begin
 
    msg1 := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
-   msg1.Header.Version := 56;
+   msg1.Header.Message_Type := VN.Message.Type_Distribute_Route;
+   msg1.Header.Version := 1;
    msg1.Header.Priority := 2;
    msg1.Header.Payload_Length := 3;
    msg1.Header.Destination := 4;
@@ -20,15 +21,19 @@ begin
    msg1.Header.Flags := 6;
    msg1.Header.Opcode := 7;
    msg1.Header.Ext_Header := 8;
-   msg1.Checksum := 9;
+   msg1.Checksum := 257;
 
    VN.Message.Serialize(msg1, arr);
 
-   arr(arr'Last) := 0;
+   arr(arr'First + 1) := 0;
+
+--   arr(arr'Last) := 0;
 
    VN.Message.DeSerialize(msg2, arr);
 
-   VN.Text_IO.Put_Line("Version= " & msg2.Header.Version'Img);
+
+   VN.Text_IO.Put_Line("Message_Type= " & msg2.Header.Message_Type'Img);
+   VN.Text_IO.Put_Line("Version= " & msg2.Header.Version'Img & ", arr'Size " & arr'Size'Img);
    VN.Text_IO.Put_Line("Priority= " & msg2.Header.Priority'Img);
    VN.Text_IO.Put_Line("Payload_Length= " & msg2.Header.Payload_Length'Img);
    VN.Text_IO.Put_Line("Destination= " & msg2.Header.Destination'Img);

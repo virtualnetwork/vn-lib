@@ -9,9 +9,6 @@ package body VN.Message is
 
    procedure Deserialize(Message : out VN_Message_Basic; buffer : in VN_Message_Byte_Array) is
       tempBuffer : VN_Message_Byte_Array;
-      -- TODO: Fix this warning.
-      -- Use pragma Import for "tempMsg" to suppress initialization
-
       for tempBuffer'Address use Message'Address;
    begin
       tempBuffer := buffer;

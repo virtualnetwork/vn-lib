@@ -1,5 +1,6 @@
 
 with Interfaces;
+with System;
 
 package VN.Message is
 
@@ -83,17 +84,32 @@ package VN.Message is
          Ext_Header     : VN_Ext_Header_Length := 16#00#;
       end record;
 
+--     for VN_Header use record
+--        Message_Type      at 0 range 128 .. 135; --8
+--        Version           at 0 range 120 .. 127; --8
+--        Priority          at 0 range 112 .. 119; --8
+--        Payload_Length    at 0 range 96 .. 111;  -- 32
+--        Destination       at 0 range 64 .. 95;
+--        Source            at 0 range 32 .. 63;
+--        Flags             at 0 range 16 .. 31;
+--        Opcode            at 0 range 8 .. 15;
+--        Ext_Header        at 0 range 0 .. 7;
+--     end record;
+
    for VN_Header use record
-      Message_Type      at 0 range 128 .. 135;
-      Version           at 0 range 120 .. 127;
-      Priority          at 0 range 112 .. 119;
-      Payload_Length    at 0 range 96 .. 111;
-      Destination       at 0 range 64 .. 95;
-      Source            at 0 range 32 .. 63;
-      Flags             at 0 range 16 .. 31;
-      Opcode            at 0 range 8 .. 15;
-      Ext_Header        at 0 range 0 .. 7;
+      Message_Type      at 0 range 0 .. 7;
+      Version           at 0 range 8 .. 15;
+      Priority          at 0 range 16 .. 23;
+      Payload_Length    at 0 range 24 .. 39;
+      Destination       at 0 range 40 .. 71;
+      Source            at 0 range 72 .. 103;
+      Flags             at 0 range 104 .. 119;
+      Opcode            at 0 range 120 .. 127;
+      Ext_Header        at 0 range 128 .. 135;
    end record;
+
+  for VN_Header'Alignment use 1;
+  -- for VN_Header'Bit_Order use High_Order_First;
 
    type VN_Payload_Byte_Array is array (1 .. MAX_PAYLOAD_SIZE)
                                     of Interfaces.Unsigned_8;
@@ -105,17 +121,26 @@ package VN.Message is
          Checksum : VN_Checksum;
       end record;
 
-   for VN_Message_Basic use record
-      Header        at 0 range (CHECKSUM_SIZE * 8 + MAX_PAYLOAD_SIZE * 8) ..
-                               (CHECKSUM_SIZE * 8 +
-                                MAX_PAYLOAD_SIZE * 8 +
-                                HEADER_SIZE * 8 - 1);
-      Payload       at 0 range (CHECKSUM_SIZE * 8) ..
-                               (CHECKSUM_SIZE * 8 + MAX_PAYLOAD_SIZE * 8 - 1);
-      Checksum      at 0 range 0 .. (CHECKSUM_SIZE * 8 - 1);
-   end record;
+--     for VN_Message_Basic use record
+--        Header        at 0 range (CHECKSUM_SIZE * 8 + MAX_PAYLOAD_SIZE * 8) ..
+--                                 (CHECKSUM_SIZE * 8 +
+--                                  MAX_PAYLOAD_SIZE * 8 +
+--                                  HEADER_SIZE * 8 - 1);
+--        Payload       at 0 range (CHECKSUM_SIZE * 8) ..
+--                                 (CHECKSUM_SIZE * 8 + MAX_PAYLOAD_SIZE * 8 - 1);
+--        Checksum      at 0 range 0 .. (CHECKSUM_SIZE * 8 - 1);
+--     end record;
 
+   for VN_Message_Basic use record
+      Header        at 0 range 0 .. (HEADER_SIZE * 8 - 1);
+      Payload       at 0 range (HEADER_SIZE * 8) ..
+                               (HEADER_SIZE * 8 + MAX_PAYLOAD_SIZE * 8 - 1);
+      Checksum      at 0 range (HEADER_SIZE * 8) + (MAX_PAYLOAD_SIZE * 8) .. 
+                               (HEADER_SIZE * 8 + (MAX_PAYLOAD_SIZE * 8) + (CHECKSUM_SIZE * 8) - 1);
+   end record;
+   
    for VN_Message_Basic'Alignment use 1;
+
 
    type VN_Message_Byte_Array is array (1 .. VN_Message_Basic'Size / 8) --VN_Message_Basic'Size is in bits
                                           of Interfaces.Unsigned_8;
