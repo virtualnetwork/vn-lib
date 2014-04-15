@@ -97,6 +97,8 @@ package body VN.Communication.CUUID_Routing is
       type Unsigned_32_Array is array(1..4) of Interfaces.Unsigned_32;
       arr : Unsigned_32_Array;
       for arr'Address use F'Address;
+      for arr'Alignment use 4;
+      pragma Warnings(Off, arr);
 
       total : Interfaces.Unsigned_32 := 0;
    begin
