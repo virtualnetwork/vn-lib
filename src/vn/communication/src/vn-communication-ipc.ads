@@ -14,11 +14,11 @@ package VN.Communication.IPC is
 
    procedure Send(This: in out IPC_Wrapper;
                   Message: in VN.Message.VN_Message_Basic;
-                  Status: out VN.Message.Send_Status);
+                  Status: out VN.Send_Status);
 
    procedure Receive(This: in out IPC_Wrapper;
                      Message: out VN.Message.VN_Message_Basic;
-                     Status: out VN.Message.Receive_Status);
+                     Status: out VN.Receive_Status);
 private
 
    -- TODO: Modify code so the buffer is of variable length.

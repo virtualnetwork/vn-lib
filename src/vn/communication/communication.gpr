@@ -1,3 +1,4 @@
+with "../lib/buffers/buffers.gpr";
 with "../message/message.gpr";
 
 project Communication is
