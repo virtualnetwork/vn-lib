@@ -12,6 +12,7 @@ package VN is
    package Text_IO renames GNAT.IO;
 
    type VN_CUUID is Array(1..16) of Interfaces.Unsigned_8;
+   for VN_CUUID'Alignment use 4;
 
    type VN_Logical_Address is mod 2 ** 32;
    for VN_Logical_Address'Size use 32;
