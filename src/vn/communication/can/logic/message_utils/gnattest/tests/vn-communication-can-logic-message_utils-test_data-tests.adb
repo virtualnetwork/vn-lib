@@ -792,15 +792,52 @@ package body VN.Communication.CAN.Logic.Message_Utils.Test_Data.Tests is
       for i in 1..numLoops loop
          Fragment(msgArray1, seqNum, Interfaces.Unsigned_16(numBytes), msgCAN, isLastMsg);
 
-         DeFragment(seqNum, Interfaces.Unsigned_16(numBytes), msgCAN, msgArray2, currentLength);
+         AUnit.Assertions.Assert(seqNum = Interfaces.Unsigned_16(i), "seqNum incorrect, seqNum= " & seqNum'img & " i= " & i'img); --Tests Fragment function
+
+        if i < numLoops then
+            AUnit.Assertions.Assert
+              (msgCAN.Length = 8,
+               "msgCAN.Length incorrect " & msgCAN.Length'img & " i= " & i'img); --Tests Fragment function
+
+            AUnit.Assertions.Assert(not isLastMsg, "isLastMsg incorrect"); --Tests Fragment function
+         else
+            AUnit.Assertions.Assert(isLastMsg, "isLastMsg incorrect"); --Tests Fragment function
+
+            if msgCAN.Length >= 2 then
+               AUnit.Assertions.Assert(msgCAN.Data(msgCAN.Data'First + msgCAN.Length - 2) = msgArray1(msgArray1'Last - 1), --Tests Fragment function
+                                       "second last byte of last msgCAN.Data incorrect");
+            end if;
+
+            AUnit.Assertions.Assert(msgCAN.Data(msgCAN.Data'First + msgCAN.Length - 1) = msgArray1(msgArray1'Last), --Tests Fragment function
+                                    "last byte of last msgCAN.Data incorrect");
+         end if;
+
+         DeFragment(Interfaces.Unsigned_16(i - 1), Interfaces.Unsigned_16(numLoops), msgCAN, msgArray2, currentLength);
       end loop;
 
+
+      for i in 0 .. numBytes - 3 loop
+       AUnit.Assertions.Assert
+        (msgArray1(msgArray1'First + i) = msgArray2(msgArray2'First + i),
+         "byte arrays differ at index " & i'img);
+      end loop;
+
+      declare
+         temp : Integer := msgArray2'Last - 1;
+      begin
+         AUnit.Assertions.Assert
+           (msgArray1(msgArray1'Last - 1) = msgArray2(msgArray2'Last - 1),
+            "byte arrays differ at index " & temp'img & " msgArray1(index)= " & msgArray1(msgArray1'Last - 1)'img &
+              " msgArray1(index + 1)= " & msgArray1(msgArray1'Last)'img &
+              " msgArray2(index)= " & msgArray2(msgArray2'Last - 1)'img &
+              " msgArray2(index + 1)= " & msgArray1(msgArray2'Last)'img & " numBytes= " & numBytes'img); -- & " numLoops= " & numLoops'img);
+      end;
+
       AUnit.Assertions.Assert
-        (isLastMsg,
-         "isLastMsg incorrect");
+        (msgArray1(msgArray1'Last) = msgArray2(msgArray2'Last),
+         "byte arrays differ at index " & msgArray2'Last'img);
 
       VN.Message.Deserialize(msgBasic2, msgArray2);
-
       VN.Message.Local_Hello.To_Local_Hello(msgBasic2, msgLocalHello2);
 
       AUnit.Assertions.Assert
@@ -826,16 +863,9 @@ package body VN.Communication.CAN.Logic.Message_Utils.Test_Data.Tests is
         (msgLocalHello1.Header.Ext_Header = msgLocalHello2.Header.Ext_Header,
          "msgLocalHello2.Header.Ext_Header incorrect");
 
-
-      AUnit.Assertions.Assert
-        (msgLocalHello1.Checksum = msgLocalHello2.Checksum,
-         "msgLocalHello2.Checksum incorrect");
-
-
       AUnit.Assertions.Assert
         (msgLocalHello1.Header.Destination = msgLocalHello2.Header.Destination,
          "msgLocalHello2.Header.Destination incorrect");
-
 
       AUnit.Assertions.Assert
         (msgLocalHello1.CUUID = msgLocalHello2.CUUID,
@@ -845,6 +875,10 @@ package body VN.Communication.CAN.Logic.Message_Utils.Test_Data.Tests is
       AUnit.Assertions.Assert
         (msgLocalHello1.Component_Type = msgLocalHello2.Component_Type,
          "msgLocalHello2.Component_Type incorrect");
+
+      AUnit.Assertions.Assert
+        (msgLocalHello1.Checksum = msgLocalHello2.Checksum,
+         "msgLocalHello2.Checksum incorrect");
 
       --  begin read only
    end Test_DeFragment;
