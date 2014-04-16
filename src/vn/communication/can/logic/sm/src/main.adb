@@ -24,6 +24,7 @@ with VN.Message;
 use VN.Message;
 
 with VN.Message.Local_Hello;
+with VN.Message.Local_Ack;
 
 with Interfaces;
 
@@ -62,6 +63,8 @@ procedure main is
 
    msg : VN.Message.VN_Message_Basic;
    msgLocalHello : VN.Message.Local_Hello.VN_Message_Local_Hello;
+   msgLocalAck : VN.Message.Local_Ack.VN_Message_Local_Ack;
+
    status : VN.Receive_Status;
 begin
 
@@ -111,8 +114,14 @@ begin
 
             if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
                VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
-               VN.Text_IO.Put_Line("LocalHello type= " & msgLocalHello.Header.Message_Type'Img & 
+               VN.Text_IO.Put_Line("LocalHello, type= " & msgLocalHello.Header.Message_Type'Img & 
                                      " CUUID(1)= " & msgLocalHello.CUUID(1)'img & " component type = " & msgLocalHello.Component_Type'img);
+            end if;
+
+            if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_ACK then
+               VN.Message.Local_Ack.To_Local_Ack(msg, msgLocalAck);
+               VN.Text_IO.Put_Line("LocalAck, type= " & msgLocalAck.Header.Message_Type'Img & 
+                                     " status = " & msgLocalAck.Status'img);
             end if;
             
             VN.Text_IO.New_Line;
