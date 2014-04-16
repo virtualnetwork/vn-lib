@@ -163,6 +163,9 @@ package body VN.Communication.CAN.Logic.SM is
       internal : VN.Communication.CAN.Logic.VN_Message_Internal;
       receiver : VN.Communication.CAN.CAN_Address_Sender;
       found : boolean;
+
+      msgAssignAddr 	 : VN.Message.Assign_Address.VN_Message_Assign_Address;
+      msgAssignAddrBlock : VN.Message.Assign_Address_Block.VN_Message_Assign_Address_Block;
    begin
       if not this.isInitialized then
          Init(this);
@@ -174,18 +177,29 @@ package body VN.Communication.CAN.Logic.SM is
          return;
       end if;
 
-      CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found);
+      -- ASSIGN_ADDR and ASSIGN_ADDR_BLOCK are routed on their receiver's
+      -- CUUID since the receiver does not have a logical address yet
+      if msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
+         VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
+         CUUID_CAN_Routing.Search(msgAssignAddr.CUUID, receiver, found);
+
+      elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
+
+         VN.Message.Assign_Address_Block.To_Assign_Address_Block(msg, msgAssignAddrBlock);
+         CUUID_CAN_Routing.Search(msgAssignAddrBlock.CUUID, receiver, found);
+      else
+
+         CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found);
+      end if;
 
       if found then
          internal.Receiver := VN.Communication.CAN.Convert(receiver);
-
          internal.Data := msg;
 
          -- ToDo: test if this is right:
          internal.NumBytes := Interfaces.Unsigned_16(Integer(msg.Header.Payload_Length) +
                                                        VN.Message.HEADER_SIZE +
                                                          VN.Message.CHECKSUM_SIZE);
-
          this.sender.SendVNMessage(internal, result);
          result := OK;
       else
