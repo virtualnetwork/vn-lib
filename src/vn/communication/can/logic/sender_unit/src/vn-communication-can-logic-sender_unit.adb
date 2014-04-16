@@ -11,8 +11,6 @@
 
 with VN.Communication.CAN.Logic.Message_Utils;
 
-with Ada.Exceptions; --ToDo: only for testing
-
 package body VN.Communication.CAN.Logic.Sender_Unit is
 
    overriding procedure Update(this : in out Sender_Unit_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
@@ -82,7 +80,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
 
                VN.Communication.CAN.Logic.Message_Utils.TransmissionToMessage(msgOut, this.receiver, this.myCANAddress);
                
-               Fragment(this.ToSend, this.sequenceNumber, this.numBytesToSend, msgOut, isLastMessage); --this also increments sequenceNumber
+               VN.Communication.CAN.Logic.Message_Utils.Fragment(this.ToSend, this.sequenceNumber, this.numBytesToSend, msgOut, isLastMessage); --this also increments sequenceNumber
                bWillSend := true;
 
                VN.Communication.CAN.Logic.DebugOutput("Sender_Unit sent Transmission message", 4);
@@ -159,69 +157,5 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
          return messageLength / 8 + 1;
       end if;
    end NumMessagesToSend;
-
-
-   procedure Fragment(msgArray 		: VN.Message.VN_Message_Byte_Array; 
-                      seqNumber 	: in out Interfaces.Unsigned_16;
-                      NumBytes 		: in Interfaces.Unsigned_16;
-                      CANMessage 	: in out VN.Communication.CAN.CAN_Message_Logical; 
-                      isLastMessage 	: out  boolean) is
-      
-      Last, index, startIndex : integer; -- 0-based indices
-
-      Fragment_Error : exception;
-   begin
-
-      -- if the next Transmission message should be full (contain 8 bytes)
-      --but this is not the last CAN message to be sent
-      if (seqNumber + 1) * 8 < NumBytes then
-         Last := 7;
-         isLastMessage := false;
-
-         -- if the next Transmission message should be full (contain 8 bytes)
-         --and this is the last CAN message to be sent
-      elsif (seqNumber + 1) * 8 = NumBytes then
-         Last := 7;
-         isLastMessage := true;
-
-      else -- if the next Transmission message should contain less than 8 bytes
-         Last := Integer(NumBytes - seqNumber * 8) - 1;
-         isLastMessage := true;
-      end if;
-
-      CANMessage.Length := VN.Communication.CAN.DLC_Type(Last + 1);
-
-      startIndex := Integer(seqNumber) * 8; --where in the msgArray the first byte should be taken
-
-      for i in 0..Last loop
-         index := i + startIndex;
-         
-         -- If we are to take the last two bytes (the Checksum), these are always placed 
-         -- at the last to indices of the array.
-         if index = Integer(NumBytes) - 1 then
-            index := msgArray'Last - msgArray'First;
-         elsif index = Integer(NumBytes) - 2 then
-            index := msgArray'Last - msgArray'First - 1;
-         end if;
-
-         if CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i) > CANMessage.Data'Last then
-            Ada.Exceptions.Raise_Exception(Fragment_Error'Identity, "CANMessage error, i= " & i'Img);
-         end if;
-         
-         if msgArray'First + index > msgArray'Last then 
-             Ada.Exceptions.Raise_Exception(Fragment_Error'Identity, "msgArray error, index= " & index'Img & " seqNumber= " & seqNumber'img);
-         end if;
-            
-         CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)) :=
-           msgArray(msgArray'First + index);
-
-         --reverse index on msgArray:
---           CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)) :=
---             msgArray(msgArray'Last - index);
-      end loop;
-
-      seqNumber := seqNumber + 1;
-   end Fragment;
-
 end VN.Communication.CAN.Logic.Sender_Unit;
 

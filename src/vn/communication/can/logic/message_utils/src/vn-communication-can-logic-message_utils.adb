@@ -6,6 +6,7 @@
 -- information into CAN messages and retrieving information from CAN messages.
 
 with Interfaces;
+with Ada.Exceptions;
 
 package body VN.Communication.CAN.Logic.Message_Utils is
 
@@ -370,6 +371,107 @@ package body VN.Communication.CAN.Logic.Message_Utils is
 
       return VN.Communication.CAN.CAN_message_ID(total);
    end GetMessageID;
+
+   procedure Fragment(msgArray 		: VN.Message.VN_Message_Byte_Array;
+                      seqNumber 	: in out Interfaces.Unsigned_16;
+                      NumBytes 		: in Interfaces.Unsigned_16;
+                      CANMessage 	: in out VN.Communication.CAN.CAN_Message_Logical;
+                      isLastMessage 	: out  boolean) is
+
+      Last, index, startIndex : integer; -- 0-based indices
+
+      Fragment_Error : exception;
+   begin
+
+      -- if the next Transmission message should be full (contain 8 bytes)
+      --but this is not the last CAN message to be sent
+      if (seqNumber + 1) * 8 < NumBytes then
+         Last := 7;
+         isLastMessage := false;
+
+         -- if the next Transmission message should be full (contain 8 bytes)
+         --and this is the last CAN message to be sent
+      elsif (seqNumber + 1) * 8 = NumBytes then
+         Last := 7;
+         isLastMessage := true;
+
+      else -- if the next Transmission message should contain less than 8 bytes
+         Last := Integer(NumBytes - seqNumber * 8) - 1;
+         isLastMessage := true;
+      end if;
+
+      CANMessage.Length := VN.Communication.CAN.DLC_Type(Last + 1);
+
+      startIndex := Integer(seqNumber) * 8; --where in the msgArray the first byte should be taken
+
+      for i in 0..Last loop
+         index := i + startIndex;
+
+         -- If we are to take the last two bytes (the Checksum), these are always placed
+         -- at the last to indices of the array.
+         if index = Integer(NumBytes) - 1 then
+            index := msgArray'Last - msgArray'First;
+         elsif index = Integer(NumBytes) - 2 then
+            index := msgArray'Last - msgArray'First - 1;
+         end if;
+
+         if CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i) > CANMessage.Data'Last then
+            Ada.Exceptions.Raise_Exception(Fragment_Error'Identity, "CANMessage error, i= " & i'Img);
+         end if;
+
+         if msgArray'First + index > msgArray'Last then
+             Ada.Exceptions.Raise_Exception(Fragment_Error'Identity, "msgArray error, index= " & index'Img & " seqNumber= " & seqNumber'img);
+         end if;
+
+         CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)) :=
+           msgArray(msgArray'First + index);
+
+         --reverse index on msgArray:
+--           CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)) :=
+--             msgArray(msgArray'Last - index);
+      end loop;
+
+      seqNumber := seqNumber + 1;
+   end Fragment;
+
+   procedure DeFragment(seqNumber 	 : Interfaces.Unsigned_16;
+                        numMessages	 : Interfaces.Unsigned_16;
+                        CANMessage 	 : VN.Communication.CAN.CAN_Message_Logical;
+                        VNMessageContent : in out VN.Message.VN_Message_Byte_Array;
+                        currentLength 	 : out Interfaces.Unsigned_16) is
+
+      index, startIndex, lastIndex : Integer; -- zerobased
+   begin
+
+      startIndex := Integer(seqNumber) * 8;
+
+      for i in 0 .. CANMessage.Length - 1 loop
+         index := startIndex + Integer(i);
+
+         VNMessageContent(VNMessageContent'First + index) :=
+           CANMessage.Data(CANMessage.Data'First + i);
+
+         --reverse index on VNMessageContent:
+--           VNMessageContent(VNMessageContent'Last - index) :=
+--             CANMessage.Data(CANMessage.Data'First + i);
+      end loop;
+
+      currentLength := seqNumber * 8 + Interfaces.Unsigned_16(CANMessage.Length);
+
+      -- If the last CAN message has been received, move the
+      -- two last received bytes to the end of the array.
+      -- These two bytes are the checksum and should allways be put at the end of the array.
+      if seqNumber = numMessages then
+         lastIndex := startIndex + Integer(CANMessage.Length) - 1;
+
+         VNMessageContent(VNMessageContent'Last)     :=  VNMessageContent(lastIndex);
+         VNMessageContent(VNMessageContent'Last - 1) :=  VNMessageContent(lastIndex - 1);
+
+         --reverse index on VNMessageContent:
+--           VNMessageContent(VNMessageContent'First)     :=  VNMessageContent(VNMessageContent'Last - lastIndex);
+--           VNMessageContent(VNMessageContent'First + 1) :=  VNMessageContent(VNMessageContent'Last - lastIndex - 1);
+      end if;
+   end DeFragment;
 
 
    procedure DataToU16(Data : VN.Communication.CAN.Byte8; u16 : out Interfaces.Unsigned_16) is

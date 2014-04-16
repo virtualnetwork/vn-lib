@@ -4,7 +4,11 @@ project Message_Utils is
 
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
-  -- for Main use ("main.adb");
+   -- for Main use ("main.adb");
+
+   package Gnattest is
+      for Harness_Dir use "../gnattest/harness";
+   end Gnattest;
 
 end Message_Utils;
 

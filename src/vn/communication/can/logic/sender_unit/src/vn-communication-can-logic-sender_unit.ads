@@ -52,11 +52,12 @@ private
 
    function NumMessagesToSend(messageLength : Interfaces.Unsigned_16) return Interfaces.Unsigned_16;
 
-   procedure Fragment(msgArray 	: VN.Message.VN_Message_Byte_Array;
-                      seqNumber : in out Interfaces.Unsigned_16;
-                      NumBytes 		: in Interfaces.Unsigned_16;
-                      CANMessage 	: in out VN.Communication.CAN.CAN_Message_Logical;
-                      isLastMessage 	: out boolean);
+   --Moved to message_utils
+--     procedure Fragment(msgArray 	: VN.Message.VN_Message_Byte_Array;
+--                        seqNumber : in out Interfaces.Unsigned_16;
+--                        NumBytes 		: in Interfaces.Unsigned_16;
+--                        CANMessage 	: in out VN.Communication.CAN.CAN_Message_Logical;
+--                        isLastMessage 	: out boolean);
 
 end VN.Communication.CAN.Logic.Sender_Unit;
 

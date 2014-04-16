@@ -53,7 +53,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
                if msgIn.Sender = this.sender and msgIn.Receiver = this.myCANAddress then
 
-                  DeFragment(this.sequenceNumber, this.numMessages, msgIn, this.receivedData, currentLength);
+                  VN.Communication.CAN.Logic.Message_Utils.DeFragment(this.sequenceNumber, this.numMessages, msgIn, this.receivedData, currentLength);
 
                   this.sequenceNumber := this.sequenceNumber + 1;
                   this.blockCount     := this.blockCount + 1;
@@ -139,45 +139,5 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
    begin
       return this.Sender;
    end Sender;
-
-   procedure DeFragment(seqNumber 	 : Interfaces.Unsigned_16;
-                        numMessages	 : Interfaces.Unsigned_16;
-                        CANMessage 	 : VN.Communication.CAN.CAN_Message_Logical;
-                        VNMessageContent : in out VN.Message.VN_Message_Byte_Array;
-                        currentLength 	 : out Interfaces.Unsigned_16) is
-
-      index, startIndex, lastIndex : Integer; -- zerobased
-   begin
-
-      startIndex := Integer(seqNumber) * 8;
-
-      for i in 0 .. CANMessage.Length - 1 loop
-         index := startIndex + Integer(i);
-
-         VNMessageContent(VNMessageContent'First + index) :=
-           CANMessage.Data(CANMessage.Data'First + i);
-
-         --reverse index on VNMessageContent:
---           VNMessageContent(VNMessageContent'Last - index) :=
---             CANMessage.Data(CANMessage.Data'First + i);
-      end loop;
-
-      currentLength := seqNumber * 8 + Interfaces.Unsigned_16(CANMessage.Length);
-
-      -- If the last CAN message has been received, move the
-      -- two last received bytes to the end of the array.
-      -- These two bytes are the checksum and should allways be put at the end of the array.
-      if seqNumber = numMessages then
-         lastIndex := startIndex + Integer(CANMessage.Length) - 1;
-
-         VNMessageContent(VNMessageContent'Last)     :=  VNMessageContent(lastIndex);
-         VNMessageContent(VNMessageContent'Last - 1) :=  VNMessageContent(lastIndex - 1);
-
-         --reverse index on VNMessageContent:
---           VNMessageContent(VNMessageContent'First)     :=  VNMessageContent(VNMessageContent'Last - lastIndex);
---           VNMessageContent(VNMessageContent'First + 1) :=  VNMessageContent(VNMessageContent'Last - lastIndex - 1);
-      end if;
-   end DeFragment;
-
 end VN.Communication.CAN.Logic.Receiver_Unit;
 

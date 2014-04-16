@@ -76,10 +76,11 @@ private
          pendingSenders : Pending_Senders_ptr 	:= null;
       end record;
 
-   procedure DeFragment(seqNumber 	 : Interfaces.Unsigned_16;
-                        numMessages	 : Interfaces.Unsigned_16; --total number of CAN messages that are to be received
-                        CANMessage 	 : VN.Communication.CAN.CAN_Message_Logical;
-                        VNMessageContent : in out VN.Message.VN_Message_Byte_Array;
-                        currentLength 	 : out Interfaces.Unsigned_16);
+   --Moved to message_utils:
+--     procedure DeFragment(seqNumber 	 : Interfaces.Unsigned_16;
+--                          numMessages	 : Interfaces.Unsigned_16; --total number of CAN messages that are to be received
+--                          CANMessage 	 : VN.Communication.CAN.CAN_Message_Logical;
+--                          VNMessageContent : in out VN.Message.VN_Message_Byte_Array;
+--                          currentLength 	 : out Interfaces.Unsigned_16);
 
 end VN.Communication.CAN.Logic.Receiver_Unit;

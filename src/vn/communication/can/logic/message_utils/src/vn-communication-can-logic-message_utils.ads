@@ -94,6 +94,20 @@ package VN.Communication.CAN.Logic.Message_Utils is
    function GetMessageID(msgPrio : VN.Communication.CAN.CAN_Message_Prio; msgType : VN.Communication.CAN.CAN_Message_Type;
                          receiver : VN.Communication.CAN.CAN_Address_Receiver; myAddress : VN.Communication.CAN.CAN_Address_Sender) return VN.Communication.CAN.CAN_message_ID;
 
+
+   procedure Fragment(msgArray 	: VN.Message.VN_Message_Byte_Array;
+                      seqNumber : in out Interfaces.Unsigned_16;
+                      NumBytes 		: in Interfaces.Unsigned_16;
+                      CANMessage 	: in out VN.Communication.CAN.CAN_Message_Logical;
+                      isLastMessage 	: out boolean);
+
+   procedure DeFragment(seqNumber 	 : Interfaces.Unsigned_16;
+                        numMessages	 : Interfaces.Unsigned_16;
+                        CANMessage 	 : VN.Communication.CAN.CAN_Message_Logical;
+                        VNMessageContent : in out VN.Message.VN_Message_Byte_Array;
+                        currentLength 	 : out Interfaces.Unsigned_16);
+
+
 private
 
    type TwoBytes is array(VN.Communication.CAN.Byte8'First .. VN.Communication.CAN.Byte8'First + 1) of Interfaces.Unsigned_8;
