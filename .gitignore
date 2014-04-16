@@ -13,6 +13,7 @@ b~*.ad*
 *.bexch
 *.o
 *.ali
+b__*.ad*
 
 # Vagrant
 .vagrant
