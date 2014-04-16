@@ -19,6 +19,7 @@ with VN.Communication;
 with VN.Communication.CAN;
 with VN.Communication.CAN.CAN_Interface;
 with VN.Communication.Routing_Table;
+with VN.Communication.CUUID_Routing;
 
 package VN.Communication.Protocol_Routing is
 
@@ -26,6 +27,9 @@ package VN.Communication.Protocol_Routing is
    
    package Protocol_Router is new VN.Communication.Routing_Table(Protocol_Address_Type);
    use Protocol_Router;
+
+   package CUUID_Protocol_Routing  is new VN.Communication.CUUID_Routing(Protocol_Address_Type);
+   use CUUID_Protocol_Routing;
 
    --ToDo: These constants should be put in a config file of some sort
    PROTOCOL_ROUTING_TABLE_SIZE : constant VN.VN_Logical_Address := 500;

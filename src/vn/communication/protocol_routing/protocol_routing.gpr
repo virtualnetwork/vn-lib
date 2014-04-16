@@ -1,3 +1,4 @@
+with "../cuuid_routing/cuuid_routing.gpr";
 with "../routing_table/routing_table.gpr";
 with "../can/can_interface/can_interface.gpr";
 with "../can/can.gpr";
