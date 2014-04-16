@@ -131,8 +131,6 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
          msgLocalHello.CUUID := this.myCUUID;
          msgLocalHello.Component_Type := VN.Message.SM_x;
 
-         VN.Communication.CAN.Logic.DebugOutput("Opcode= " & msgLocalHello.Header.Opcode'img, 2);
-
          VN.Message.Local_Hello.To_Basic(msgLocalHello, msg.Data);
 
          VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img &

@@ -21,6 +21,8 @@ use VN.Communication.CAN.Logic;
 
 with VN.Communication.CAN.Logic.SM;
 with VN.Message;
+use VN.Message;
+
 with VN.Message.Local_Hello;
 
 with Interfaces;

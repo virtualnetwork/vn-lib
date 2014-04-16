@@ -40,11 +40,11 @@ package body VN.Communication.CAN.Logic.SM is
          for i in this.DutyArray'Range loop
             this.DutyArray(i).Update(msgIn, false, msgOut, bWillSend);
 
-            if bWillSend and then msgOut.isNormal and then msgOut.msgType = VN.Communication.CAN.Logic.TRANSMISSION and then
-              msgOut.Receiver = VN.Communication.CAN.CAN_Address_Receiver(1) then
-
-               VN.Communication.CAN.Logic.DebugOutput("SM sent transmission msg", 3);
-            end if;
+--              if bWillSend and then msgOut.isNormal and then msgOut.msgType = VN.Communication.CAN.Logic.TRANSMISSION and then
+--                msgOut.Receiver = VN.Communication.CAN.CAN_Address_Receiver(1) then
+--
+--                 VN.Communication.CAN.Logic.DebugOutput("SM sent transmission msg", 3);
+--              end if;
 
             if bWillSend then
                CAN_Message_Buffers.Insert(msgOut, ret);
@@ -67,11 +67,11 @@ package body VN.Communication.CAN.Logic.SM is
 
                this.DutyArray(i).Update(msgIn, true, msgOut, bWillSend);
 
-               if bWillSend and then msgOut.isNormal and then msgOut.msgType = VN.Communication.CAN.Logic.TRANSMISSION and then
-                 msgOut.Receiver = VN.Communication.CAN.CAN_Address_Receiver(1) then
+--                 if bWillSend and then msgOut.isNormal and then msgOut.msgType = VN.Communication.CAN.Logic.TRANSMISSION and then
+--                   msgOut.Receiver = VN.Communication.CAN.CAN_Address_Receiver(1) then
 
-                  VN.Communication.CAN.Logic.DebugOutput("SM sent transmission msg", 3);
-               end if;
+--                    VN.Communication.CAN.Logic.DebugOutput("SM sent transmission msg", 3);
+--                 end if;
 
                if bWillSend then
                   CAN_Message_Buffers.Insert(msgOut, ret);
@@ -260,7 +260,6 @@ package body VN.Communication.CAN.Logic.SM is
             Local_Ack_Response(internal); -- Respond with a LocalAck
             --   stop := false;
 
-            VN.Communication.CAN.Logic.DebugOutput("TEST: borde ha svarat, LocalHello",0);
             VN.Communication.CAN.Logic.DebugOutput("CAN address " & internal.Receiver'Img &
                                                      " received LocalHello from CAN address " &
                                                      internal.Sender'Img &
