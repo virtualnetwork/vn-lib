@@ -8,10 +8,6 @@
 -- Please also note that this functionality is regarding a Subnet Manager for CAN (SM-CAN),
 -- not an ordinary node.
 
---ToDo: Right now no routing information is retreived from DistributeRoute messages!!
---ToDo: Send LocalHello messages when detecting a new SM-CAN
---ToDo: Send LocalAck messages when receiving a LocalHello message
-
 pragma Profile (Ravenscar);
 
 with VN.Message;
