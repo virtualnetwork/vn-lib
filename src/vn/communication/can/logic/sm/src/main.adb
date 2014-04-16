@@ -23,8 +23,10 @@ with VN.Communication.CAN.Logic.SM;
 with VN.Message;
 use VN.Message;
 
+with VN.Message.Factory;
 with VN.Message.Local_Hello;
 with VN.Message.Local_Ack;
+with VN.Message.Assign_Address;
 
 with Interfaces;
 
@@ -65,7 +67,10 @@ procedure main is
    msgLocalHello : VN.Message.Local_Hello.VN_Message_Local_Hello;
    msgLocalAck : VN.Message.Local_Ack.VN_Message_Local_Ack;
 
-   status : VN.Receive_Status;
+   msgAssignAddr 	 : VN.Message.Assign_Address.VN_Message_Assign_Address;
+
+   receiveStatus : VN.Receive_Status;
+   sendStatus : VN.Send_Status;
 begin
 
    VN.Text_IO.Put_Line("VN.Message.VN_Message_Basic'Size= " & VN.Message.VN_Message_Basic'Size'Img);
@@ -105,9 +110,9 @@ begin
       end loop;
 
       for i in DutyArray'Range loop
-         VN.Communication.CAN.Logic.SM.Receive(DutyArray(i).all, msg, status);
+         VN.Communication.CAN.Logic.SM.Receive(DutyArray(i).all, msg, receiveStatus);
          
-         if status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or status = VN.MSG_RECEIVED_MORE_AVAILABLE then
+         if receiveStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or receiveStatus = VN.MSG_RECEIVED_MORE_AVAILABLE then
             VN.Text_IO.New_Line;
             
             VN.Text_IO.Put_Line("VN message received by duty no " & i'Img & " type= " & msg.Header.Message_Type'img & " Opcode= " & msg.Header.Opcode'img);
@@ -116,12 +121,40 @@ begin
                VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
                VN.Text_IO.Put_Line("LocalHello, type= " & msgLocalHello.Header.Message_Type'Img & 
                                      " CUUID(1)= " & msgLocalHello.CUUID(1)'img & " component type = " & msgLocalHello.Component_Type'img);
+
+               -- Simulate SM-CAN master assigning addresses or address blocks:
+               if i = DutyArray'First then
+                  
+                  msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
+                  VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
+                  
+                  msgAssignAddr.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
+                  msgAssignAddr.Header.Source := 10;
+                  msgAssignAddr.CUUID := msgLocalHello.CUUID;
+                  msgAssignAddr.Assigned_Address := 20;
+                  
+                  VN.Message.Assign_Address.To_Basic(msgAssignAddr, msg);
+                  VN.Communication.CAN.Logic.SM.Send(DutyArray(i).all, msg, sendStatus);    
+
+                  VN.Text_IO.Put_Line("Assinged Logical address");
+                  
+
+               end if;
             end if;
 
             if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_ACK then
                VN.Message.Local_Ack.To_Local_Ack(msg, msgLocalAck);
                VN.Text_IO.Put_Line("LocalAck, type= " & msgLocalAck.Header.Message_Type'Img & 
                                      " status = " & msgLocalAck.Status'img);
+            end if;
+
+            if msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then 
+               VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
+
+               if msgAssignAddr.CUUID = DutyArray(i).theCUUID.all then
+                  VN.Text_IO.Put_Line("Was assigned logical address= " & msgAssignAddr.Assigned_Address'Img & 
+                                        " by SM with logical address = " & msgAssignAddr.Header.Source'img);
+               end if;
             end if;
             
             VN.Text_IO.New_Line;
