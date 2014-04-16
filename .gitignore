@@ -9,6 +9,10 @@ project_pragmas
 *.bin
 *.bin~
 makefile~
+b~*.ad*
+*.bexch
+*.o
+*.ali
 
 # Vagrant
 .vagrant
