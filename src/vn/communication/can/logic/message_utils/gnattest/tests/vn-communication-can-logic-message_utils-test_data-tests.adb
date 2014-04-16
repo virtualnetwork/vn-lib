@@ -7,6 +7,12 @@
 
 with AUnit.Assertions; use AUnit.Assertions;
 
+with VN.Message;
+use VN.Message;
+
+with VN.Message.Factory;
+with VN.Message.Local_Hello;
+
 package body VN.Communication.CAN.Logic.Message_Utils.Test_Data.Tests is
 
 
@@ -255,7 +261,7 @@ package body VN.Communication.CAN.Logic.Message_Utils.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+         "RequestCUUIDToMessage, Test not implemented.");
 
 --  begin read only
    end Test_RequestCUUIDToMessage;
@@ -275,8 +281,8 @@ package body VN.Communication.CAN.Logic.Message_Utils.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (true,
-         "Test not implemented.");
+        (Gnattest_Generated.Default_Assert_Value,
+         "CUUIDHalfToMessage, Test not implemented.");
 
 --  begin read only
    end Test_CUUIDHalfToMessage;
@@ -726,7 +732,7 @@ package body VN.Communication.CAN.Logic.Message_Utils.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (true,
          "Test not implemented.");
 
 --  begin read only
@@ -744,13 +750,103 @@ package body VN.Communication.CAN.Logic.Message_Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      msgBasic1 : VN.Message.VN_Message_Basic := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
+      msgBasic2 : VN.Message.VN_Message_Basic;
+      msgLocalHello1, msgLocalHello2 : VN.Message.Local_Hello.VN_Message_Local_Hello;
+      msgArray1, msgArray2 : VN.Message.VN_Message_Byte_Array;
+
+      msgCAN : VN.Communication.CAN.CAN_Message_Logical;
+      seqNum : Interfaces.Unsigned_16 := 0;
+      currentLength : Interfaces.Unsigned_16 := 0;
+
+      numLoops, numBytes : Integer;
+      isLastMsg : boolean := false;
    begin
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      VN.Message.Local_Hello.To_Local_Hello(msgBasic1, msgLocalHello1);
 
---  begin read only
+      msgLocalHello1.Header.Version := 1;
+      msgLocalHello1.Header.Priority := 2;
+      msgLocalHello1.Header.Destination := 4;
+      msgLocalHello1.Header.Source := 5;
+      msgLocalHello1.Header.Flags := 6;
+      msgLocalHello1.Header.Ext_Header := 8;
+      msgLocalHello1.Checksum := 257;
+
+      msgLocalHello1.CUUID := (others => 6);
+      msgLocalHello1.Component_Type := VN.Message.SM_x;
+
+      VN.Message.Local_Hello.To_Basic(msgLocalHello1, msgBasic1);
+
+      numBytes := Integer(msgLocalHello1.Header.Payload_Length) +
+        VN.Message.CHECKSUM_SIZE + VN.Message.HEADER_SIZE;
+
+      VN.Message.Serialize(msgBasic1, msgArray1);
+
+      if numBytes mod 8 = 0 then
+         numLoops := numBytes / 8;
+      else
+         numLoops := numBytes / 8 + 1;
+      end if;
+
+      for i in 1..numLoops loop
+         Fragment(msgArray1, seqNum, Interfaces.Unsigned_16(numBytes), msgCAN, isLastMsg);
+
+         DeFragment(seqNum, Interfaces.Unsigned_16(numBytes), msgCAN, msgArray2, currentLength);
+      end loop;
+
+      AUnit.Assertions.Assert
+        (isLastMsg,
+         "isLastMsg incorrect");
+
+      VN.Message.Deserialize(msgBasic2, msgArray2);
+
+      VN.Message.Local_Hello.To_Local_Hello(msgBasic2, msgLocalHello2);
+
+      AUnit.Assertions.Assert
+        (msgLocalHello1.Header.Destination = msgLocalHello2.Header.Destination,
+         "msgLocalHello2.Header.Destination incorrect");
+
+      AUnit.Assertions.Assert
+        (msgLocalHello1.Header.Priority = msgLocalHello2.Header.Priority,
+         "msgLocalHello2.Header.Priority incorrect");
+
+
+      AUnit.Assertions.Assert
+        (msgLocalHello1.Header.Source = msgLocalHello2.Header.Source,
+         "msgLocalHello2.Header.Source incorrect");
+
+
+      AUnit.Assertions.Assert
+        (msgLocalHello1.Header.Flags = msgLocalHello2.Header.Flags,
+         "msgLocalHello2.Header.Flags incorrect");
+
+
+      AUnit.Assertions.Assert
+        (msgLocalHello1.Header.Ext_Header = msgLocalHello2.Header.Ext_Header,
+         "msgLocalHello2.Header.Ext_Header incorrect");
+
+
+      AUnit.Assertions.Assert
+        (msgLocalHello1.Checksum = msgLocalHello2.Checksum,
+         "msgLocalHello2.Checksum incorrect");
+
+
+      AUnit.Assertions.Assert
+        (msgLocalHello1.Header.Destination = msgLocalHello2.Header.Destination,
+         "msgLocalHello2.Header.Destination incorrect");
+
+
+      AUnit.Assertions.Assert
+        (msgLocalHello1.CUUID = msgLocalHello2.CUUID,
+         "msgLocalHello2.CUUID incorrect");
+
+
+      AUnit.Assertions.Assert
+        (msgLocalHello1.Component_Type = msgLocalHello2.Component_Type,
+         "msgLocalHello2.Component_Type incorrect");
+
+      --  begin read only
    end Test_DeFragment;
 --  end read only
 
