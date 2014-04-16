@@ -63,6 +63,12 @@ procedure main is
    status : VN.Receive_Status;
 begin
 
+   VN.Text_IO.Put_Line("VN.Message.VN_Message_Basic'Size= " & VN.Message.VN_Message_Basic'Size'Img);
+   VN.Text_IO.Put_Line("VN.Message.Local_Hello.VN_Message_Local_Hello'Size= " & VN.Message.Local_Hello.VN_Message_Local_Hello'Size'Img);
+   VN.Text_IO.Put_Line("VN.Message.VN_Message_Byte_Array'Size= " & VN.Message.VN_Message_Byte_Array'Size'Img);
+
+   VN.Text_IO.New_Line;
+
    Next_Period := Ada.Real_Time.Clock;
 
    loop
@@ -101,9 +107,11 @@ begin
             
             VN.Text_IO.Put_Line("VN message received by duty no " & i'Img & " type= " & msg.Header.Message_Type'img & " Opcode= " & msg.Header.Opcode'img);
 
-            VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
-            VN.Text_IO.Put_Line("LocalHello type= " & msgLocalHello.Header.Message_Type'Img & 
-                                  " CUUID(1)= " & msgLocalHello.CUUID(1)'img & " component type = " & msgLocalHello.Component_Type'img);
+            if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
+               VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
+               VN.Text_IO.Put_Line("LocalHello type= " & msgLocalHello.Header.Message_Type'Img & 
+                                     " CUUID(1)= " & msgLocalHello.CUUID(1)'img & " component type = " & msgLocalHello.Component_Type'img);
+            end if;
             
             VN.Text_IO.New_Line;
          end if;

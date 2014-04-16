@@ -383,6 +383,8 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       Fragment_Error : exception;
    begin
 
+      VN.Text_IO.Put_Line("Fragment, seqNumber=" & seqNumber'Img);
+
       -- if the next Transmission message should be full (contain 8 bytes)
       --but this is not the last CAN message to be sent
       if (seqNumber + 1) * 8 < NumBytes then
@@ -426,6 +428,12 @@ package body VN.Communication.CAN.Logic.Message_Utils is
          CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)) :=
            msgArray(msgArray'First + index);
 
+         declare
+            temp : integer := msgArray'First + index;
+         begin
+            VN.Text_IO.Put_Line("Fragment, Array(" & temp'Img & ") := " & msgArray(temp)'img);
+         end;
+
          --reverse index on msgArray:
 --           CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)) :=
 --             msgArray(msgArray'Last - index);
@@ -443,6 +451,8 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       index, startIndex, lastIndex : Integer; -- zerobased
    begin
 
+      VN.Text_IO.Put_Line("DeFragment, seqNumber=" & seqNumber'Img);
+
       startIndex := Integer(seqNumber) * 8;
 
       for i in 0 .. CANMessage.Length - 1 loop
@@ -450,6 +460,12 @@ package body VN.Communication.CAN.Logic.Message_Utils is
 
          VNMessageContent(VNMessageContent'First + index) :=
            CANMessage.Data(CANMessage.Data'First + i);
+
+         declare
+            temp : integer := VNMessageContent'First + index;
+         begin
+            VN.Text_IO.Put_Line("DeFragment, Array(" & temp'Img & ") := " & VNMessageContent(VNMessageContent'First + index)'img);
+         end;
 
          --reverse index on VNMessageContent:
 --           VNMessageContent(VNMessageContent'Last - index) :=
@@ -461,11 +477,18 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       -- If the last CAN message has been received, move the
       -- two last received bytes to the end of the array.
       -- These two bytes are the checksum and should allways be put at the end of the array.
-      if seqNumber = numMessages then
-         lastIndex := startIndex + Integer(CANMessage.Length) - 1;
+      if seqNumber + 1 = numMessages then
+         lastIndex := startIndex + Integer(CANMessage.Length);
 
          VNMessageContent(VNMessageContent'Last)     :=  VNMessageContent(lastIndex);
          VNMessageContent(VNMessageContent'Last - 1) :=  VNMessageContent(lastIndex - 1);
+
+         declare
+            temp : integer := VNMessageContent'Last - 1;
+         begin
+            VN.Text_IO.Put_Line("DeFragment, second to last entry, Array(" & temp'Img & ") := " & VNMessageContent(temp)'img);
+         end;
+         VN.Text_IO.Put_Line("DeFragment, last entry, Array(" & VNMessageContent'Last'Img & ") := " & VNMessageContent(VNMessageContent'Last)'img);
 
          --reverse index on VNMessageContent:
 --           VNMessageContent(VNMessageContent'First)     :=  VNMessageContent(VNMessageContent'Last - lastIndex);

@@ -40,6 +40,12 @@ package body VN.Communication.CAN.Logic.SM is
          for i in this.DutyArray'Range loop
             this.DutyArray(i).Update(msgIn, false, msgOut, bWillSend);
 
+            if bWillSend and then msgOut.isNormal and then msgOut.msgType = VN.Communication.CAN.Logic.TRANSMISSION and then
+              msgOut.Receiver = VN.Communication.CAN.CAN_Address_Receiver(1) then
+
+               VN.Communication.CAN.Logic.DebugOutput("SM sent transmission msg", 3);
+            end if;
+
             if bWillSend then
                CAN_Message_Buffers.Insert(msgOut, ret);
             end if;
@@ -49,9 +55,23 @@ package body VN.Communication.CAN.Logic.SM is
          while CAN_Message_Buffers.Extent(msgsBuffer) /= 0 loop
 
             CAN_Message_Buffers.Remove(msgIn, msgsBuffer);
+
             for i in this.DutyArray'Range loop
 
+--                 if i = this.DutyArray'First + 1 and then
+--                   msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.TRANSMISSION and then
+--                   msgIn.Receiver = VN.Communication.CAN.CAN_Address_Receiver(1) then
+--
+--                   VN.Communication.CAN.Logic.DebugOutput("SM recieved transmission msg", 3);
+--                 end if;
+
                this.DutyArray(i).Update(msgIn, true, msgOut, bWillSend);
+
+               if bWillSend and then msgOut.isNormal and then msgOut.msgType = VN.Communication.CAN.Logic.TRANSMISSION and then
+                 msgOut.Receiver = VN.Communication.CAN.CAN_Address_Receiver(1) then
+
+                  VN.Communication.CAN.Logic.DebugOutput("SM sent transmission msg", 3);
+               end if;
 
                if bWillSend then
                   CAN_Message_Buffers.Insert(msgOut, ret);

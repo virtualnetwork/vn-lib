@@ -22,6 +22,8 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
       VN_msg : VN.Communication.CAN.Logic.VN_Message_Internal;
 
       tempSender : Pending_Sender;
+
+      TRANSMISSION_MSG_RECEIVED_IN_STATE_Started : exception;
    begin
 
       case this.currentState is
@@ -30,7 +32,10 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
          when Started =>
 
-            --ToDo: Check that no Transmission messages are received in this state
+            --ToDo: Check that no Transmission messages are received in this state in a better way than raising an exception
+            if bMsgReceived and then msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.TRANSMISSION then
+               raise TRANSMISSION_MSG_RECEIVED_IN_STATE_Started;
+            end if;
 
             this.blockSize := DEFAULT_BLOCK_SIZE;
 
@@ -78,6 +83,9 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
                      --write the VN message to the receive buffer:
                      VN.Message.Deserialize(VN_msg.Data, this.receivedData);
+
+                     VN.Communication.CAN.Logic.DebugOutput("Opcode= " & VN_msg.Data.Header.Opcode'img, 3, false);
+
                      VN_msg.NumBytes := currentLength;
                      VN_msg.Receiver := VN.Communication.CAN.Convert(this.myCANAddress);
                      VN_msg.Sender   := this.sender;
