@@ -17,7 +17,6 @@ package body VN.Communication.CAN.Logic.Receiver is
 
    overriding procedure Update(this : in out Receiver_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
                                msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean) is
-    --  use Ada.Containers;
 
       freeUnit 	: Receiver_Unit_Duty_ptr;
       pending  	: VN.Communication.CAN.Logic.Receiver_Unit.Pending_Sender;
@@ -42,7 +41,6 @@ package body VN.Communication.CAN.Logic.Receiver is
                         --Check whether this StartTransmission has been recieved eariler (the sender might resend the StartTransmission message)
                         -- if not, add it as a pending transmission:
                         if not Pending_Senders_pack.Find(pending, this.pendingSenders) then
---                             this.pendingSenders.Append(pending);
                            Pending_Senders_pack.Insert(pending, this.pendingSenders);
                         end if;
                      end if;
@@ -63,12 +61,9 @@ package body VN.Communication.CAN.Logic.Receiver is
                this.GetFreeUnit(freeUnit);
 
                if freeUnit /= null then
---                 pending  := this.pendingSenders.First_Element;
                   Pending_Senders_pack.Remove(pending, this.pendingSenders);
 
-            --   if freeUnit /= null then
                   freeUnit.Assign(pending.sender, pending.numMessages);
-               --   this.pendingSenders.Delete_First;
                   freeUnit.Update(msgIn, false, msgOut, bWillSend);
              end if;
             end if;
@@ -78,7 +73,7 @@ package body VN.Communication.CAN.Logic.Receiver is
    procedure ReceiveVNMessage(this : in out Receiver_Duty; msg : out VN_Message_Internal;
                               status : out VN.Receive_Status) is
    begin
-      if Receive_Buffer_pack.Empty(this.receiveBuffer) then --this.receiveBuffer.Is_Empty then
+      if Receive_Buffer_pack.Empty(this.receiveBuffer) then
          status := VN.NO_MSG_RECEIVED;
       else
          Receive_Buffer_pack.Remove(msg, this.receiveBuffer);
@@ -87,8 +82,6 @@ package body VN.Communication.CAN.Logic.Receiver is
             status := VN.MSG_RECEIVED_NO_MORE_AVAILABLE;
          else
             status := VN.MSG_RECEIVED_MORE_AVAILABLE;
---           msg := this.receiveBuffer.First_Element;
---           this.receiveBuffer.Delete_First;
          end if;
       end if;
    end ReceiveVNMessage;
