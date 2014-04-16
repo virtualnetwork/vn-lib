@@ -15,7 +15,7 @@ use VN.Communication.CAN;
 with Interfaces;
 with VN.Communication.CUUID_Routing;
 
-with System.BB.Interrupts; -- Remove when compiling for PC, keep when compiling for SmartFusion2
+--  with System.BB.Interrupts; -- Remove when compiling for PC, keep when compiling for SmartFusion2
 
 procedure CUUID_Routing_Test_Main is
 
