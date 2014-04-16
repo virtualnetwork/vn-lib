@@ -19,7 +19,6 @@ with VN.Message;
 use VN.Message;
 
 with VN.Message.Local_Hello;
-with VN.Message.Local_Ack;
 with VN.Message.Distribute_Route;
 with VN.Message.Assign_Address;
 with VN.Message.Assign_Address_Block;
