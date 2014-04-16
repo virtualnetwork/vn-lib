@@ -118,6 +118,10 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
                                                CANAddress'Img & " isSM_CAN = " &
                                                isSM_CAN'img, 4);
 
+--        if this.myCANAddress /= VN.Communication.CAN.CAN_Address_Sender(0) then --ToDo: ONLY FOR TESTING
+--           return;
+--        end if;
+
       -- Send LocalHello message:
       if isSM_CAN then
          VN.Message.Local_Hello.To_Local_Hello(msgBasic, msgLocalHello);
