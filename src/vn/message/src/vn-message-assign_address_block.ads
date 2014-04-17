@@ -30,7 +30,7 @@ package VN.Message.Assign_Address_Block is
 
       Unknown_Payload   at 0 range (HEADER_SIZE + CUUID_SIZE + VN_LOGICAL_ADDRESS_SIZE + RESPONSE_TYPE_SIZE) * 8 ..
 					(HEADER_SIZE + CUUID_SIZE + VN_LOGICAL_ADDRESS_SIZE +
-                                     RESPONSE_TYPE_SIZE + ASSIGN_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE) * 8 - 1
+                                     RESPONSE_TYPE_SIZE + ASSIGN_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE) * 8 - 1;
 
       Checksum          at 0 range (HEADER_SIZE + CUUID_SIZE + VN_LOGICAL_ADDRESS_SIZE +
                                         RESPONSE_TYPE_SIZE + ASSIGN_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE) * 8 ..
