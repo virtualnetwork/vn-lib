@@ -1,7 +1,7 @@
 package VN.Message.Request_Address_Block is
 
    REQUEST_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE :
-                                    constant integer := MAX_PAYLOAD_SIZE - 16;
+                                    constant integer := MAX_PAYLOAD_SIZE - CUUID_SIZE;
 
    type VN_Request_Address_Block_Unknown_Payload is Array(1 ..
                               REQUEST_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE) of
@@ -16,25 +16,17 @@ package VN.Message.Request_Address_Block is
       end record;
 
    for VN_Message_Request_Address_Block use record
-      Header            at 0 range (CHECKSUM_SIZE * 8 +
-                                    CUUID_SIZE * 8 +
-                                    REQUEST_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE * 8) ..
-                                   (CHECKSUM_SIZE * 8 +
-                                    CUUID_SIZE * 8 +
-                                    REQUEST_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE * 8 +
-                                    HEADER_SIZE * 8 - 1);
+      Header            at 0 range 0 .. HEADER_SIZE * 8 - 1;
 
-      Unknown_Payload   at 0 range (CHECKSUM_SIZE * 8 +
-                                    CUUID_SIZE * 8) ..
-                                   (CHECKSUM_SIZE * 8 +
-                                    CUUID_SIZE * 8 +
-                                    REQUEST_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE * 8 - 1);
+      CUUID             at 0 range HEADER_SIZE * 8 ..
+                                   (HEADER_SIZE + CUUID_SIZE) * 8 - 1;
 
-      CUUID             at 0 range (CHECKSUM_SIZE * 8) ..
-                                   (CHECKSUM_SIZE * 8 +
-                                    CUUID_SIZE * 8 - 1);
+      Unknown_Payload   at 0 range (HEADER_SIZE + CUUID_SIZE) * 8 ..
+        (HEADER_SIZE + CUUID_SIZE + REQUEST_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE) * 8 - 1;
 
-      Checksum          at 0 range 0 .. (CHECKSUM_SIZE * 8 - 1);
+      Checksum          at 0 range (HEADER_SIZE + CUUID_SIZE +
+                                      REQUEST_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE) * 8 ..
+          (HEADER_SIZE + CUUID_SIZE + REQUEST_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE + CHECKSUM_SIZE) * 8 - 1;
    end record;
 
    for VN_Message_Request_Address_Block'Alignment use 1;

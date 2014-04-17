@@ -1,6 +1,6 @@
 package VN.Message.Local_Ack is
 
-   LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE : constant integer := MAX_PAYLOAD_SIZE - 1;
+   LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE : constant integer := MAX_PAYLOAD_SIZE - STATUS_SIZE;
 
    type VN_Local_Ack_Unknown_Payload is Array(1 ..
                                        LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE) of
