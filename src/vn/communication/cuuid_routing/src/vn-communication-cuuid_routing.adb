@@ -1,3 +1,13 @@
+-- Copyright (c) 2014 All Rights Reserved
+-- Author: Nils Brynedal Ignell
+-- Date: 2014-XX-XX
+-- Summary:
+-- Simple implementation of routing table. A CUUID is mapped to 
+-- a generic type of address, for example a CAN address, UDP-port, etc.
+-- A better implementation is recommended in the future.
+
+-- ToDo: Only a simple implementation, could be optimized.
+
 with Interfaces;
 use Interfaces;
 

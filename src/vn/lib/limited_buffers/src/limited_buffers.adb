@@ -29,6 +29,8 @@
 -- When using this package one must provide an assignment function
 -- for the type that is to be used.
 
+-- This package is current not used.
+
 package body Limited_Buffers is
 
    ------------

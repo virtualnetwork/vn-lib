@@ -2,7 +2,10 @@
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
 -- Summary:
--- Simple implementation of routing table. A better implementation is recommended in the future.
+-- Simple implementation of routing table. A logical address is mapped to 
+-- a generic type of address, for example a CAN address, UDP-port, etc.
+-- A better implementation is recommended in the future.
+
 -- ToDo: Only a simple implementation, could be optimized.
 
 generic

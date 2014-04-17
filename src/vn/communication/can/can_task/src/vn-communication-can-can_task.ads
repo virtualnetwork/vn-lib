@@ -2,10 +2,12 @@
 -- Copyright (c) 2014 All Rights Reserved
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
--- Summary: CAN_Task is a task that sends and receives CAN messages.
--- that are to be sent, or have been received, over the CAN network.
--- Main_Duty holds instances of the classes that implement the state machines
--- of the VN-CAN protcol.
+-- Summary:
+-- CAN_Task is the lowlevel task that accesses the CAN_Interface object.
+-- It reads CAN messages from the lowlevel read buffer, runs the Update
+-- function of CAN_Interface and writes CAN messages to the lowlevel send buffer.
+-- Each task that accesses an instance of CAN_Interface will do so using an
+-- access variable (pointer).
 
 with System;
 with Ada.Real_Time;

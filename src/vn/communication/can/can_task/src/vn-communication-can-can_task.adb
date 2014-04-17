@@ -2,11 +2,10 @@
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
 -- Summary:
--- CAN_Task is the lowlevel task that accesses the CAN_SM_Type object.
+-- CAN_Task is the lowlevel task that accesses the CAN_Interface object.
 -- It reads CAN messages from the lowlevel read buffer, runs the Update
--- function of CAN_SM_Type and writes CAN messages to the lowlevel send buffer.
-
--- Each task that accesses an instance of CAN_SM_Type will do so using an
+-- function of CAN_Interface and writes CAN messages to the lowlevel send buffer.
+-- Each task that accesses an instance of CAN_Interface will do so using an
 -- access variable (pointer).
 
 with Ada.Real_Time;

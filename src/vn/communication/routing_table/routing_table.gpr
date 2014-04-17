@@ -1,13 +1,11 @@
+-- Copyright (c) 2014 All Rights Reserved
+-- Author: Nils Brynedal Ignell
+-- Date: 2014-XX-XX
+
 with "../communication.gpr";
 with "../../vn.gpr";
-
 
 project Routing_Table is
     for Source_Dirs use ("src");
     for Object_Dir use "obj";
-
---      package Compiler is
---         for Local_Configuration_Pragmas use "project_pragmas";
---      end Compiler;
-
 end Routing_Table;

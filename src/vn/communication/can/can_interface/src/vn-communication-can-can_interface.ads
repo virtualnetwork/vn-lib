@@ -2,15 +2,15 @@
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
 -- Summary:
--- CAN_SM_Type is a protected object that holds a Lowlevel.Main.Main_Duty.
--- CAN_SM_Type is to be used by two tasks: One higher level task and
+-- CAN_Interface is a protected object that holds a VN.Communication.CAN.Logic.SM.Main_Duty.
+-- CAN_Interface is to be used by two tasks: One higher level task and
 -- CAN_task, a lower level task that handles CAN communication.
 
--- Each task that accesses an instance of CAN_SM_Type will do so using an
+-- Each task that accesses an instance of CAN_Interface will do so using an
 -- access variable (pointer).
 
 -- Please note: If the Ravenscar profile had not been used, the CAN_Task
--- would have been put inside CAN_SM_Type which would have simplyfied the
+-- would have been put inside CAN_Interface which would have simplyfied the
 -- interface of CAN_SM_Type. This would however violate the NO_TASK_HIERARCY
 -- restriction that the Ravenscar profile imposes.
 

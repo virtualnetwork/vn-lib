@@ -31,6 +31,8 @@
 -- When using this package one must provide an assignment function
 -- for the type that is to be used.
 
+-- This package is current not used.
+
 generic
    type Element is limited private;
    with procedure Assignment (destination : out Element; source : in Element);

@@ -1,3 +1,7 @@
+-- Copyright (c) 2014 All Rights Reserved
+-- Author: Nils Brynedal Ignell
+-- Date: 2014-XX-XX
+
 with "../cuuid_routing/cuuid_routing.gpr";
 with "../routing_table/routing_table.gpr";
 with "../can/can_interface/can_interface.gpr";
@@ -10,10 +14,5 @@ project Protocol_Routing is
 
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
-
-   --      package Compiler is
-   --         for Local_Configuration_Pragmas use "project_pragmas";
-   --      end Compiler;
-
 end Protocol_Routing;
 
