@@ -70,6 +70,7 @@ package VN.Message is
    OPCODE_DISTRIBUTE_ROUTE 	: constant VN_Opcode := 16#72#;  
    OPCODE_ASSIGN_ADDR_BLOCK	: constant VN_Opcode := 16#4D#;
    OPCODE_ASSIGN_ADDR		: constant VN_Opcode := 16#7B#;
+   OPCODE_REQUEST_ADDR_BLOCK	: constant VN_Opcode := 16#4C#;
 
    type VN_Header is
       record
@@ -83,18 +84,6 @@ package VN.Message is
          Opcode         : VN_Opcode;
          Ext_Header     : VN_Ext_Header_Length := 16#00#;
       end record;
-
---     for VN_Header use record
---        Message_Type      at 0 range 128 .. 135; --8
---        Version           at 0 range 120 .. 127; --8
---        Priority          at 0 range 112 .. 119; --8
---        Payload_Length    at 0 range 96 .. 111;  -- 32
---        Destination       at 0 range 64 .. 95;
---        Source            at 0 range 32 .. 63;
---        Flags             at 0 range 16 .. 31;
---        Opcode            at 0 range 8 .. 15;
---        Ext_Header        at 0 range 0 .. 7;
---     end record;
 
    for VN_Header use record
       Message_Type      at 0 range 0 .. 7;
@@ -121,16 +110,6 @@ package VN.Message is
          Checksum : VN_Checksum;
       end record;
 
---     for VN_Message_Basic use record
---        Header        at 0 range (CHECKSUM_SIZE * 8 + MAX_PAYLOAD_SIZE * 8) ..
---                                 (CHECKSUM_SIZE * 8 +
---                                  MAX_PAYLOAD_SIZE * 8 +
---                                  HEADER_SIZE * 8 - 1);
---        Payload       at 0 range (CHECKSUM_SIZE * 8) ..
---                                 (CHECKSUM_SIZE * 8 + MAX_PAYLOAD_SIZE * 8 - 1);
---        Checksum      at 0 range 0 .. (CHECKSUM_SIZE * 8 - 1);
---     end record;
-
    for VN_Message_Basic use record
       Header        at 0 range 0 .. (HEADER_SIZE * 8 - 1);
       Payload       at 0 range (HEADER_SIZE * 8) ..
@@ -144,8 +123,6 @@ package VN.Message is
 
    type VN_Message_Byte_Array is array (1 .. VN_Message_Basic'Size / 8) --VN_Message_Basic'Size is in bits
                                           of Interfaces.Unsigned_8;
-
- --  procedure Assignment (destination : out VN_Message_Basic; source : in VN_Message_Basic);
 
    procedure Serialize(Message : in VN_Message_Basic;
                        buffer : out VN_Message_Byte_Array);

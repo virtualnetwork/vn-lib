@@ -17,7 +17,7 @@ package body VN.Message.Request_Address_Block is
                                     REQUEST_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE);
    begin
       Request_Address_Block_VN_Msg.Header.Message_Type    := Type_Request_Address_Block;
-      Request_Address_Block_VN_Msg.Header.Opcode          := 16#4C#;
+      Request_Address_Block_VN_Msg.Header.Opcode          := OPCODE_REQUEST_ADDR_BLOCK;
       Request_Address_Block_VN_Msg.Header.Payload_Length  := Payload_Length;
    end To_Request_Address_Block;
 

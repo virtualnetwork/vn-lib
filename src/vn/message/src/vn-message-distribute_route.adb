@@ -17,7 +17,7 @@ package body VN.Message.Distribute_Route is
                                     DISTRIBUTE_ROUTE_UNKNOWN_PAYLOAD_SIZE);
    begin
       Distribute_Route_VN_Msg.Header.Message_Type    := Type_Distribute_Route;
-      Distribute_Route_VN_Msg.Header.Opcode          := 16#72#;
+      Distribute_Route_VN_Msg.Header.Opcode          := OPCODE_DISTRIBUTE_ROUTE;
       Distribute_Route_VN_Msg.Header.Payload_Length  := Payload_Length;
    end To_Distribute_Route;
 

@@ -17,7 +17,7 @@ package body VN.Message.Local_Ack is
                                     LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE);
    begin
       Local_Ack_VN_Msg.Header.Message_Type    := Type_Local_Ack;
-      Local_Ack_VN_Msg.Header.Opcode          := 16#21#;
+      Local_Ack_VN_Msg.Header.Opcode          := OPCODE_LOCAL_ACK;
       Local_Ack_VN_Msg.Header.Payload_Length  := Payload_Length;
    end To_Local_Ack;
 

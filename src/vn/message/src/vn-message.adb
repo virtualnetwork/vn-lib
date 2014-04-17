@@ -14,12 +14,6 @@ package body VN.Message is
       tempBuffer := buffer;
    end DeSerialize;
 
---     procedure Assignment (destination : out VN_Message_Basic; source : in VN_Message_Basic) is
---     begin
---        destination.Header := source.Header;
---        destination.Checksum := source.Checksum;
---     end Assignment;
-
    procedure Update_Checksum(Message: in out VN_Message_Basic) is
    begin
       Message.Checksum := 5; -- TODO: Update the checksum with a proper
