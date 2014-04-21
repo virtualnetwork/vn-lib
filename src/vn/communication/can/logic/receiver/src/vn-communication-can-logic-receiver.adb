@@ -35,8 +35,9 @@ package body VN.Communication.CAN.Logic.Receiver is
                      VN.Communication.CAN.Logic.Message_Utils.StartTransmissionFromMessage(msgIn, rec, pending.sender, pending.numMessages);
                      if rec = this.myCANAddress then
 
-                        VN.Communication.CAN.Logic.DebugOutput("StartTransmission message recieved, transmission pending. Sender = "
-                                             & pending.sender'Img & " numMessages= " & pending.numMessages'img, 3);
+                        VN.Communication.CAN.Logic.DebugOutput("StartTransmission message recieved by CAN address " & this.myCANAddress'Img &
+                                                                 ", transmission pending. Sender = "
+                                                               & pending.sender'Img & " numMessages= " & pending.numMessages'img, 3);
 
                         --Check whether this StartTransmission has been recieved eariler (the sender might resend the StartTransmission message)
                         -- if not, add it as a pending transmission:
