@@ -426,6 +426,13 @@ package body VN.Communication.CAN.Logic.Message_Utils is
          CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)) :=
            msgArray(msgArray'First + index);
 
+
+         declare
+            temp : integer := msgArray'First + index;
+         begin
+            VN.Communication.CAN.Logic.DebugOutput("Fragment. Array(" & temp'Img & ") := " & msgArray(temp)'img, 4);
+         end;
+
 --           declare
 --              temp : integer := msgArray'First + index;
 --           begin
@@ -457,11 +464,12 @@ package body VN.Communication.CAN.Logic.Message_Utils is
          VNMessageContent(VNMessageContent'First + index) :=
            CANMessage.Data(CANMessage.Data'First + i);
 
---           declare
---              temp : integer := VNMessageContent'First + index;
---           begin
---              VN.Text_IO.Put_Line("DeFragment, Array(" & temp'Img & ") := " & VNMessageContent(VNMessageContent'First + index)'img);
---           end;
+         declare
+            temp : integer := VNMessageContent'First + index;
+         begin
+            VN.Communication.CAN.Logic.DebugOutput("DeFragment. Array(" & temp'Img & ") := " & VNMessageContent(temp)'img, 4);
+         end;
+
 
          --reverse index on VNMessageContent:
 --           VNMessageContent(VNMessageContent'Last - index) :=
@@ -479,12 +487,12 @@ package body VN.Communication.CAN.Logic.Message_Utils is
          VNMessageContent(VNMessageContent'Last)     :=  VNMessageContent(lastIndex);
          VNMessageContent(VNMessageContent'Last - 1) :=  VNMessageContent(lastIndex - 1);
 
---           declare
---              temp : integer := VNMessageContent'Last - 1;
---           begin
---              VN.Text_IO.Put_Line("DeFragment, second to last entry, Array(" & temp'Img & ") := " & VNMessageContent(temp)'img);
---           end;
---           VN.Text_IO.Put_Line("DeFragment, last entry, Array(" & VNMessageContent'Last'Img & ") := " & VNMessageContent(VNMessageContent'Last)'img);
+         declare
+            temp : integer := VNMessageContent'Last - 1;
+         begin
+            VN.Communication.CAN.Logic.DebugOutput("DeFragment. Last message. Array(" & temp'Img & ") := " & VNMessageContent(VNMessageContent'Last - 1)'img &
+                                                     ",  Array(" & VNMessageContent'Last'Img & ") := " & VNMessageContent(VNMessageContent'Last )'img, 4);
+         end;
 
          --reverse index on VNMessageContent:
 --           VNMessageContent(VNMessageContent'First)     :=  VNMessageContent(VNMessageContent'Last - lastIndex);
