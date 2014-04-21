@@ -135,8 +135,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
 
          VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img &
                                                   " sent LocalHello to CAN address " &
-                                                  CANAddress'img &
-                                                  " Opcode= " & msg.Data.Header.Opcode'img, 2);
+                                                  CANAddress'img, 2);
 
          msg.Receiver := VN.Communication.CAN.Convert(CANAddress);
          msg.NumBytes := Interfaces.Unsigned_16(Integer(msgLocalHello.Header.Payload_Length) +
