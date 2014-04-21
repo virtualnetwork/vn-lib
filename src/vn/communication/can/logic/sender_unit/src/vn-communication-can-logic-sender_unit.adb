@@ -80,10 +80,11 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
 
                VN.Communication.CAN.Logic.Message_Utils.TransmissionToMessage(msgOut, this.receiver, this.myCANAddress);
                
+               VN.Communication.CAN.Logic.DebugOutput("Sender_Unit sent Transmission message from  CAN adr" & this.myCANAddress'img & " to " & this.Receiver'img, 4);
                VN.Communication.CAN.Logic.Message_Utils.Fragment(this.ToSend, this.sequenceNumber, this.numBytesToSend, msgOut, isLastMessage); --this also increments sequenceNumber
                bWillSend := true;
 
-               VN.Communication.CAN.Logic.DebugOutput("Sender_Unit sent Transmission message", 4);
+               
                if isLastMessage then
                   this.currentState := Idle;
                    VN.Communication.CAN.Logic.DebugOutput("Sender_Unit: Transmission done, went Idle", 3);
@@ -127,7 +128,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
       this.numBytesToSend := message.NumBytes;   
       this.Receiver := message.Receiver;     
 
-      VN.Communication.CAN.Logic.DebugOutput("Send VN Message: NumBytes= " & message.NumBytes'Img & " Opcode= " & message.Data.Header.Opcode'img, 4);
+      VN.Communication.CAN.Logic.DebugOutput("Send VN Message: NumBytes= " & message.NumBytes'Img & " Opcode= " & message.Data.Header.Opcode'img, 3);
 
 --        VN.Communication.CAN.Logic.DebugOutput("", 4);
 --        VN.Communication.CAN.Logic.DebugOutput("Sender_Unit_Duty.Send, opcode= " & message.Data.Header.Opcode'Img, 4);
