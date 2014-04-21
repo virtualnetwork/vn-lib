@@ -58,6 +58,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
                if msgIn.Sender = this.sender and msgIn.Receiver = this.myCANAddress then
 
+                  VN.Communication.CAN.Logic.DebugOutput("DeFragment. receiver= " & this.myCANAddress'img & " sender= " & this.sender'img, 4);
                   VN.Communication.CAN.Logic.Message_Utils.DeFragment(this.sequenceNumber, this.numMessages, msgIn, this.receivedData, currentLength);
 
                   this.sequenceNumber := this.sequenceNumber + 1;
@@ -79,12 +80,13 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
                   elsif this.sequenceNumber >= this.numMessages then
 
-                     VN.Communication.CAN.Logic.DebugOutput("Receiver unit: Transmission complete, ", 3, false);
+                     VN.Communication.CAN.Logic.DebugOutput("Receiver unit CAN address " & this.myCANAddress'Img &
+                                                              ": Transmission from CAN address " & this.sender'Img & " complete,", 3, false);
 
                      --write the VN message to the receive buffer:
                      VN.Message.Deserialize(VN_msg.Data, this.receivedData);
 
-                     VN.Communication.CAN.Logic.DebugOutput("Opcode= " & VN_msg.Data.Header.Opcode'img, 3, false);
+                     VN.Communication.CAN.Logic.DebugOutput(" Opcode= " & VN_msg.Data.Header.Opcode'img, 3, false);
 
                      VN_msg.NumBytes := currentLength;
                      VN_msg.Receiver := VN.Communication.CAN.Convert(this.myCANAddress);
@@ -100,13 +102,13 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
                         this.Assign(tempSender.sender, tempSender.numMessages);
 
 
-                        VN.Communication.CAN.Logic.DebugOutput("started new transmission", 3);
+                        VN.Communication.CAN.Logic.DebugOutput(" started new transmission from CAN address " & tempSender.sender'img, 3);
 
                         this.Update(msgIn, false, msgOut, bWillSend);
                         return;
                      else
                         this.currentState := Idle;
-                         VN.Communication.CAN.Logic.DebugOutput("went idle.", 3);
+                         VN.Communication.CAN.Logic.DebugOutput(" went idle.", 3);
                      end if;
                   end if;
                end if;

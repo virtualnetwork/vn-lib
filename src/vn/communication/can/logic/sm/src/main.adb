@@ -47,14 +47,14 @@ procedure main is
    C3 : aliased VN.VN_CUUID := (3, others => 5);
 
 
---     DutyArray : Array(1..3) of VN.Communication.CAN.Logic.SM.SM_Duty_ptr :=
---       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C1'Unchecked_Access),
---        new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C2'Unchecked_Access),
---        new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C3'Unchecked_Access));
-
-   DutyArray : Array(1..2) of VN.Communication.CAN.Logic.SM.SM_Duty_ptr :=
+   DutyArray : Array(1..3) of VN.Communication.CAN.Logic.SM.SM_Duty_ptr :=
      (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C1'Unchecked_Access),
-      new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C2'Unchecked_Access));
+      new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C2'Unchecked_Access),
+      new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C3'Unchecked_Access));
+
+--     DutyArray : Array(1..2) of VN.Communication.CAN.Logic.SM.SM_Duty_ptr :=
+--       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C1'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C2'Unchecked_Access));
    
    type BufferArray is array(DutyArray'Range) of VN.Communication.CAN.CAN_Message_Buffers.Buffer(100);
    messagesIn : BufferArray;
@@ -115,8 +115,14 @@ begin
          if receiveStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or receiveStatus = VN.MSG_RECEIVED_MORE_AVAILABLE then
             VN.Text_IO.New_Line;
             
-            VN.Text_IO.Put_Line("VN message received by duty no " & i'Img & " type= " & msg.Header.Message_Type'img & " Opcode= " & msg.Header.Opcode'img);
-
+            declare 
+               CANAddress : VN.Communication.CAN.CAN_Address_Sender;
+               temp : boolean;
+            begin
+               VN.Communication.CAN.Logic.SM.GetCANAddress(DutyArray(i).all, CANAddress, temp);
+               VN.Text_IO.Put_Line("VN message received by duty on CAN address " & CANAddress'Img & " type= " & msg.Header.Message_Type'img & " Opcode= " & msg.Header.Opcode'img);
+            end;
+              
             if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
                VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
                VN.Text_IO.Put_Line("LocalHello, type= " & msgLocalHello.Header.Message_Type'Img & 
