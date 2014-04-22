@@ -34,6 +34,8 @@ package Buffers is
    -- type Buffer (Capacity : Positive) is limited private;
    type Buffer (Capacity : Positive) is private;
 
+   procedure InsertInFront (Item : Element;  Into : in out Buffer); -- added manually
+
    procedure Insert (Item : Element;  Into : in out Buffer);
    --  Insert Item into the buffer, overwriting if necessary.
    --  Does not block caller if no space is available.
