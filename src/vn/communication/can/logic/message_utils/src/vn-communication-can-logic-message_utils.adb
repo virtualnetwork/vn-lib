@@ -364,10 +364,10 @@ package body VN.Communication.CAN.Logic.Message_Utils is
 
    begin
 
-      total := 	Interfaces.Shift_Left(u32Prio, VN.Communication.CAN.Logic.OFFSET_CAN_PRIORITY) +
-        Interfaces.Shift_Left(u32Type, VN.Communication.CAN.Logic.OFFSET_CAN_TYPE) +
-        Interfaces.Shift_Left(u32Receiver, VN.Communication.CAN.Logic.OFFSET_CAN_RECEIVER) +
-        Interfaces.Shift_Left(u32Sender, VN.Communication.CAN.Logic.OFFSET_CAN_SENDER);
+      total := 	Interfaces.Shift_Left(u32Prio, VN.Communication.CAN.OFFSET_CAN_PRIORITY) +
+        Interfaces.Shift_Left(u32Type, VN.Communication.CAN.OFFSET_CAN_TYPE) +
+        Interfaces.Shift_Left(u32Receiver, VN.Communication.CAN.OFFSET_CAN_RECEIVER) +
+        Interfaces.Shift_Left(u32Sender, VN.Communication.CAN.OFFSET_CAN_SENDER);
 
       return VN.Communication.CAN.CAN_message_ID(total);
    end GetMessageID;
