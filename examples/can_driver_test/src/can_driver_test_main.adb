@@ -26,6 +26,12 @@ procedure CAN_Driver_Test_Main is
 
 begin
 
+--     loop
+--        now := Ada.Real_Time.Clock;
+--        delay until now + Ada.Real_Time.Milliseconds(1000);
+--        GNAT.IO.Put_Line("Program in ENVM started!");
+--     end loop;
+
    CAN_Driver_Test.Init;
 
    physMsgSend.ID := 1338;
