@@ -23,8 +23,6 @@ package VN.Communication.CAN.CAN_Driver is
 
 private
 
-   package CANPack renames VN.Communication.CAN;
-
    type Data_Array is array(0..7) of Interfaces.C.signed_char;
 
    type CAN_Message_Physical is
@@ -36,6 +34,9 @@ private
    pragma Convention (C, CAN_Message_Physical);
 
    type CAN_Message_Physical_Access is access all CAN_Message_Physical;
+
+   package CANPack renames VN.Communication.CAN;
+   package CAN_Message_Buffers is new Buffers(CAN_Message_Physical);
 
 --     procedure CAN_Get_Msg_Filter_Mask(x : Interfaces.C.int; y : Interfaces.C.unsigned_char; z : Interfaces.C.unsigned_char);
 --     pragma Import(C, CAN_Get_Msg_Filter_Mask, "MSS_CAN_get_msg_filter_mask");
@@ -53,11 +54,11 @@ private
 --MSS_CAN_start(&g_can0);
 --MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
 
-   function Send(msg : CAN_Message_Physical_Access) return Interfaces.C.int;  --will return 1 on success
-   pragma Import(C, Send, "Send_CAN_Message");
+   function SendPhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;  --will return 1 on success
+   pragma Import(C, SendPhysical, "Send_CAN_Message");
 
-   function Receive(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
-   pragma Import(C, Receive, "Receive_CAN_Message");
+   function ReceivePhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
+   pragma Import(C, ReceivePhysical, "Receive_CAN_Message");
 
    function Test return Interfaces.C.int;
    pragma Import(C, Test, "test");
@@ -66,5 +67,11 @@ private
    procedure PhysicalToLogical(msgIn : CAN_Message_Physical; msgOut : out CANPack.CAN_Message_Logical);
 
    procedure LogicalToPhysical(msgIn : CANPack.CAN_Message_Logical; msgOut : out CAN_Message_Physical);
+
+
+   SIZE : constant Integer := 40;
+
+   SendBuffer    : CAN_Message_Buffers.Buffer(SIZE);
+   ReceiveBuffer : CAN_Message_Buffers.Buffer(SIZE);
 
 end VN.Communication.CAN.CAN_Driver;
