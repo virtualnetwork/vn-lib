@@ -1,4 +1,6 @@
 
+THIS DIRECTORY IS OBSOLETE!!
+
 1. Create directory obj
 2. Run makefile (command: "make") to compile mss_can.o and main.o.
 3. Once mss_can.o and main.o exist in directory obj the project can be built using command "gnatmake -Pcan_driver.gpr".

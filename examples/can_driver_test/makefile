@@ -26,7 +26,7 @@ PRGTTY		?=	/dev/ttyUSB0
 # Driver sources
 CSRC		+=	$(DRVPATH)/drivers/mss_uart/mss_uart.c
 CSRC		+=	$(DRVPATH)/drivers/mss_can/mss_can.c
-CSRC		+=	src/main.c
+CSRC		+=	../../src/firmware/c_drivers/can_driver/main.c
 #CSRC		+=	$(DRVPATH)/drivers/mss_usb/mss_usb_device.c
 #CSRC		+=	$(DRVPATH)/drivers/mss_ethernet_mac/mss_ethernet_mac.c
 CSRC		+=	$(SPTPATH)/bap-drivers/uart/uart.c
@@ -130,6 +130,6 @@ clean:
 	@echo
 	@echo "*** Clean project"
 	@echo	
-	@-rm obj/*.o obj/*.a obj/*.ali $(NAME) $(NAME).bin
+	@-rm obj/*.o obj/*.a obj/*.ali obj/$(NAME) $(NAME).bin obj/auto.cgpr
 
 
