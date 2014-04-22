@@ -10,15 +10,15 @@ use Ada.Real_Time;
 with GNAT.IO;
 use GNAT.IO;
 
-with CAN_Driver;
+with VN.Communication.CAN.CAN_Driver;
 with CAN_Driver_Test;
 
 
 procedure CAN_Driver_Test_Main is
    now : Ada.Real_Time.Time;
 
-   physMsgSend : aliased CAN_Driver.CAN_Message_Physical;
-   physMsgReceive  : aliased CAN_Driver.CAN_Message_Physical;
+   physMsgSend : aliased VN.Communication.CAN.CAN_Driver.CAN_Message_Physical;
+   physMsgReceive  : aliased VN.Communication.CAN.CAN_Driver.CAN_Message_Physical;
    t : integer := 0;
 
    sendStatus : Integer;
@@ -53,17 +53,17 @@ begin
       now := Ada.Real_Time.Clock;
       delay until now + Ada.Real_Time.Milliseconds(1000);
 
-   --   t := Integer(CAN_Driver.Test);
+   --   t := Integer(VN.Communication.CAN.CAN_Driver.Test);
    --   GNAT.IO.Put_Line("Test= " & t'img);
 
---        CAN_Driver.CAN_Get_Msg_Filter_Mask(1, 2, 3);
+--        VN.Communication.CAN.CAN_Driver.CAN_Get_Msg_Filter_Mask(1, 2, 3);
 
-      sendStatus := Integer(CAN_Driver.Send(physMsgSend'Unchecked_Access));
+      sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgSend'Unchecked_Access));
 
       GNAT.IO.Put_Line("Message sent sendStatus=" & sendStatus'img);
       GNAT.IO.New_Line;
 
-      if CAN_Driver.Receive(physMsgReceive'Unchecked_Access) = 1 then
+      if VN.Communication.CAN.CAN_Driver.ReceivePhysical(physMsgReceive'Unchecked_Access) = 1 then
          GNAT.IO.Put_Line("Message received");
          GNAT.IO.Put_Line("ID= " & physMsgReceive.ID'Img &
                             "Length= " & physMsgReceive.Length'Img);

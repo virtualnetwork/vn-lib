@@ -7,6 +7,8 @@
 -- of CAN messages.
 -- This code interfaces with driver code written in C.
 
+-- Please note: This code will not compile unless it is compiled with the correct makefile,
+-- the BAP repository needs to be included.
 
 with Interfaces;
 with Interfaces.C;
@@ -15,13 +17,15 @@ with VN;
 with VN.Communication;
 with VN.Communication.CAN;
 
+with System.BB.Interrupts;
+
 package VN.Communication.CAN.CAN_Driver is
 
    procedure Send(message : VN.Communication.CAN.CAN_Message_Logical; status : out VN.Send_Status);
 
    procedure Receive(message : out VN.Communication.CAN.CAN_Message_Logical; status : out VN.Receive_Status);
 
-private
+--  private --ToDo: The things below are only public when testing, the test project can_driver_test uses these things.
 
    type Data_Array is array(0..7) of Interfaces.C.signed_char;
 
@@ -34,6 +38,16 @@ private
    pragma Convention (C, CAN_Message_Physical);
 
    type CAN_Message_Physical_Access is access all CAN_Message_Physical;
+
+   --will return 1 on success
+   function SendPhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
+   pragma Import(C, SendPhysical, "Send_CAN_Message");
+
+   --returns 1 if message was received, 0 otherwise
+   function ReceivePhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
+   pragma Import(C, ReceivePhysical, "Receive_CAN_Message");
+
+private
 
    package CANPack renames VN.Communication.CAN;
    package CAN_Message_Buffers is new Buffers(CAN_Message_Physical);
@@ -54,12 +68,6 @@ private
 --MSS_CAN_start(&g_can0);
 --MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
 
-   function SendPhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;  --will return 1 on success
-   pragma Import(C, SendPhysical, "Send_CAN_Message");
-
-   function ReceivePhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
-   pragma Import(C, ReceivePhysical, "Receive_CAN_Message");
-
    function Test return Interfaces.C.int;
    pragma Import(C, Test, "test");
 
@@ -67,6 +75,10 @@ private
    procedure PhysicalToLogical(msgIn : CAN_Message_Physical; msgOut : out CANPack.CAN_Message_Logical);
 
    procedure LogicalToPhysical(msgIn : CANPack.CAN_Message_Logical; msgOut : out CAN_Message_Physical);
+
+   procedure CANHandler(ID : System.BB.Interrupts.Interrupt_ID);
+
+   procedure Init;
 
 
    SIZE : constant Integer := 40;

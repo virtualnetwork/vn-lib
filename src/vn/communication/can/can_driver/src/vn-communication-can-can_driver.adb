@@ -7,6 +7,10 @@
 -- of CAN messages.
 -- This code interfaces with driver code written in C.
 
+-- Please note: This code will not compile unless it is compiled with the correct makefile,
+-- the BAP repository needs to be included.
+
+
 with Interfaces;
 use Interfaces;
 
@@ -116,7 +120,18 @@ package body VN.Communication.CAN.CAN_Driver is
       for i in msgOut.Data'First .. msgOut.Data'First + Integer(msgOut.Length) - 1 loop
          msgOut.Data(i) := Interfaces.C.signed_char(msgIn.Data(CANPack.DLC_Type(i)));
       end loop;
-
    end LogicalToPhysical;
 
+   procedure CANHandler(ID : System.BB.Interrupts.Interrupt_ID) is
+   begin
+      null; --ToDo: Implement this...
+   end CANHandler;
+
+   procedure Init is
+   begin
+      System.BB.Interrupts.Attach_Handler(CANHandler'Access, System.BB.Interrupts.Interrupt_ID(32));
+   end Init;
+
+begin
+   Init;
 end VN.Communication.CAN.CAN_Driver;
