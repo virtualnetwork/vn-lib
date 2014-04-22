@@ -1,14 +1,36 @@
+-- Copyright (c) 2014 All Rights Reserved
+-- Author: Nils Brynedal Ignell
+-- Date: 2014-XX-XX
+-- Summary:
+-- This package contains procedures for sending and receiving CAN messages
+-- as well as for conversion between logical and physical representations
+-- of CAN messages.
+-- This code interfaces with driver code written in C.
+
+
 with Interfaces;
 with Interfaces.C;
 
-package CAN_Driver is
+with VN;
+with VN.Communication;
+with VN.Communication.CAN;
+
+package VN.Communication.CAN.CAN_Driver is
+
+   procedure Send(message : VN.Communication.CAN.CAN_Message_Logical; status : out VN.Send_Status);
+
+   procedure Receive(message : out VN.Communication.CAN.CAN_Message_Logical; status : out VN.Receive_Status);
+
+private
+
+   package CANPack renames VN.Communication.CAN;
 
    type Data_Array is array(0..7) of Interfaces.C.signed_char;
 
    type CAN_Message_Physical is
       record
-         ID		: Interfaces.C.unsigned; --??
-         Length   	: Interfaces.C.unsigned; --??
+         ID		: Interfaces.C.unsigned;
+         Length   	: Interfaces.C.unsigned;
          Data     	: Data_Array;
       end record;
    pragma Convention (C, CAN_Message_Physical);
@@ -40,6 +62,9 @@ package CAN_Driver is
    function Test return Interfaces.C.int;
    pragma Import(C, Test, "test");
 
-   procedure Temp(msg : CAN_Message_Physical);
 
-end CAN_Driver;
+   procedure PhysicalToLogical(msgIn : CAN_Message_Physical; msgOut : out CANPack.CAN_Message_Logical);
+
+   procedure LogicalToPhysical(msgIn : CANPack.CAN_Message_Logical; msgOut : out CAN_Message_Physical);
+
+end VN.Communication.CAN.CAN_Driver;
