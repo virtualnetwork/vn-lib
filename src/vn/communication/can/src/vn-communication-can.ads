@@ -16,6 +16,11 @@ with Buffers;
 package VN.Communication.CAN is
 
 
+   OFFSET_CAN_PRIORITY 	: constant Natural := 22;
+   OFFSET_CAN_TYPE	: constant Natural := 15;
+   OFFSET_CAN_RECEIVER 	: constant Natural := 7;
+   OFFSET_CAN_SENDER 	: constant Natural := 0;
+
    type CAN_Message_Prio is mod 2 ** 6;
    for CAN_Message_Prio'size use 6;
 

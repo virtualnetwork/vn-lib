@@ -19,21 +19,7 @@ package VN.Communication.CAN.Logic is
 
    GIVE_DEBUG_OUTPUT : constant integer := 4;
 
-   OFFSET_CAN_PRIORITY 	: constant Natural := 22;
-   OFFSET_CAN_TYPE	: constant Natural := 15;
-   OFFSET_CAN_RECEIVER 	: constant Natural := 7;
-   OFFSET_CAN_SENDER 	: constant Natural := 0;
-
    procedure DebugOutput(str : String; level : Integer; newLine : boolean := true);
-
-
-   type CAN_Message_Physical is
-      record
-         ID     : CAN_message_ID;
-         Length : DLC_Type;
-         Data   : Byte8;
-      end record;
-
 
    ASSIGN_CAN_ADDRESS 	: CAN_Message_Type := 0;
    CAN_MASTER_ASSIGNED 	: CAN_Message_Type := 1;
