@@ -1,5 +1,6 @@
-with "../../../../firmware/can_driver/can_driver.gpr";
 with "../can_interface/can_interface.gpr";
+with "../can_driver/can_driver.gpr";
+
 with "../../../vn.gpr";
 with "../../communication.gpr";
 with "../can.gpr";

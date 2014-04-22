@@ -9,13 +9,13 @@
 -- access variable (pointer).
 
 with Ada.Real_Time;
-with VN;
 
 --with UartWrapper;
---  with Physical_Logical;
+
+with VN;
 with VN.Communication.CAN;
 with VN.Communication.CAN.Logic.SM;
-
+with VN.Communication.CAN.CAN_Driver;
 
 package body VN.Communication.CAN.Can_Task is
 
@@ -32,34 +32,38 @@ package body VN.Communication.CAN.Can_Task is
       msgsIn, msgsOut : buf.Buffer(BUFFER_SIZE);
 
       procedure Input is
-         hasReceived : boolean;
+         status  : VN.Receive_Status;
          msgLog  : VN.Communication.CAN.CAN_Message_Logical;
-         --     msgPhys : CAN_Defs.CAN_Message;
-         b : boolean;
       begin
+
          --  BBB_CAN.Get(msgPhys, hasReceived, b);
+       CAN_Driver.Receive(msgLog, status);
 
-         while not buf.Full(msgsIn) and hasReceived loop
+         while not buf.Full(msgsIn) and
+           (status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or status = VN.MSG_RECEIVED_MORE_AVAILABLE) loop -- ToDo: Update if more options of VN.Receive_Status are added
 
-            --   Physical_Logical.PhysicalToLogical(msgPhys, msgLog);
             buf.Insert(msgLog, msgsIn);
 
             --   BBB_CAN.Get(msgPhys, hasReceived, b);
+            CAN_Driver.Receive(msgLog, status);
          end loop;
       end Input;
 
       procedure Output is
          msgLog  : VN.Communication.CAN.CAN_Message_Logical;
-         --   msgPhys : CAN_Defs.CAN_Message;
+         status : VN.Send_Status;
       begin
 
          while not buf.Empty(msgsOut) loop
             buf.Remove(msgLog, msgsOut);
-            --  Physical_Logical.LogicalToPhysical(msgLog, msgPhys);
             --       BBB_CAN.Send(msgPhys);
+          CAN_Driver.Send(msgLog, status);
+
+            if status = VN.ERROR_BUFFER_FULL then
+               exit;
+            end if;
          end loop;
       end Output;
-
 
    begin
 

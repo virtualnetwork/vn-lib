@@ -13,9 +13,6 @@ with System;
 with Ada.Real_Time;
 with VN.Communication.CAN.CAN_Interface;
 
-
-with CAN_Driver;
-
 --with BBB_CAN;
 
 package VN.Communication.CAN.Can_Task is
