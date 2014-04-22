@@ -14,6 +14,57 @@ package body VN.Communication.CAN.Logic.Sender is
 
    overriding procedure Update(this : in out Sender_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
                                msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean) is
+
+      -- This function assigns a new Sender unit to send another VN message.
+      -- It makes sure that we are not sending two different VN messages to the
+      -- same CAN address at any time.
+      procedure AssignNewUnit is
+
+         freeUnit : Sender_Unit_Duty_ptr; -- := this.GetFreeUnit;
+         msg : VN.Communication.CAN.Logic.VN_Message_Internal;
+         isSending : boolean;
+
+         tempBuffer : Send_Buffer_pack.Buffer(SIZE);
+      begin
+         this.GetFreeUnit(freeUnit);
+         if freeUnit = null then
+            return;
+         end if;
+
+         loop
+            if not Send_Buffer_pack.Empty(this.sendBuffer) then
+               Send_Buffer_pack.Remove(msg, this.sendBuffer);
+            else
+               exit;
+            end if;
+
+            isSending := false; --whether or not we are currently sending to CAN address msg.Receiver
+            for i in this.units'Range loop
+               if this.units(i).isActive and then this.units(i).Receiver = msg.Receiver then
+                  isSending := true;
+                  Send_Buffer_pack.Insert(msg, tempBuffer); --remember the message
+                  exit;
+               end if;
+            end loop;
+
+            if not isSending then
+               this.GetFreeUnit(freeUnit);
+
+               if freeUnit /= null then
+                  freeUnit.Send(msg);
+                  freeUnit.Update(msgIn, false, msgOut, bWillSend);
+               end if;
+               exit;
+            end if;
+         end loop;
+
+         while not Send_Buffer_pack.Empty(tempBuffer) loop
+            Send_Buffer_pack.Remove(msg, tempBuffer);
+            Send_Buffer_pack.Insert(msg, this.sendBuffer);
+         end loop;
+
+      end AssignNewUnit;
+
    begin
       case this.currentState is
          when Unactivated =>
@@ -38,19 +89,7 @@ package body VN.Communication.CAN.Logic.Sender is
 
             --If there is a VN message to send, assign it to a Sender Unit (if available):
             if not Send_Buffer_pack.Empty(this.sendBuffer) then
-               declare
-                  freeUnit : Sender_Unit_Duty_ptr; -- := this.GetFreeUnit;
-                  msg : VN.Communication.CAN.Logic.VN_Message_Internal;
-               begin
-                  this.GetFreeUnit(freeUnit);
-
-                  if freeUnit /= null then
-                     Send_Buffer_pack.Remove(msg, this.sendBuffer);
-                     freeUnit.Send(msg);
-                     freeUnit.Update(msgIn, false, msgOut, bWillSend);
-                     return;
-                  end if;
-               end;
+               AssignNewUnit;
             end if;
 
             --otherwise, find an active Sender Unit and let it send a message (iterate which one you take):
