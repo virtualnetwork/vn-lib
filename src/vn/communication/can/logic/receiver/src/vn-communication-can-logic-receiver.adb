@@ -21,6 +21,8 @@ package body VN.Communication.CAN.Logic.Receiver is
       freeUnit 	: Receiver_Unit_Duty_ptr;
       pending  	: VN.Communication.CAN.Logic.Receiver_Unit.Pending_Sender;
       rec 	: VN.Communication.CAN.CAN_Address_Receiver;
+
+      alreadyReceiving : boolean := false;
    begin
 
       case this.currentState is
@@ -31,9 +33,18 @@ package body VN.Communication.CAN.Logic.Receiver is
             if bMsgReceived and then msgIn.isNormal and then msgIn.Receiver = this.myCANAddress then
                if msgIn.msgType = VN.Communication.CAN.Logic.START_TRANSMISSION then
 
-                  if not Pending_Senders_pack.Full(this.pendingSenders) then --if pendingSenders is not full
+                  -- check if we are already receiving a VN message from the sender of this StartTransmission message
+                  for i in this.units'Range loop
+                     if this.units(i).isActive and then this.units(i).Sender = msgIn.Sender then
+                        alreadyReceiving := true;
+                        exit;
+                     end if;
+                  end loop;
+
+                  if (not alreadyReceiving) and (not Pending_Senders_pack.Full(this.pendingSenders)) then
                      VN.Communication.CAN.Logic.Message_Utils.StartTransmissionFromMessage(msgIn, rec, pending.sender, pending.numMessages);
-                     if rec = this.myCANAddress then
+
+                        if rec = this.myCANAddress then
 
                         VN.Communication.CAN.Logic.DebugOutput("StartTransmission message recieved by CAN address " & this.myCANAddress'Img &
                                                                  ", transmission pending. Sender = "
