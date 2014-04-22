@@ -45,6 +45,10 @@ begin
    now := Ada.Real_Time.Clock;
    delay until now + Ada.Real_Time.Milliseconds(4000);
 
+   GNAT.IO.Put_Line("NEW TEST");
+   GNAT.IO.New_Line;
+
+
    loop
       now := Ada.Real_Time.Clock;
       delay until now + Ada.Real_Time.Milliseconds(1000);

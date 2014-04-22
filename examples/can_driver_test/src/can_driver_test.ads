@@ -13,4 +13,6 @@ private
 
    procedure Handler(ID : System.BB.Interrupts.Interrupt_ID);
 
+   procedure TestHandler(ID : System.BB.Interrupts.Interrupt_ID);
+
 end CAN_Driver_Test;

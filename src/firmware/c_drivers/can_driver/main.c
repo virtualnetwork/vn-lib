@@ -108,5 +108,8 @@ void Init_CAN() {
     rx_msg.RXB.IDE = 0u;
 
     MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
+
+    MSS_CAN_set_int_ebl(&g_can0, CAN_INT_RX_MSG);
+    MSS_CAN_set_int_ebl(&g_can0, CAN_INT_TX_MSG);
 }
 
