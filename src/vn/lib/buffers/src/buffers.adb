@@ -40,7 +40,7 @@ package body Buffers is
 
       Into.Values (Into.Next_Out) := Item;
       Into.Count := Into.Count + 1;
-   end Insert;
+   end InsertInFront;
 
    ------------
    -- Insert --
@@ -70,7 +70,7 @@ package body Buffers is
 
    function Empty (This : Buffer) return Boolean is
    begin
-      return This.Count =< 0;
+      return This.Count <= 0;
    end Empty;
 
    ----------
@@ -79,7 +79,7 @@ package body Buffers is
 
    function Full (This : Buffer) return Boolean is
    begin
-      return This.Count => This.Capacity;
+      return This.Count >= This.Capacity;
    end Full;
 
    -----------
