@@ -47,6 +47,11 @@ package VN.Communication.CAN.CAN_Driver is
    function ReceivePhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
    pragma Import(C, ReceivePhysical, "Receive_CAN_Message");
 
+
+   procedure Test_CAN_Send;
+   pragma Import(C, Test_CAN_Send, "Test_Send");
+
+
 private
 
    package CANPack renames VN.Communication.CAN;
@@ -67,6 +72,9 @@ private
 --MSS_CAN_set_mode(&g_can0,CANOP_MODE_NORMAL);
 --MSS_CAN_start(&g_can0);
 --MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
+
+   procedure CAN_Init;
+   pragma Import(C, CAN_Init, "Init_CAN");
 
    function Test return Interfaces.C.int;
    pragma Import(C, Test, "test");

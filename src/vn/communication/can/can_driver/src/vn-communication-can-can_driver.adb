@@ -14,6 +14,9 @@
 with Interfaces;
 use Interfaces;
 
+with GNAT.IO;
+use GNAT.IO;
+
 package body VN.Communication.CAN.CAN_Driver is
 
    procedure Send(message : VN.Communication.CAN.CAN_Message_Logical;
@@ -129,7 +132,9 @@ package body VN.Communication.CAN.CAN_Driver is
 
    procedure Init is
    begin
-      System.BB.Interrupts.Attach_Handler(CANHandler'Access, System.BB.Interrupts.Interrupt_ID(32));
+      CAN_Init;
+      GNAT.IO.Put_Line("CAN initiated");
+    --  System.BB.Interrupts.Attach_Handler(CANHandler'Access, System.BB.Interrupts.Interrupt_ID(32));
    end Init;
 
 begin

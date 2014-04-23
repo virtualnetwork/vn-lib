@@ -32,12 +32,12 @@ begin
 --        GNAT.IO.Put_Line("Program in ENVM started!");
 --     end loop;
 
-   CAN_Driver_Test.Init;
+--     CAN_Driver_Test.Init;
 
    physMsgSend.ID := 1338;
    physMsgSend.Length := 8;
 
-   x := 2;
+   x := 5;
 
    physMsgSend.Data(0) := x;
    physMsgSend.Data(1) := x;
@@ -48,21 +48,20 @@ begin
    physMsgSend.Data(6) := x;
    physMsgSend.Data(7) := x;
 
+   VN.Communication.CAN.CAN_Driver.Test_CAN_Send;
+
    now := Ada.Real_Time.Clock;
    delay until now + Ada.Real_Time.Milliseconds(4000);
+
+
 
    GNAT.IO.Put_Line("NEW TEST");
    GNAT.IO.New_Line;
 
 
    loop
-      now := Ada.Real_Time.Clock;
-      delay until now + Ada.Real_Time.Milliseconds(1000);
-
    --   t := Integer(VN.Communication.CAN.CAN_Driver.Test);
    --   GNAT.IO.Put_Line("Test= " & t'img);
-
---        VN.Communication.CAN.CAN_Driver.CAN_Get_Msg_Filter_Mask(1, 2, 3);
 
       sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgSend'Unchecked_Access));
 
@@ -83,6 +82,9 @@ begin
          GNAT.IO.Put_Line("Data(6)= " & physMsgReceive.Data(6)'img);
          GNAT.IO.Put_Line("Data(7)= " & physMsgReceive.Data(7)'img);
       end if;
+
+      now := Ada.Real_Time.Clock;
+      delay until now + Ada.Real_Time.Milliseconds(1000);
    end loop;
 
 end CAN_Driver_Test_Main;

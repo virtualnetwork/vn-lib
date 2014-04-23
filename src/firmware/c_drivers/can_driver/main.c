@@ -16,8 +16,8 @@
  /*----------------------------------------------------------------------------
  * include files
  */
-//#include "drivers/mss_uart/mss_uart.h"
-#include "drivers/mss_can/mss_can.h"
+#include "mss_can.h"
+//#include "drivers/mss_can/mss_can.h"
 #include<stdio.h>
 #include<stdlib.h>
 
@@ -83,10 +83,20 @@ int Receive_CAN_Message(C_CAN_Message_Type *msg) { //returns 1 if message was re
     }
 }
 
+void Test_Send() {
+    CAN_MSGOBJECT pMsg;
+    pMsg.ID=0x120;
+    pMsg.DATALOW = 0x11111111;
+    pMsg.DATAHIGH = 0x22222222;
+    pMsg.L =((1<<20)| 0x00080000);
+
+    MSS_CAN_send_message_n(&g_can0, 0, &pMsg);
+}
+
 void Init_CAN() {
 
     MSS_CAN_init(&g_can0,
-                 CAN_SPEED_32M_500K,
+                 CAN_SPEED_32M_1M,
                  (PCAN_CONFIG_REG)0,
                  6,
                  6);
