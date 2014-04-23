@@ -128,6 +128,8 @@ package VN.Message is
    type Word_Array_Type is array(1 .. VN_Message_Basic'Size / 16) of Interfaces.Unsigned_16;
    for Word_Array_Type'Alignment use 2;
 
+   VN_CHECKSUM_ERROR : exception;
+
    procedure Serialize(Message : in VN_Message_Basic;
                        buffer : out VN_Message_Byte_Array);
 

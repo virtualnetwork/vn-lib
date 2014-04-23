@@ -1,12 +1,12 @@
 
-pragma profile(Ravenscar);
-
 package body VN.Message is
 
    procedure Serialize(Message : in VN_Message_Basic; buffer : out VN_Message_Byte_Array) is
-      tempMsg : VN_Message_Basic := Message;
+      tempMsg : VN_Message_Basic;
+      pragma Warnings(Off, tempMsg);
       for tempMsg'Address use buffer'Address;
    begin
+      tempMsg := Message;
       Update_Checksum(tempMsg);
    end Serialize;
 
@@ -14,15 +14,15 @@ package body VN.Message is
       tempBuffer : VN_Message_Byte_Array;
       for tempBuffer'Address use Message'Address;
 
-      receivedChecksum : VN_Checksum := Message.Checksum;
-
-      CHECKSUM_INCORRECT : exception;
+      receivedChecksum : VN_Checksum;
    begin
       tempBuffer := buffer;
+      receivedChecksum := Message.Checksum;
+
       Update_Checksum(Message);
 
       if receivedChecksum /= Message.Checksum then
-         raise CHECKSUM_INCORRECT with "Received checksum= " &
+         raise VN.Message.VN_CHECKSUM_ERROR with "Received checksum= " &
            receivedChecksum'Img & ", acctual checksum= " & Message.Checksum'Img;
       end if;
 
@@ -52,6 +52,7 @@ package body VN.Message is
       end if;
 
       sum := sum + Interfaces.Shift_Right(sum, 16); -- add the carry bits to the answer
+      sum := sum and 16#FFFF#;
       ret := not Interfaces.Unsigned_16(sum);
 
       Message.Checksum := VN_Checksum(ret);
