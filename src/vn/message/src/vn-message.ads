@@ -125,7 +125,7 @@ package VN.Message is
                                           of Interfaces.Unsigned_8;
    for VN_Message_Byte_Array'Alignment use 2;
 
-   type Word_Array_Type is array(1 .. VN_Message_Basic'Size / 16) of Interfaces.Unsigned_16;
+   type Word_Array_Type is array(1 .. (VN_Message_Basic'Size / 16 + 1)) of Interfaces.Unsigned_16;
    for Word_Array_Type'Alignment use 2;
 
    VN_CHECKSUM_ERROR : exception;

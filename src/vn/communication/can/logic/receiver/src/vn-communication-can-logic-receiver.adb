@@ -60,6 +60,9 @@ package body VN.Communication.CAN.Logic.Receiver is
 
                elsif msgIn.msgType = VN.Communication.CAN.Logic.TRANSMISSION then
 
+--                    VN.Communication.CAN.Logic.DebugOutput("RECEIVER AT ADDR " & this.myCANAddress'Img &
+--                                                             " RECEVED TRANSMISSION MESSAGE FROM " & msgIn.Sender'Img, 4);
+
                   for i in this.units'range loop
                      if this.units(i).isActive and then this.units(i).Sender = msgIn.sender then
                         this.units(i).Update(msgIn, bMsgReceived, msgOut, bWillSend);
