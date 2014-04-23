@@ -18,17 +18,18 @@ package body VN.Communication.CAN.Logic.Sender is
       -- This function assigns a new Sender unit to send another VN message.
       -- It makes sure that we are not sending two different VN messages to the
       -- same CAN address at any time.
-      procedure AssignNewUnit is
+      function AssignNewUnit return boolean is
 
          freeUnit : Sender_Unit_Duty_ptr; -- := this.GetFreeUnit;
          msg : VN.Communication.CAN.Logic.VN_Message_Internal;
          isSending : boolean;
 
          tempBuffer : Send_Buffer_pack.Buffer(SIZE);
+         ret : Boolean := false;
       begin
          this.GetFreeUnit(freeUnit);
          if freeUnit = null then
-            return;
+            return ret;
          end if;
 
          loop
@@ -38,7 +39,7 @@ package body VN.Communication.CAN.Logic.Sender is
                exit;
             end if;
 
-            isSending := false; --whether or not we are currently sending to CAN address msg.Receiver
+            isSending := false; --whether or not we are currently sending to msg.Receiver
             for i in this.units'Range loop
                if this.units(i).isActive and then this.units(i).Receiver = msg.Receiver then
                   isSending := true;
@@ -53,6 +54,7 @@ package body VN.Communication.CAN.Logic.Sender is
                if freeUnit /= null then
                   freeUnit.Send(msg);
                   freeUnit.Update(msgIn, false, msgOut, bWillSend);
+                  ret := true;
                end if;
                exit;
             end if;
@@ -63,6 +65,7 @@ package body VN.Communication.CAN.Logic.Sender is
             Send_Buffer_pack.Insert(msg, this.sendBuffer);
          end loop;
 
+         return ret;
       end AssignNewUnit;
 
    begin
@@ -89,7 +92,9 @@ package body VN.Communication.CAN.Logic.Sender is
 
             --If there is a VN message to send, assign it to a Sender Unit (if available):
             if not Send_Buffer_pack.Empty(this.sendBuffer) then
-               AssignNewUnit;
+               if AssignNewUnit then
+                  return;
+               end if;
             end if;
 
             --otherwise, find an active Sender Unit and let it send a message (iterate which one you take):
