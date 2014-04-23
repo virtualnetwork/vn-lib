@@ -97,7 +97,7 @@ package VN.Message is
       Ext_Header        at 0 range 128 .. 135;
    end record;
 
-  for VN_Header'Alignment use 1;
+  for VN_Header'Alignment use 2;
   -- for VN_Header'Bit_Order use High_Order_First;
 
    type VN_Payload_Byte_Array is array (1 .. MAX_PAYLOAD_SIZE)
@@ -118,11 +118,15 @@ package VN.Message is
                                (HEADER_SIZE + MAX_PAYLOAD_SIZE + CHECKSUM_SIZE) * 8 - 1;
    end record;
    
-   for VN_Message_Basic'Alignment use 1;
+   for VN_Message_Basic'Alignment use 2;
 
 
    type VN_Message_Byte_Array is array (1 .. VN_Message_Basic'Size / 8) --VN_Message_Basic'Size is in bits
                                           of Interfaces.Unsigned_8;
+   for VN_Message_Byte_Array'Alignment use 2;
+
+   type Word_Array_Type is array(1 .. VN_Message_Basic'Size / 16) of Interfaces.Unsigned_16;
+   for Word_Array_Type'Alignment use 2;
 
    procedure Serialize(Message : in VN_Message_Basic;
                        buffer : out VN_Message_Byte_Array);

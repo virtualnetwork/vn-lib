@@ -39,7 +39,7 @@ package VN.Message.Distribute_Route is
            			 COMPONENT_TYPE_SIZE + DISTRIBUTE_ROUTE_UNKNOWN_PAYLOAD_SIZE + CHECKSUM_SIZE) * 8 - 1;
    end record;
 
-   for VN_Message_Distribute_Route'Alignment use 1;
+   for VN_Message_Distribute_Route'Alignment use 2;
 
    procedure To_Basic(
                Distribute_Route_VN_Msg: in VN_Message_Distribute_Route;

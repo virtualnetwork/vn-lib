@@ -29,7 +29,7 @@ package VN.Message.Request_Address_Block is
           (HEADER_SIZE + CUUID_SIZE + REQUEST_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE + CHECKSUM_SIZE) * 8 - 1;
    end record;
 
-   for VN_Message_Request_Address_Block'Alignment use 1;
+   for VN_Message_Request_Address_Block'Alignment use 2;
 
    procedure To_Basic(
                Request_Address_Block_VN_Msg: in VN_Message_Request_Address_Block;

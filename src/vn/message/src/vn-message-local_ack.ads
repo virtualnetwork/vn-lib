@@ -26,7 +26,7 @@ package VN.Message.Local_Ack is
         (HEADER_SIZE + STATUS_SIZE  + LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE + CHECKSUM_SIZE) * 8 - 1;
    end record;
 
-   for VN_Message_Local_Ack'Alignment use 1;
+   for VN_Message_Local_Ack'Alignment use 2;
 
    procedure To_Basic(Local_Ack_VN_Msg: in VN_Message_Local_Ack;
                       Basic_VN_Msg: out VN_Message_Basic);

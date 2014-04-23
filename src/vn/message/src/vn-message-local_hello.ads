@@ -30,7 +30,7 @@ package VN.Message.Local_Hello is
         (HEADER_SIZE + CUUID_SIZE + COMPONENT_TYPE_SIZE + LOCAL_HELLO_UNKNOWN_PAYLOAD_SIZE + CHECKSUM_SIZE) * 8 - 1;
    end record;
 
-   for VN_Message_Local_Hello'Alignment use 1;
+   for VN_Message_Local_Hello'Alignment use 2;
 
    procedure To_Basic(Local_Hello_VN_Msg: in VN_Message_Local_Hello;
                       Basic_VN_Msg: out VN_Message_Basic);
