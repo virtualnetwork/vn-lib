@@ -62,7 +62,7 @@ int Send_CAN_Message(C_CAN_Message_Type *msg) {
     pMsg.RTR = 1; //regular message (not remote frame)
     pMsg.NA1 = 0; //padding?
 
-    return MSS_CAN_send_message_n(&g_can0, 0, &pMsg);
+    return MSS_CAN_send_message_n(&g_can0, 6, &pMsg);
 }
 
 int Receive_CAN_Message(C_CAN_Message_Type *msg) { //returns 1 if message was received, 0 otherwise
@@ -88,9 +88,13 @@ void Test_Send() {
     pMsg.ID=0x120;
     pMsg.DATALOW = 0x11111111;
     pMsg.DATAHIGH = 0x22222222;
-    pMsg.L =((1<<20)| 0x00080000);
+    pMsg.NA0 = 1;
+    pMsg.DLC = 8;
+    pMsg.IDE = 1;
+    pMsg.RTR = 0;
+    pMsg.NA1 = 0; //???
 
-    MSS_CAN_send_message_n(&g_can0, 0, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 6, &pMsg);
 }
 
 void Init_CAN() {
