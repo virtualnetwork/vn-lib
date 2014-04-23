@@ -128,7 +128,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
       this.numBytesToSend := message.NumBytes;   
       this.Receiver := message.Receiver;     
 
-      VN.Communication.CAN.Logic.DebugOutput("Send VN Message: Sender CAN addr " this.myCANAddress'Img & 
+      VN.Communication.CAN.Logic.DebugOutput("Send VN Message: Sender CAN addr " & this.myCANAddress'Img & 
                                                ", receiver= " & this.Receiver'Img & " NumBytes= " & message.NumBytes'Img & 
                                                " Opcode= " & message.Data.Header.Opcode'img, 3);
 

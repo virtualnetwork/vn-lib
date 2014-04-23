@@ -45,7 +45,14 @@ procedure main is
    C2 : aliased VN.VN_CUUID := (2, others => 5);
    U3 : aliased VN.Communication.CAN.UCID := 3;
    C3 : aliased VN.VN_CUUID := (3, others => 5);
-
+   U4 : aliased VN.Communication.CAN.UCID := 4;
+   C4 : aliased VN.VN_CUUID := (3, others => 5);
+   
+--        DutyArray : Array(1..4) of VN.Communication.CAN.Logic.SM.SM_Duty_ptr :=
+--       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C1'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C2'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C3'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U4'Unchecked_Access, C4'Unchecked_Access));
 
    DutyArray : Array(1..3) of VN.Communication.CAN.Logic.SM.SM_Duty_ptr :=
      (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C1'Unchecked_Access),

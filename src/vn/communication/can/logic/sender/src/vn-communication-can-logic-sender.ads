@@ -43,7 +43,7 @@ private
    use Send_Buffer_pack;
 
    SIZE : constant Integer := 20;      --ToDO: Put this in a config file of some sort
-   NUM_UNITS : constant integer := 1;  --ToDO: Put this in a config file of some sort
+   NUM_UNITS : constant integer := 3;  --ToDO: Put this in a config file of some sort
 
    type UnitArray is array(1..NUM_UNITS) of aliased VN.Communication.CAN.Logic.Sender_Unit.Sender_Unit_Duty;
 

@@ -37,7 +37,7 @@ package VN.Communication.CAN.Logic.Receiver is
 private
 
 
-   NUM_UNITS : constant integer := 1;  --ToDO: Put this in a config file of some sort
+   NUM_UNITS : constant integer := 3;  --ToDO: Put this in a config file of some sort
 
    --type UnitArray is array(1..NUM_UNITS) of VN.Communication.CAN.Logic.Receiver_Unit.Receiver_Unit_Duty_ptr;
    type UnitArray is array(1..NUM_UNITS) of aliased VN.Communication.CAN.Logic.Receiver_Unit.Receiver_Unit_Duty;
