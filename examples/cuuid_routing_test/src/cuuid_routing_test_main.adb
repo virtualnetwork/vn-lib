@@ -38,7 +38,8 @@ begin
    now := Ada.Real_Time.Clock;
    delay until now + wait;
 
-   GNAT.IO.Put_Line("Start");
+   GNAT.IO.New_Line(2);
+   GNAT.IO.Put_Line("CUUID routing table test started");
 
    now := Ada.Real_Time.Clock;
    delay until now + wait;
@@ -70,7 +71,7 @@ begin
       end if;
    end loop;
 
-   GNAT.IO.Put_Line("Test done");
+   GNAT.IO.Put_Line("Test comlete");
 
    loop
       now := Ada.Real_Time.Clock;
