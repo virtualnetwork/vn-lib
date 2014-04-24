@@ -16,6 +16,8 @@ with VN.Communication.CAN.Logic.SM;
 with VN.Communication.CAN.CAN_Driver;
 --  with BBB_CAN;
 
+with Ada.Exceptions;
+
 package body VN.Communication.CAN.Can_Task is
 
    package buf renames VN.Communication.CAN.CAN_Message_Buffers;
@@ -77,9 +79,19 @@ package body VN.Communication.CAN.Can_Task is
          Next_Period := Next_Period + myPeriod;
          delay until Next_Period;
 
+       --  VN.Text_IO.Put_Line("CAN_Task input start");
+
          Input;
+
+      --   VN.Text_IO.Put_Line("CAN_Task input ended, update start");
+
          myAccess.Update(msgsIn, msgsOut);
+
+        -- VN.Text_IO.Put_Line("CAN_Task update ended");
+
          Output;
+
+        -- VN.Text_IO.Put_Line("CAN_Task loop ended");
       end loop;
 
    end CAN_Task_Type;
