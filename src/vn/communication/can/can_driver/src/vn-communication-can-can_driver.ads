@@ -19,7 +19,7 @@ with VN.Communication.CAN;
 
 
 -- Remove this (and any reference to System.BB) when compiling for PC, keep when compiling for SmartFusion2
---  with System.BB.Interrupts;
+with System.BB.Interrupts;
 
 package VN.Communication.CAN.CAN_Driver is
 
@@ -50,6 +50,7 @@ package VN.Communication.CAN.CAN_Driver is
  --  pragma Import(C, ReceivePhysical, "Receive_CAN_Message");
 
 
+   -- Remove this when compiling for PC, keep when compiling for SmartFusion2:
    procedure Test_CAN_Send;
    pragma Import(C, Test_CAN_Send, "Test_Send");
 
@@ -75,10 +76,10 @@ private
 --MSS_CAN_start(&g_can0);
 --MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
 
-   procedure CAN_Init;
+   procedure CAN_Init; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
    pragma Import(C, CAN_Init, "Init_CAN");
 
-   function Test return Interfaces.C.int;
+   function Test return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
    pragma Import(C, Test, "test");
 
 
@@ -86,7 +87,7 @@ private
 
    procedure LogicalToPhysical(msgIn : CANPack.CAN_Message_Logical; msgOut : out CAN_Message_Physical);
 
- --  procedure CANHandler(ID : System.BB.Interrupts.Interrupt_ID);
+ --  procedure CANHandler(ID : System.BB.Interrupts.Interrupt_ID); -- Remove this when compiling for PC, keep when compiling for SmartFusion2
 
    procedure Init;
 
