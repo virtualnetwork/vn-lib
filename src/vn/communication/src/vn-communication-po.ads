@@ -15,13 +15,14 @@ package VN.Communication.PO is
                       Status: out VN.Send_Status);
 
       function Get_Buffer_Length_To_SM_L return Integer;
-      function Get_Buffer_Length_From_SM_L return Integer;
+      function Get_Buffer_Length_To_Other return Integer;
 
    private
       Buffer_Length_To_SM_L: Integer := 0;
-      Buffer_Length_From_SM_L: Integer := 0;
---
---      VN_Msg_Buffer : VN_Buffer;
+      Buffer_Length_To_Other: Integer := 0;
+
+      Buffer_To_SM_L: VN_Message_Buffer.Buffer(10);
+      Buffer_To_Other: VN_Message_Buffer.Buffer(10);
    end VN_PO;
 
    type VN_PO_Access is access all VN_PO;

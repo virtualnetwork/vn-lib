@@ -1,4 +1,5 @@
 with VN.Message;
+with Buffers;
 
 package body VN.Communication.PO is
 
@@ -7,32 +8,32 @@ package body VN.Communication.PO is
       procedure Receive_From_SM_L(Message: out VN.Message.VN_Message_Basic;
                      Status: out VN.Receive_Status) is
       begin
-         null; -- TODO: Implement
+         VN_Message_Buffer.Remove(Message, Buffer_To_Other);
       end Receive_From_SM_L;
 
       procedure Send_To_SM_L(Message: in VN.Message.VN_Message_Basic;
                       Status: out VN.Send_Status) is
       begin
-         null; -- TODO: Implement
+         VN_Message_Buffer.Insert(Message, Buffer_To_SM_L);
       end Send_To_SM_L;
 
       procedure Receive_From_Other(Message: out VN.Message.VN_Message_Basic;
                      Status: out VN.Receive_Status) is
       begin
-         null; -- TODO: Implement
+         VN_Message_Buffer.Remove(Message, Buffer_To_Other);
       end Receive_From_Other;
 
       procedure Send_To_Other(Message: in VN.Message.VN_Message_Basic;
                               Status: out VN.Send_Status) is
       begin
-         null; -- TODO: Implement
+         VN_Message_Buffer.Insert(Message, Buffer_To_SM_L);
       end Send_To_Other;
 
       -- Get buffer length
-      function Get_Buffer_Length_From_SM_L return Integer is
+      function Get_Buffer_Length_To_Other return Integer is
       begin
-         return Buffer_Length_From_SM_L;
-      end Get_Buffer_Length_From_SM_L;
+         return Buffer_Length_To_Other;
+      end Get_Buffer_Length_To_Other;
 
       -- Get buffer length
       function Get_Buffer_Length_To_SM_L return Integer is
