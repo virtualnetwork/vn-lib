@@ -16,7 +16,7 @@ all: clean
 	gnatmake -d -p -P communication.gpr
 
 clean:
-	gnat clean -P communication.gpr
+	-gnat clean -P communication.gpr
 
 clean-all:
 	gnat clean -r -P communication.gpr

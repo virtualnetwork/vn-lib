@@ -16,7 +16,7 @@ all: clean
 	gnatmake -d -p -P buffers.gpr
 
 clean:
-	gnat clean -P buffers.gpr
+	-gnat clean -P buffers.gpr
 
 clean-all:
 	gnat clean -r -P buffers.gpr
