@@ -21,7 +21,7 @@ with VN.Communication.Routing_Table;
 with Interfaces;
 use Interfaces;
 
-with System.BB.Interrupts; -- Remove when compiling for PC, keep when compiling for SmartFusion2
+-- with System.BB.Interrupts; -- Remove when compiling for PC, keep when compiling for SmartFusion2
 
 procedure Routing_Table_Test is
 

@@ -130,6 +130,6 @@ clean:
 	@echo
 	@echo "*** Clean project"
 	@echo	
-	@-rm obj/*.o obj/*.a obj/*.ali $(NAME) $(NAME).bin
+	@-rm obj/*.o obj/*.a obj/*.ali obj/$(NAME) $(NAME).bin
 
 
