@@ -65,6 +65,13 @@ OBJECTS		+=	$(patsubst %.s, obj/%.o, $(notdir $(ASRC)))
 VPATH 		= 	$(dir $(ASRC))
 VPATH 		+= 	$(dir $(CSRC))
 
+######## TEST ##############
+ifeq "$(PORT)" "1"
+	PRGTTY 	=	/dev/ttyUSB1
+else
+	PRGTTY 	=	/dev/ttyUSB0
+endif
+
 ########################################
 # Must explicitly define target address
 EXIT 		= 	0

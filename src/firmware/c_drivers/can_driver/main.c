@@ -1,16 +1,10 @@
 /*******************************************************************************
- * (c) Copyright 2012-2013 Microsemi SoC Products Group.  All rights reserved
- *
+ * 
+ * This code is based on code from:
  * SmartFusion2 MSSCAN example demonstrating the Data transmission and Reception
- * using MSSCAN (FullCAN).
- * For Transmission: Get data from Hyperterminal using MSSUART0 --> Form as CAN
- * packets --> Send to CAN Analyzer.
- * For Reception: Send the CAN Message from CAN Analyzer --> read the Message-->
- * Send to hyperterminal using MSSUART0.
- * Board settings and test procedure clearly mentioned in ReadMe.txt file.
- *
- * SVN $Revision: 5439 $
- * SVN $Date: 2013-03-29 08:58:40 +0530 (Fri, 29 Mar 2013) $
+ * using MSSCAN (FullCAN) by Microsemi SoC Products Group.
+ * 
+ * No rights reserved regarding this code file.
  */
 
  /*----------------------------------------------------------------------------
@@ -100,7 +94,7 @@ void Test_Send() {
 void Init_CAN() {
 
     MSS_CAN_init(&g_can0,
-                 CAN_SPEED_32M_1M,
+                 CAN_SPEED_32M_50K, //CAN_SPEED_32M_1M,
                  (PCAN_CONFIG_REG)0,
                  6,
                  6);
@@ -114,12 +108,21 @@ void Init_CAN() {
     rx_msg.ID = 0x200;
     rx_msg.DATAHIGH = 0u;
     rx_msg.DATALOW = 0u;
-    rx_msg.AMR.L = 0x00000000; //0xFFFFFFFF;
-    rx_msg.ACR.L = 0x00000000;
-    rx_msg.AMR_D = 0xFFFFFFFF;
-    rx_msg.ACR_D = 0x00000000;
     rx_msg.RXB.DLC = 8u;
-    rx_msg.RXB.IDE = 0u;
+    rx_msg.RXB.IDE = 1;
+    rx_msg.RXB.RTR = 0;
+
+   // rx_msg.AMR.L = 0x00000000; //0xFFFFFFFF;
+    rx_msg.AMR.RTR = 0;
+    rx_msg.AMR.IDE = 1;
+    rx_msg.AMR.ID  = 0;
+
+    rx_msg.ACR.RTR = 0;
+    rx_msg.ACR.IDE = 1;
+    rx_msg.ACR.ID  = 0;
+    //rx_msg.ACR.L = 0x00000000;
+    rx_msg.ACR_D = 0x00000000;
+    rx_msg.AMR_D = 0xFFFFFFFF;
 
     MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
 
