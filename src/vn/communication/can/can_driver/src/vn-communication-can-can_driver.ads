@@ -41,11 +41,11 @@ package VN.Communication.CAN.CAN_Driver is
 
    --will return 1 on success
    function SendPhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
-   pragma Import(C, SendPhysical, "Send_CAN_Message");
+ --  pragma Import(C, SendPhysical, "Send_CAN_Message");
 
    --returns 1 if message was received, 0 otherwise
    function ReceivePhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
-   pragma Import(C, ReceivePhysical, "Receive_CAN_Message");
+ --  pragma Import(C, ReceivePhysical, "Receive_CAN_Message");
 
 
    procedure Test_CAN_Send;
