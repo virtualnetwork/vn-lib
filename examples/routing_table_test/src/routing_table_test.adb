@@ -21,6 +21,8 @@ with VN.Communication.Routing_Table;
 with Interfaces;
 use Interfaces;
 
+with System.BB.Interrupts; -- Remove when compiling for PC, keep when compiling for SmartFusion2
+
 procedure Routing_Table_Test is
 
    package pack is new VN.Communication.Routing_Table(VN.Communication.CAN.CAN_Address_Sender);
@@ -55,6 +57,9 @@ begin
 
 --     passed := passed and Test(13, 13, 1);
 --     passed := passed and Test(12033, 12, 2);
+
+   GNAT.IO.New_Line(2);
+   GNAT.IO.Put_Line("Routing table test started");
 
    for i in VN.Communication.CAN.CAN_Address_Sender'Range loop
       passed := passed and Test(VN.VN_Logical_Address(i), i, Integer(i) + 1);
