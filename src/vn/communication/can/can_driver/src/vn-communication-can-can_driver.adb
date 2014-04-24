@@ -137,6 +137,18 @@ package body VN.Communication.CAN.CAN_Driver is
     --  System.BB.Interrupts.Attach_Handler(CANHandler'Access, System.BB.Interrupts.Interrupt_ID(32));
    end Init;
 
+
+   -- ToDo: This is just for testing, to make sure the C-code does not interfere:
+   function SendPhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int is
+   begin
+      return 1;
+   end SendPhysical;
+
+   function ReceivePhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int is
+   begin
+      return 0;
+   end ReceivePhysical;
+
 begin
    Init;
 end VN.Communication.CAN.CAN_Driver;
