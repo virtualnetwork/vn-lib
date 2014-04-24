@@ -17,7 +17,9 @@ with VN;
 with VN.Communication;
 with VN.Communication.CAN;
 
-with System.BB.Interrupts;
+
+-- Remove this (and any reference to System.BB) when compiling for PC, keep when compiling for SmartFusion2
+--  with System.BB.Interrupts;
 
 package VN.Communication.CAN.CAN_Driver is
 
@@ -84,7 +86,7 @@ private
 
    procedure LogicalToPhysical(msgIn : CANPack.CAN_Message_Logical; msgOut : out CAN_Message_Physical);
 
-   procedure CANHandler(ID : System.BB.Interrupts.Interrupt_ID);
+ --  procedure CANHandler(ID : System.BB.Interrupts.Interrupt_ID);
 
    procedure Init;
 
