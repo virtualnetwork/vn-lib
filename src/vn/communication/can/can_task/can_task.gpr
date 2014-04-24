@@ -1,5 +1,6 @@
 with "../can_interface/can_interface.gpr";
 with "../can_driver/can_driver.gpr";
+--with "../../../../firmware/CAN_over_UART/bbb_can/bbb_can.gpr";
 
 with "../../../vn.gpr";
 with "../../communication.gpr";
