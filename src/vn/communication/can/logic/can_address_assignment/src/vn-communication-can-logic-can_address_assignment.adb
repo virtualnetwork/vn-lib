@@ -55,6 +55,7 @@ package body VN.Communication.CAN.Logic.CAN_Address_Assignment is
    procedure Activate(this : in out CAN_Assignment_Master; theUCID : VN.Communication.CAN.UCID) is
    begin
       if this.currentState = Unactivated then
+         DebugOutput("CAN address assigner started with UCID=" & theUCID'Img, 5);
          this.currentState := Started;
          this.myUCID := theUCID;
       end if;

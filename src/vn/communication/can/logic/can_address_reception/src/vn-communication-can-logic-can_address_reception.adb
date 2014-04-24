@@ -80,6 +80,7 @@ package body VN.Communication.CAN.Logic.CAN_Address_Reception is
    procedure Activate(this : in out CAN_Assignment_Node) is
    begin
       if this.currentState = Unactivated then
+         DebugOutput("CAN address receiver activated", 5);
          this.currentState := Start;
       end if;
    end Activate;
