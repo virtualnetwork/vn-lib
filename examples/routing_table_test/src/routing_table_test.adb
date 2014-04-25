@@ -21,13 +21,12 @@ with VN.Communication.Routing_Table;
 with Interfaces;
 use Interfaces;
 
--- with System.BB.Interrupts; -- Remove when compiling for PC, keep when compiling for SmartFusion2
+with System.BB.Interrupts; -- Remove when compiling for PC, keep when compiling for SmartFusion2
 
 procedure Routing_Table_Test is
 
    package pack is new VN.Communication.Routing_Table(VN.Communication.CAN.CAN_Address_Sender);
    table : pack.Table_Type(VN.VN_Logical_Address(1000));
-
 
    passed : Boolean := true;
  --  canAddressIn, canAddressOut : VN.Communication.CAN.CAN_Address_Sender;
@@ -52,14 +51,23 @@ procedure Routing_Table_Test is
       return true;
    end Test;
 
-
+   type Protocol_Address_Type is (CAN_Subnet, Application_Layer); -- for testing
+   package pack2 is new VN.Communication.Routing_Table(Protocol_Address_Type);
+   table2 : pack2.Table_Type(VN.VN_Logical_Address(500));-- for testing
+   found : boolean;
+   address : Protocol_Address_Type;
 begin
-
---     passed := passed and Test(13, 13, 1);
---     passed := passed and Test(12033, 12, 2);
 
    GNAT.IO.New_Line(2);
    GNAT.IO.Put_Line("Routing table test started");
+
+   pack2.Insert(Table2, 1337, CAN_Subnet);
+   pack2.Search(Table2, 1337, address, found);
+   if found and then address = CAN_Subnet then
+      Put_Line("Minitest passed");
+   else
+      Put_Line("Minitest failed");
+   end if;
 
    for i in VN.Communication.CAN.CAN_Address_Sender'Range loop
       passed := passed and Test(VN.VN_Logical_Address(i), i, Integer(i) + 1);
