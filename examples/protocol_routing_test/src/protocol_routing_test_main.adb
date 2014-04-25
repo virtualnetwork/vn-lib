@@ -96,7 +96,7 @@ begin
    GNAT.IO.Put_Line("Main function entering infinte wait.");
    loop
       now := Ada.Real_Time.Clock;
-      delay until now + Ada.Real_Time.Milliseconds(1000);
+      delay until now + Ada.Real_Time.Milliseconds(3000);
       GNAT.IO.Put_Line("<Main function hearbeat>");
    end loop;
 end Protocol_Routing_Test_Main;
