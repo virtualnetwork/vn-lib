@@ -143,9 +143,13 @@ package body VN.Communication.Protocol_Routing is
       end Receive;
 
       procedure Init is -- ToDo: For testing only!!!!!!!!!!
+         testCUUID : VN.VN_CUUID := (others => 42);
       begin
          Initiated := true;
          Protocol_Router.Insert(myTable, 1337, CAN_Subnet);
+         CUUID_Protocol_Routing.Insert(testCUUID, CAN_Subnet);
+
+         GNAT.IO.Put_Line("Protocol_Routing initiated");  --ToDo, for testing
       end Init;
 
    end Protocol_Routing_Type;
