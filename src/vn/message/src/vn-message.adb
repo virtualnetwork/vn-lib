@@ -1,4 +1,4 @@
-
+with Ada.Exceptions;
 package body VN.Message is
 
    procedure Serialize(Message : in VN_Message_Basic; buffer : out VN_Message_Byte_Array) is
@@ -42,19 +42,21 @@ package body VN.Message is
       ret    : Interfaces.Unsigned_16;
       length : integer := Integer(Message.Header.Payload_Length) + HEADER_SIZE;
    begin
+      if length > MAX_PAYLOAD_SIZE then
+         length := MAX_PAYLOAD_SIZE;
+      end if;
 
       for i in 1 .. length / 2 loop
          sum := sum + Interfaces.Unsigned_32(wordArray(i));
       end loop;
 
       if length rem 2 = 1 then
-         sum := sum + Interfaces.Unsigned_32(byteArray(length));
+         sum := sum + Interfaces.Unsigned_32(byteArray(length)); --ToDo: Bit padding, to the left of to the right?
       end if;
 
       sum := sum + Interfaces.Shift_Right(sum, 16); -- add the carry bits to the answer
       sum := sum and 16#FFFF#;
       ret := not Interfaces.Unsigned_16(sum);
-
       Message.Checksum := VN_Checksum(ret);
    end Update_Checksum;
 
