@@ -11,12 +11,14 @@ package VN.Communication is
 
    type Com is limited interface; --changed "protected" to "limited"
 
-   procedure Send(This: in out Com;
+   type Com_Access is access all Com'Class;
+
+   procedure Send(This: in out Com'Class;
                   Message: in VN.Message.VN_Message_Basic;
                   Status: out VN.Send_Status)
                         is abstract;
 
-   procedure Receive( This: in out Com;
+   procedure Receive( This: in out Com'Class;
                      Message: out VN.Message.VN_Message_Basic;
                      Status: out VN.Receive_Status)
                         is abstract;

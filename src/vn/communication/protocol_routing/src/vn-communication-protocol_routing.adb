@@ -25,7 +25,7 @@ with VN.Message.Assign_Address_Block;
 
 package body VN.Communication.Protocol_Routing is
 
-   overriding procedure Send(this : in out Protocol_Routing_Type;
+   procedure Send(this : in out Protocol_Routing_Type;
                              Message: in VN.Message.VN_Message_Basic;
                              Status: out VN.Send_Status) is
 
@@ -38,11 +38,10 @@ package body VN.Communication.Protocol_Routing is
          Protocol_Router.Insert(this.myTable, msgDistribute.Component_Address, source);
       end Handle_Distribute_Route;
 
-
-      found : Boolean;
+      found   : Boolean;
       address : Protocol_Address_Type;
 
-      msgAssignAddr 	    : VN.Message.Assign_Address.VN_Message_Assign_Address;
+      msgAssignAddr 	 : VN.Message.Assign_Address.VN_Message_Assign_Address;
       msgAssignAddrBlock : VN.Message.Assign_Address_Block.VN_Message_Assign_Address_Block;
    begin
 
@@ -61,7 +60,7 @@ package body VN.Communication.Protocol_Routing is
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(Message, msgAssignAddrBlock);
          CUUID_Protocol_Routing.Search(msgAssignAddrBlock.CUUID, address, found);
       else
-         Protocol_Router.Insert(this.myTable, Message.Header.Source, Application_Layer);
+         Protocol_Router.Insert(this.myTable, Message.Header.Source, Protocol_Address_Type(0));
          Protocol_Router.Search(this.myTable, Message.Header.Destination, address, found);
 
          --Get routing info from Distribute Route messages:
@@ -71,20 +70,18 @@ package body VN.Communication.Protocol_Routing is
       end if;
 
       if found then
-         case address is
-            when CAN_Subnet =>
-               this.myCANInterface.Send(Message, Status);
-
-            when Application_Layer =>
-               null; -- ToDo, what do we do if this happens!!???
-         end case;
+         if address = 0 then -- the case when the message is to be sent back to the application layer
+            Status := ERROR_UNKNOWN; -- ToDo, what do we do if this happens!!???
+         else
+            this.myCANInterfaces(Integer(address)).Send(Message, Status);
+         end if;
       else
          Status := ERROR_NO_ADDRESS_RECEIVED; --should not really happen?
       end if;
    end Send;
 
 
-   overriding procedure Receive(this : in out Protocol_Routing_Type;
+   procedure Receive(this : in out Protocol_Routing_Type;
                                 Message : out VN.Message.VN_Message_Basic;
                                 Status: out VN.Receive_Status) is
 
@@ -97,47 +94,36 @@ package body VN.Communication.Protocol_Routing is
          CUUID_Protocol_Routing.Insert(msgLocalHello.CUUID, source);
       end HandleCUUIDRouting;
 
-
       tempMsg    : VN.Message.VN_Message_Basic;
       tempStatus : VN.Receive_Status;
-
-      stop : boolean := false;
-      firstLoop : boolean := true;
+      stop          : boolean := false;
+      firstLoop     : boolean := true;
       wasNextInTurn : Protocol_Address_Type := this.nextProtocolInTurn;
-
    begin
 
       while firstLoop or (not stop and wasNextInTurn /= this.nextProtocolInTurn) loop
+
          firstLoop := false;
+         this.myCANInterfaces(this.nextProtocolInTurn).Receive(tempMsg, tempStatus);
 
-         case this.nextProtocolInTurn is
-            when CAN_Subnet => -- TODO, update this line when more Subnets are added
+         --TODO, this will need to be updated if more options for VN.Receive_Status are added:
+         if tempStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
+           tempStatus = VN.MSG_RECEIVED_MORE_AVAILABLE then
 
-               this.nextProtocolInTurn := CAN_Subnet; -- TODO, update this line when more Subnets are added
+            --Some special cases of retreiving routing info:
+            if tempMsg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
+               HandleCUUIDRouting(tempMsg, this.nextProtocolInTurn);
+            else
+               Protocol_Router.Insert(this.myTable, tempMsg.Header.Source, Protocol_Address_Type(this.nextProtocolInTurn));
+            end if;
 
-               this.myCANInterface.Receive(tempMsg, tempStatus);
+            Status  := tempStatus;
+            Message := tempMsg;
+            stop    := true;
+         end if;
 
-               --TODO, this will need to be updated if more options for VN.Receive_Status are added:
-               if tempStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
-                 tempStatus = VN.MSG_RECEIVED_MORE_AVAILABLE then
-
-                  --Some special cases of retreiving routing info:
-                  if tempMsg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
-                     HandleCUUIDRouting(tempMsg, CAN_Subnet);
-
-                  else
-                     Protocol_Router.Insert(this.myTable, tempMsg.Header.Source, CAN_Subnet);
-                  end if;
-
-                  Status := tempStatus;
-                  Message := tempMsg;
-
-                  stop := true;
-               end if;
-
-            when Application_Layer =>  -- TODO, add more cases as more Subnets are added
-               null;
-         end case;
+         this.nextProtocolInTurn := this.nextProtocolInTurn rem MAX_NUMBER_OF_SUBNETS;
+         this.nextProtocolInTurn := this.nextProtocolInTurn + 1;
       end loop;
 
    end Receive;
@@ -146,8 +132,8 @@ package body VN.Communication.Protocol_Routing is
       testCUUID : VN.VN_CUUID := (others => 42);
    begin
       this.Initiated := true;
-      Protocol_Router.Insert(this.myTable, 1337, CAN_Subnet);
-      CUUID_Protocol_Routing.Insert(testCUUID, CAN_Subnet);
+      Protocol_Router.Insert(this.myTable, 1337, Protocol_Address_Type(1));
+      CUUID_Protocol_Routing.Insert(testCUUID, Protocol_Address_Type(1));
 
       GNAT.IO.Put_Line("Protocol_Routing initiated");  --ToDo, for testing
    end Init;
