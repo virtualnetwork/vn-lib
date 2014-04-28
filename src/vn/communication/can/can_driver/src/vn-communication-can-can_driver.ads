@@ -76,7 +76,7 @@ private
 --MSS_CAN_start(&g_can0);
 --MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
 
-   procedure CAN_Init; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
+   function CAN_Init return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
    pragma Import(C, CAN_Init, "Init_CAN");
 
    function Test return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2

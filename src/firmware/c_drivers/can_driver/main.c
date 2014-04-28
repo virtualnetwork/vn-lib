@@ -1,9 +1,9 @@
 /*******************************************************************************
- * 
+ *
  * This code is based on code from:
  * SmartFusion2 MSSCAN example demonstrating the Data transmission and Reception
  * using MSSCAN (FullCAN) by Microsemi SoC Products Group.
- * 
+ *
  * No rights reserved regarding this code file.
  */
 
@@ -88,10 +88,31 @@ void Test_Send() {
     pMsg.RTR = 0;
     pMsg.NA1 = 0; //???
 
+    MSS_CAN_send_message_n(&g_can0, 0, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 1, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 2, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 3, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 4, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 5, &pMsg);
     MSS_CAN_send_message_n(&g_can0, 6, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 7, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 8, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 9, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 10, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 11, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 12, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 13, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 14, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 15, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 16, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 17, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 18, &pMsg);
+    MSS_CAN_send_message_n(&g_can0, 19, &pMsg);
 }
 
-void Init_CAN() {
+int Init_CAN() {
+
+    int ret;
 
     MSS_CAN_init(&g_can0,
                  CAN_SPEED_32M_50K, //CAN_SPEED_32M_1M,
@@ -124,9 +145,11 @@ void Init_CAN() {
     rx_msg.ACR_D = 0x00000000;
     rx_msg.AMR_D = 0xFFFFFFFF;
 
-    MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
+    ret = MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
 
     MSS_CAN_set_int_ebl(&g_can0, CAN_INT_RX_MSG);
     MSS_CAN_set_int_ebl(&g_can0, CAN_INT_TX_MSG);
+
+    return ret;
 }
 

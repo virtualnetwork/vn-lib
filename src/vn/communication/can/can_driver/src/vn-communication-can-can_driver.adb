@@ -26,8 +26,8 @@ package body VN.Communication.CAN.CAN_Driver is
    begin
 
       -- ToDo: This is just for testing, right now the CAN drivers don't work so we'll have to pretend we sent the message without doing so:
-      status := VN.OK;
-      return;
+   --   status := VN.OK;
+   --   return;
 
       LogicalToPhysical(message, physicalMessage);
 
@@ -46,8 +46,8 @@ package body VN.Communication.CAN.CAN_Driver is
    begin
 
       -- ToDo: This is just for testing, right now the CAN drivers don't work so we'll have to pretend we just didn't receive a message
-      status := VN.NO_MSG_RECEIVED;
-      return;
+    --  status := VN.NO_MSG_RECEIVED;
+    --  return;
 
       if CAN_Message_Buffers.Empty(ReceiveBuffer) then
          status := VN.NO_MSG_RECEIVED;
@@ -142,9 +142,18 @@ package body VN.Communication.CAN.CAN_Driver is
 --     end CANHandler;
 
    procedure Init is
+      ret : Interfaces.Integer_32;
    begin
-      CAN_Init; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
-      GNAT.IO.Put_Line("CAN initiated");
+      ret := Interfaces.Integer_32(CAN_Init); -- Remove this when compiling for PC, keep when compiling for SmartFusion2
+
+      GNAT.IO.New_Line(2);
+
+      if ret = 0 then
+         GNAT.IO.Put_Line("CAN initiated successfully");
+      else
+
+         GNAT.IO.Put_Line("CAN initiated with error code= " & ret'Img);
+      end if;
     --  System.BB.Interrupts.Attach_Handler(CANHandler'Access, System.BB.Interrupts.Interrupt_ID(32));
    end Init;
 
