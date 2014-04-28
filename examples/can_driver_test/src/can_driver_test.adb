@@ -9,11 +9,13 @@ package body CAN_Driver_Test is
 --        System.BB.Interrupts.Attach_Handler(Handler'Access, System.BB.Interrupts.Interrupt_ID(32));
 
 
-      System.BB.Interrupts.Attach_Handler(TestHandler'Access, System.BB.Interrupts.Interrupt_ID(30));
-      System.BB.Interrupts.Attach_Handler(TestHandler'Access, System.BB.Interrupts.Interrupt_ID(31));
-      System.BB.Interrupts.Attach_Handler(TestHandler'Access, System.BB.Interrupts.Interrupt_ID(32));
-      System.BB.Interrupts.Attach_Handler(TestHandler'Access, System.BB.Interrupts.Interrupt_ID(23));
-      System.BB.Interrupts.Attach_Handler(TestHandler'Access, System.BB.Interrupts.Interrupt_ID(24));
+--        System.BB.Interrupts.Attach_Handler(TestHandler'Access, System.BB.Interrupts.Interrupt_ID(30));
+--        System.BB.Interrupts.Attach_Handler(TestHandler'Access, System.BB.Interrupts.Interrupt_ID(31));
+--        System.BB.Interrupts.Attach_Handler(TestHandler'Access, System.BB.Interrupts.Interrupt_ID(32));
+--        System.BB.Interrupts.Attach_Handler(TestHandler'Access, System.BB.Interrupts.Interrupt_ID(23));
+--        System.BB.Interrupts.Attach_Handler(TestHandler'Access, System.BB.Interrupts.Interrupt_ID(24));
+
+      null;
 
    end Init;
 
