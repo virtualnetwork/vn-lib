@@ -23,6 +23,21 @@ with VN.Communication.CUUID_Routing;
 
 package VN.Communication.Protocol_Routing is
 
+   type Protocol_Routing_Type(theCANInterface : VN.Communication.CAN.CAN_Interface.CAN_Interface_Access) is 
+     new VN.Communication.Com with private;
+      
+   overriding procedure Send(this : in out Protocol_Routing_Type; 
+                             Message: in VN.Message.VN_Message_Basic;
+                             Status: out VN.Send_Status);
+
+   overriding procedure Receive(this : in out Protocol_Routing_Type; 
+                                Message : out VN.Message.VN_Message_Basic;
+                                Status: out VN.Receive_Status);
+
+private
+
+   procedure Init(this : in out Protocol_Routing_Type); -- ToDo: For testing only!!!
+
    type Protocol_Address_Type is (CAN_Subnet, Application_Layer);
    
    package Protocol_Router is new VN.Communication.Routing_Table(Protocol_Address_Type);
@@ -34,27 +49,14 @@ package VN.Communication.Protocol_Routing is
    --ToDo: These constants should be put in a config file of some sort
    PROTOCOL_ROUTING_TABLE_SIZE : constant VN.VN_Logical_Address := 500;
 
-   protected type Protocol_Routing_Type(theCANInterface : VN.Communication.CAN.CAN_Interface.CAN_Interface_Access) is 
-        new VN.Communication.Com with
-      
-      overriding procedure Send(Message: in VN.Message.VN_Message_Basic;
-                                Status: out VN.Send_Status);
+   type Protocol_Routing_Type(theCANInterface : VN.Communication.CAN.CAN_Interface.CAN_Interface_Access) is 
+     new VN.Communication.Com with
+      record
+         myCANInterface     : VN.Communication.CAN.CAN_Interface.CAN_Interface_Access := theCANInterface;
+         myTable 	    : Protocol_Router.Table_Type(PROTOCOL_ROUTING_TABLE_SIZE);
+         nextProtocolInTurn : Protocol_Address_Type;
 
-      overriding procedure Receive(Message : out VN.Message.VN_Message_Basic;
-                                   Status: out VN.Receive_Status);
-
-   private
-
-      procedure Init; -- ToDo: For testing only!!!
-
-      myCANInterface 	 : VN.Communication.CAN.CAN_Interface.CAN_Interface_Access := theCANInterface;
-      myTable 		 : Protocol_Router.Table_Type(PROTOCOL_ROUTING_TABLE_SIZE);
-      nextProtocolInTurn : Protocol_Address_Type;
-
-      Initiated : Boolean := false; -- ToDo: for testing only!!!
-   end Protocol_Routing_Type;
-
-private
-
+         Initiated : Boolean := false; -- ToDo: for testing only!!!
+      end record;
 
 end VN.Communication.Protocol_Routing;
