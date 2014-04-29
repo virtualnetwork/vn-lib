@@ -133,7 +133,6 @@ package body VN.Communication.CAN.CAN_Driver is
    begin
 
       msgOut.Length := Interfaces.C.unsigned(msgIn.Length);
-      GNAT.IO.Put_Line("LogicalToPhysical 1, msgIn.Length=" & msgIn.Length'Img & " msgOut.Length= " & msgOut.Length'Img);
 
       if msgIn.isNormal then
          msgOut.ID := Interfaces.C.unsigned(Interfaces.Shift_Left(msgPrio, CANPack.OFFSET_CAN_PRIORITY) +
