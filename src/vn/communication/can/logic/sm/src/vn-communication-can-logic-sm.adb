@@ -335,6 +335,7 @@ package body VN.Communication.CAN.Logic.SM is
 
 
    procedure Init(this : in out SM_Duty) is
+      testCUUID : VN.VN_CUUID := (others => 42); --ToDo: For testing only!!!!
    begin
       VN.Communication.CAN.Logic.DebugOutput("SM_Duty initialized", 4);
 
@@ -350,6 +351,7 @@ package body VN.Communication.CAN.Logic.SM is
 
       --ToDo: For testing only!!!!
       CAN_Routing.Insert(this.myTable, 1337, 42);
+      CUUID_CAN_Routing.Insert(testCUUID, 42);
    end Init;
 
 end VN.Communication.CAN.Logic.SM;
