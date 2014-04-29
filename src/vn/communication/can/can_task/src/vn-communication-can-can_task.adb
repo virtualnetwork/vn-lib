@@ -55,14 +55,10 @@ package body VN.Communication.CAN.Can_Task is
          status : VN.Send_Status;
       begin
 
-         while not buf.Empty(msgsOut) loop
+         while not buf.Empty(msgsOut) and not CAN_Driver.Send_Buffer_Full loop
             buf.Remove(msgLog, msgsOut);
             --       BBB_CAN.Send(msgPhys);
-          CAN_Driver.Send(msgLog, status);
-
-            if status = VN.ERROR_BUFFER_FULL then
-               exit;
-            end if;
+            CAN_Driver.Send(msgLog, status);
          end loop;
       end Output;
 
@@ -79,15 +75,15 @@ package body VN.Communication.CAN.Can_Task is
          Next_Period := Next_Period + myPeriod;
          delay until Next_Period;
 
-       --  VN.Text_IO.Put_Line("CAN_Task input start");
+--           VN.Text_IO.Put_Line("CAN_Task input start");
 
          Input;
 
-      --   VN.Text_IO.Put_Line("CAN_Task input ended, update start");
+--           VN.Text_IO.Put_Line("CAN_Task input ended, update start");
 
          myAccess.Update(msgsIn, msgsOut);
 
-        -- VN.Text_IO.Put_Line("CAN_Task update ended");
+--           VN.Text_IO.Put_Line("CAN_Task update ended");
 
          Output;
 
