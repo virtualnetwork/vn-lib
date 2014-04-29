@@ -30,6 +30,8 @@ package body VN.Communication.CAN.Logic.Receiver is
             bWillSend:=false;
 
          when Activated =>
+
+            bWillSend := false;
             if bMsgReceived and then msgIn.isNormal and then msgIn.Receiver = this.myCANAddress then
                if msgIn.msgType = VN.Communication.CAN.Logic.START_TRANSMISSION then
 
