@@ -25,6 +25,8 @@ package VN.Communication.CAN.CAN_Driver is
 
    procedure Send(message : VN.Communication.CAN.CAN_Message_Logical; status : out VN.Send_Status);
 
+   function Send_Buffer_Full return Boolean;
+
    procedure Receive(message : out VN.Communication.CAN.CAN_Message_Logical; status : out VN.Receive_Status);
 
 --  private --ToDo: The things below are only public when testing, the test project can_driver_test uses these things.
