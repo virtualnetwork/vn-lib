@@ -1,4 +1,4 @@
-with Ada.Exceptions;
+
 package body VN.Message is
 
    procedure Serialize(Message : in VN_Message_Basic; buffer : out VN_Message_Byte_Array) is
