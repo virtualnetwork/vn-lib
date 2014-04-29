@@ -60,24 +60,7 @@ begin
 
 --  -------------------
 
-   VN.Message.Assign_Address.To_Basic(msgAssign, msg);
-   Protocol_Routing_Test.myInterface.Send(msg, Status);
-
-   GNAT.IO.Put("VN message written to send buffer");
-   if Status = VN.OK then
-      GNAT.IO.Put(", Status = VN.OK");
-
-   elsif Status = VN.ERROR_BUFFER_FULL then
-      GNAT.IO.Put(", Status = VN.ERROR_BUFFER_FULL");
-
-   elsif Status = VN.ERROR_NO_ADDRESS_RECEIVED then
-      GNAT.IO.Put(", Status = VN.ERROR_NO_ADDRESS_RECEIVED");
-   end if;
-   GNAT.IO.Put_Line("");
-
---  -------------------
-
---     VN.Message.Request_Address_Block.To_Basic(msgReq, msg);
+--     VN.Message.Assign_Address.To_Basic(msgAssign, msg);
 --     Protocol_Routing_Test.myInterface.Send(msg, Status);
 --
 --     GNAT.IO.Put("VN message written to send buffer");
@@ -92,6 +75,23 @@ begin
 --     end if;
 --     GNAT.IO.Put_Line("");
 
+--  -------------------
+
+   VN.Message.Request_Address_Block.To_Basic(msgReq, msg);
+   Protocol_Routing_Test.myInterface.Send(msg, Status);
+
+   GNAT.IO.Put("VN message written to send buffer");
+   if Status = VN.OK then
+      GNAT.IO.Put(", Status = VN.OK");
+
+   elsif Status = VN.ERROR_BUFFER_FULL then
+      GNAT.IO.Put(", Status = VN.ERROR_BUFFER_FULL");
+
+   elsif Status = VN.ERROR_NO_ADDRESS_RECEIVED then
+      GNAT.IO.Put(", Status = VN.ERROR_NO_ADDRESS_RECEIVED");
+   end if;
+   GNAT.IO.Put_Line("");
+--  -------------------
 
    GNAT.IO.Put_Line("Main function entering infinte wait.");
    loop
