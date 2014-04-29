@@ -17,7 +17,12 @@ use Interfaces;
 with GNAT.IO;
 use GNAT.IO;
 
+with Ada.Unchecked_Conversion;
+
 package body VN.Communication.CAN.CAN_Driver is
+
+   function signedChar_To_Unsigned_8 is new Ada.Unchecked_Conversion(Interfaces.C.signed_char, Interfaces.Unsigned_8);
+   function Unsigned_8_To_signedChar is new Ada.Unchecked_Conversion(Interfaces.Unsigned_8, Interfaces.C.signed_char);
 
    procedure Send(message : VN.Communication.CAN.CAN_Message_Logical;
                   status : out VN.Send_Status) is
@@ -26,8 +31,8 @@ package body VN.Communication.CAN.CAN_Driver is
    begin
 
       -- ToDo: This is just for testing, right now the CAN drivers don't work so we'll have to pretend we sent the message without doing so:
-   --   status := VN.OK;
-   --   return;
+--        status := VN.OK;
+--        return;
 
       LogicalToPhysical(message, physicalMessage);
 
@@ -38,6 +43,11 @@ package body VN.Communication.CAN.CAN_Driver is
          CAN_Message_Buffers.Insert(physicalMessage, SendBuffer);
       end if;
    end Send;
+
+   function Send_Buffer_Full return Boolean is
+   begin
+      return CAN_Message_Buffers.Full(SendBuffer);
+   end Send_Buffer_Full;
 
    procedure Receive(message : out VN.Communication.CAN.CAN_Message_Logical;
                      status : out VN.Receive_Status) is
@@ -98,10 +108,15 @@ package body VN.Communication.CAN.CAN_Driver is
          msgOut.Receiver := CANPack.CAN_Address_Receiver(msgReceiver);
       end if;
 
-      msgOut.Length := CANPack.DLC_Type(msgIn.Length);
+      if msgIn.Length > 8 then --should never be true, check just in case
+         msgOut.Length := CANPack.DLC_Type(8);
+      else
+         msgOut.Length := CANPack.DLC_Type(msgIn.Length);
+      end if;
 
-      for i in msgOut.Data'First .. msgOut.Data'First + msgOut.Length - 1 loop
-         msgOut.Data(i) := Interfaces.Unsigned_8(msgIn.Data(Integer(i)));
+      for i in 0 .. msgOut.Length - 1 loop
+         msgOut.Data(msgOut.Data'First + i) :=
+           signedChar_To_Unsigned_8(msgIn.Data(msgIn.Data'First + Integer(i)));
       end loop;
    end PhysicalToLogical;
 
@@ -118,6 +133,7 @@ package body VN.Communication.CAN.CAN_Driver is
    begin
 
       msgOut.Length := Interfaces.C.unsigned(msgIn.Length);
+      GNAT.IO.Put_Line("LogicalToPhysical 1, msgIn.Length=" & msgIn.Length'Img & " msgOut.Length= " & msgOut.Length'Img);
 
       if msgIn.isNormal then
          msgOut.ID := Interfaces.C.unsigned(Interfaces.Shift_Left(msgPrio, CANPack.OFFSET_CAN_PRIORITY) +
@@ -125,12 +141,12 @@ package body VN.Communication.CAN.CAN_Driver is
                                                            Interfaces.Shift_Left(msgSender,   CANPack.OFFSET_CAN_SENDER) +
                                                            Interfaces.Shift_Left(msgReceiver, CANPack.OFFSET_CAN_RECEIVER));
       else
-
          msgOut.ID := Interfaces.C.unsigned(msgIn.SenderUCID) + POWER28;
       end if;
 
-      for i in msgOut.Data'First .. msgOut.Data'First + Integer(msgOut.Length) - 1 loop
-         msgOut.Data(i) := Interfaces.C.signed_char(msgIn.Data(CANPack.DLC_Type(i)));
+      for i in 0 .. Integer(msgIn.Length) - 1 loop
+         msgOut.Data(msgOut.Data'First + i) :=
+           Unsigned_8_To_signedChar(msgIn.Data(msgIn.Data'First + CANPack.DLC_Type(i)));
       end loop;
    end LogicalToPhysical;
 
