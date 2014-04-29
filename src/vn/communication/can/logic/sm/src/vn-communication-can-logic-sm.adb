@@ -62,7 +62,6 @@ package body VN.Communication.CAN.Logic.SM is
                      VN.Communication.CAN.Logic.DebugOutput("TRANSMISSION msg sent from " &
                                                               msgOut.Sender'Img & " to " & msgOut.Receiver'Img, 4);
                   end if;
-
                   CAN_Message_Buffers.Insert(msgOut, ret);
                end if;
             end loop;
