@@ -21,6 +21,8 @@ with VN.Communication.Protocol_Routing;
 
 package Protocol_Routing_Test is
 
+   pragma Elaborate_Body(Protocol_Routing_Test);
+
    CANPeriod : aliased Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(100);
    U1 : aliased VN.Communication.CAN.UCID := 1;
    C1 : aliased VN.VN_CUUID := (1, others => 5);
@@ -31,6 +33,11 @@ package Protocol_Routing_Test is
    myTask : aliased VN.Communication.CAN.Can_Task.CAN_Task_Type
      (CANInterface'Access, System.Priority'Last, CANPeriod'Access);
 
-   myInterface : VN.Communication.Protocol_Routing.Protocol_Routing_Type(CANInterface'Access);
+--     myInterface : VN.Communication.Protocol_Routing.Protocol_Routing_Type(CANInterface'Access);
+   myInterface : VN.Communication.Protocol_Routing.Protocol_Routing_Type;
+
+private
+
+   procedure Init;
 
 end Protocol_Routing_Test;

@@ -25,13 +25,16 @@ package VN.Communication.Protocol_Routing is
    type Protocol_Routing_Type is 
      new VN.Communication.Com with private;
       
-   procedure Send(this : in out Protocol_Routing_Type; 
+   overriding procedure Send(this : in out Protocol_Routing_Type; 
                              Message: in VN.Message.VN_Message_Basic;
                              Status: out VN.Send_Status);
 
-   procedure Receive(this : in out Protocol_Routing_Type; 
+   overriding procedure Receive(this : in out Protocol_Routing_Type; 
                                 Message : out VN.Message.VN_Message_Basic;
                                 Status: out VN.Receive_Status);
+
+   procedure Add_Interface(this : in out Protocol_Routing_Type; 
+                           theInterface : VN.Communication.Com_Access);
 
 private
    
@@ -53,9 +56,10 @@ private
    type Protocol_Routing_Type is 
      new VN.Communication.Com with
       record
-         myCANInterfaces    : Interface_Array;
+         myInterfaces       : Interface_Array;
          myTable 	    : Protocol_Router.Table_Type(PROTOCOL_ROUTING_TABLE_SIZE);
          nextProtocolInTurn : Protocol_Address_Type := Interface_Array'First;
+         numberOfInterfaces : Natural := 0;
 
          Initiated : Boolean := false; -- ToDo: for testing only!!!
       end record;

@@ -60,6 +60,7 @@ package body VN.Communication.Protocol_Routing is
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(Message, msgAssignAddrBlock);
          CUUID_Protocol_Routing.Search(msgAssignAddrBlock.CUUID, address, found);
       else
+         --Protocol_Address_Type(0) means that the message shall be returned to the application layer
          Protocol_Router.Insert(this.myTable, Message.Header.Source, Protocol_Address_Type(0));
          Protocol_Router.Search(this.myTable, Message.Header.Destination, address, found);
 
@@ -73,7 +74,7 @@ package body VN.Communication.Protocol_Routing is
          if address = 0 then -- the case when the message is to be sent back to the application layer
             Status := ERROR_UNKNOWN; -- ToDo, what do we do if this happens!!???
          else
-            this.myCANInterfaces(Integer(address)).Send(Message, Status);
+            this.myInterfaces(Integer(address)).Send(Message, Status);
          end if;
       else
          Status := ERROR_NO_ADDRESS_RECEIVED; --should not really happen?
@@ -99,34 +100,73 @@ package body VN.Communication.Protocol_Routing is
       stop          : boolean := false;
       firstLoop     : boolean := true;
       wasNextInTurn : Protocol_Address_Type := this.nextProtocolInTurn;
+
+      found      : Boolean;
+      address    : Protocol_Address_Type;
+      sendStatus : VN.Send_Status;
    begin
 
       while firstLoop or (not stop and wasNextInTurn /= this.nextProtocolInTurn) loop
 
          firstLoop := false;
-         this.myCANInterfaces(this.nextProtocolInTurn).Receive(tempMsg, tempStatus);
+         this.myInterfaces(this.nextProtocolInTurn).Receive(tempMsg, tempStatus);
 
          --TODO, this will need to be updated if more options for VN.Receive_Status are added:
          if tempStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
            tempStatus = VN.MSG_RECEIVED_MORE_AVAILABLE then
 
-            --Some special cases of retreiving routing info:
+            --A special case of retreiving routing info:
             if tempMsg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
                HandleCUUIDRouting(tempMsg, this.nextProtocolInTurn);
             else
-               Protocol_Router.Insert(this.myTable, tempMsg.Header.Source, Protocol_Address_Type(this.nextProtocolInTurn));
+               Protocol_Router.Insert(this.myTable, tempMsg.Header.Source,
+                                      Protocol_Address_Type(this.nextProtocolInTurn));
             end if;
 
-            Status  := tempStatus;
-            Message := tempMsg;
-            stop    := true;
+            --Check if the message shall be re-routed onto a subnet, or returned to the application layer:
+            if tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_HELLO and --LocalHello and LocalAck shall always be sent to the application layer
+              tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_ACK then
+
+               Protocol_Router.Search(this.myTable, tempMsg.Header.Destination, address, found);
+
+               if found then
+                  this.Send(tempMsg, sendStatus);
+                  stop := false;
+               else
+                  stop := true;
+               end if;
+            else
+               stop := true;
+            end if;
+
+            if stop then
+               Status  := tempStatus;
+               Message := tempMsg;
+            end if;
          end if;
 
-         this.nextProtocolInTurn := this.nextProtocolInTurn rem MAX_NUMBER_OF_SUBNETS;
+         this.nextProtocolInTurn := this.nextProtocolInTurn rem this.numberOfInterfaces;
          this.nextProtocolInTurn := this.nextProtocolInTurn + 1;
       end loop;
 
    end Receive;
+
+   procedure Add_Interface(this : in out Protocol_Routing_Type;
+                           theInterface : VN.Communication.Com_Access) is
+   begin
+      if this.numberOfInterfaces >= MAX_NUMBER_OF_SUBNETS then
+         return;
+      end if;
+
+      for i in Interface_Array'First .. Interface_Array'First + this.numberOfInterfaces - 1 loop
+         if this.myInterfaces(i) = theInterface then
+            return;
+         end if;
+      end loop;
+
+      this.myInterfaces(Interface_Array'First + this.numberOfInterfaces) := theInterface;
+      this.numberOfInterfaces := this.numberOfInterfaces + 1;
+   end Add_Interface;
 
    procedure Init(this : in out Protocol_Routing_Type) is -- ToDo: For testing only!!!!!!!!!!
       testCUUID : VN.VN_CUUID := (others => 42);
@@ -135,7 +175,7 @@ package body VN.Communication.Protocol_Routing is
       Protocol_Router.Insert(this.myTable, 1337, Protocol_Address_Type(1));
       CUUID_Protocol_Routing.Insert(testCUUID, Protocol_Address_Type(1));
 
-      GNAT.IO.Put_Line("Protocol_Routing initiated");  --ToDo, for testing
+      GNAT.IO.Put_Line("Protocol_Routing initiated");
    end Init;
 
 end VN.Communication.Protocol_Routing;
