@@ -15,7 +15,7 @@ b~*.ad*
 *.ali
 b__*.ad*
 test_runner
-.c~
+*.c~
 
 
 # Vagrant
