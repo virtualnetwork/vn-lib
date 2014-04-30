@@ -65,19 +65,20 @@ The message ID is divided according to:
 
 1. msgID[28] = 1: RequestCANAddress message
 	msgID[27 .. 0] = Universally Unique CAN Identifier (UCID) for the node
-2. msgID[28] = 0: Normal CAN messages_ 
-	msgID[27 .. 22] = Message priority_ 
-	msgID[21 .. 15] = Message type_ 
-	msgID[14 .. 7] = Receiver address_ 
-	msgID[6 .. 0] = Sender address
+2. msgID[28] = 0: Normal CAN messages 
+	msgID[27 .. 22] = Message priority 
+	msgID[21 .. 15] = Message type 
+	msgID[14 .. 7] = Receiver address 
+	msgID[6 .. 0] = Sender address 
 
 *Please note:* Even though CAN addresses are 8 bit, addresses over 127 will never be used as a sender address since the maximum number of allowed CAN nodes on a CAN network is 128 one only needs addresses 0 through 127. This means that only 7 bits are needed for the Sender address.
 
 
+##### Message priority
+To be determined, set by higher protocols?
 
-
-
-
+##### Message type
+The types of messages present are listed below. Please note that in the case of two messages having equal priory fields the message type field will determine priority. A lower Message type number will give a higher priority.
 
 
 
