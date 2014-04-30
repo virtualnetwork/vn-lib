@@ -2,29 +2,29 @@ with VN.Message;
 with Ada.Text_IO;
 with VN.Communication.PO;
 
-package VN.Communication.IPC is
+package VN.Communication.PO_Wrapper is
 
    package Int_IO is new Ada.Text_IO.Integer_IO (Integer);
 
-   -- TODO: Define a Protected object type here that is used for this wrapper.
-   -- VN_Message buffer that is.
-   type IPC_Wrapper(VN_PO_Access: VN.Communication.PO.VN_PO_Access;
+   -- This PO_Wrapper makes it possible to wrap two different Protected
+   -- Objects in one "wrapper". The two different Protected Objects are
+   -- buffers for in and outgoing traffic respectively.
+   type VN_PO_Wrapper(VN_PO_Access: VN.Communication.PO.VN_PO_Access;
                     Is_SM_L: Boolean)
                      is new Com with Private;
 
-   procedure Send(This: in out IPC_Wrapper;
+   procedure Send(This: in out VN_PO_Wrapper;
                   Message: in VN.Message.VN_Message_Basic;
                   Status: out VN.Send_Status);
 
-   procedure Receive(This: in out IPC_Wrapper;
+   procedure Receive(This: in out VN_PO_Wrapper;
                      Message: out VN.Message.VN_Message_Basic;
                      Status: out VN.Receive_Status);
 private
 
-   -- TODO: Modify code so the buffer is of variable length.
    type VN_Buffer is array (1 .. 10) of VN.Message.VN_Message_Basic;
 
-   type IPC_Wrapper(VN_PO_Access: VN.Communication.PO.VN_PO_Access;
+   type VN_PO_Wrapper(VN_PO_Access: VN.Communication.PO.VN_PO_Access;
                     Is_SM_L: Boolean)
                      is new Com with
       record
@@ -33,4 +33,4 @@ private
          Value: Integer := 0;
       end record;
 
-end VN.Communication.IPC;
+end VN.Communication.PO_Wrapper;

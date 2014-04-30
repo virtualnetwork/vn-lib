@@ -1,7 +1,7 @@
-package body VN.Communication.IPC is
+package body VN.Communication.PO_Wrapper is
 
-   -- IPC Wrapper Send procedure
-   procedure Send(This: in out IPC_Wrapper;
+   -- PO Wrapper Send procedure
+   procedure Send(This: in out VN_PO_Wrapper;
                   Message: in VN.Message.VN_Message_Basic;
                   Status: out VN.Send_Status) is
    begin
@@ -12,8 +12,8 @@ package body VN.Communication.IPC is
       end if;
    end Send;
 
-   -- IPC Wrapper Receive procedure
-   procedure Receive( This: in out IPC_Wrapper;
+   -- PO Wrapper Receive procedure
+   procedure Receive( This: in out VN_PO_Wrapper;
                      Message: out VN.Message.VN_Message_Basic;
                      Status: out VN.Receive_Status) is
    begin
@@ -24,4 +24,4 @@ package body VN.Communication.IPC is
       end if;
    end Receive;
 
-end VN.Communication.IPC;
+end VN.Communication.PO_Wrapper;

@@ -2,7 +2,7 @@ with Ada.Real_Time;
 with System;
 with VN.Message.Factory;
 with VN.Communication.PO;
-with VN.Communication.IPC;
+with VN.Communication.PO_Wrapper;
 
 package Global_Settings is
 
@@ -22,16 +22,18 @@ package Global_Settings is
 --                                             := new VN.Communication.PO.VN_PO;
 
    -- Communication object for Application
-   Com_Application   : VN.Communication.IPC.IPC_Wrapper(PO_To_Application,
-                                                           False);
+   Com_Application   : VN.Communication.PO_Wrapper.VN_PO_Wrapper(
+                                                            PO_To_Application,
+                                                            False);
 
 --   -- Communication object for Central Addressing Service
 --   Com_CAS           : VN.Communication.IPC.IPC_Wrapper(PO_To_Application,
 --                                                           False);
 
    -- Communication object for SM-L
-   Com_SM_L          : VN.Communication.IPC.IPC_Wrapper(PO_To_Application,
-                                                           True);
+   Com_SM_L          : VN.Communication.PO_Wrapper.VN_PO_Wrapper(
+                                                            PO_To_Application,
+                                                            True);
    -- Com_SM_L          : VN.Communication.Protocol_Router(???);
 
 end Global_Settings;
