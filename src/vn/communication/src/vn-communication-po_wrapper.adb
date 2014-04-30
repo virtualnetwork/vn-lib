@@ -1,3 +1,7 @@
+with VN.Message;
+with VN.Message.Factory;
+with VN.Message.Local_Hello;
+
 package body VN.Communication.PO_Wrapper is
 
    -- PO Wrapper Send procedure
@@ -23,5 +27,26 @@ package body VN.Communication.PO_Wrapper is
          This.PO_Access.Receive_From_SM_L(Message, Status);
       end if;
    end Receive;
+
+   -- If not a Subnet Manager this applikation should send a LocalHello
+   -- message.
+   procedure Init(This: in out VN_PO_Wrapper) is
+      Basic_Msg         : VN.Message.VN_Message_Basic;
+      Local_Hello_Msg   : VN.Message.Local_Hello.VN_Message_Local_Hello;
+      Status            : VN.Send_Status;
+   begin
+      Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
+      VN.Message.Local_Hello.To_Local_Hello(Basic_Msg, Local_Hello_Msg);
+      Local_Hello_Msg.CUUID := This.CUUID;
+      Local_Hello_Msg.Component_Type := This.This_Component_Type;
+      VN.Message.Local_Hello.To_Basic(Local_Hello_Msg, Basic_Msg);
+
+      if This.Is_From_SM_L then
+         -- Only applications send the Local_Hello message
+         null;
+      else
+         This.PO_Access.Send_To_SM_L(Basic_Msg, Status);
+      end if;
+   end Init;
 
 end VN.Communication.PO_Wrapper;

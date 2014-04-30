@@ -5,5 +5,5 @@ with Application;
 
 procedure Main is
 begin
-   null;
+   Global_Settings.Com_Application.Init;
 end Main;
