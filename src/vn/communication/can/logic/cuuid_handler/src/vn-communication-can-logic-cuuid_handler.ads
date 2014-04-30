@@ -14,12 +14,15 @@
 pragma Profile (Ravenscar);
 
 with Ada.Real_Time;
+
+with VN.Communication.CAN.CAN_Filtering;
 with VN.Communication.CAN.Logic;
 with VN.Communication.CAN.Logic.Sender;
 
 package VN.Communication.CAN.Logic.CUUID_Handler is
 
-   type CUUID_Handler is new VN.Communication.CAN.Logic.Duty with private;
+   type CUUID_Handler(theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+     new VN.Communication.CAN.Logic.Duty with private;
 
    type CUUID_Handler_ptr is access all CUUID_Handler'Class;
 
@@ -56,7 +59,8 @@ private
    --ToDO: Put this in a config file of some sort:
    DELAY_TIME : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(1400);
 
-   type CUUID_Handler is new VN.Communication.CAN.Logic.Duty with
+   type CUUID_Handler(theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+     new VN.Communication.CAN.Logic.Duty with
       record
          mySender 	: VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr;
          currentState 	: CUUID_Responder_State  := Unactivated;

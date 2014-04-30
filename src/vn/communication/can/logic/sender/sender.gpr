@@ -1,3 +1,4 @@
+with "../../can_filtering/can_filtering.gpr";
 with "../../../../lib/buffers/buffers.gpr";
 with "../sender_unit/sender_unit.gpr";
 with "../logic.gpr";

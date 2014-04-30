@@ -91,20 +91,19 @@ private
          myCUUID : VN.VN_CUUID := theCUUID.all;
          myTable : CAN_Routing.Table_Type(CAN_ROUTING_TABLE_SIZE);
 
+         masterNegotiation : aliased VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID, theFilter);
 
-         masterNegotiation : aliased VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);
+         addressReceiver : aliased VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node(theUCID, theFilter);
 
-         addressReceiver : aliased VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node(theUCID);
+         assigner : aliased VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master(theFilter);
 
-         assigner : aliased VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master;
+         sender : aliased VN.Communication.CAN.Logic.Sender.Sender_Duty(theFilter);
 
-         sender : aliased VN.Communication.CAN.Logic.Sender.Sender_Duty;
+         receiver : aliased VN.Communication.CAN.Logic.Receiver.Receiver_Duty(theFilter);
+         ----theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access
+         cuuidResponder : aliased VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder(theFilter);
 
-         receiver : aliased VN.Communication.CAN.Logic.Receiver.Receiver_Duty;
-
-         cuuidResponder : aliased VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder;
-
-         cuuidHandler : aliased VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler;
+         cuuidHandler : aliased VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler(theFilter);
 
          DutyArray : ArrayOfDuties;
 

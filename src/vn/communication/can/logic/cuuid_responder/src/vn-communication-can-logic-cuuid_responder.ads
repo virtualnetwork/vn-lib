@@ -7,12 +7,15 @@
 
 pragma Profile (Ravenscar);
 
-with VN.Communication.CAN.Logic;
 
+with VN.Communication.CAN.CAN_Filtering;
+with VN.Communication.CAN.Logic;
 
 package VN.Communication.CAN.Logic.CUUID_Responder is
 
-   type CUUID_Responder is new VN.Communication.CAN.Logic.Duty with private;
+   type CUUID_Responder(theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+     new VN.Communication.CAN.Logic.Duty with private;
+
    type CUUID_Responder_ptr is access all CUUID_Responder'Class;
 
    overriding procedure Update(this : in out CUUID_Responder; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
@@ -25,7 +28,8 @@ private
 
    type CUUID_Responder_State is (Unactivated, Activated, SendSecondCUUIDHalf, SendType);
 
-   type CUUID_Responder is new VN.Communication.CAN.Logic.Duty with
+   type CUUID_Responder(theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+     new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	: CUUID_Responder_State := Unactivated;
          myCUUID 	: VN.VN_CUUID;

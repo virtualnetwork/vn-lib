@@ -17,7 +17,9 @@ with Buffers;
 
 package VN.Communication.CAN.Logic.Receiver_Unit is
 
-   type Receiver_Unit_Duty is new VN.Communication.CAN.Logic.Duty with private;
+   type Receiver_Unit_Duty is
+     new VN.Communication.CAN.Logic.Duty with private;
+
    type Receiver_Unit_Duty_ptr is access all Receiver_Unit_Duty'Class;
 
    type Pending_Sender is
@@ -58,7 +60,9 @@ private
    DEFAULT_BLOCK_SIZE : Interfaces.Unsigned_16 := 2;  --ToDO: Put this in a config file of some sort
 
    type Receiver_Unit_State is (Idle, Started, Transmitting);
-   type Receiver_Unit_Duty is new VN.Communication.CAN.Logic.Duty with
+
+   type Receiver_Unit_Duty is
+     new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	: Receiver_Unit_State := Idle;
          myCANAddress 	: VN.Communication.CAN.CAN_Address_Sender;
@@ -75,12 +79,5 @@ private
          receiveBuffer 	: Receive_Buffer_ptr 	:= null;
          pendingSenders : Pending_Senders_ptr 	:= null;
       end record;
-
-   --Moved to message_utils:
---     procedure DeFragment(seqNumber 	 : Interfaces.Unsigned_16;
---                          numMessages	 : Interfaces.Unsigned_16; --total number of CAN messages that are to be received
---                          CANMessage 	 : VN.Communication.CAN.CAN_Message_Logical;
---                          VNMessageContent : in out VN.Message.VN_Message_Byte_Array;
---                          currentLength 	 : out Interfaces.Unsigned_16);
 
 end VN.Communication.CAN.Logic.Receiver_Unit;
