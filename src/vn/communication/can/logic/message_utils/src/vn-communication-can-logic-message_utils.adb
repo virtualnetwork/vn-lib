@@ -430,7 +430,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
          declare
             temp : integer := msgArray'First + index;
          begin
-            VN.Communication.CAN.Logic.DebugOutput("Fragment. Array(" & temp'Img & ") := " & msgArray(temp)'img, 4);
+            VN.Communication.CAN.Logic.DebugOutput("Fragment. Array(" & temp'Img & ") := " & msgArray(temp)'img, 6);
          end;
 
 --           declare
@@ -467,7 +467,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
          declare
             temp : integer := VNMessageContent'First + index;
          begin
-            VN.Communication.CAN.Logic.DebugOutput("DeFragment. Array(" & temp'Img & ") := " & VNMessageContent(temp)'img, 4);
+            VN.Communication.CAN.Logic.DebugOutput("DeFragment. Array(" & temp'Img & ") := " & VNMessageContent(temp)'img, 6);
          end;
 
 
@@ -491,7 +491,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
             temp : integer := VNMessageContent'Last - 1;
          begin
             VN.Communication.CAN.Logic.DebugOutput("DeFragment. Last message. Array(" & temp'Img & ") := " & VNMessageContent(VNMessageContent'Last - 1)'img &
-                                                     ",  Array(" & VNMessageContent'Last'Img & ") := " & VNMessageContent(VNMessageContent'Last )'img, 4);
+                                                     ",  Array(" & VNMessageContent'Last'Img & ") := " & VNMessageContent(VNMessageContent'Last )'img, 6);
          end;
 
          --reverse index on VNMessageContent:
