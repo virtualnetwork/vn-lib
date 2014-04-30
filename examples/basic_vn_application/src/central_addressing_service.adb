@@ -5,9 +5,9 @@ with VN.Application_Information;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;
 
-package body Application is
+package body Central_Addressing_Service is
 
-   task body VN_Application is
+   task body CAS is
       use Ada.Real_Time;
       use VN;
       use VN.Message.Local_Hello;
@@ -28,7 +28,7 @@ package body Application is
       App_Info.Component_Type := VN.Message.Other;
       -- App_Info.CUUID := ???;
 
-      Ada.Text_IO.Put_Line("Task type VN_Application - Start, ID: "
+      Ada.Text_IO.Put_Line("Task type CAS - Start, ID: "
                               & Integer'Image(Task_ID));
 
       Global_Settings.Start_Time.Get(Next_Period);
@@ -41,7 +41,7 @@ package body Application is
          if App_Info.Has_Logical_Address then
             null;
          else
-            Ada.Text_IO.Put_Line("APP - Logical address not found "
+            Ada.Text_IO.Put_Line("CAS - Logical address not found "
                                        & Integer'Image(Task_ID));
 
             -- Prepare message to be sent
@@ -59,11 +59,11 @@ package body Application is
          i := i + 1;
          exit when i = 6;
       end loop;
-      Ada.Text_IO.Put_Line("Task type VN_Application - End, ID:"
+      Ada.Text_IO.Put_Line("Task type CAS - End, ID:"
                               & Integer'Image(Task_ID));
-   end VN_Application;
+   end CAS;
 
    -- Start one instance of the SM-L
-   App: VN_Application(20, 500000, 30, 3);
+   CAS1: CAS(20, 500000, 10, 3);
 
-end Application;
+end Central_Addressing_Service;
