@@ -35,14 +35,14 @@ include the VN-CAN protocol for communication over the Controller Area Network
 This protocol does not specify how the discovery process is to be done on the
 subnet, this is up to the specific subnet protocol to define.
 
-Each unit (node or Subnet Manager) on the subnet shall send a LocalHello
-message containing the unit's CUUID and type to each Subnet Manager it
+Each unit (node or Subnet Manager) on the subnet shall send a **LocalHello
+message** containing the unit's CUUID and type to each Subnet Manager it
 discovers.
 
-The sender and receiver (logical) addresses of the LocalHello message shall be
-set to 2. If no LocalAck message is received within a certain time the
-LocalHello message shall be resent. _The responsibility to send the LocalHello
-messages lies on the subnet layer._
+The sender and receiver (logical) addresses of the **LocalHello message** shall
+be set to 2. If no **LocalAck message** is received within a certain time the
+**LocalHello message** shall be resent. _The responsibility to send the
+**LocalHello messages** lies on the subnet layer._
 
 This way the higher level protocols on the Subnet Managers discover which units
 (their type and CUUID) that exist on the subnet.
