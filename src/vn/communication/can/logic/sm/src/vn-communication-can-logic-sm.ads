@@ -8,11 +8,9 @@
 -- Please also note that this functionality is regarding a Subnet Manager for CAN (SM-CAN),
 -- not an ordinary node.
 
---ToDo: Right now no routing information is retreived from DistributeRoute messages!!
---ToDo: Send LocalHello messages when detecting a new SM-CAN
---ToDo: Send LocalAck messages when receiving a LocalHello message
-
 with VN.Message;
+with VN.Communication.CAN.CAN_Filtering;
+
 with VN.Communication.CAN.Logic;
 with VN.Communication.CAN.Logic.CAN_Address_Assignment;
 with VN.Communication.CAN.Logic.CAN_Address_Reception;
@@ -53,37 +51,26 @@ package VN.Communication.CAN.Logic.SM is
    use Unit_Buffers;
 
 
-   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is limited private;
+   type SM_Duty(theUCID   : access VN.Communication.CAN.UCID;
+                theCUUID  : access VN.VN_CUUID;
+                theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is limited private;
 
    type SM_Duty_ptr is access all SM_Duty;
 
    procedure Update(this : in out SM_Duty; msgsBuffer : in out CAN_Message_Buffers.Buffer;
                     ret : out CAN_Message_Buffers.Buffer);
 
-   --This function should be private sooner or later?
+   --This function is most likely obsolete:
    procedure Discover(this : in out SM_Duty; discoveredUnits : out Unit_Buffers.Buffer);
 
-   procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
+   procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic;
                                 result : out VN.Send_Status);
 
-   procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
+   procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic;
                      status : out VN.Receive_Status);
 
    --This function is most likely obsolete:
    procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender; isAssigned : out boolean);
-
-   --THIS IS JUST TESTING FUNCTIONALLITY FOR NODES, NOT SM-CANs
---     procedure GetLogicalAddress(this : in out SM_Duty; LogicalAddress : out VN.VN_Logical_Address;
---                                 isAssigned : out boolean);
---
---     procedure SetMyAddress(this : in out SM_Duty; LogicalAddress : VN.VN_Logical_Address);
---
---     procedure Assign(this : in out SM_Duty; CANAddress : CAN_Address_Sender;
---                      LogicalAddress : VN.VN_Logical_Address);
---
---     procedure AddressQuestion(this : in out SM_Duty; LogicalAddress : VN.VN_Logical_Address;
---                               CANAddress : out CAN_Address_Sender; wasFound : out boolean);
-
 
 private
 
@@ -105,33 +92,19 @@ private
          myTable : CAN_Routing.Table_Type(CAN_ROUTING_TABLE_SIZE);
 
 
-           masterNegotiation : aliased VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);
---           masterNegotiation : VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty_ptr :=
---             new VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);
+         masterNegotiation : aliased VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);
 
          addressReceiver : aliased VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node(theUCID);
---           addressReceiver : VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node_ptr :=
---             new VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node(theUCID);
 
          assigner : aliased VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master;
---           assigner : VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master_ptr :=
---             new VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master;
 
          sender : aliased VN.Communication.CAN.Logic.Sender.Sender_Duty;
---           sender : VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr :=
---             new VN.Communication.CAN.Logic.Sender.Sender_Duty;
 
          receiver : aliased VN.Communication.CAN.Logic.Receiver.Receiver_Duty;
---           receiver : VN.Communication.CAN.Logic.Receiver.Receiver_Duty_ptr :=
---             new VN.Communication.CAN.Logic.Receiver.Receiver_Duty;
 
          cuuidResponder : aliased VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder;
---           cuuidResponder : VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder_ptr :=
---             new VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder;
 
          cuuidHandler : aliased VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler;
---           cuuidHandler : VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler_ptr :=
---             new VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler(HelloProc'Access);
 
          DutyArray : ArrayOfDuties;
 

@@ -308,32 +308,6 @@ package body VN.Communication.CAN.Logic.SM is
       end if;
    end GetCANAddress;
 
-   --THIS IS JUST TESTING FUNCTIONALLITY FOR NODES, NOT SM-CANs
---     procedure GetLogicalAddress(this : in out SM_Duty; LogicalAddress : out VN.VN_Logical_Address;
---                                 isAssigned : out boolean) is
---     begin
---        this.logicalAddressHandler.GetAddress(LogicalAddress, isAssigned);
---     end GetLogicalAddress;
---
---
---     procedure SetMyAddress(this : in out SM_Duty; LogicalAddress : VN.VN_Logical_Address) is
---     begin
---        this.logicalAddressHandler.SetMyAddress(LogicalAddress);
---     end SetMyAddress;
---
---     procedure Assign(this : in out SM_Duty; CANAddress : CAN_Address_Sender;
---                      LogicalAddress : VN.VN_Logical_Address) is
---     begin
---        this.logicalAddressHandler.Assign(CANAddress, LogicalAddress);
---     end Assign;
---
---     procedure AddressQuestion(this : in out SM_Duty; LogicalAddress : VN.VN_Logical_Address;
---                               CANAddress : out CAN_Address_Sender; wasFound : out boolean) is
---     begin
---        this.logicalAddressHandler.AddressQuestion(LogicalAddress, CANAddress, wasFound);
---     end AddressQuestion;
-
-
    procedure Init(this : in out SM_Duty) is
       testCUUID : VN.VN_CUUID := (others => 42); --ToDo: For testing only!!!!
    begin
