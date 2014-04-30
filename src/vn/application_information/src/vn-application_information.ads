@@ -4,7 +4,7 @@ with VN.Message.Local_Hello;
 
 package VN.Application_Information is
 
-   type VN_Application_Information is
+   type VN_Application_Information is tagged limited
       record
          Logical_Address   : VN.VN_Logical_Address := 16#0000_0000#;
          CUUID             : VN.VN_CUUID; -- TODO: Assign default value.

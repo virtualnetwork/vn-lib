@@ -10,7 +10,6 @@ package body Application is
    task body VN_Application is
       use Ada.Real_Time;
       use VN;
-      use VN.Application_Information;
       use VN.Message.Local_Hello;
 
       i: Integer := 1;
@@ -39,7 +38,7 @@ package body Application is
          delay until Next_Period;
          ----------------------------
 
-         if Has_Logical_Address(App_Info) then
+         if App_Info.Has_Logical_Address then
             null;
          else
             Ada.Text_IO.Put_Line("Logical address not found "
@@ -48,7 +47,7 @@ package body Application is
             -- Prepare message to be sent
             Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
             To_Local_Hello(Basic_Msg, Local_Hello_Msg);
-            Get_Application_Information(App_Info, Local_Hello_Msg);
+            App_Info.Get_Application_Information(Local_Hello_Msg);
             To_Basic(Local_Hello_Msg, Basic_Msg);
 
             -- Send message
