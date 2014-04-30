@@ -2,6 +2,21 @@
 /build
 obj/
 project_pragmas
+*.ads~
+*.adb~
+*.gpr~
+*.gitignore~
+*.bin
+*.bin~
+makefile~
+b~*.ad*
+*.bexch
+*.o
+*.ali
+b__*.ad*
+test_runner
+.c~
+
 
 # Vagrant
 .vagrant

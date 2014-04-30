@@ -30,6 +30,22 @@ package body Buffers is
    -- Insert --
    ------------
 
+   procedure InsertInFront (Item : Element;  Into : in out Buffer) is
+   begin
+
+      Into.Next_Out := Into.Next_Out - 1;
+      if Into.Next_Out = 0 then
+         Into.Next_Out := Into.Capacity;
+      end if;
+
+      Into.Values (Into.Next_Out) := Item;
+      Into.Count := Into.Count + 1;
+   end InsertInFront;
+
+   ------------
+   -- Insert --
+   ------------
+
    procedure Insert (Item : Element;  Into : in out Buffer) is
    begin
       Into.Values (Into.Next_In) := Item;
@@ -54,7 +70,7 @@ package body Buffers is
 
    function Empty (This : Buffer) return Boolean is
    begin
-      return This.Count = 0;
+      return This.Count <= 0;
    end Empty;
 
    ----------
@@ -63,7 +79,7 @@ package body Buffers is
 
    function Full (This : Buffer) return Boolean is
    begin
-      return This.Count = This.Capacity;
+      return This.Count >= This.Capacity;
    end Full;
 
    -----------

@@ -1,4 +1,6 @@
+
 with Interfaces;
+with System;
 
 package VN.Message is
 
@@ -32,7 +34,7 @@ package VN.Message is
 
    type VN_Opcode is mod 2 ** 8;
    for VN_Opcode'Size use 8;
-
+   
    type VN_Payload is mod 2 ** 8;
    for VN_Payload'Size use 8;
 
@@ -45,6 +47,10 @@ package VN.Message is
    -- Other VN fields used in multiple derived types
    type VN_Status is mod 2 ** 8;
    for VN_Status'Size use 8;
+   ACK_OK 	: constant VN_Status := 0;
+   ACK_ERROR 	: constant VN_Status := 1;
+
+
 
    type VN_Response_Type is (Valid, Invalid);
    for VN_Response_Type'Size use 8;
@@ -58,6 +64,13 @@ package VN.Message is
    STATUS_SIZE             : constant integer := 1;
    RESPONSE_TYPE_SIZE      : constant integer := 1;
    VN_LOGICAL_ADDRESS_SIZE : constant integer := 4;
+
+   OPCODE_LOCAL_HELLO 		: constant VN_Opcode := 16#20#;
+   OPCODE_LOCAL_ACK 		: constant VN_Opcode := 16#21#;  
+   OPCODE_DISTRIBUTE_ROUTE 	: constant VN_Opcode := 16#72#;  
+   OPCODE_ASSIGN_ADDR_BLOCK	: constant VN_Opcode := 16#4D#;
+   OPCODE_ASSIGN_ADDR		: constant VN_Opcode := 16#7B#;
+   OPCODE_REQUEST_ADDR_BLOCK	: constant VN_Opcode := 16#4C#;
 
    type VN_Header is
       record
@@ -73,16 +86,19 @@ package VN.Message is
       end record;
 
    for VN_Header use record
-      Message_Type      at 0 range 128 .. 135;
-      Version           at 0 range 120 .. 127;
-      Priority          at 0 range 112 .. 119;
-      Payload_Length    at 0 range 96 .. 111;
-      Destination       at 0 range 64 .. 95;
-      Source            at 0 range 32 .. 63;
-      Flags             at 0 range 16 .. 31;
-      Opcode            at 0 range 8 .. 15;
-      Ext_Header        at 0 range 0 .. 7;
+      Message_Type      at 0 range 0 .. 7;
+      Version           at 0 range 8 .. 15;
+      Priority          at 0 range 16 .. 23;
+      Payload_Length    at 0 range 24 .. 39;
+      Destination       at 0 range 40 .. 71;
+      Source            at 0 range 72 .. 103;
+      Flags             at 0 range 104 .. 119;
+      Opcode            at 0 range 120 .. 127;
+      Ext_Header        at 0 range 128 .. 135;
    end record;
+
+  for VN_Header'Alignment use 2;
+  -- for VN_Header'Bit_Order use High_Order_First;
 
    type VN_Payload_Byte_Array is array (1 .. MAX_PAYLOAD_SIZE)
                                     of Interfaces.Unsigned_8;
@@ -95,19 +111,24 @@ package VN.Message is
       end record;
 
    for VN_Message_Basic use record
-      Header        at 0 range (CHECKSUM_SIZE * 8 + MAX_PAYLOAD_SIZE * 8) ..
-                               (CHECKSUM_SIZE * 8 +
-                                MAX_PAYLOAD_SIZE * 8 +
-                                HEADER_SIZE * 8 - 1);
-      Payload       at 0 range (CHECKSUM_SIZE * 8) ..
-                               (CHECKSUM_SIZE * 8 + MAX_PAYLOAD_SIZE * 8 - 1);
-      Checksum      at 0 range 0 .. (CHECKSUM_SIZE * 8 - 1);
+      Header        at 0 range 0 .. (HEADER_SIZE * 8 - 1);
+      Payload       at 0 range (HEADER_SIZE * 8) ..
+                               (HEADER_SIZE * 8 + MAX_PAYLOAD_SIZE * 8 - 1);
+      Checksum      at 0 range (HEADER_SIZE + MAX_PAYLOAD_SIZE) * 8 .. 
+                               (HEADER_SIZE + MAX_PAYLOAD_SIZE + CHECKSUM_SIZE) * 8 - 1;
    end record;
+   
+   for VN_Message_Basic'Alignment use 2;
 
-   for VN_Message_Basic'Alignment use 1;
 
-   type VN_Message_Byte_Array is array (1 .. VN_Message_Basic'Size)
+   type VN_Message_Byte_Array is array (1 .. VN_Message_Basic'Size / 8) --VN_Message_Basic'Size is in bits
                                           of Interfaces.Unsigned_8;
+   for VN_Message_Byte_Array'Alignment use 2;
+
+   type Word_Array_Type is array(1 .. (VN_Message_Basic'Size / 16 + 1)) of Interfaces.Unsigned_16;
+   for Word_Array_Type'Alignment use 2;
+
+   VN_CHECKSUM_ERROR : exception;
 
    procedure Serialize(Message : in VN_Message_Basic;
                        buffer : out VN_Message_Byte_Array);

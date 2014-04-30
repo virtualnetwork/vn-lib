@@ -1,0 +1,69 @@
+with "../../src/vn/message/message.gpr";
+with "../../src/vn/communication/can/can_task/can_task.gpr";
+with "../../src/vn/communication/can/can_interface/can_interface.gpr";
+with "../../src/vn/communication/protocol_routing/protocol_routing.gpr";
+with "../../src/vn/communication/communication.gpr";
+with "../../src/vn/communication/can/can.gpr";
+project Task_Test_sf2 is
+    for Source_Dirs use ("src");
+    for Object_Dir use "obj";
+    for Exec_Dir use ".";
+    for Languages use ("Ada", "C");
+
+    for Main use ("task_test_main.adb");
+
+    Link_File := external
+        ("LDFILE", "../../../support/link-dbg-in-microsemi-sf2-esram.ld");
+    Link_File := "-T" & Link_File;
+
+    package Builder is
+        for Default_Switches ("Ada") use (
+            "-gnat2005",
+            "-O2",
+            -- "-g",
+            "-x",
+            "-a",
+            "-gnatn",
+            "-gnata",
+            "-nostdinc",
+            "-nostdlib",
+            "-mcpu=cortex-m3",
+            "-mthumb"
+        );
+    end Builder;
+
+    package Compiler is
+        for Default_Switches ("Ada") use (
+            "-O2",
+            -- "-g",
+            "-ggdb",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-mcpu=cortex-m3",
+            "-mthumb"
+        );
+    end Compiler;
+
+    package Binder is
+        for Default_Switches ("Ada") use (
+            "-nostdinc",
+            "-nostdlib"
+        );
+    end Binder;
+
+    package Linker is
+        for Default_Switches ("Ada") use (
+            "-nostartfiles",
+            "-nodefaultlibs",
+            "-nostdlib",
+            "-lc",
+            "-lgcc",
+            "obj/libtask_test_main_c.a",
+            "-v",
+            "-mcpu=cortex-m3",
+            "-mthumb",
+            Link_File,
+            "-Wl,--gc-sections"
+        );
+    end Linker;
+end Task_Test_sf2;

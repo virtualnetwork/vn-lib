@@ -1,7 +1,7 @@
 package VN.Message.Assign_Address is
 
-   ASSIGN_ADDRESS_UNKNOWN_PAYLOAD_SIZE :
-                                    constant integer := MAX_PAYLOAD_SIZE - 20;
+   ASSIGN_ADDRESS_UNKNOWN_PAYLOAD_SIZE : constant integer :=
+     MAX_PAYLOAD_SIZE - CUUID_SIZE - VN_LOGICAL_ADDRESS_SIZE;
 
    type VN_Assign_Address_Unknown_Payload is Array(1 ..
                               ASSIGN_ADDRESS_UNKNOWN_PAYLOAD_SIZE) of
@@ -17,38 +17,25 @@ package VN.Message.Assign_Address is
       end record;
 
    for VN_Message_Assign_Address use record
-      Header            at 0 range (CHECKSUM_SIZE * 8 +
-                                    VN_LOGICAL_ADDRESS_SIZE * 8 +
-                                    CUUID_SIZE * 8 +
-                                    ASSIGN_ADDRESS_UNKNOWN_PAYLOAD_SIZE * 8) ..
-                                   (CHECKSUM_SIZE * 8 +
-                                    VN_LOGICAL_ADDRESS_SIZE * 8 +
-                                    CUUID_SIZE * 8 +
-                                    ASSIGN_ADDRESS_UNKNOWN_PAYLOAD_SIZE * 8 +
-                                    HEADER_SIZE * 8 - 1);
+      Header            at 0 range 0 .. (HEADER_SIZE * 8 - 1);
 
-      Unknown_Payload   at 0 range (CHECKSUM_SIZE * 8 +
-                                    VN_LOGICAL_ADDRESS_SIZE * 8 +
-                                    CUUID_SIZE * 8) ..
-                                   (CHECKSUM_SIZE * 8 +
-                                    VN_LOGICAL_ADDRESS_SIZE * 8 +
-                                    CUUID_SIZE * 8 +
-                                    ASSIGN_ADDRESS_UNKNOWN_PAYLOAD_SIZE * 8 - 1);
+      CUUID		at 0 range HEADER_SIZE * 8 ..
+                                   (HEADER_SIZE + CUUID_SIZE) * 8 - 1;
 
-      CUUID             at 0 range (CHECKSUM_SIZE * 8 +
-                                    VN_LOGICAL_ADDRESS_SIZE * 8) ..
-                                   (CHECKSUM_SIZE * 8 +
-                                    VN_LOGICAL_ADDRESS_SIZE * 8 +
-                                    CUUID_SIZE * 8 - 1);
+      Assigned_Address  at 0 range (HEADER_SIZE + CUUID_SIZE) * 8 ..
+        			    (HEADER_SIZE + CUUID_SIZE + VN_LOGICAL_ADDRESS_SIZE) * 8 - 1;
 
-      Assigned_Address  at 0 range (CHECKSUM_SIZE * 8) ..
-                                   (CHECKSUM_SIZE * 8 +
-                                    VN_LOGICAL_ADDRESS_SIZE * 8 - 1);
+      Unknown_Payload   at 0 range (HEADER_SIZE + CUUID_SIZE + VN_LOGICAL_ADDRESS_SIZE) * 8 ..
+        				(HEADER_SIZE + CUUID_SIZE + VN_LOGICAL_ADDRESS_SIZE +
+           				 ASSIGN_ADDRESS_UNKNOWN_PAYLOAD_SIZE) * 8 - 1;
 
-      Checksum          at 0 range 0 .. (CHECKSUM_SIZE * 8 - 1);
+      Checksum          at 0 range (HEADER_SIZE + CUUID_SIZE + VN_LOGICAL_ADDRESS_SIZE +
+                                      ASSIGN_ADDRESS_UNKNOWN_PAYLOAD_SIZE) * 8 ..
+        				(HEADER_SIZE + CUUID_SIZE + VN_LOGICAL_ADDRESS_SIZE +
+             				 ASSIGN_ADDRESS_UNKNOWN_PAYLOAD_SIZE + CHECKSUM_SIZE) * 8 - 1;
    end record;
 
-   for VN_Message_Assign_Address'Alignment use 1;
+   for VN_Message_Assign_Address'Alignment use 2;
 
    procedure To_Basic(
                Assign_Address_VN_Msg: in VN_Message_Assign_Address;
