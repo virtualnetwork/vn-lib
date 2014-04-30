@@ -16,6 +16,7 @@ with VN.Communication.CAN;
 use VN.Communication.CAN;
 with VN.Communication.CAN.Can_Task;
 with VN.Communication.CAN.CAN_Interface;
+with VN.Communication.CAN.CAN_Filtering;
 
 with VN.Communication.Protocol_Routing;
 

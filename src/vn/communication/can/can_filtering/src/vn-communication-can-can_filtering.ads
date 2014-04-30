@@ -18,9 +18,10 @@ package VN.Communication.CAN.CAN_Filtering is
 
    type Filter_ID_Type is range 1 .. MAX_NUM_FILTERS;
 
-   function Create_Filter(this : in out CAN_Filter_Type;
-                          template : CAN_message_ID;
-                          mask     : CAN_message_ID) return Filter_ID_Type;
+   procedure Create_Filter(this : in out CAN_Filter_Type;
+                           filterID : out Filter_ID_Type;
+                           template : CAN_message_ID;
+                           mask     : CAN_message_ID);
 
    procedure Change_Filter(this : in out CAN_Filter_Type;
                            filterID : Filter_ID_Type;

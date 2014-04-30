@@ -82,7 +82,9 @@ private
 
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
-   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is limited
+   type SM_Duty(theUCID   : access VN.Communication.CAN.UCID;
+                theCUUID  : access VN.VN_CUUID;
+                theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is limited
       record
 
          isInitialized : Boolean := false;

@@ -35,7 +35,9 @@ private
 
    type SM_CAN_MN_State is (Start, Started, Slave, Master);
 
-   type SM_CAN_MN_Duty(theUCID : access VN.Communication.CAN.UCID) is new VN.Communication.CAN.Logic.Duty with
+   type SM_CAN_MN_Duty(theUCID : access VN.Communication.CAN.UCID;
+                       theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+     new VN.Communication.CAN.Logic.Duty with
       record
          currentState : SM_CAN_MN_State := Start;
          timer : Ada.Real_Time.Time;
