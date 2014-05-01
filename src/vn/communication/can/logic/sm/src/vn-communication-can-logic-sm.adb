@@ -74,7 +74,9 @@ package body VN.Communication.CAN.Logic.SM is
          this.receiver.Activate(0);
          this.cuuidResponder.Activate(this.myCUUID, 0, true);
          this.cuuidHandler.Activate(this.myCUUID, 0, this.sender'Unchecked_Access);
-         --this.logicalAddressHandler.Activate(0, true);
+
+         --Change CAN message filters, SM_CAN_MasterNegotioation longer wishes to receceive normal CAN messages:
+         this.theFilter.Change_Filter(this.negotioationFilterID, VN.Communication.CAN.CAN_message_ID(2 ** 28), VN.Communication.CAN.CAN_message_ID(2 ** 28));
 
       elsif this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SLAVE then
          this.addressReceiver.Activate;
@@ -90,7 +92,21 @@ package body VN.Communication.CAN.Logic.SM is
             this.receiver.Activate(address);
             this.cuuidResponder.Activate(this.myCUUID, address, true);
             this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
-           -- this.logicalAddressHandler.Activate(address, false); --isSM_CAN is set to false here in some cases of testing
+
+            --Change CAN message filters, SM_CAN_MasterNegotioation longer wishes to receceive any CAN messages:
+            this.theFilter.Remove_Filter(this.negotioationFilterID);
+            declare
+               template, mask   : VN.Communication.CAN.CAN_message_ID;
+               POWER28 : constant Interfaces.Unsigned_32 := 2 ** 28;
+            begin
+               template := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(address),
+                                                               VN.Communication.CAN.OFFSET_CAN_RECEIVER));
+
+               mask := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(CAN_Address_Receiver'Last),
+                                                           VN.Communication.CAN.OFFSET_CAN_RECEIVER) + POWER28);
+
+               this.theFilter.Create_Filter(this.transmissionFilterID, template, mask);
+            end;
 
             --FOR TESTING:
 --              if not this.hasSent then
@@ -310,6 +326,9 @@ package body VN.Communication.CAN.Logic.SM is
 
    procedure Init(this : in out SM_Duty) is
       testCUUID : VN.VN_CUUID := (others => 42); --ToDo: For testing only!!!!
+
+      template, mask    : VN.Communication.CAN.CAN_message_ID;
+      POWER28 		: constant Interfaces.Unsigned_32 := 2 ** 28;
    begin
       VN.Communication.CAN.Logic.DebugOutput("SM_Duty initialized", 4);
 
@@ -322,6 +341,17 @@ package body VN.Communication.CAN.Logic.SM is
       this.DutyArray(this.DutyArray'First + 4) := this.receiver'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 5) := this.cuuidResponder'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 6) := this.cuuidHandler'Unchecked_Access;
+
+      -- Set CAN fileters:
+      this.theFilter.Create_Filter(this.negotioationFilterID, 0, 0); --will listen to all CAN messages, for now
+
+      template := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(255),
+                                                      VN.Communication.CAN.OFFSET_CAN_RECEIVER));
+
+      mask := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(CAN_Address_Receiver'Last),
+                                                  VN.Communication.CAN.OFFSET_CAN_RECEIVER) + POWER28);
+
+      this.theFilter.Create_Filter(this.broadcastFilterID, template, mask); -- receiving messages sent to CAN address 255 (broadcast)
 
       --ToDo: For testing only!!!!
       CAN_Routing.Insert(this.myTable, 1337, 42);
