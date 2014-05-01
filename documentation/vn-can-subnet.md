@@ -82,6 +82,51 @@ The types of messages present are listed below. Please note that in the case of 
 
 
 
+| **Message type number** | **Meaning** | **Comment**  |
+| ----------------------- | ----------- | ------------ |
+| Not in this list | **RequestCANAddress** | Sent at regular intervals by any unit on the CAN network that does not have an CAN address yet. Contains information telling whether its a normal node or an SM-CAN. <br/>
+Nodes shall wait to send this message until they have received a **Normal CAN message**[^](This shows that a SM-CAN master has been assigned.) such as the **CANMasterAssigned** message, since nobody will care about the **RequestCANAddress** except the SM-CAN master.
+| 0 | **AssignCANAddress** |  |
+| 1 | **CANMasterAssigned** |  |
+| 2 | **AssignCANAddress** |  |
+| 3 | **AssignCANAddress** |  |
+| 4 | **AssignCANAddress** |  |
+| 5 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+| 0 | **AssignCANAddress** |  |
+
+##### Message contents
+This section declares the content of each message.
+
+**RequestCANAddress**
+Can contain zero or one byte. An ordinary node either sends zero bytes or sets the first byte equal to 5. SM-CANs set this byte equal to 3. 
+
+
+**AssignCANAddress**
+Bytes 0 – 3:  UCID of the receiving node.
+Byte 4: CAN address assigned to the node.
+
+**CANMasterAssigned**
+No payload data.
+
+
+
+
+
+
 
 
 
