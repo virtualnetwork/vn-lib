@@ -149,8 +149,25 @@ This means that it shall listen for StartTransmission and Transmission messages 
 *This process takes place after the SM-CAN master negotiation process.*
 
 #### For nodes and SM-CAN slaves
+*Please note that both nodes and SM-CAN slaves are referred to as “nodes” in this section.*
+1. All SM-CANs shall participate in the Discovery process on their Processing nodes according to VN. See VN-CAN high level protocol for further details.
+2. All nodes shall listen to any **Normal CAN message** (such as the **CANMasterAssigned** message). Once the node receives a 
+Normal CAN message** this indicates that an SM-CAN master has been assigned.
+3. All nodes shall then start to send **RequestCANAddress** messages at regular intervals.
+4. When node receives a **AssignCANAddress** message intended for it (containing the node's *Universally Unique CAN Identifier*, *UCID*) it will stop sending **RequestCANAddress** messages and start to use the assigned CAN address.
+5. Once the node has an CAN address it shall be ready to receive VN messages, meaning it shall listen for **StartTransmission** and **Transmission** messages and be ready to answer with **FlowControl** messages.
+
 
 ##### For the SM-CAN master
+1. All SM-CANs shall participate in the Discovery process on their Processing nodes according to VN. See VN-CAN high level protocol for further details.
+2. The SM-CAN master shall listen to **RequestCANAddress** messages. 
+It shall use the **AssignCANAddress** message to assign CAN addresses to those it receives **RequestCANAddress** messages from. SM-CAN slaves shall be assigned CAN addresses before nodes.
+This responsibility of the SM-CAN master remains indefinitely.
+3. ~~When the SM-CAN master receives the FirstCUUIDHalf and SecondCUUIDHalf messages from a node it shall register the node's CUUID.~~
+4. Whenever the SM-CAN master starts to assign CAN addresses, it shall be ready to receive VN messages. <br/>
+This means that it shall listen for **StartTransmission** and **Transmission** messages and be ready to answer with **FlowControl** messages.
+5. ~~Point 4 means that the SM-CAN master might start to receive VN Request Address Block Messages from other SM-CANs. When this happens these requests shall take priority over assigning CAN addresses to nodes.~~
+
 
 ##### For all units (nodes or SM-CANs)
 After an unit has received a CAN address it shall send a **DiscoveryRequest** message to CAN address 254, thus causing all SM-CANs to respond with a **ComponentType** message. This way the unit learns the CAN addresses of all SM-CANs present on the CAN network. <br/>
@@ -169,7 +186,7 @@ All SM-CANs shall respond to **DiscoveryRequest** messages with a **ComponentTyp
 #### Transmission of VN messages
 The following section describes how the transmission of a VN message shall be done. It applies to any unit on the CAN network, the SM-CANs (master or slaves) and nodes. This section assumes that the receiver's CAN address is known. <br/>
 Transmission of a VN message will be done as follows:
-
+ 
 1. The unit will send an **StartTransmission** message containing the number of **Transmission** messages needed to send the VN message.
 If there is no **FlowControl** message in response the sending unit shall retry a few times before giving up. Perferably, the failure to send the message should be reported to the overlying protocol.
 2. The receiver will answer with a **FlowControl** message containing its preferred block size. If the receiver is too busy at the moment, it can deny the transmission by simply not replying.
