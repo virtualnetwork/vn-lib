@@ -8,6 +8,31 @@
 -- Please also note that this functionality is regarding a Subnet Manager for CAN (SM-CAN),
 -- not an ordinary node.
 
+-- Attention to CAN messages with regards to their ID is as follows:
+
+-- SM_CAN_MasterNegotiation listens initially to all CAN messages.
+-- If assigned as Slave: Does not listen to any messages.
+-- If assigned as Master: Listens RequestCANAddress messages.
+
+-- CAN_Address_Assignment, only activated when being SM-CAN master
+-- Listens to RequestCANAddress messages
+
+-- CAN_Address_Reception, only activated when being SM-CAN slave
+-- Listens to AssignCANAddress messages (these are sent to CAN address 255)
+
+-- CUUID_Responder (ToDo: name change needed) receives DiscoveryRequest
+-- either on the assigned CAN address or CAN address 255.
+
+-- CUUID_Handler (ToDo: name change needed) receives ComponentType
+-- on the assigned CAN address.
+
+-- Sender receives FlowControl messages
+-- on the assigned CAN address.
+
+-- Receiver receives StartTransmission and Transmission messages
+-- on the assigned CAN address.
+
+
 with VN.Message;
 with VN.Communication.CAN.CAN_Filtering;
 
