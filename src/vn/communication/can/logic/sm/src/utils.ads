@@ -16,7 +16,7 @@ package Utils is
 
    procedure To_Physical(msgIn : CANPack.CAN_Message_Logical; msgIDOut : out CANPack.CAN_message_ID);
 
-   function Filter_CAN_Message(msg : CANPack.CAN_message_ID;
+   function Filter_CAN_Message(msg : VN.Communication.CAN.CAN_Message_Logical;
                                filter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Type) return boolean;
 
 end Utils;
