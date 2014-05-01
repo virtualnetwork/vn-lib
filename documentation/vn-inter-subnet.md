@@ -1,6 +1,5 @@
 VN Inter Subnet Protocol
 ==========================
-
 This protocol defines the communication to and from the application layer and between different subnet protocols.
 A subnet protocol is specific for the underlying communication protocol. An example of subnet protocols is the VN-CAN protocol for communication over the Controller Area Network (CAN).
 
@@ -43,7 +42,7 @@ Whenever a **Distribute Route** message is sent by the higher level protocol the
 #### For routes to underlying units
 Whenever a VN message is received from an underlying subnet, it can be concluded that VN messages addressed to the sender address of this VN message can be routed via that particular subnet.  <br/>
 Consequently, the logical address of the VN message shall be entered into the routing table with corresponding subnet address set according to the subnet from which the message was received. <br/>
-*The above does not apply to **LocalHello** and **LocalAck messages**. No routing information regarding logical addresses shall be retrieved from **LocalHello** and **LocalAck** messages.* <br/>
+*The above does not apply to LocalHello and LocalAck messages. No routing information regarding logical addresses shall be retrieved from LocalHello and LocalAck messages.* <br/>
 Whenever a **Distribute Route** message is received from an underlying subnet, it can be concluded that VN messages addressed to the logical address contained in the **Distribute Route** message can be routed via this subnet. <br/>
 Consequently, the logical address contained in the **Distribute Route** message shall be entered into the routing table with corresponding subnet address set according to the subnet from which the message was received. <br/>
 Whenever a **Local Hello** message is received from a particular subnet, the CUUID contained in its payload shall be entered into the CUUID routing table. This saves the information that **AssignAddr** and **AssignAddrBlock** messages sent to this CUUID shall be sent via this subnet.
@@ -51,9 +50,10 @@ Whenever a **Local Hello** message is received from a particular subnet, the CUU
 #### Transmission of VN messages
 Whenever a VN message is received from a subnet, or sent by the application layer, actions according to section *Route discovery process* shall be performed. <br/>
 Whenever a VN message is received from a subnet, or sent by the application layer, the receiver address of the message shall be looked up in the primary routing table. The routing table will tell which subnet that is to be used to send the message, or if it should be delivered to the application layer.  <br/>
-If the VN message was addressed to logical address 0 it shall be discarded.  <br/>
 There exist the following exceptions from the above rule:
+
 1. If the message is a **AssignAddr** or **AssignAddrBlock** the CUUID in its payload shall be used for a lookup in the CUUID routing table, the primary routing table shall not be used.
 
-If no match is found in the lookup in the routing table this shall be reported to the overlying protocol.
+If no match is found in the lookup in the routing table this shall be reported to the overlying protocol. <br/>
+If the VN message was addressed to logical address 0 it shall be discarded.  
 
