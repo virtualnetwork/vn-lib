@@ -16,7 +16,7 @@ b~*.ad*
 b__*.ad*
 test_runner
 *.c~
-
+*.md~
 
 # Vagrant
 .vagrant
