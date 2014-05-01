@@ -4,36 +4,36 @@ VN CAN Subnet Protocol
 ## High level
 
 ### Identifiers and addresses
-
-
 **There exists two forms of identifiers in this protocol:** 
-  * **The Component Universally Unique Identifier (CUUID)**  is a high level identifier that is to be unique world world for the particular component. The length of the CUUID is 128 bits (16 bytes). Any component on a VN network needs a CUUID.
-  * **The Universally Unique CAN Identifier (UCID)** is a low level identifier that is to be unique world world for the particular component. The length of the UCID is 28 bits. Any component on the VN-CAN network will need a UCID.
+  * **The Component Universally Unique Identifier (CUUID)**  is a high level identifier that is to be unique worldwide for the particular component. The length of the CUUID is 128 bits (16 bytes). Any component on a VN network needs a CUUID.
+  * **The Universally Unique CAN Identifier (UCID)** is a low level identifier that is to be unique on the VN-CAN network for the particular component. The length of the UCID is 28 bits. Any component on the VN-CAN network will need a UCID.
 
 **There exists two forms of addresses in this protocol:**
   * **The logical addresses.**  Defined in the VN protocol.
-  * **CAN addresses.** The CAN address. Any component on the VN-CAN network will be assigned a CAN address. The CAN addresses are only used 	on the CAN bus on the low level part of the VN-CAN protocol. The CAN addresses are managed by the SM-CAN master.
-
+  * **CAN addresses.** The CAN address. Any component on the VN-CAN network will be assigned a CAN address. The CAN addresses are only used on the CAN bus on the low level part of the VN-CAN protocol. The CAN addresses are managed by the SM-CAN master.
 
 ### Stored data
 **The following data is stored in this protocol:**
-  * Send buffer, for VN-messages.
-  * Receive buffer, for VN-messages.
-  * A primary routing table, connecting a given logical address to a low level
+  * *Send buffer*, for VN-messages.
+  * *Receive buffer*, for VN-messages.
+  * A *primary routing* table, connecting a given logical address to a low level
     address.
-  * A CUUID routing table, connecting a given CUUID to a subnet address. This
+  * A *CUUID routing* table, connecting a given CUUID to a subnet address. This
     table is used in some special cases of VN messages (e.g. **AssignAddr**)
     that cannot rely on logical addresses for routing.
 
 
 ### Interface
 **There exists two public functions stored in this protocol:**
-  * Send. Will take a VN message as argument, an out-variable will tell the
+  * *Send*. Will take a VN message as argument, an out-variable will tell the
     outcome of the call, i.e. “Transmission OK” or “Buffer full”. The message
     is written to the send buffer if it is not full.
-  * Receive. Will give a VN message as an out-variable, another out-variable
+  * *Receive*. Will give a VN message as an out-variable, another out-variable
     will tell the outcome of the call, i.e. “No message received”, “Message
     received, buffer empty” and “Message received, more available”.
+
+### Unit discovery process
+Section *Unit discovery process* in *VN generic subnet protocol* shall be followed. Section *Low level* will further give further specifications for how this is to be done.
 
 ### Route discovery process
 #### For routes to overlying units
@@ -43,17 +43,14 @@ See Section *For routes to overlying units* in *VN generic subnet protocol*.
 See Section *For routes to underlying units* in *VN generic subnet protocol*.
 
 #### Transmission of VN messages
-See Section *Transmission of VN messages* in *VN generic subnet protocol*.
+Section *Transmission of VN messages* in *VN generic subnet protocol* applies. Transmission of VN messages is further specified in Section *Low level*.
 
 #### Reception of VN messages
 When a VN message is received on the subnet it shall be pushed to the receive buffer. 
 Actions according to sections *Route discovery process* and *Unit discovery process* shall also be performed.
-*Unit discovery process ?????????????????* 
 
 #### Logical addresses
 Assignment of logical addresses is handled by higher level protocols and is not described in this protocol.
-
-
 
 
 ## Low level
@@ -89,24 +86,13 @@ Nodes shall wait to send this message until they have received a **Normal CAN me
 Is sent to address 255 (Broadcast address). Contains the  Universally Unique CAN Identifier (UCID) for the node and its assigned CAN address |
 | 1 | **CANMasterAssigned** |  |
 | 2 | **AssignCANAddress** |  |
-| 3 | **AssignCANAddress** |  |
-| 4 | **AssignCANAddress** |  |
-| 5 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
-| 0 | **AssignCANAddress** |  |
+| 3 | **Ping** |  |
+| 4 | **Pong** |  |
+| 6 | **StartTransmission** |  |
+| 7 | **FlowControl** |  |
+| 8 | **Transmission** |  |
+| 9 | **DiscoveryRequest** |  |
+| 10 | **ComponentType** | Informs the receiver about the sender's type. |
 
 #### Message contents
 This section declares the content of each message.
@@ -121,6 +107,20 @@ Byte 4: CAN address assigned to the node.
 
 **CANMasterAssigned**
 No payload data.
+
+**Ping**
+
+**Pong**
+
+**StartTransmission**
+
+**FlowControl**
+
+**Transmission**
+
+**DiscoveryRequest**
+
+**ComponentType**
 
 
 
@@ -171,7 +171,7 @@ This means that it shall listen for **StartTransmission** and **Transmission** m
 
 ##### For all units (nodes or SM-CANs)
 After an unit has received a CAN address it shall send a **DiscoveryRequest** message to CAN address 254, thus causing all SM-CANs to respond with a **ComponentType** message. This way the unit learns the CAN addresses of all SM-CANs present on the CAN network. <br/>
-The unit shall then send a **LocalHello** message to each SM-CAN it has discovered. The **LocalHello** message will contain the unit's CUUID and component type. The sender and receiver addresses of the message are set to 2. If no **LocalAck** message is received within XXX milliseconds the **LocalHello** message shall be resent.  <br/>
+The unit shall then send a **LocalHello** message to each SM-CAN it has discovered. The **LocalHello** message will contain the unit's CUUID and component type. The sender and receiver addresses of the message are set to 2. If no **LocalAck** message is received within XXXXX milliseconds the **LocalHello** message shall be resent.  <br/>
 When a **LocalHello** message is received over the subnet the following shall be done:
 
 1. Actions according to Route discovery process shall be taken.
