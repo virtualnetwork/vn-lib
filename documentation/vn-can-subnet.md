@@ -63,12 +63,12 @@ Bits are numbered 28-0 where bit 28 is most significant and is sent first.
 There are two groups of message types: *RequestCANAddress* message (one message type) and *Normal* CAN Messages. These are defined by the first bit of the message ID.
 The message ID is divided according to:
 
-1. msgID[28] = 1: RequestCANAddress message
+1. msgID[28] = 1: RequestCANAddress message<br/>
 	msgID[27 .. 0] = Universally Unique CAN Identifier (UCID) for the node
-2. msgID[28] = 0: Normal CAN messages 
-	msgID[27 .. 22] = Message priority 
-	msgID[21 .. 15] = Message type 
-	msgID[14 .. 7] = Receiver address 
+2. msgID[28] = 0: Normal CAN messages <br/>
+	msgID[27 .. 22] = Message priority <br/>
+	msgID[21 .. 15] = Message type <br/>
+	msgID[14 .. 7] = Receiver address <br/>
 	msgID[6 .. 0] = Sender address 
 
 *Please note:* Even though CAN addresses are 8 bit, addresses over 127 will never be used as a sender address since the maximum number of allowed CAN nodes on a CAN network is 128 one only needs addresses 0 through 127. This means that only 7 bits are needed for the Sender address.
