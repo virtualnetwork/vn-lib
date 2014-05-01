@@ -1,9 +1,9 @@
 VN CAN Subnet Protocol
 ==========================
 
-### High level
+## High level
 
-#### Identifiers and addresses
+### Identifiers and addresses
 
 
 **There exists two forms of identifiers in this protocol:** 
@@ -15,7 +15,7 @@ VN CAN Subnet Protocol
   * **CAN addresses.** The CAN address. Any component on the VN-CAN network will be assigned a CAN address. The CAN addresses are only used 	on the CAN bus on the low level part of the VN-CAN protocol. The CAN addresses are managed by the SM-CAN master.
 
 
-#### Stored data
+### Stored data
 **The following data is stored in this protocol:**
   * Send buffer, for VN-messages.
   * Receive buffer, for VN-messages.
@@ -26,7 +26,7 @@ VN CAN Subnet Protocol
     that cannot rely on logical addresses for routing.
 
 
-#### Interface
+### Interface
 **There exists two public functions stored in this protocol:**
   * Send. Will take a VN message as argument, an out-variable will tell the
     outcome of the call, i.e. “Transmission OK” or “Buffer full”. The message
@@ -35,22 +35,22 @@ VN CAN Subnet Protocol
     will tell the outcome of the call, i.e. “No message received”, “Message
     received, buffer empty” and “Message received, more available”.
 
-#### Route discovery process
-##### For routes to overlying units
+### Route discovery process
+#### For routes to overlying units
 See Section *For routes to overlying units* in *VN generic subnet protocol*.
 
-##### For routes to underlying units
+#### For routes to underlying units
 See Section *For routes to underlying units* in *VN generic subnet protocol*.
 
-##### Transmission of VN messages
+#### Transmission of VN messages
 See Section *Transmission of VN messages* in *VN generic subnet protocol*.
 
-##### Reception of VN messages
+#### Reception of VN messages
 When a VN message is received on the subnet it shall be pushed to the receive buffer. 
 Actions according to sections *Route discovery process* and *Unit discovery process* shall also be performed.
 *Unit discovery process ?????????????????* 
 
-##### Logical addresses
+#### Logical addresses
 Assignment of logical addresses is handled by higher level protocols and is not described in this protocol.
 
 
@@ -58,7 +58,7 @@ Assignment of logical addresses is handled by higher level protocols and is not 
 
 ## Low level
 
-##### Division of message IDs
+#### Division of message IDs
 Bits are numbered 28-0 where bit 28 is most significant and is sent first.
 There are two groups of message types: *RequestCANAddress* message (one message type) and *Normal* CAN Messages. These are defined by the first bit of the message ID.
 The message ID is divided according to:
@@ -74,10 +74,10 @@ The message ID is divided according to:
 *Please note:* Even though CAN addresses are 8 bit, addresses over 127 will never be used as a sender address since the maximum number of allowed CAN nodes on a CAN network is 128 one only needs addresses 0 through 127. This means that only 7 bits are needed for the Sender address.
 
 
-##### Message priority
+#### Message priority
 To be determined, set by higher protocols?
 
-##### Message type
+#### Message type
 The types of messages present are listed below. Please note that in the case of two messages having equal priory fields the message type field will determine priority. A lower Message type number will give a higher priority.
 
 
@@ -108,7 +108,7 @@ Is sent to address 255 (Broadcast address). Contains the  Universally Unique CAN
 | 0 | **AssignCANAddress** |  |
 | 0 | **AssignCANAddress** |  |
 
-##### Message contents
+#### Message contents
 This section declares the content of each message.
 
 **RequestCANAddress**
@@ -124,7 +124,7 @@ No payload data.
 
 
 
-##### CAN Addresses
+#### CAN Addresses
 
 | **Address** | **Meaning** | **Comment**  |
 | ----------------------- | ----------- | ------------ |
@@ -134,7 +134,7 @@ No payload data.
 | 1..127 | Node CAN addresses | These addresses are given to nodes and SM-CAN slaves. |
 | 0 | SM-CAN master address | CAN address of SM-CAN master. |
 
-##### SM-CAN master negotiation process
+#### SM-CAN master negotiation process
  1.  Each SM-CAN shall send a RequestCANAddress message when it starts.
  2.  The SM-CAN shall delay for XXX ms. During this time it shall listen to **RequestCANAddress** and any **Normal CAN message**. 
  2.1.  If the SM-CAN receives a **Normal CAN message**, or a **RequestCANAddress** message from an SM-CAN with a lower UCID, it shall become an SM-CAN slave.  <br/>
@@ -145,14 +145,14 @@ No payload data.
  6.  Once a SM-CAN has been assigned an SM-CAN master, it shall be ready to receive VN messages. <br/>
 This means that it shall listen for StartTransmission and Transmission messages and be ready to answer with FlowControl messages.
 
-#### Discovery process
+### Discovery process
 *This process takes place after the SM-CAN master negotiation process.*
 
-##### For nodes and SM-CAN slaves
+#### For nodes and SM-CAN slaves
 
-###### For the SM-CAN master
+##### For the SM-CAN master
 
-###### For all units (nodes or SM-CANs)
+##### For all units (nodes or SM-CANs)
 After an unit has received a CAN address it shall send a **DiscoveryRequest** message to CAN address 254, thus causing all SM-CANs to respond with a **ComponentType** message. This way the unit learns the CAN addresses of all SM-CANs present on the CAN network. <br/>
 The unit shall then send a **LocalHello** message to each SM-CAN it has discovered. The **LocalHello** message will contain the unit's CUUID and component type. The sender and receiver addresses of the message are set to 2. If no **LocalAck** message is received within XXX milliseconds the **LocalHello** message shall be resent.  <br/>
 When a **LocalHello** message is received over the subnet the following shall be done:
@@ -163,10 +163,10 @@ When a **LocalHello** message is received over the subnet the following shall be
 
 The **LocalHello** message is a mid level message that is used to inform the recipient about the sender's presence. The **LocalHello** message is described further in higher level protocols.
 
-###### For all SM-CANs
+##### For all SM-CANs
 All SM-CANs shall respond to **DiscoveryRequest** messages with a **ComponentType** message.
 
-##### Transmission of VN messages
+#### Transmission of VN messages
 The following section describes how the transmission of a VN message shall be done. It applies to any unit on the CAN network, the SM-CANs (master or slaves) and nodes. This section assumes that the receiver's CAN address is known. <br/>
 Transmission of a VN message will be done as follows:
 
