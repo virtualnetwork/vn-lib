@@ -35,7 +35,7 @@ VN CAN Subnet Protocol
     will tell the outcome of the call, i.e. “No message received”, “Message
     received, buffer empty” and “Message received, more available”.
 
-### Route discovery process
+#### Route discovery process
 ##### For routes to overlying units
 See Section *For routes to overlying units* in *VN generic subnet protocol*.
 
@@ -56,16 +56,16 @@ Assignment of logical addresses is handled by higher level protocols and is not 
 
 
 
-### Low level
+## Low level
 
 ##### Division of message IDs
 Bits are numbered 28-0 where bit 28 is most significant and is sent first.
 There are two groups of message types: *RequestCANAddress* message (one message type) and *Normal* CAN Messages. These are defined by the first bit of the message ID.
 The message ID is divided according to:
 
-1. msgID[28] = 1: RequestCANAddress message<br/>
-	msgID[27 .. 0] = Universally Unique CAN Identifier (UCID) for the node
-2. msgID[28] = 0: Normal CAN messages <br/>
+1. **msgID[28] = 1: RequestCANAddress message**<br/>
+	msgID[27 .. 0] = *Universally Unique CAN Identifier* (*UCID*) for the node
+2. **msgID[28] = 0: Normal CAN messages** <br/>
 	msgID[27 .. 22] = Message priority <br/>
 	msgID[21 .. 15] = Message type <br/>
 	msgID[14 .. 7] = Receiver address <br/>
@@ -79,7 +79,6 @@ To be determined, set by higher protocols?
 
 ##### Message type
 The types of messages present are listed below. Please note that in the case of two messages having equal priory fields the message type field will determine priority. A lower Message type number will give a higher priority.
-
 
 
 | **Message type number** | **Meaning** | **Comment**  |
@@ -146,10 +145,10 @@ No payload data.
  6.  Once a SM-CAN has been assigned an SM-CAN master, it shall be ready to receive VN messages. <br/>
 This means that it shall listen for StartTransmission and Transmission messages and be ready to answer with FlowControl messages.
 
-##### Discovery process
+#### Discovery process
 *This process takes place after the SM-CAN master negotiation process.*
 
-###### For nodes and SM-CAN slaves
+##### For nodes and SM-CAN slaves
 
 ###### For the SM-CAN master
 
