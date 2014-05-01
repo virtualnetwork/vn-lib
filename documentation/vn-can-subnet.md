@@ -80,10 +80,8 @@ The types of messages present are listed below. Please note that in the case of 
 
 | **Message type number** | **Meaning** | **Comment**  |
 | ----------------------- | ----------- | ------------ |
-| Not in this list | **RequestCANAddress** | Sent at regular intervals by any unit on the CAN network that does not have an CAN address yet. Contains information telling whether its a normal node or an SM-CAN. 
-Nodes shall wait to send this message until they have received a **Normal CAN message**[^1](This shows that a SM-CAN master has been assigned.) such as the **CANMasterAssigned** message, since nobody will care about the **RequestCANAddress** except the SM-CAN master. |
-| 0 | **AssignCANAddress** | Assignment of CAN-address from SM-CAN master. 
-Is sent to address 255 (Broadcast address). Contains the  Universally Unique CAN Identifier (UCID) for the node and its assigned CAN address |
+| Not in this list | **RequestCANAddress** | Sent at regular intervals by any unit on the CAN network that does not have an CAN address yet. Contains information telling whether its a normal node or an SM-CAN. Nodes shall wait to send this message until they have received a **Normal CAN message**[^1](This shows that a SM-CAN master has been assigned.) such as the **CANMasterAssigned** message, since nobody will care about the **RequestCANAddress** except the SM-CAN master. |
+| 0 | **AssignCANAddress** | Assignment of CAN-address from SM-CAN master. Is sent to address 255 (Broadcast address). Contains the  Universally Unique CAN Identifier (UCID) for the node and its assigned CAN address |
 | 1 | **CANMasterAssigned** |  |
 | 2 | **AssignCANAddress** |  |
 | 3 | **Ping** |  |
