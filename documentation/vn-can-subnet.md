@@ -81,8 +81,8 @@ The types of messages present are listed below. Please note that in the case of 
 | **Message type number** | **Meaning** | **Comment**  |
 | ----------------------- | ----------- | ------------ |
 | Not in this list | **RequestCANAddress** | Sent at regular intervals by any unit on the CAN network that does not have an CAN address yet. Contains information telling whether its a normal node or an SM-CAN. <br/>
-Nodes shall wait to send this message until they have received a **Normal CAN message**[^1](This shows that a SM-CAN master has been assigned.) such as the **CANMasterAssigned** message, since nobody will care about the **RequestCANAddress** except the SM-CAN master.
-| 0 | **AssignCANAddress** | Assignment of CAN-address from SM-CAN master.
+Nodes shall wait to send this message until they have received a **Normal CAN message**[^1](This shows that a SM-CAN master has been assigned.) such as the **CANMasterAssigned** message, since nobody will care about the **RequestCANAddress** except the SM-CAN master. |
+| 0 | **AssignCANAddress** | Assignment of CAN-address from SM-CAN master. <br/>
 Is sent to address 255 (Broadcast address). Contains the  Universally Unique CAN Identifier (UCID) for the node and its assigned CAN address |
 | 1 | **CANMasterAssigned** |  |
 | 2 | **AssignCANAddress** |  |
@@ -98,14 +98,17 @@ Is sent to address 255 (Broadcast address). Contains the  Universally Unique CAN
 This section declares the content of each message.
 
 **RequestCANAddress**
+
 Can contain zero or one byte. An ordinary node either sends zero bytes or sets the first byte equal to 5. SM-CANs set this byte equal to 3. 
 
 
 **AssignCANAddress**
+
 Bytes 0 – 3:  UCID of the receiving node.
 Byte 4: CAN address assigned to the node.
 
 **CANMasterAssigned**
+
 No payload data.
 
 **Ping**
@@ -150,6 +153,7 @@ This means that it shall listen for StartTransmission and Transmission messages 
 
 #### For nodes and SM-CAN slaves
 *Please note that both nodes and SM-CAN slaves are referred to as “nodes” in this section.*
+
 1. All SM-CANs shall participate in the Discovery process on their Processing nodes according to VN. See VN-CAN high level protocol for further details.
 2. All nodes shall listen to any **Normal CAN message** (such as the **CANMasterAssigned** message). Once the node receives a 
 Normal CAN message** this indicates that an SM-CAN master has been assigned.
