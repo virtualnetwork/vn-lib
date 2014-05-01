@@ -43,7 +43,7 @@ Whenever a **Distribute Route** message is sent by the higher level protocol the
 #### For routes to underlying units
 Whenever a VN message is received from an underlying subnet, it can be concluded that VN messages addressed to the sender address of this VN message can be routed via that particular subnet.  <br/>
 Consequently, the logical address of the VN message shall be entered into the routing table with corresponding subnet address set according to the subnet from which the message was received. <br/>
-*The above does not apply to LocalHello and LocalAck messages. No routing information regarding logical addresses shall be retrieved from LocalHello and LocalAck messages.* <br/>
+*The above does not apply to **LocalHello** and **LocalAck messages**. No routing information regarding logical addresses shall be retrieved from **LocalHello** and **LocalAck** messages.* <br/>
 Whenever a **Distribute Route** message is received from an underlying subnet, it can be concluded that VN messages addressed to the logical address contained in the **Distribute Route** message can be routed via this subnet. <br/>
 Consequently, the logical address contained in the **Distribute Route** message shall be entered into the routing table with corresponding subnet address set according to the subnet from which the message was received. <br/>
 Whenever a **Local Hello** message is received from a particular subnet, the CUUID contained in its payload shall be entered into the CUUID routing table. This saves the information that **AssignAddr** and **AssignAddrBlock** messages sent to this CUUID shall be sent via this subnet.
