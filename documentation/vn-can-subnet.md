@@ -157,6 +157,7 @@ This means that it shall listen for StartTransmission and Transmission messages 
 After an unit has received a CAN address it shall send a **DiscoveryRequest** message to CAN address 254, thus causing all SM-CANs to respond with a **ComponentType** message. This way the unit learns the CAN addresses of all SM-CANs present on the CAN network. <br/>
 The unit shall then send a **LocalHello** message to each SM-CAN it has discovered. The **LocalHello** message will contain the unit's CUUID and component type. The sender and receiver addresses of the message are set to 2. If no **LocalAck** message is received within XXX milliseconds the **LocalHello** message shall be resent.  <br/>
 When a **LocalHello** message is received over the subnet the following shall be done:
+
 1. Actions according to Route discovery process shall be taken.
 2. Respond with a **LocalAck** message.
 3. The **LocalHello** message shall be passed on to the overlying protocol.
@@ -169,6 +170,7 @@ All SM-CANs shall respond to **DiscoveryRequest** messages with a **ComponentTyp
 ##### Transmission of VN messages
 The following section describes how the transmission of a VN message shall be done. It applies to any unit on the CAN network, the SM-CANs (master or slaves) and nodes. This section assumes that the receiver's CAN address is known. <br/>
 Transmission of a VN message will be done as follows:
+
 1. The unit will send an **StartTransmission** message containing the number of **Transmission** messages needed to send the VN message.
 If there is no **FlowControl** message in response the sending unit shall retry a few times before giving up. Perferably, the failure to send the message should be reported to the overlying protocol.
 2. The receiver will answer with a **FlowControl** message containing its preferred block size. If the receiver is too busy at the moment, it can deny the transmission by simply not replying.
