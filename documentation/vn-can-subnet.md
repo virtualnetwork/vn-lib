@@ -125,11 +125,31 @@ No payload data.
 
 
 
+##### CAN Addresses
+
+| **Address** | **Meaning** | **Comment**  |
+| ----------------------- | ----------- | ------------ |
+| 255 | Broadcast address | All units on the CAN network should listen to this address at all times. |
+| 254 | Selective broadcast address | Broadcast address to all SM-CANs, but not nodes. |
+| 128..253 | Currently not used | These addresses are not used at the time of writing. |
+| 1..127 | Node CAN addresses | These addresses are given to nodes and SM-CAN slaves. |
+| 0 | SM-CAN master address | CAN address of SM-CAN master. |
+
+##### SM-CAN master negotiation process
+ 1  Each SM-CAN shall send a RequestCANAddress message when it starts.
+ 2  The SM-CAN shall delay for XXX ms. During this time it shall listen to RequestCANAddress and any Normal CAN message.
+ 2.1  If the SM-CAN receives a Normal CAN message, or a RequestCANAddress message from an SM-CAN with a lower UCID, it shall become an SM-CAN slave.
+ 2.2  If the  SM-CAN receives a RequestCANAddress message from an SM-CAN with a higher UCID it shall respond with a RequestCANAddress message of its own.
+ 3  If the delay has passed without the SM-CAN becoming a slave it shall become an SM-CAN master.
+ 4  If the SM-CAN master receives a RequestCANAddress message from an SM-CAN it shall respond with a Normal CAN message, such as the CANMasterAssigned message. 
+This responsibility of the SM-CAN master remains indefinitely.
+ 5  Once assigned as a slave, an SM-CAN has no further responsibilities with regards to the SM-CAN master negotiation process.
+ 6  Once a SM-CAN has been assigned an SM-CAN master, it shall be ready to receive VN messages. <br/>
+This means that it shall listen for StartTransmission and Transmission messages and be ready to answer with FlowControl messages.
+
+##### Discovery process
+*This process takes place after the SM-CAN master negotiation process.*
 
 
-
-
-
-
-
+##### Transmission of VN messages
 
