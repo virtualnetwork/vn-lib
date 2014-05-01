@@ -149,6 +149,35 @@ This means that it shall listen for StartTransmission and Transmission messages 
 ##### Discovery process
 *This process takes place after the SM-CAN master negotiation process.*
 
+###### For nodes and SM-CAN slaves
+
+###### For the SM-CAN master
+
+###### For all units (nodes or SM-CANs)
+After an unit has received a CAN address it shall send a **DiscoveryRequest** message to CAN address 254, thus causing all SM-CANs to respond with a **ComponentType** message. This way the unit learns the CAN addresses of all SM-CANs present on the CAN network. <br/>
+The unit shall then send a **LocalHello** message to each SM-CAN it has discovered. The **LocalHello** message will contain the unit's CUUID and component type. The sender and receiver addresses of the message are set to 2. If no **LocalAck** message is received within XXX milliseconds the **LocalHello** message shall be resent.  <br/>
+When a **LocalHello** message is received over the subnet the following shall be done:
+1. Actions according to Route discovery process shall be taken.
+2. Respond with a **LocalAck** message.
+3. The **LocalHello** message shall be passed on to the overlying protocol.
+
+The **LocalHello** message is a mid level message that is used to inform the recipient about the sender's presence. The **LocalHello** message is described further in higher level protocols.
+
+###### For all SM-CANs
+All SM-CANs shall respond to **DiscoveryRequest** messages with a **ComponentType** message.
 
 ##### Transmission of VN messages
+The following section describes how the transmission of a VN message shall be done. It applies to any unit on the CAN network, the SM-CANs (master or slaves) and nodes. This section assumes that the receiver's CAN address is known. <br/>
+Transmission of a VN message will be done as follows:
+1. The unit will send an **StartTransmission** message containing the number of **Transmission** messages needed to send the VN message.
+If there is no **FlowControl** message in response the sending unit shall retry a few times before giving up. Perferably, the failure to send the message should be reported to the overlying protocol.
+2. The receiver will answer with a **FlowControl** message containing its preferred block size. If the receiver is too busy at the moment, it can deny the transmission by simply not replying.
+3. Once the sending node receives the **FlowControl** message it will send **Transmission** messages according to:
+A) If the FlowControl message did not indicate the use of flow control, or if the Block Size is smaller than the number of **Transmission** messages needed to send the VN message, all **Transmission** messages will be sent. In this case step 6 will be omitted.
+B) Otherwise, the sender will send as many **Transmission** messages as specified in the **FlowControl** message.
+4. Once the sender receives another FlowControl message it will send another block size of Transmission messages, or the remaining **Transmission** messages if the number of remaining **Transmission** messages is smaller than the block size.
+This will continue until all **Transmission** messages have been sent.
+5. Once a sender has sent a **StartTransmission** message to a receiver regarding a particular VN message it shall not send another  **StartTransmission** message regarding another VN message to that receiver before having transferred all of the previous VN message (all **Transmission** messages). <br/>
+Hence, the transmission a VN message cannot be interrupted by the transmission of another VN message that is sent from the same sender to the same receiver. <br/>
+However, any sender is allowed to simultaneously transmit VN messages to several receivers and receivers are allowed to receive VN messages from several senders simultaneously.
 
