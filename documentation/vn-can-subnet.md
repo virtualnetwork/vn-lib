@@ -85,7 +85,7 @@ The types of messages present are listed below. Please note that in the case of 
 | **Message type number** | **Meaning** | **Comment**  |
 | ----------------------- | ----------- | ------------ |
 | Not in this list | **RequestCANAddress** | Sent at regular intervals by any unit on the CAN network that does not have an CAN address yet. Contains information telling whether its a normal node or an SM-CAN. <br/>
-Nodes shall wait to send this message until they have received a **Normal CAN message**[^](This shows that a SM-CAN master has been assigned.) such as the **CANMasterAssigned** message, since nobody will care about the **RequestCANAddress** except the SM-CAN master.
+Nodes shall wait to send this message until they have received a **Normal CAN message**[^1](This shows that a SM-CAN master has been assigned.) such as the **CANMasterAssigned** message, since nobody will care about the **RequestCANAddress** except the SM-CAN master.
 | 0 | **AssignCANAddress** | Assignment of CAN-address from SM-CAN master.
 Is sent to address 255 (Broadcast address). Contains the  Universally Unique CAN Identifier (UCID) for the node and its assigned CAN address |
 | 1 | **CANMasterAssigned** |  |
@@ -136,15 +136,14 @@ No payload data.
 | 0 | SM-CAN master address | CAN address of SM-CAN master. |
 
 ##### SM-CAN master negotiation process
- 1  Each SM-CAN shall send a RequestCANAddress message when it starts.
- 2  The SM-CAN shall delay for XXX ms. During this time it shall listen to RequestCANAddress and any Normal CAN message.
- 2.1  If the SM-CAN receives a Normal CAN message, or a RequestCANAddress message from an SM-CAN with a lower UCID, it shall become an SM-CAN slave.
- 2.2  If the  SM-CAN receives a RequestCANAddress message from an SM-CAN with a higher UCID it shall respond with a RequestCANAddress message of its own.
- 3  If the delay has passed without the SM-CAN becoming a slave it shall become an SM-CAN master.
- 4  If the SM-CAN master receives a RequestCANAddress message from an SM-CAN it shall respond with a Normal CAN message, such as the CANMasterAssigned message. 
-This responsibility of the SM-CAN master remains indefinitely.
- 5  Once assigned as a slave, an SM-CAN has no further responsibilities with regards to the SM-CAN master negotiation process.
- 6  Once a SM-CAN has been assigned an SM-CAN master, it shall be ready to receive VN messages. <br/>
+ 1.  Each SM-CAN shall send a RequestCANAddress message when it starts.
+ 2.  The SM-CAN shall delay for XXX ms. During this time it shall listen to **RequestCANAddress** and any **Normal CAN message**.
+ 2.1  If the SM-CAN receives a **Normal CAN message**, or a **RequestCANAddress** message from an SM-CAN with a lower UCID, it shall become an SM-CAN slave.
+ 2.2  If the  SM-CAN receives a **RequestCANAddress** message from an SM-CAN with a higher UCID it shall respond with a **RequestCANAddress** message of its own.
+ 3.  If the delay has passed without the SM-CAN becoming a slave it shall become an SM-CAN master.
+ 4.  If the SM-CAN master receives a **RequestCANAddress** message from an SM-CAN it shall respond with a *Normal CAN message*, such as the **CANMasterAssigned** message. *This responsibility of the SM-CAN master remains indefinitely.*
+ 5.  Once assigned as a slave, an SM-CAN has no further responsibilities with regards to the SM-CAN master negotiation process.
+ 6.  Once a SM-CAN has been assigned an SM-CAN master, it shall be ready to receive VN messages. <br/>
 This means that it shall listen for StartTransmission and Transmission messages and be ready to answer with FlowControl messages.
 
 ##### Discovery process
