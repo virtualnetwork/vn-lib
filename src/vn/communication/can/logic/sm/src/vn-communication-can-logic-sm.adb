@@ -25,7 +25,7 @@ with Ada.Text_IO; --ToDo, for testing only
 
 package body VN.Communication.CAN.Logic.SM is
 
-   procedure Binary_IO(value : VN.Communication.CAN.CAN_message_ID) is
+   procedure Binary_IO(value : VN.Communication.CAN.CAN_message_ID) is  --ToDo, for testing only
       package CAN_MSG_ID_IO is new Ada.Text_IO.Integer_IO(Integer);
       temp : integer := Integer(value);
    begin
@@ -93,7 +93,8 @@ package body VN.Communication.CAN.Logic.SM is
             this.cuuidResponder.Activate(this.myCUUID, 0, true);
             this.cuuidHandler.Activate(this.myCUUID, 0, this.sender'Unchecked_Access);
 
-            --Change CAN message filters, SM_CAN_MasterNegotioation longer wishes to receceive normal CAN messages:
+            --Change CAN message filters, SM_CAN_MasterNegotioation longer wishes to receceive
+            -- normal CAN messages, only RequestCANAddress messages:
             this.theFilter.Change_Filter(this.negotioationFilterID, VN.Communication.CAN.CAN_message_ID(2 ** 28), VN.Communication.CAN.CAN_message_ID(2 ** 28));
             VN.Communication.CAN.Logic.DebugOutput("Change_Filter negotioationFilterID, template=", 5);
             Binary_IO(VN.Communication.CAN.CAN_message_ID(2 ** 28));
@@ -101,6 +102,8 @@ package body VN.Communication.CAN.Logic.SM is
             VN.Communication.CAN.Logic.DebugOutput("Change_Filter negotioationFilterID, mask=", 5);
             Binary_IO(VN.Communication.CAN.CAN_message_ID(2 ** 28));
 
+            --Create filter to filter out messages addressed to the SM_CAN master's CAN address (0):
+            this.theFilter.Create_Transmission_Filter(this.transmissionFilterID, 0);
 
          elsif this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SLAVE then
             this.addressReceiver.Activate;
@@ -122,25 +125,13 @@ package body VN.Communication.CAN.Logic.SM is
                this.cuuidResponder.Activate(this.myCUUID, address, true);
                this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
 
-               --Change CAN message filters, SM_CAN_MasterNegotioation longer wishes to receceive any CAN messages:
+               --Change CAN message filters, SM_CAN_MasterNegotioation does no longer wishe
+               -- to receceive any CAN messages:
                this.theFilter.Remove_Filter(this.negotioationFilterID);
-               declare
-                  template, mask   : VN.Communication.CAN.CAN_message_ID;
-                  POWER28 : constant Interfaces.Unsigned_32 := 2 ** 28;
-               begin
-                  template := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(address),
-                                                                  VN.Communication.CAN.OFFSET_CAN_RECEIVER));
 
-                  mask := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(CAN_Address_Receiver'Last),
-                                                              VN.Communication.CAN.OFFSET_CAN_RECEIVER) + POWER28);
-
-                  this.theFilter.Create_Filter(this.transmissionFilterID, template, mask);
-                  VN.Communication.CAN.Logic.DebugOutput("Create_Filter , transmissionFilterID, template=", 5);
-                  Binary_IO(template);
-
-                  VN.Communication.CAN.Logic.DebugOutput("Create_Filter transmissionFilterID, mask=", 5);
-                  Binary_IO(mask);
-               end;
+               --Create filter to filter out messages addressed to the assigned CAN address:
+               this.theFilter.Create_Transmission_Filter(this.transmissionFilterID,
+                                                         VN.Communication.CAN.Convert(address));
 
                --FOR TESTING:
                --              if not this.hasSent then
