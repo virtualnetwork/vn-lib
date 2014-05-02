@@ -11,8 +11,6 @@
 -- a VN message, it will write it to this buffer.
 
 
-with VN.Communication.CAN.CAN_Filtering;
-
 with VN.Communication.CAN.Logic;
 with VN.Communication.CAN.Logic.Receiver_Unit;
 use VN.Communication.CAN.Logic.Receiver_Unit;
@@ -25,7 +23,7 @@ with Buffers;
 
 package VN.Communication.CAN.Logic.Receiver is
 
-   type Receiver_Duty(theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+   type Receiver_Duty is
      new VN.Communication.CAN.Logic.Duty with private;
 
    type Receiver_Duty_ptr is access all Receiver_Duty'Class;
@@ -46,7 +44,7 @@ private
    type UnitArray is array(1..NUM_UNITS) of aliased VN.Communication.CAN.Logic.Receiver_Unit.Receiver_Unit_Duty;
 
    type Receiver_State is (Unactivated, Activated);
-   type Receiver_Duty(theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+   type Receiver_Duty is
      new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	 : Receiver_State := Unactivated;

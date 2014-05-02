@@ -29,7 +29,7 @@ package body VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation is
             this.currentState := Started;
 
             -- Set filter for receiving all CAN messages:
-            this.theFilter.Create_Filter(this.mainFilter, VN.Communication.CAN.CAN_message_ID(0), VN.Communication.CAN.CAN_message_ID(0));
+          --  this.theFilter.Create_Filter(this.mainFilter, VN.Communication.CAN.CAN_message_ID(0), VN.Communication.CAN.CAN_message_ID(0));
 
          when Started =>
             if bHasMessage then
@@ -45,7 +45,7 @@ package body VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation is
 
 
                   this.currentState := Slave;
-                  this.theFilter.Remove_Filter(this.mainFilter); --stop receving CAN messages
+                 -- this.theFilter.Remove_Filter(this.mainFilter); --stop receving CAN messages
 
                   bWillSend := false;
                   return;
@@ -60,7 +60,7 @@ package body VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation is
                         VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": SM_CAN_MasterNegotiation.Update: Started, RequestCANAddress from lower UCID = " & theUCID'Img & " received, became slave", 4);
                         this.currentState := Slave;
                         bWillSend := false;
-                        this.theFilter.Remove_Filter(this.mainFilter); --stop receving CAN messages
+                      --  this.theFilter.Remove_Filter(this.mainFilter); --stop receving CAN messages
                         return;
                      elsif bIs_SM_CAN then
                         VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": SM_CAN_MasterNegotiation.Update: Started, RequestCANAddress from higher UCID = " & theUCID'Img & " received, replied", 4);
@@ -81,7 +81,7 @@ package body VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation is
 
                this.currentState := Master;
                bWillSend := true;
-               this.theFilter.Remove_Filter(this.mainFilter); --stop receving CAN messages
+              -- this.theFilter.Remove_Filter(this.mainFilter); --stop receving CAN messages
                VN.Communication.CAN.Logic.Message_Utils.CANMasterAssignedToMessage(msgOut, 0);
                return;
 

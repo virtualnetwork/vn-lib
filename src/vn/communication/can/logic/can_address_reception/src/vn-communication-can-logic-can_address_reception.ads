@@ -12,13 +12,11 @@
 pragma Profile (Ravenscar);
 
 with Ada.Real_Time;
-with VN.Communication.CAN.CAN_Filtering;
 with VN.Communication.CAN.Logic;
 
 package VN.Communication.CAN.Logic.CAN_Address_Reception is
 
-   type CAN_Assignment_Node(theUCID : access VN.Communication.CAN.UCID;
-                            theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+   type CAN_Assignment_Node(theUCID : access VN.Communication.CAN.UCID) is
      new VN.Communication.CAN.Logic.Duty with private;
 
    type CAN_Assignment_Node_ptr is access all CAN_Assignment_Node'Class;
@@ -37,8 +35,7 @@ private
 
    TIME_TO_WAIT_FOR_ADDRESS : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(1000);
 
-   type CAN_Assignment_Node(theUCID : access VN.Communication.CAN.UCID;
-                            theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+   type CAN_Assignment_Node(theUCID : access VN.Communication.CAN.UCID) is
      new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	: CAN_Assignment_Node_State := Unactivated;
