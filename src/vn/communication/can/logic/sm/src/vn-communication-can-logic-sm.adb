@@ -335,9 +335,6 @@ package body VN.Communication.CAN.Logic.SM is
 
    procedure Init(this : in out SM_Duty) is
       testCUUID : VN.VN_CUUID := (others => 42); --ToDo: For testing only!!!!
-
-      template, mask    : VN.Communication.CAN.CAN_message_ID;
-      POWER28 		: constant Interfaces.Unsigned_32 := 2 ** 28;
    begin
       VN.Communication.CAN.Logic.DebugOutput("SM_Duty initialized", 4);
 
@@ -354,15 +351,11 @@ package body VN.Communication.CAN.Logic.SM is
       -- Set CAN filters:
       this.theFilter.Create_Filter(this.negotioationFilterID, 0, 0); --will listen to all CAN messages, for now
 
-      template := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(255),
-                                                      VN.Communication.CAN.OFFSET_CAN_RECEIVER));
-
-      mask := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(CAN_Address_Receiver'Last),
-                                                  VN.Communication.CAN.OFFSET_CAN_RECEIVER) + POWER28);
-
       -- receiving messages sent to CAN address 255 (broadcast)
-      this.theFilter.Create_Filter(this.broadcastFilterID, template, mask);
+      this.theFilter.Create_Transmission_Filter(this.broadcastFilterID, 255);
 
+      -- receiving messages sent to CAN address 254 (selective broadcast)
+      this.theFilter.Create_Transmission_Filter(this.selectiveBroadcastFilterID, 254);
 
       --ToDo: For testing only!!!!
       CAN_Routing.Insert(this.myTable, 1337, 42);
