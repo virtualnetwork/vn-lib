@@ -131,7 +131,7 @@ private
 
          assigner : aliased VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master;
 
-         sender : aliased VN.Communication.CAN.Logic.Sender.Sender_Duty(theFilter);
+         sender : aliased VN.Communication.CAN.Logic.Sender.Sender_Duty;
 
          receiver : aliased VN.Communication.CAN.Logic.Receiver.Receiver_Duty;
 
