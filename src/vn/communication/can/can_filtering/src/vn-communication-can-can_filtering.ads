@@ -36,6 +36,14 @@ package VN.Communication.CAN.CAN_Filtering is
                         template : out CAN_message_ID;
                         mask 	 : out CAN_message_ID;
                         isUsed 	 : out Boolean);
+
+   procedure Create_Transmission_Filter(this : in out CAN_Filter_Type;
+                                        filterID   : out Filter_ID_Type;
+                                        CANaddress : VN.Communication.CAN.CAN_Address_Receiver);
+
+   procedure Change_To_Transmission_Filter(this : in out CAN_Filter_Type;
+                                           filterID   : Filter_ID_Type;
+                                           CANaddress : VN.Communication.CAN.CAN_Address_Receiver);
 private
 
    type Filter_Type is
