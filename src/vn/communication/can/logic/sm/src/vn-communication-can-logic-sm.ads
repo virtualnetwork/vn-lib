@@ -24,7 +24,7 @@
 -- either on the assigned CAN address or CAN address 255.
 
 -- CUUID_Handler (ToDo: name change needed) receives ComponentType
--- on the assigned CAN address.
+-- on CAN address 254.
 
 -- Sender receives FlowControl messages
 -- on the assigned CAN address.
@@ -123,6 +123,7 @@ private
          negotioationFilterID : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
          transmissionFilterID : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
          broadcastFilterID    : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
+         selectiveBroadcastFilterID    : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
 
          masterNegotiation : aliased VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);
 
