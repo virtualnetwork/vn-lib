@@ -30,8 +30,12 @@ package body VN.Communication.CAN.CAN_Filtering is
                            template : CAN_message_ID;
                            mask     : CAN_message_ID) is
    begin
-      this.myFilters(filterID).template := template;
-      this.myFilters(filterID).mask := mask;
+      -- This if statement prevents error if the filterID was not initialized.
+      -- I.e. read before written to.
+      if filterID >= Filter_ID_Type'First and filterID <= Filter_ID_Type'Last then
+         this.myFilters(filterID).template := template;
+         this.myFilters(filterID).mask := mask;
+      end if;
    end Change_Filter;
 
    procedure Remove_Filter(this : in out CAN_Filter_Type;
