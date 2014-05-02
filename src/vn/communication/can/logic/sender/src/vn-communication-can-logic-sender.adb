@@ -101,7 +101,6 @@ package body VN.Communication.CAN.Logic.Sender is
             bWillSend := false;
             loop
                if this.units(this.iterator).isActive  then
---                    VN.Communication.CAN.Logic.DebugOutput(this.iterator'Img& ": ", 4);
                   this.units(this.iterator).Update(msgIn, bMsgReceived, msgOut, bWillSend);
                end if;
 

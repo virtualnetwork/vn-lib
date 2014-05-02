@@ -67,34 +67,6 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       end if;
    end AddressAnswerFromMessage;
 
-
---     procedure AssignLogicalAddressToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
---                                             prio : VN.Communication.CAN.CAN_Message_Prio; logicalAddress : VN.VN_Logical_Address) is
---     begin
---        msg.isNormal := true;
---        msg.msgPrio  := prio;
---        msg.msgType  := VN.Communication.CAN.Logic.ASSIGN_LOGICAL_ADDR;
---        msg.Receiver := receiver;
---        msg.Sender   := sender;
---        msg.Length   := 4;
---
---        U16ToData(Interfaces.Unsigned_16(logicalAddress), msg.Data);
---     end AssignLogicalAddressToMessage;
-
-
---     procedure AssignLogicalAddressFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.VN_Logical_Address) is
---        INCORRECT_MESSAGE_AssignLogicalAddress : exception;
---        temp : Interfaces.Unsigned_16;
---     begin
---        if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ASSIGN_LOGICAL_ADDR and msg.Length = 4 then
---           DataToU16(msg.Data, temp);
---           logicalAddress := VN.VN_Logical_Address(temp);
---        else
---           raise INCORRECT_MESSAGE_AssignLogicalAddress;
---        end if;
---     end AssignLogicalAddressFromMessage;
-
-
    procedure ComponentTypeToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical;  sender : VN.Communication.CAN.CAN_Address_Sender; prio : VN.Communication.CAN.CAN_Message_Prio; isSM_CAN : boolean) is
    begin
       msg.isNormal := true;
@@ -194,15 +166,6 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.Receiver 	:= receiver;
       msg.Sender 	:= sender;
    end TransmissionToMessage;
-
-
---     procedure TransmissionFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; receiver : out VN.Communication.CAN.CAN_Address_Receiver;
---                                       sender : out VN.Communication.CAN.CAN_Address_Sender; numMessages : out Interfaces.Unsigned_16) is
---
---     begin
---
---     end TransmissionFromMessage;
-
 
    procedure FlowControlToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
                                   sender : VN.Communication.CAN.CAN_Address_Sender; useFlowControl : boolean;

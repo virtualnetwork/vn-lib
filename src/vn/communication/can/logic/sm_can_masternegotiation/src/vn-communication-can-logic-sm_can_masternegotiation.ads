@@ -39,7 +39,6 @@ private
          currentState : SM_CAN_MN_State := Start;
          timer    : Ada.Real_Time.Time;
          myUCID   : VN.Communication.CAN.UCID := theUCID.all;
-     --    mainFilter : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
       end record;
 
 end VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation;

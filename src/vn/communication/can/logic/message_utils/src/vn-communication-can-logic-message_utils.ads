@@ -10,26 +10,6 @@ with VN.Communication.CAN.Logic;
 
 package VN.Communication.CAN.Logic.Message_Utils is
 
---     type MessageTypeEnum is (UNKNOWN, ANY_NORMAL_CAN_MSG, REQUEST_CAN_ADDRESS, ASSIGN_CAN_ADDRESS,
---                              CAN_MASTER_ASSIGNED, ADDRESS_QUESTION, ADDRESS_ANSWER, PING, PONG,
---                              START_TRANSMISSION, FLOW_CONTROL, TRANSMISSION, FIRST_CUUID_HALF, SECOND_CUUID_HALF);
---     for MessageTypeEnum use
---       (UNKNOWN	 	  => -3,
---        ANY_NORMAL_CAN_MSG  => -2,
---        REQUEST_CAN_ADDRESS => -1,
---        ASSIGN_CAN_ADDRESS  => 0,
---        CAN_MASTER_ASSIGNED => 1,
---        ADDRESS_QUESTION    => 2,
---        ADDRESS_ANSWER	  => 3,
---        PING		  => 4,
---        PONG		  => 5,
---        START_TRANSMISSION  => 6,
---        FLOW_CONTROL	  => 7,
---        TRANSMISSION	  => 8,
---        FIRST_CUUID_HALF	  => 9,
---        SECOND_CUUID_HALF   => 10);
-
-
    procedure AddressQuestionToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
                                       sender : VN.Communication.CAN.CAN_Address_Sender; logicalAddress : VN.VN_Logical_Address; prio : CAN_Message_Prio);
 
@@ -40,11 +20,6 @@ package VN.Communication.CAN.Logic.Message_Utils is
 
    procedure AddressAnswerFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; CANAddress : out VN.Communication.CAN.CAN_Address_Sender;
                                       logicalAddress : out VN.VN_Logical_Address);
-
- --  procedure AssignLogicalAddressToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
---                                             prio : CAN_Message_Prio; logicalAddress : VN.VN_Logical_Address);
-
- --  procedure AssignLogicalAddressFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.VN_Logical_Address);
 
    procedure ComponentTypeToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; sender : VN.Communication.CAN.CAN_Address_Sender; prio : CAN_Message_Prio; isSM_CAN : boolean);
 
@@ -60,10 +35,7 @@ package VN.Communication.CAN.Logic.Message_Utils is
 --     procedure CUUIDHalfFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; theCUUID : in out VN.VN_CUUID; firstHalf : Boolean);
 
    procedure TransmissionToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
-                                        sender : VN.Communication.CAN.CAN_Address_Sender);
-
---     procedure TransmissionFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; receiver : out VN.Communication.CAN.CAN_Address_Receiver;
---                                            sender : out VN.Communication.CAN.CAN_Address_Sender);
+                                   sender : VN.Communication.CAN.CAN_Address_Sender);
 
    procedure FlowControlToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
                                   sender : VN.Communication.CAN.CAN_Address_Sender; useFlowControl : boolean;

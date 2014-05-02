@@ -30,11 +30,6 @@ package VN.Communication.CAN.Logic.ComponentType_Handler is
    procedure Activate(this : in out ComponentType_Handler; theCUUID : VN.VN_CUUID;
                       CANAddress : VN.Communication.CAN.CAN_Address_Sender;
                       sender : VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr);
-
-   --obsolete:
---     procedure ReadEntry(this : in out ComponentType_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
---                         unitCUUID : out VN.VN_CUUID; isSM_CAN : out boolean; isSet : out Boolean);
-
 private
 
    procedure HelloProc(this 	  : in out ComponentType_Handler;

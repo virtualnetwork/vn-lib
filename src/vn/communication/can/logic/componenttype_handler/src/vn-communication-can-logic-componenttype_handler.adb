@@ -76,16 +76,6 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
       this.mySender := sender;
    end Init;
 
---     procedure ReadEntry(this : in out ComponentType_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
---                         unitCUUID : out VN.VN_CUUID; isSM_CAN : out boolean; isSet : out Boolean) is
---     begin
---        isSet 	:= this.units(index).isComponentTypeSet;
---
---        if isSet then
---           isSM_CAN  := this.units(index).isSM_CAN;
---        end if;
---     end ReadEntry;
-
    procedure HelloProc(this 	  : in out ComponentType_Handler;
                        sender     : in VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr;
                        CANAddress : VN.Communication.CAN.CAN_Address_Sender;
@@ -102,10 +92,6 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
       VN.Communication.CAN.Logic.DebugOutput("SM_Duty discovered a unit, CANAddress= " &
                                                CANAddress'Img & " isSM_CAN = " &
                                                isSM_CAN'img, 4);
-
---        if this.myCANAddress /= VN.Communication.CAN.CAN_Address_Sender(0) then --ToDo: ONLY FOR TESTING
---           return;
---        end if;
 
       -- Send LocalHello message:
       if isSM_CAN then
@@ -126,10 +112,7 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
          msg.NumBytes := Interfaces.Unsigned_16(Integer(msgLocalHello.Header.Payload_Length) +
                                                   VN.Message.HEADER_SIZE + VN.Message.CHECKSUM_SIZE);
 
-
          sender.SendVNMessage(msg, result);
-
-
 
          --ToDo: If result is not equal to OK we have a problem
       end if;

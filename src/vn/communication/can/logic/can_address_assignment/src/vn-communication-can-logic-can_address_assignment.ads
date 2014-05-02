@@ -8,9 +8,6 @@
 -- CAN_Address_Assignment will assign CAN addresses to all other units on the
 -- CAN network.
 
--- ToDo: Use the information in Address_Entry in the discovery process.
-
-
 with VN.Communication.CAN.Logic;
 
 package VN.Communication.CAN.Logic.CAN_Address_Assignment is
@@ -24,7 +21,6 @@ package VN.Communication.CAN.Logic.CAN_Address_Assignment is
          isUsed	   : Boolean := false;
       end record;
 
-   --ToDo: Address tables (routing tables) need to be revised
    type Address_Table is array(VN.Communication.CAN.CAN_Address_Sender) of Address_Entry;
 
    overriding procedure Update(this : in out CAN_Assignment_Master; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
