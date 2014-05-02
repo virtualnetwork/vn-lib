@@ -99,7 +99,6 @@ package VN.Communication.CAN.Logic.SM is
 
 private
 
-   procedure Binary_IO(value : VN.Communication.CAN.CAN_message_ID);--testing
    procedure Init(this : in out SM_Duty);
 
    --ToDo: These constants should be put in a config file of some sort
