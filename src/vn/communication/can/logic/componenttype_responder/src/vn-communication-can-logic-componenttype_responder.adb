@@ -7,9 +7,9 @@
 
 with VN.Communication.CAN.Logic.Message_Utils;
 
-package body VN.Communication.CAN.Logic.CUUID_Responder is
+package body VN.Communication.CAN.Logic.ComponentType_Responder is
 
-   overriding procedure Update(this : in out CUUID_Responder; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+   overriding procedure Update(this : in out ComponentType_Responder; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
                                msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean) is
    begin
       case this.currentState is
@@ -29,7 +29,7 @@ package body VN.Communication.CAN.Logic.CUUID_Responder is
       end case;
    end Update;
 
-   procedure Activate(this : in out CUUID_Responder; theCUUID : VN.VN_CUUID; CANAddress : VN.Communication.CAN.CAN_Address_Sender; isSM_CAN : boolean) is
+   procedure Activate(this : in out ComponentType_Responder; theCUUID : VN.VN_CUUID; CANAddress : VN.Communication.CAN.CAN_Address_Sender; isSM_CAN : boolean) is
    begin
       if this.currentState = Unactivated then
          VN.Communication.CAN.Logic.DebugOutput("CUUID_Responder at address " & CANAddress'Img & " activated", 5);
@@ -39,4 +39,4 @@ package body VN.Communication.CAN.Logic.CUUID_Responder is
          this.isSM_CAN     := isSM_CAN;
       end if;
    end Activate;
-end VN.Communication.CAN.Logic.CUUID_Responder;
+end VN.Communication.CAN.Logic.ComponentType_Responder;

@@ -43,7 +43,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
             if not this.hasRequested and Ada.Real_Time.Clock - this.timer >= DELAY_TIME then
                this.hasRequested := true;
                VN.Communication.CAN.Logic.DebugOutput("Discovery request sent from address " & this.myCANAddress'Img, 5);
-               VN.Communication.CAN.Logic.Message_Utils.RequestCUUIDToMessage(msgOut, this.myCANAddress, 0);
+               VN.Communication.CAN.Logic.Message_Utils.DiscoveryRequestToMessage(msgOut, this.myCANAddress, 0);
                bWillSend := true;
             end if;
       end case;
