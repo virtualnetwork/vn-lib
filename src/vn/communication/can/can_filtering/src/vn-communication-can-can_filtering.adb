@@ -38,6 +38,7 @@ package body VN.Communication.CAN.CAN_Filtering is
       if filterID >= Filter_ID_Type'First and filterID <= Filter_ID_Type'Last then
          this.myFilters(filterID).template := template;
          this.myFilters(filterID).mask := mask;
+         this.myFilters(filterID).isUsed := true;
       end if;
    end Change_Filter;
 
