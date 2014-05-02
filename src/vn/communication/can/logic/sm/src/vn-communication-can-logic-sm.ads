@@ -8,11 +8,34 @@
 -- Please also note that this functionality is regarding a Subnet Manager for CAN (SM-CAN),
 -- not an ordinary node.
 
---ToDo: Right now no routing information is retreived from DistributeRoute messages!!
---ToDo: Send LocalHello messages when detecting a new SM-CAN
---ToDo: Send LocalAck messages when receiving a LocalHello message
+-- Attention to CAN messages with regards to their ID is as follows:
+
+-- SM_CAN_MasterNegotiation listens initially to all CAN messages.
+-- If assigned as Slave: Does not listen to any messages.
+-- If assigned as Master: Listens RequestCANAddress messages.
+
+-- CAN_Address_Assignment, only activated when being SM-CAN master
+-- Listens to RequestCANAddress messages
+
+-- CAN_Address_Reception, only activated when being SM-CAN slave
+-- Listens to AssignCANAddress messages (these are sent to CAN address 255)
+
+-- CUUID_Responder (ToDo: name change needed) receives DiscoveryRequest
+-- either on the assigned CAN address or CAN address 255.
+
+-- CUUID_Handler (ToDo: name change needed) receives ComponentType
+-- on the assigned CAN address.
+
+-- Sender receives FlowControl messages
+-- on the assigned CAN address.
+
+-- Receiver receives StartTransmission and Transmission messages
+-- on the assigned CAN address.
+
 
 with VN.Message;
+with VN.Communication.CAN.CAN_Filtering;
+
 with VN.Communication.CAN.Logic;
 with VN.Communication.CAN.Logic.CAN_Address_Assignment;
 with VN.Communication.CAN.Logic.CAN_Address_Reception;
@@ -53,37 +76,26 @@ package VN.Communication.CAN.Logic.SM is
    use Unit_Buffers;
 
 
-   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is limited private;
+   type SM_Duty(theUCID   : access VN.Communication.CAN.UCID;
+                theCUUID  : access VN.VN_CUUID;
+                theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is limited private;
 
    type SM_Duty_ptr is access all SM_Duty;
 
    procedure Update(this : in out SM_Duty; msgsBuffer : in out CAN_Message_Buffers.Buffer;
                     ret : out CAN_Message_Buffers.Buffer);
 
-   --This function should be private sooner or later?
+   --This function is most likely obsolete:
    procedure Discover(this : in out SM_Duty; discoveredUnits : out Unit_Buffers.Buffer);
 
-   procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
+   procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic;
                                 result : out VN.Send_Status);
 
-   procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
+   procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic;
                      status : out VN.Receive_Status);
 
    --This function is most likely obsolete:
    procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender; isAssigned : out boolean);
-
-   --THIS IS JUST TESTING FUNCTIONALLITY FOR NODES, NOT SM-CANs
---     procedure GetLogicalAddress(this : in out SM_Duty; LogicalAddress : out VN.VN_Logical_Address;
---                                 isAssigned : out boolean);
---
---     procedure SetMyAddress(this : in out SM_Duty; LogicalAddress : VN.VN_Logical_Address);
---
---     procedure Assign(this : in out SM_Duty; CANAddress : CAN_Address_Sender;
---                      LogicalAddress : VN.VN_Logical_Address);
---
---     procedure AddressQuestion(this : in out SM_Duty; LogicalAddress : VN.VN_Logical_Address;
---                               CANAddress : out CAN_Address_Sender; wasFound : out boolean);
-
 
 private
 
@@ -95,43 +107,36 @@ private
 
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
-   type SM_Duty(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID) is limited
+   type SM_Duty(theUCID   : access VN.Communication.CAN.UCID;
+                theCUUID  : access VN.VN_CUUID;
+                theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is limited
       record
 
          isInitialized : Boolean := false;
+         hasRole       : Boolean := false;
+         hasCANAddress : Boolean := false;
 
          myUCID  : VN.Communication.CAN.UCID  := theUCID.all;
          myCUUID : VN.VN_CUUID := theCUUID.all;
          myTable : CAN_Routing.Table_Type(CAN_ROUTING_TABLE_SIZE);
 
+         negotioationFilterID : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
+         transmissionFilterID : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
+         broadcastFilterID    : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
 
-           masterNegotiation : aliased VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);
---           masterNegotiation : VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty_ptr :=
---             new VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);
+         masterNegotiation : aliased VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID, theFilter);
 
-         addressReceiver : aliased VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node(theUCID);
---           addressReceiver : VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node_ptr :=
---             new VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node(theUCID);
+         addressReceiver : aliased VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node(theUCID, theFilter);
 
-         assigner : aliased VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master;
---           assigner : VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master_ptr :=
---             new VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master;
+         assigner : aliased VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master(theFilter);
 
-         sender : aliased VN.Communication.CAN.Logic.Sender.Sender_Duty;
---           sender : VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr :=
---             new VN.Communication.CAN.Logic.Sender.Sender_Duty;
+         sender : aliased VN.Communication.CAN.Logic.Sender.Sender_Duty(theFilter);
 
-         receiver : aliased VN.Communication.CAN.Logic.Receiver.Receiver_Duty;
---           receiver : VN.Communication.CAN.Logic.Receiver.Receiver_Duty_ptr :=
---             new VN.Communication.CAN.Logic.Receiver.Receiver_Duty;
+         receiver : aliased VN.Communication.CAN.Logic.Receiver.Receiver_Duty(theFilter);
 
-         cuuidResponder : aliased VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder;
---           cuuidResponder : VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder_ptr :=
---             new VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder;
+         cuuidResponder : aliased VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder(theFilter);
 
-         cuuidHandler : aliased VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler;
---           cuuidHandler : VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler_ptr :=
---             new VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler(HelloProc'Access);
+         cuuidHandler : aliased VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler(theFilter);
 
          DutyArray : ArrayOfDuties;
 

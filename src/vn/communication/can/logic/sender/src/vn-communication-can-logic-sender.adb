@@ -119,12 +119,24 @@ package body VN.Communication.CAN.Logic.Sender is
    end Update;
 
    procedure Activate(this : in out Sender_Duty; address : VN.Communication.CAN.CAN_Address_Sender) is
+      mainFilter : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
+      template, mask   : VN.Communication.CAN.CAN_message_ID;
+
+      POWER28 : constant Interfaces.Unsigned_32 := 2 ** 28;
    begin
       if this.currentState = Unactivated then
          this.currentState := Activated;
          this.myCANAddress := address;
 
          DebugOutput("Sender activated with CAN address " & address'Img, 5);
+
+         template := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(address),
+                                                         VN.Communication.CAN.OFFSET_CAN_SENDER));
+
+         mask := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(CAN_Address_Sender'Last),
+                                                         VN.Communication.CAN.OFFSET_CAN_SENDER) + POWER28);
+
+         this.theFilter.Create_Filter(mainFilter, template, mask);
 
          for i in this.units'range loop
             this.units(i).Activate(address);

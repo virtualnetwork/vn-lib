@@ -68,46 +68,71 @@ package body VN.Communication.CAN.Logic.SM is
          end loop;
       end if;
 
-      if this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.MASTER then
-         this.assigner.Activate(this.myUCID);
-         this.sender.Activate(0);
-         this.receiver.Activate(0);
-         this.cuuidResponder.Activate(this.myCUUID, 0, true);
-         this.cuuidHandler.Activate(this.myCUUID, 0, this.sender'Unchecked_Access);
-         --this.logicalAddressHandler.Activate(0, true);
+      if not this.hasRole then
+         if this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.MASTER then
 
-      elsif this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SLAVE then
-         this.addressReceiver.Activate;
+            this.hasCANAddress := true;
+            this.hasRole := true;
+
+            this.assigner.Activate(this.myUCID);
+            this.sender.Activate(0);
+            this.receiver.Activate(0);
+            this.cuuidResponder.Activate(this.myCUUID, 0, true);
+            this.cuuidHandler.Activate(this.myCUUID, 0, this.sender'Unchecked_Access);
+
+            --Change CAN message filters, SM_CAN_MasterNegotioation longer wishes to receceive
+            -- normal CAN messages, only RequestCANAddress messages:
+            this.theFilter.Change_Filter(this.negotioationFilterID, VN.Communication.CAN.CAN_message_ID(2 ** 28),
+                                         VN.Communication.CAN.CAN_message_ID(2 ** 28));
+
+            --Create filter to filter out messages addressed to the SM_CAN master's CAN address (0):
+            this.theFilter.Create_Transmission_Filter(this.transmissionFilterID, 0);
+
+         elsif this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SLAVE then
+            this.addressReceiver.Activate;
+            this.hasRole := true;
+         end if;
       end if;
 
-      declare
-         isAssigned : boolean;
-         address    : VN.Communication.CAN.CAN_Address_Sender;
-      begin
-         this.addressReceiver.Address(address, isAssigned);
-         if isAssigned then
-            this.sender.Activate(address);
-            this.receiver.Activate(address);
-            this.cuuidResponder.Activate(this.myCUUID, address, true);
-            this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
-           -- this.logicalAddressHandler.Activate(address, false); --isSM_CAN is set to false here in some cases of testing
+      if not this.hasCANAddress then
+         declare
+            isAssigned : boolean;
+            address    : VN.Communication.CAN.CAN_Address_Sender;
+         begin
+            this.addressReceiver.Address(address, isAssigned);
+            if isAssigned then
+               this.hasCANAddress := true;
 
-            --FOR TESTING:
---              if not this.hasSent then
---                 VN.Communication.CAN.Logic.DebugOutput("Starting to send VN message", 3);
---                 this.hasSent := true;
---
---
---                 declare
---                    tempStr : String := "Hello world its working, sent from UCID " & this.myUCID'Img & "                        ";
---                    d : VN.Communication.CAN.Logic.DataArray := VN.Communication.CAN.Logic.DataArray(tempStr(VN.Communication.CAN.Logic.DataArray'Range));
---                    msg : VN.Communication.CAN.Logic.VN_Message_Internal := (d, 50, 0, address);
---                 begin
---                    this.sender.SendVNMessage(msg);
---                 end;
---              end if;
-         end if;
-      end;
+               this.sender.Activate(address);
+               this.receiver.Activate(address);
+               this.cuuidResponder.Activate(this.myCUUID, address, true);
+               this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
+
+               --Change CAN message filters, SM_CAN_MasterNegotioation does no longer wishe
+               -- to receceive any CAN messages:
+               this.theFilter.Remove_Filter(this.negotioationFilterID);
+
+               --Create filter to filter out messages addressed to the assigned CAN address:
+               this.theFilter.Create_Transmission_Filter(this.transmissionFilterID,
+                                                         VN.Communication.CAN.Convert(address));
+
+               --FOR TESTING:
+               --              if not this.hasSent then
+               --                 VN.Communication.CAN.Logic.DebugOutput("Starting to send VN message", 3);
+               --                 this.hasSent := true;
+               --
+               --
+               --                 declare
+               --                    tempStr : String := "Hello world its working, sent from UCID " & this.myUCID'Img & "                        ";
+               --                    d : VN.Communication.CAN.Logic.DataArray := VN.Communication.CAN.Logic.DataArray(tempStr(VN.Communication.CAN.Logic.DataArray'Range));
+               --                    msg : VN.Communication.CAN.Logic.VN_Message_Internal := (d, 50, 0, address);
+               --                 begin
+               --                    this.sender.SendVNMessage(msg);
+               --                 end;
+               --              end if;
+            end if;
+         end;
+      end if;
 
       --For testing:
 --          declare
@@ -308,34 +333,11 @@ package body VN.Communication.CAN.Logic.SM is
       end if;
    end GetCANAddress;
 
-   --THIS IS JUST TESTING FUNCTIONALLITY FOR NODES, NOT SM-CANs
---     procedure GetLogicalAddress(this : in out SM_Duty; LogicalAddress : out VN.VN_Logical_Address;
---                                 isAssigned : out boolean) is
---     begin
---        this.logicalAddressHandler.GetAddress(LogicalAddress, isAssigned);
---     end GetLogicalAddress;
---
---
---     procedure SetMyAddress(this : in out SM_Duty; LogicalAddress : VN.VN_Logical_Address) is
---     begin
---        this.logicalAddressHandler.SetMyAddress(LogicalAddress);
---     end SetMyAddress;
---
---     procedure Assign(this : in out SM_Duty; CANAddress : CAN_Address_Sender;
---                      LogicalAddress : VN.VN_Logical_Address) is
---     begin
---        this.logicalAddressHandler.Assign(CANAddress, LogicalAddress);
---     end Assign;
---
---     procedure AddressQuestion(this : in out SM_Duty; LogicalAddress : VN.VN_Logical_Address;
---                               CANAddress : out CAN_Address_Sender; wasFound : out boolean) is
---     begin
---        this.logicalAddressHandler.AddressQuestion(LogicalAddress, CANAddress, wasFound);
---     end AddressQuestion;
-
-
    procedure Init(this : in out SM_Duty) is
       testCUUID : VN.VN_CUUID := (others => 42); --ToDo: For testing only!!!!
+
+      template, mask    : VN.Communication.CAN.CAN_message_ID;
+      POWER28 		: constant Interfaces.Unsigned_32 := 2 ** 28;
    begin
       VN.Communication.CAN.Logic.DebugOutput("SM_Duty initialized", 4);
 
@@ -348,6 +350,19 @@ package body VN.Communication.CAN.Logic.SM is
       this.DutyArray(this.DutyArray'First + 4) := this.receiver'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 5) := this.cuuidResponder'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 6) := this.cuuidHandler'Unchecked_Access;
+
+      -- Set CAN filters:
+      this.theFilter.Create_Filter(this.negotioationFilterID, 0, 0); --will listen to all CAN messages, for now
+
+      template := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(255),
+                                                      VN.Communication.CAN.OFFSET_CAN_RECEIVER));
+
+      mask := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(CAN_Address_Receiver'Last),
+                                                  VN.Communication.CAN.OFFSET_CAN_RECEIVER) + POWER28);
+
+      -- receiving messages sent to CAN address 255 (broadcast)
+      this.theFilter.Create_Filter(this.broadcastFilterID, template, mask);
+
 
       --ToDo: For testing only!!!!
       CAN_Routing.Insert(this.myTable, 1337, 42);

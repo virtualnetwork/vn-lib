@@ -10,10 +10,13 @@
 
 -- ToDo: Use the information in Address_Entry in the discovery process.
 
+
+with VN.Communication.CAN.CAN_Filtering;
 with VN.Communication.CAN.Logic;
+
 package VN.Communication.CAN.Logic.CAN_Address_Assignment is
 
-   type CAN_Assignment_Master is new VN.Communication.CAN.Logic.Duty with private;
+   type CAN_Assignment_Master(theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is new VN.Communication.CAN.Logic.Duty with private;
    type CAN_Assignment_Master_ptr is access all CAN_Assignment_Master'Class;
 
    type Address_Entry is
@@ -34,7 +37,8 @@ private
 
    type CAN_Assignment_Master_State is (Unactivated, Started);
 
-   type CAN_Assignment_Master is new VN.Communication.CAN.Logic.Duty with
+   type CAN_Assignment_Master(theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+     new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	: CAN_Assignment_Master_State := Unactivated;
          addresses 	: Address_Table;
