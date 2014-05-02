@@ -2,8 +2,8 @@
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
 -- Summary:
--- CUUID_Handler handles the discovery process on the CAN network.
--- CUUID_Handler sends out the RequestCUUID message to which other units will respond.
+-- ComponentType_Handler handles the discovery process on the CAN network.
+-- ComponentType_Handler sends out the RequestCUUID message to which other units will respond.
 -- The function ReadEntry can then be used to retrieve information about
 -- the units of the CAN network.
 
@@ -13,9 +13,9 @@ with VN.Communication.CAN.Logic.Message_Utils;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;
 
-package body VN.Communication.CAN.Logic.CUUID_Handler is
+package body VN.Communication.CAN.Logic.ComponentType_Handler is
 
-   overriding procedure Update(this : in out CUUID_Handler; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+   overriding procedure Update(this : in out ComponentType_Handler; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
                                msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean) is
       use Ada.Real_Time;
       wasSM_CAN : Boolean;
@@ -49,7 +49,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
       end case;
    end Update;
 
-   procedure Activate(this : in out CUUID_Handler;
+   procedure Activate(this : in out ComponentType_Handler;
                       theCUUID : VN.VN_CUUID;
                       CANAddress : VN.Communication.CAN.CAN_Address_Sender;
                       sender : VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr) is
@@ -57,7 +57,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
 
       if this.currentState = Unactivated then
          this.timer := Ada.Real_Time.Clock;
-         VN.Communication.CAN.Logic.DebugOutput("CUUID_Handler at address " & CANAddress'Img & " activated", 5);
+         VN.Communication.CAN.Logic.DebugOutput("ComponentType_Handler at address " & CANAddress'Img & " activated", 5);
 
          this.mySender     := sender;
          this.myCUUID      := theCUUID;
@@ -68,7 +68,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
       end if;
    end Activate;
 
-   procedure Init(this     : in out CUUID_Handler;
+   procedure Init(this     : in out ComponentType_Handler;
                   sender   : VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr;
                   theCUUID : VN.VN_CUUID) is
    begin
@@ -76,7 +76,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
       this.mySender := sender;
    end Init;
 
---     procedure ReadEntry(this : in out CUUID_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
+--     procedure ReadEntry(this : in out ComponentType_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
 --                         unitCUUID : out VN.VN_CUUID; isSM_CAN : out boolean; isSet : out Boolean) is
 --     begin
 --        isSet 	:= this.units(index).isComponentTypeSet;
@@ -86,7 +86,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
 --        end if;
 --     end ReadEntry;
 
-   procedure HelloProc(this 	  : in out CUUID_Handler;
+   procedure HelloProc(this 	  : in out ComponentType_Handler;
                        sender     : in VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr;
                        CANAddress : VN.Communication.CAN.CAN_Address_Sender;
                        isSM_CAN   : Boolean) is
@@ -134,5 +134,5 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
          --ToDo: If result is not equal to OK we have a problem
       end if;
    end HelloProc;
-end VN.Communication.CAN.Logic.CUUID_Handler;
+end VN.Communication.CAN.Logic.ComponentType_Handler;
 

@@ -2,7 +2,7 @@ with "../../can_filtering/can_filtering.gpr";
 with "../../../cuuid_routing/cuuid_routing.gpr";
 with "../../../routing_table/routing_table.gpr";
 with "../../../../lib/buffers/buffers.gpr";
-with "../cuuid_handler/cuuid_handler.gpr";
+with "../componenttype_handler/componenttype_handler.gpr";
 with "../componenttype_responder/componenttype_responder.gpr";
 with "../receiver/receiver.gpr";
 with "../sender/sender.gpr";

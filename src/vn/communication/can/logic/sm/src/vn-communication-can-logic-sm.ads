@@ -43,7 +43,7 @@ with VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation;
 with VN.Communication.CAN.Logic.Sender;
 with VN.Communication.CAN.Logic.Receiver;
 with VN.Communication.CAN.Logic.ComponentType_Responder;
-with VN.Communication.CAN.Logic.CUUID_Handler;
+with VN.Communication.CAN.Logic.ComponentType_Handler;
 
 with VN.Communication.Routing_Table;
 with VN.Communication.CUUID_Routing;
@@ -137,7 +137,7 @@ private
 
          cuuidResponder : aliased VN.Communication.CAN.Logic.ComponentType_Responder.ComponentType_Responder;
 
-         cuuidHandler : aliased VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler;
+         cuuidHandler : aliased VN.Communication.CAN.Logic.ComponentType_Handler.ComponentType_Handler;
 
          DutyArray : ArrayOfDuties;
 

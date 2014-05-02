@@ -4,10 +4,10 @@ with "../sender/sender.gpr";
 with "../message_utils/message_utils.gpr";
 with "../logic.gpr";
 
-project CUUID_Handler is
+project ComponentType_Handler is
 
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
 
-end CUUID_Handler;
+end ComponentType_Handler;
 

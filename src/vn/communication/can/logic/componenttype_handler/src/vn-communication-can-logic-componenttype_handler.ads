@@ -2,12 +2,12 @@
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
 -- Summary:
--- CUUID_Handler handles the discovery process on the CAN network.
--- CUUID_Handler sends out the RequestCUUID message to which other units will respond.
+-- ComponentType_Handler handles the discovery process on the CAN network.
+-- ComponentType_Handler sends out the RequestCUUID message to which other units will respond.
 -- The function ReadEntry can then be used to retrieve information about
 -- the units of the CAN network.
 
--- CUUID_Handler takes a procedure pointer HelloProc as input when initiated.
+-- ComponentType_Handler takes a procedure pointer HelloProc as input when initiated.
 -- This procedure is called each time new unit is discovered.
 
 
@@ -19,27 +19,27 @@ with VN.Communication.CAN.CAN_Filtering;
 with VN.Communication.CAN.Logic;
 with VN.Communication.CAN.Logic.Sender;
 
-package VN.Communication.CAN.Logic.CUUID_Handler is
+package VN.Communication.CAN.Logic.ComponentType_Handler is
 
-   type CUUID_Handler is
+   type ComponentType_Handler is
      new VN.Communication.CAN.Logic.Duty with private;
 
-   type CUUID_Handler_ptr is access all CUUID_Handler'Class;
+   type ComponentType_Handler_ptr is access all ComponentType_Handler'Class;
 
-   overriding procedure Update(this : in out CUUID_Handler; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
+   overriding procedure Update(this : in out ComponentType_Handler; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
                                msgOut : out VN.Communication.CAN.CAN_Message_Logical; bWillSend : out boolean);
 
-   procedure Activate(this : in out CUUID_Handler; theCUUID : VN.VN_CUUID;
+   procedure Activate(this : in out ComponentType_Handler; theCUUID : VN.VN_CUUID;
                       CANAddress : VN.Communication.CAN.CAN_Address_Sender;
                       sender : VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr);
 
    --obsolete:
---     procedure ReadEntry(this : in out CUUID_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
+--     procedure ReadEntry(this : in out ComponentType_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
 --                         unitCUUID : out VN.VN_CUUID; isSM_CAN : out boolean; isSet : out Boolean);
 
 private
 
-   procedure HelloProc(this 	  : in out CUUID_Handler;
+   procedure HelloProc(this 	  : in out ComponentType_Handler;
                        sender     : in VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr;
                        CANAddress : VN.Communication.CAN.CAN_Address_Sender;
                        isSM_CAN   : Boolean);
@@ -51,16 +51,16 @@ private
       end record;
 
    type Unit_Table is array(VN.Communication.CAN.CAN_Address_Sender) of Unit_Entry;
-   type CUUID_Handler_State is (Unactivated, Activated);
+   type ComponentType_Handler_State is (Unactivated, Activated);
 
    --ToDO: Put this in a config file of some sort:
    DELAY_TIME : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(1400);
 
-   type CUUID_Handler is
+   type ComponentType_Handler is
      new VN.Communication.CAN.Logic.Duty with
       record
          mySender 	: VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr;
-         currentState 	: CUUID_Handler_State  := Unactivated;
+         currentState 	: ComponentType_Handler_State  := Unactivated;
          myCUUID 	: VN.VN_CUUID;
          myCANAddress   : VN.Communication.CAN.CAN_Address_Sender;
          units		: Unit_Table;
@@ -68,5 +68,5 @@ private
          timer 		: Ada.Real_Time.Time;
       end record;
 
-end VN.Communication.CAN.Logic.CUUID_Handler;
+end VN.Communication.CAN.Logic.ComponentType_Handler;
 
