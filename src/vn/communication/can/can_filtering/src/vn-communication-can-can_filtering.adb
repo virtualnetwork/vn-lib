@@ -5,6 +5,9 @@
 -- CAN_Filtering keeps track of what the hardware filters of the CAN controller should be.
 -- The purpose of this is to filter out all CAN messages that are not needed.
 
+with Interfaces;
+use Interfaces;
+
 package body VN.Communication.CAN.CAN_Filtering is
 
    procedure Create_Filter(this : in out CAN_Filter_Type;
@@ -54,5 +57,35 @@ package body VN.Communication.CAN.CAN_Filtering is
       mask 	:= this.myFilters(filterID).mask;
       isUsed 	:= this.myFilters(filterID).isUsed;
    end Get_Filter;
+
+   procedure Create_Transmission_Filter(this : in out CAN_Filter_Type;
+                                        filterID   : out Filter_ID_Type;
+                                        CANaddress : VN.Communication.CAN.CAN_Address_Receiver) is
+      template, mask   : VN.Communication.CAN.CAN_message_ID;
+      POWER28 : constant Interfaces.Unsigned_32 := 2 ** 28;
+   begin
+      template := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(CANaddress),
+                                                      VN.Communication.CAN.OFFSET_CAN_RECEIVER));
+
+      mask := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(CAN_Address_Receiver'Last),
+                                                  VN.Communication.CAN.OFFSET_CAN_RECEIVER) + POWER28);
+
+      this.Create_Filter(filterID, template, mask);
+   end Create_Transmission_Filter;
+
+   procedure Change_To_Transmission_Filter(this : in out CAN_Filter_Type;
+                                           filterID   : Filter_ID_Type;
+                                           CANaddress : VN.Communication.CAN.CAN_Address_Receiver) is
+      template, mask   : VN.Communication.CAN.CAN_message_ID;
+      POWER28 : constant Interfaces.Unsigned_32 := 2 ** 28;
+   begin
+      template := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(CANaddress),
+                                                      VN.Communication.CAN.OFFSET_CAN_RECEIVER));
+
+      mask := VN.Communication.CAN.CAN_message_ID(Interfaces.Shift_Left(Interfaces.Unsigned_32(CAN_Address_Receiver'Last),
+                                                  VN.Communication.CAN.OFFSET_CAN_RECEIVER) + POWER28);
+
+      this.Change_Filter(filterID, template, mask);
+   end Change_To_Transmission_Filter;
 
 end VN.Communication.CAN.CAN_Filtering;
