@@ -2,10 +2,8 @@
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
 -- Summary:
--- ComponentType_Handler handles the discovery process on the CAN network.
--- ComponentType_Handler sends out the RequestCUUID message to which other units will respond.
--- The function ReadEntry can then be used to retrieve information about
--- the units of the CAN network.
+-- ComponentType_Handler handles the component discovery process on the CAN network.
+-- ComponentType_Handler sends out the DiscoveryRequest message to which other units will respond.
 
 -- ComponentType_Handler takes a procedure pointer HelloProc as input when initiated.
 -- This procedure is called each time new unit is discovered.

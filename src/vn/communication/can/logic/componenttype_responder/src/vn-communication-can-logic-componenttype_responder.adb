@@ -2,8 +2,8 @@
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
 -- Summary:
--- CUUID_Responder responds to the RequestCUUID message. Shall be used by all units (nodes or SM-CANs).
--- CUUID_Responder shall be activated once one has been assigned a CAN address.
+-- ComponentType_Responder responds to the DiscoveryRequest message. Shall be used by all units (nodes or SM-CANs).
+-- ComponentType_Responder shall be activated once one has been assigned a CAN address.
 
 with VN.Communication.CAN.Logic.Message_Utils;
 
