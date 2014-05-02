@@ -47,11 +47,11 @@ package body Utils is
          if isUsed then
             temp := msgID xor template;
             temp := temp and mask;
-            if temp /= 0 then
-               return false;
+            if temp = 0 then
+               return true;
             end if;
          end if;
       end loop;
-      return true;
+      return false;
    end Filter_CAN_Message;
 end Utils;
