@@ -119,7 +119,7 @@ begin
 
                for j in messagesIn'Range loop
                   if i /= j then
-                     if Utils.Filter_CAN_Message(element, CANFilters(i)) then
+                     if Utils.Filter_CAN_Message(element, CANFilters(j)) then
                         VN.Communication.CAN.CAN_Message_Buffers.Insert(element, messagesIn(j));
                      end if;
                   end if;
