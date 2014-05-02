@@ -126,7 +126,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       end if;
    end ComponentTypeFromMessage;
 
-   procedure RequestCUUIDToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical;  sender : VN.Communication.CAN.CAN_Address_Sender; prio : VN.Communication.CAN.CAN_Message_Prio) is
+   procedure DiscoveryRequestToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical;  sender : VN.Communication.CAN.CAN_Address_Sender; prio : VN.Communication.CAN.CAN_Message_Prio) is
    begin
       msg.isNormal := true;
       msg.msgPrio  := prio;
@@ -134,7 +134,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.Receiver := 255;
       msg.Sender   := sender;
       msg.Length   := 0;
-   end RequestCUUIDToMessage;
+   end DiscoveryRequestToMessage;
 
 
 --     procedure CUUIDHalfToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical;  sender : VN.Communication.CAN.CAN_Address_Sender;
