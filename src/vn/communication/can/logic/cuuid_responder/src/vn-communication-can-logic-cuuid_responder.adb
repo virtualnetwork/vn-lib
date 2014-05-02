@@ -17,38 +17,15 @@ package body VN.Communication.CAN.Logic.CUUID_Responder is
             bWillSend := false;
 
          when Activated =>
-            if bMsgReceived and then msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.REQUEST_CUUID then
-               VN.Communication.CAN.Logic.Message_Utils.CUUIDHalfToMessage(msgOut, this.myCANAddress, this.myCUUID, true);
-               bWillSend := true;
-               this.currentState := SendSecondCUUIDHalf;
-               VN.Communication.CAN.Logic.DebugOutput("Sent first CUUID half from CAN address " & this.myCANAddress'img, 5);
+            if bMsgReceived and then msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.DISCOVERY_REQUEST then
 
+               VN.Communication.CAN.Logic.Message_Utils.ComponentTypeToMessage(msgOut, this.myCANAddress, 0, this.isSM_CAN); --ToDo: prio???
+               bWillSend := true;
+               this.currentState := Activated;
+               VN.Communication.CAN.Logic.DebugOutput("Sent component type (node or SM-CAN) from CAN address " & this.myCANAddress'img, 5);
             else
                bWillSend := false;
             end if;
-
-         when SendSecondCUUIDHalf =>
-            -- If a new REQUEST_CUUID message is received before both the messages have been sent, respond with the first one first, then the second.
-            -- (just to make sure that whoever who sent the REQUEST_CUUID message gets both messages)
-            if bMsgReceived and then msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.REQUEST_CUUID then
-               VN.Communication.CAN.Logic.Message_Utils.CUUIDHalfToMessage(msgOut, this.myCANAddress, this.myCUUID, true);
-               bWillSend := true;
-               this.currentState := SendSecondCUUIDHalf;
-               VN.Communication.CAN.Logic.DebugOutput("Resent first CUUID half from CAN address " & this.myCANAddress'img, 5);
-
-            else
-               VN.Communication.CAN.Logic.Message_Utils.CUUIDHalfToMessage(msgOut, this.myCANAddress, this.myCUUID, false);
-               bWillSend := true;
-               this.currentState := SendType;
-               VN.Communication.CAN.Logic.DebugOutput("Sent second CUUID half from CAN address " & this.myCANAddress'img, 5);
-            end if;
-
-         when SendType =>
-
-            VN.Communication.CAN.Logic.Message_Utils.ComponentTypeToMessage(msgOut, this.myCANAddress, 0, this.isSM_CAN); --prio???
-            bWillSend := true;
-            this.currentState := Activated;
-            VN.Communication.CAN.Logic.DebugOutput("Sent type (node or SM-CAN) from CAN address " & this.myCANAddress'img, 5);
       end case;
    end Update;
 

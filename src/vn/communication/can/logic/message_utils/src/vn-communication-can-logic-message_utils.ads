@@ -41,10 +41,10 @@ package VN.Communication.CAN.Logic.Message_Utils is
    procedure AddressAnswerFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; CANAddress : out VN.Communication.CAN.CAN_Address_Sender;
                                       logicalAddress : out VN.VN_Logical_Address);
 
-   procedure AssignLogicalAddressToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
-                                           prio : CAN_Message_Prio; logicalAddress : VN.VN_Logical_Address);
+ --  procedure AssignLogicalAddressToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
+--                                             prio : CAN_Message_Prio; logicalAddress : VN.VN_Logical_Address);
 
-   procedure AssignLogicalAddressFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.VN_Logical_Address);
+ --  procedure AssignLogicalAddressFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.VN_Logical_Address);
 
    procedure ComponentTypeToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; sender : VN.Communication.CAN.CAN_Address_Sender; prio : CAN_Message_Prio; isSM_CAN : boolean);
 
@@ -52,10 +52,10 @@ package VN.Communication.CAN.Logic.Message_Utils is
 
    procedure RequestCUUIDToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; sender : VN.Communication.CAN.CAN_Address_Sender; prio : CAN_Message_Prio);
 
-   procedure CUUIDHalfToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; sender : VN.Communication.CAN.CAN_Address_Sender;
-                                theCUUID : VN.VN_CUUID; firstHalf : Boolean);
+--     procedure CUUIDHalfToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; sender : VN.Communication.CAN.CAN_Address_Sender;
+--                                  theCUUID : VN.VN_CUUID; firstHalf : Boolean);
 
-   procedure CUUIDHalfFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; theCUUID : in out VN.VN_CUUID; firstHalf : Boolean);
+--     procedure CUUIDHalfFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; theCUUID : in out VN.VN_CUUID; firstHalf : Boolean);
 
    procedure TransmissionToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
                                         sender : VN.Communication.CAN.CAN_Address_Sender);

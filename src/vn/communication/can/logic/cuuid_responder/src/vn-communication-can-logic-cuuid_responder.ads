@@ -26,7 +26,7 @@ package VN.Communication.CAN.Logic.CUUID_Responder is
 
 private
 
-   type CUUID_Responder_State is (Unactivated, Activated, SendSecondCUUIDHalf, SendType);
+   type CUUID_Responder_State is (Unactivated, Activated);
 
    type CUUID_Responder is
      new VN.Communication.CAN.Logic.Duty with

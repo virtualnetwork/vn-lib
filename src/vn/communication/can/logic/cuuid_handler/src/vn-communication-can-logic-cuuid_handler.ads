@@ -33,9 +33,9 @@ package VN.Communication.CAN.Logic.CUUID_Handler is
                       CANAddress : VN.Communication.CAN.CAN_Address_Sender;
                       sender : VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr);
 
-   --Should be obsolete soon:
-   procedure ReadEntry(this : in out CUUID_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
-                       unitCUUID : out VN.VN_CUUID; isSM_CAN : out boolean; isSet : out Boolean);
+   --obsolete:
+--     procedure ReadEntry(this : in out CUUID_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
+--                         unitCUUID : out VN.VN_CUUID; isSM_CAN : out boolean; isSet : out Boolean);
 
 private
 
@@ -46,15 +46,12 @@ private
 
    type Unit_Entry is
       record
-         unitCUUID : VN.VN_CUUID;
          isSM_CAN  : Boolean;
-         isFirstCUUIDHalfSet  : Boolean := false;
-         isSecondCUUIDHalfSet : Boolean := false;
          isComponentTypeSet   : boolean := false;
       end record;
 
    type Unit_Table is array(VN.Communication.CAN.CAN_Address_Sender) of Unit_Entry;
-   type CUUID_Responder_State is (Unactivated, Activated);
+   type CUUID_Handler_State is (Unactivated, Activated);
 
    --ToDO: Put this in a config file of some sort:
    DELAY_TIME : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(1400);
@@ -63,7 +60,7 @@ private
      new VN.Communication.CAN.Logic.Duty with
       record
          mySender 	: VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr;
-         currentState 	: CUUID_Responder_State  := Unactivated;
+         currentState 	: CUUID_Handler_State  := Unactivated;
          myCUUID 	: VN.VN_CUUID;
          myCANAddress   : VN.Communication.CAN.CAN_Address_Sender;
          units		: Unit_Table;

@@ -86,7 +86,7 @@ package VN.Communication.CAN.Logic.SM is
                     ret : out CAN_Message_Buffers.Buffer);
 
    --This function is most likely obsolete:
-   procedure Discover(this : in out SM_Duty; discoveredUnits : out Unit_Buffers.Buffer);
+--     procedure Discover(this : in out SM_Duty; discoveredUnits : out Unit_Buffers.Buffer);
 
    procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic;
                                 result : out VN.Send_Status);

@@ -147,29 +147,29 @@ package body VN.Communication.CAN.Logic.SM is
 --          end;
    end Update;
 
-   procedure Discover(this : in out SM_Duty; discoveredUnits : out Unit_Buffers.Buffer) is
-      isSet  : boolean;
-      aCUUID : VN.VN_CUUID;
-      aUnit  : Unit;
-      isSM_CAN  : boolean;
-   begin
-      if not this.isInitialized then
-         Init(this);
-      end if;
-
-      Unit_Buffers.Clear(discoveredUnits);
-
-      for i in VN.Communication.CAN.CAN_Address_Sender'range loop
-         this.cuuidHandler.ReadEntry(i, aCUUID, isSM_CAN, isSet);
-
-         if isSet then
-            aUnit.unitCANAddress := i;
-            aUnit.unitCUUID 	 := aCUUID;
-            aUnit.isSM_CAN := isSM_CAN;
-            Unit_Buffers.Insert(aUnit, discoveredUnits);
-         end if;
-      end loop;
-   end Discover;
+--     procedure Discover(this : in out SM_Duty; discoveredUnits : out Unit_Buffers.Buffer) is
+--        isSet  : boolean;
+--        aCUUID : VN.VN_CUUID;
+--        aUnit  : Unit;
+--        isSM_CAN  : boolean;
+--     begin
+--        if not this.isInitialized then
+--           Init(this);
+--        end if;
+--  
+--        Unit_Buffers.Clear(discoveredUnits);
+--  
+--        for i in VN.Communication.CAN.CAN_Address_Sender'range loop
+--           this.cuuidHandler.ReadEntry(i, aCUUID, isSM_CAN, isSet);
+--  
+--           if isSet then
+--              aUnit.unitCANAddress := i;
+--              aUnit.unitCUUID 	 := aCUUID;
+--              aUnit.isSM_CAN := isSM_CAN;
+--              Unit_Buffers.Insert(aUnit, discoveredUnits);
+--           end if;
+--        end loop;
+--     end Discover;
 
    procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
                   result : out VN.Send_Status) is
@@ -363,5 +363,3 @@ package body VN.Communication.CAN.Logic.SM is
    end Init;
 
 end VN.Communication.CAN.Logic.SM;
-
-

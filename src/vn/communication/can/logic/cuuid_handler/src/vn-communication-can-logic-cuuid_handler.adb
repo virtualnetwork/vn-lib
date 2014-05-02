@@ -26,21 +26,8 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
 
          when Activated =>
             if bMsgReceived then
-               if msgIn.isNormal and msgIn.msgType = VN.Communication.CAN.Logic.FIRST_CUUID_HALF then
-                  if not this.units(msgIn.Sender).isFirstCUUIDHalfSet then
-                     VN.Communication.CAN.Logic.Message_Utils.CUUIDHalfFromMessage(msgIn, this.units(msgIn.Sender).unitCUUID, true);
-                     this.units(msgIn.Sender).isFirstCUUIDHalfSet := true;
-                     VN.Communication.CAN.Logic.DebugOutput("Recieved first CUUID half from address " & msgIn.Sender'Img, 5);
-                  end if;
 
-               elsif msgIn.isNormal and msgIn.msgType = VN.Communication.CAN.Logic.SECOND_CUUID_HALF then
-                  if not this.units(msgIn.Sender).isSecondCUUIDHalfSet then
-                     VN.Communication.CAN.Logic.Message_Utils.CUUIDHalfFromMessage(msgIn, this.units(msgIn.Sender).unitCUUID, false);
-                     this.units(msgIn.Sender).isSecondCUUIDHalfSet := true;
-                     VN.Communication.CAN.Logic.DebugOutput("Recieved second CUUID half from address " & msgIn.Sender'Img, 5);
-                  end if;
-
-               elsif msgIn.isNormal and msgIn.msgType = VN.Communication.CAN.Logic.COMPONENT_TYPE then
+               if msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.COMPONENT_TYPE then
                   if not this.units(msgIn.Sender).isComponentTypeSet then
                      VN.Communication.CAN.Logic.Message_Utils.ComponentTypeFromMessage(msgIn, wasSM_CAN);
                      this.units(msgIn.Sender).isSM_CAN := wasSM_CAN;
@@ -55,7 +42,7 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
 
             if not this.hasRequested and Ada.Real_Time.Clock - this.timer >= DELAY_TIME then
                this.hasRequested := true;
-               VN.Communication.CAN.Logic.DebugOutput("CUUID request sent from address " & this.myCANAddress'Img, 5);
+               VN.Communication.CAN.Logic.DebugOutput("Discovery request sent from address " & this.myCANAddress'Img, 5);
                VN.Communication.CAN.Logic.Message_Utils.RequestCUUIDToMessage(msgOut, this.myCANAddress, 0);
                bWillSend := true;
             end if;
@@ -76,9 +63,8 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
          this.myCUUID      := theCUUID;
          this.currentState := Activated;
          this.myCANAddress := CANAddress;
-         this.units(this.myCANAddress).unitCUUID := theCUUID;
-         this.units(this.myCANAddress).isFirstCUUIDHalfSet  := true;
-         this.units(this.myCANAddress).isSecondCUUIDHalfSet := true;
+         this.units(this.myCANAddress).isSM_CAN := true;
+         this.units(this.myCANAddress).isComponentTypeSet  := true;
       end if;
    end Activate;
 
@@ -90,16 +76,15 @@ package body VN.Communication.CAN.Logic.CUUID_Handler is
       this.mySender := sender;
    end Init;
 
-   procedure ReadEntry(this : in out CUUID_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
-                       unitCUUID : out VN.VN_CUUID; isSM_CAN : out boolean; isSet : out Boolean) is
-   begin
-      isSet 	:= this.units(index).isFirstCUUIDHalfSet and this.units(index).isSecondCUUIDHalfSet and this.units(index).isComponentTypeSet;
-
-      if isSet then
-         unitCUUID := this.units(index).unitCUUID;
-         isSM_CAN  := this.units(index).isSM_CAN;
-      end if;
-   end ReadEntry;
+--     procedure ReadEntry(this : in out CUUID_Handler; index : VN.Communication.CAN.CAN_Address_Sender;
+--                         unitCUUID : out VN.VN_CUUID; isSM_CAN : out boolean; isSet : out Boolean) is
+--     begin
+--        isSet 	:= this.units(index).isComponentTypeSet;
+--
+--        if isSet then
+--           isSM_CAN  := this.units(index).isSM_CAN;
+--        end if;
+--     end ReadEntry;
 
    procedure HelloProc(this 	  : in out CUUID_Handler;
                        sender     : in VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr;

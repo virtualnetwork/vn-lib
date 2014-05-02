@@ -68,31 +68,31 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    end AddressAnswerFromMessage;
 
 
-   procedure AssignLogicalAddressToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
-                                           prio : VN.Communication.CAN.CAN_Message_Prio; logicalAddress : VN.VN_Logical_Address) is
-   begin
-      msg.isNormal := true;
-      msg.msgPrio  := prio;
-      msg.msgType  := VN.Communication.CAN.Logic.ASSIGN_LOGICAL_ADDR;
-      msg.Receiver := receiver;
-      msg.Sender   := sender;
-      msg.Length   := 4;
+--     procedure AssignLogicalAddressToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
+--                                             prio : VN.Communication.CAN.CAN_Message_Prio; logicalAddress : VN.VN_Logical_Address) is
+--     begin
+--        msg.isNormal := true;
+--        msg.msgPrio  := prio;
+--        msg.msgType  := VN.Communication.CAN.Logic.ASSIGN_LOGICAL_ADDR;
+--        msg.Receiver := receiver;
+--        msg.Sender   := sender;
+--        msg.Length   := 4;
+--
+--        U16ToData(Interfaces.Unsigned_16(logicalAddress), msg.Data);
+--     end AssignLogicalAddressToMessage;
 
-      U16ToData(Interfaces.Unsigned_16(logicalAddress), msg.Data);
-   end AssignLogicalAddressToMessage;
 
-
-   procedure AssignLogicalAddressFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.VN_Logical_Address) is
-      INCORRECT_MESSAGE_AssignLogicalAddress : exception;
-      temp : Interfaces.Unsigned_16;
-   begin
-      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ASSIGN_LOGICAL_ADDR and msg.Length = 4 then
-         DataToU16(msg.Data, temp);
-         logicalAddress := VN.VN_Logical_Address(temp);
-      else
-         raise INCORRECT_MESSAGE_AssignLogicalAddress;
-      end if;
-   end AssignLogicalAddressFromMessage;
+--     procedure AssignLogicalAddressFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; logicalAddress : out VN.VN_Logical_Address) is
+--        INCORRECT_MESSAGE_AssignLogicalAddress : exception;
+--        temp : Interfaces.Unsigned_16;
+--     begin
+--        if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ASSIGN_LOGICAL_ADDR and msg.Length = 4 then
+--           DataToU16(msg.Data, temp);
+--           logicalAddress := VN.VN_Logical_Address(temp);
+--        else
+--           raise INCORRECT_MESSAGE_AssignLogicalAddress;
+--        end if;
+--     end AssignLogicalAddressFromMessage;
 
 
    procedure ComponentTypeToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical;  sender : VN.Communication.CAN.CAN_Address_Sender; prio : VN.Communication.CAN.CAN_Message_Prio; isSM_CAN : boolean) is
@@ -130,59 +130,59 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    begin
       msg.isNormal := true;
       msg.msgPrio  := prio;
-      msg.msgType  := VN.Communication.CAN.Logic.REQUEST_CUUID;
+      msg.msgType  := VN.Communication.CAN.Logic.DISCOVERY_REQUEST;
       msg.Receiver := 255;
       msg.Sender   := sender;
       msg.Length   := 0;
    end RequestCUUIDToMessage;
 
 
-   procedure CUUIDHalfToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical;  sender : VN.Communication.CAN.CAN_Address_Sender;
-                                theCUUID : VN.VN_CUUID; firstHalf : Boolean) is
-      offset : VN.Communication.CAN.DLC_Type;
-   begin
-      msg.isNormal := true;
-      msg.msgPrio  := 0;
-      msg.Receiver := 254;
-      msg.Sender   := sender;
-      msg.Length   := 8;
+--     procedure CUUIDHalfToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical;  sender : VN.Communication.CAN.CAN_Address_Sender;
+--                                  theCUUID : VN.VN_CUUID; firstHalf : Boolean) is
+--        offset : VN.Communication.CAN.DLC_Type;
+--     begin
+--        msg.isNormal := true;
+--        msg.msgPrio  := 0;
+--        msg.Receiver := 254;
+--        msg.Sender   := sender;
+--        msg.Length   := 8;
+--
+--        if firstHalf then
+--           msg.msgType  := VN.Communication.CAN.Logic.FIRST_CUUID_HALF;
+--           offset := 0;
+--        else
+--           msg.msgType  := VN.Communication.CAN.Logic.SECOND_CUUID_HALF;
+--           offset := 8;
+--        end if;
+--
+--        for i in msg.Data'Range loop
+--           msg.Data(i) := theCUUID(Integer(offset + i));
+--        end loop;
+--     end CUUIDHalfToMessage;
 
-      if firstHalf then
-         msg.msgType  := VN.Communication.CAN.Logic.FIRST_CUUID_HALF;
-         offset := 0;
-      else
-         msg.msgType  := VN.Communication.CAN.Logic.SECOND_CUUID_HALF;
-         offset := 8;
-      end if;
 
-      for i in msg.Data'Range loop
-         msg.Data(i) := theCUUID(Integer(offset + i));
-      end loop;
-   end CUUIDHalfToMessage;
-
-
-   procedure CUUIDHalfFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; theCUUID : in out VN.VN_CUUID; firstHalf : Boolean) is
-
-      INCORRECT_MESSAGE_CUUID_Half : exception;
-      offset : VN.Communication.CAN.DLC_Type;
-   begin
-
-      if msg.isNormal and msg.Length = 8 and
-        (msg.msgType = VN.Communication.CAN.Logic.FIRST_CUUID_HALF or msg.msgType = VN.Communication.CAN.Logic.SECOND_CUUID_HALF) then
-
-         if firstHalf then
-            offset := 0;
-         else
-            offset := 8;
-         end if;
-
-         for i in msg.Data'Range loop
-            theCUUID(Integer(offset + i)) := msg.Data(i);
-         end loop;
-      else
-         raise INCORRECT_MESSAGE_CUUID_Half;
-      end if;
-   end CUUIDHalfFromMessage;
+--     procedure CUUIDHalfFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; theCUUID : in out VN.VN_CUUID; firstHalf : Boolean) is
+--
+--        INCORRECT_MESSAGE_CUUID_Half : exception;
+--        offset : VN.Communication.CAN.DLC_Type;
+--     begin
+--
+--        if msg.isNormal and msg.Length = 8 and
+--          (msg.msgType = VN.Communication.CAN.Logic.FIRST_CUUID_HALF or msg.msgType = VN.Communication.CAN.Logic.SECOND_CUUID_HALF) then
+--
+--           if firstHalf then
+--              offset := 0;
+--           else
+--              offset := 8;
+--           end if;
+--
+--           for i in msg.Data'Range loop
+--              theCUUID(Integer(offset + i)) := msg.Data(i);
+--           end loop;
+--        else
+--           raise INCORRECT_MESSAGE_CUUID_Half;
+--        end if;
+--     end CUUIDHalfFromMessage;
 
 
    procedure TransmissionToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
