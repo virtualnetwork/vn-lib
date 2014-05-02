@@ -50,7 +50,9 @@ package VN.Communication.CAN.Logic.Message_Utils is
 
    procedure ComponentTypeFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; isSM_CAN : out boolean);
 
-   procedure RequestCUUIDToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; sender : VN.Communication.CAN.CAN_Address_Sender; prio : CAN_Message_Prio);
+   procedure DiscoveryRequestToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical;
+                                       sender : VN.Communication.CAN.CAN_Address_Sender;
+                                       prio : CAN_Message_Prio);
 
 --     procedure CUUIDHalfToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; sender : VN.Communication.CAN.CAN_Address_Sender;
 --                                  theCUUID : VN.VN_CUUID; firstHalf : Boolean);
