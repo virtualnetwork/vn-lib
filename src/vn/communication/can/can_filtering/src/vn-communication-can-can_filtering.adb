@@ -35,16 +35,21 @@ package body VN.Communication.CAN.CAN_Filtering is
    begin
       -- This if statement prevents error if the filterID was not initialized.
       -- I.e. read before written to.
-      if filterID >= Filter_ID_Type'First and filterID <= Filter_ID_Type'Last then
+    if filterID >= Filter_ID_Type'First and filterID <= Filter_ID_Type'Last then
          this.myFilters(filterID).template := template;
          this.myFilters(filterID).mask := mask;
-      end if;
+         this.myFilters(filterID).isUsed := true;
+    end if;
    end Change_Filter;
 
    procedure Remove_Filter(this : in out CAN_Filter_Type;
                            filterID : Filter_ID_Type) is
    begin
-      this.myFilters(filterID).isUsed := false;
+      -- This if statement prevents error if the filterID was not initialized.
+      -- I.e. read before written to.
+    if filterID >= Filter_ID_Type'First and filterID <= Filter_ID_Type'Last then
+         this.myFilters(filterID).isUsed := false;
+    end if;
    end Remove_Filter;
 
    procedure Get_Filter(this : in CAN_Filter_Type;

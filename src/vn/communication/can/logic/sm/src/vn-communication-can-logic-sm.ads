@@ -24,7 +24,7 @@
 -- either on the assigned CAN address or CAN address 255.
 
 -- CUUID_Handler (ToDo: name change needed) receives ComponentType
--- on the assigned CAN address.
+-- on CAN address 254.
 
 -- Sender receives FlowControl messages
 -- on the assigned CAN address.
@@ -123,20 +123,21 @@ private
          negotioationFilterID : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
          transmissionFilterID : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
          broadcastFilterID    : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
+         selectiveBroadcastFilterID    : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
 
-         masterNegotiation : aliased VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID, theFilter);
+         masterNegotiation : aliased VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SM_CAN_MN_Duty(theUCID);
 
-         addressReceiver : aliased VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node(theUCID, theFilter);
+         addressReceiver : aliased VN.Communication.CAN.Logic.CAN_Address_Reception.CAN_Assignment_Node(theUCID);
 
-         assigner : aliased VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master(theFilter);
+         assigner : aliased VN.Communication.CAN.Logic.CAN_Address_Assignment.CAN_Assignment_Master;
 
-         sender : aliased VN.Communication.CAN.Logic.Sender.Sender_Duty(theFilter);
+         sender : aliased VN.Communication.CAN.Logic.Sender.Sender_Duty;
 
-         receiver : aliased VN.Communication.CAN.Logic.Receiver.Receiver_Duty(theFilter);
+         receiver : aliased VN.Communication.CAN.Logic.Receiver.Receiver_Duty;
 
-         cuuidResponder : aliased VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder(theFilter);
+         cuuidResponder : aliased VN.Communication.CAN.Logic.CUUID_Responder.CUUID_Responder;
 
-         cuuidHandler : aliased VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler(theFilter);
+         cuuidHandler : aliased VN.Communication.CAN.Logic.CUUID_Handler.CUUID_Handler;
 
          DutyArray : ArrayOfDuties;
 
