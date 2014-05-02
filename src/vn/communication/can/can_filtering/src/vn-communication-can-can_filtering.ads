@@ -11,7 +11,7 @@ with VN.Communication.CAN;
 
 package VN.Communication.CAN.CAN_Filtering is
 
-   MAX_NUM_FILTERS : constant Integer := 16; -- ToDo: kolla upp detta!!!
+   MAX_NUM_FILTERS : constant Integer := 16; -- ToDo: Check this number
 
    type CAN_Filter_Type is tagged limited private;
    type CAN_Filter_Access is access all CAN_Filter_Type;
