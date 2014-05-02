@@ -12,7 +12,6 @@
 
 pragma Profile (Ravenscar);
 
-with VN.Communication.CAN.CAN_Filtering;
 with VN.Communication.CAN.Logic;
 with VN.Communication.CAN.Logic.Sender_Unit;
 use VN.Communication.CAN.Logic.Sender_Unit;
@@ -24,7 +23,7 @@ with Buffers;
 package VN.Communication.CAN.Logic.Sender is
 
 
-   type Sender_Duty(theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+   type Sender_Duty is
      new VN.Communication.CAN.Logic.Duty with private;
 
    type Sender_Duty_ptr is access all Sender_Duty'Class;
@@ -49,7 +48,7 @@ private
 
    type Sender_State is (Unactivated, Activated);
 
-   type Sender_Duty(theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+   type Sender_Duty is
      new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	: Sender_State := Unactivated;
