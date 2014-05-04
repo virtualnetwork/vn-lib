@@ -2,6 +2,8 @@ with VN.Message;
 with Ada.Text_IO;
 with VN.Communication.PO;
 with VN.Communication.PO_Wrapper;
+with VN.Communication.Temp_Routing_Table;
+with VN.Communication.Temp_CUUID_Routing;
 
 package VN.Communication.PO_Routing is
 
@@ -29,6 +31,12 @@ private
 
    subtype Protocol_Address_Type is Integer range 0 .. MAX_NUMBER_OF_SUBNETS; --the value 0 means Application Layer
    type PO_Wrapper_Access_Array is array(1..MAX_NUMBER_OF_SUBNETS) of VN.Communication.PO_Wrapper.PO_Wrapper_Access;
+
+   package Protocol_Router is new VN.Communication.Temp_Routing_Table(Protocol_Address_Type);
+   use Protocol_Router;
+
+   package CUUID_Protocol_Routing is new VN.Communication.Temp_CUUID_Routing(Protocol_Address_Type);
+   use CUUID_Protocol_Routing;
 
    type PO_Router is new Com with
       record
