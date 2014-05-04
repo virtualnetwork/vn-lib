@@ -42,6 +42,8 @@ private
       record
         Number_Of_PO_Wrappers : Natural := 0;
         PO_Wrapper_Array      : PO_Wrapper_Access_Array;
+        myTable               : Protocol_Router.Table_Type(PROTOCOL_ROUTING_TABLE_SIZE);
+        nextProtocolInTurn    : Protocol_Address_Type := PO_Wrapper_Access_Array'First;
         Value: Integer := 0;
       end record;
 

@@ -16,8 +16,8 @@ package Global_Settings is
       First_Time: Boolean := True;
    end Start_Time;
 
-   temp_CUUID_App : aliased VN.VN_CUUID := (1, others => 5);
-   temp_CUUID_SM : aliased VN.VN_CUUID := (2, others => 2);
+   CUUID_App : aliased VN.VN_CUUID := (others => 10);
+   CUUID_SM : aliased VN.VN_CUUID := (others => 20);
    -- Communication between Application, CAS and SM-L
    PO_To_Application : VN.Communication.PO.VN_PO_Access
                                              := new VN.Communication.PO.VN_PO;
@@ -27,7 +27,7 @@ package Global_Settings is
    -- Communication object for Application
    Com_Application   : VN.Communication.PO_Wrapper.VN_PO_Wrapper(
                                                             PO_To_Application,
-                                                            temp_CUUID_App'Access,
+                                                            CUUID_App'Access,
                                                             VN.Message.Other,
                                                             False);
 
@@ -44,7 +44,7 @@ package Global_Settings is
    -- PO_Router_For_SM_L: VN.Communication.PO_Routing.PO_Router;
    PO_Wrapper_To_App : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(
                                                             PO_To_Application,
-                                                            temp_CUUID_SM'Access,
+                                                            CUUID_SM'Access,
                                                             VN.Message.SM_L,
                                                             True);
    Com_SM_L          : VN.Communication.PO_Routing.PO_Router;
