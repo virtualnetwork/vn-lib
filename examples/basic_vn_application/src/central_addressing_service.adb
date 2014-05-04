@@ -28,8 +28,8 @@ package body Central_Addressing_Service is
       App_Info.Component_Type := VN.Message.Other;
       -- App_Info.CUUID := ???;
 
-      Ada.Text_IO.Put_Line("Task type CAS - Start, ID: "
-                              & Integer'Image(Task_ID));
+      --Ada.Text_IO.Put_Line("Task type CAS - Start, ID: "
+      --                       & Integer'Image(Task_ID));
 
       Global_Settings.Start_Time.Get(Next_Period);
 
@@ -41,8 +41,8 @@ package body Central_Addressing_Service is
          if App_Info.Has_Logical_Address then
             null;
          else
-            Ada.Text_IO.Put_Line("CAS - Logical address not found "
-                                       & Integer'Image(Task_ID));
+            -- Ada.Text_IO.Put_Line("CAS - Logical address not found "
+            --                           & Integer'Image(Task_ID));
 
             -- Prepare message to be sent
             Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
@@ -59,8 +59,8 @@ package body Central_Addressing_Service is
          i := i + 1;
          exit when i = 6;
       end loop;
-      Ada.Text_IO.Put_Line("Task type CAS - End, ID:"
-                              & Integer'Image(Task_ID));
+      --Ada.Text_IO.Put_Line("Task type CAS - End, ID:"
+      --                       & Integer'Image(Task_ID));
    end CAS;
 
    -- Start one instance of the SM-L

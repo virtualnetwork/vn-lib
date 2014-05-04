@@ -1,5 +1,6 @@
 with "../../src/vn/communication/communication.gpr";
 with "../../src/vn/message/message.gpr";
+with "../../src/vn/lib/logger/logger.gpr";
 with "../../src/vn/application_information/application_information.gpr";
 
 project Basic_VN_Application is

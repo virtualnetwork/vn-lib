@@ -24,9 +24,9 @@ package body VN.Application_Information is
             App_Info: in VN_Application_Information;
             Message: out VN.Message.Local_Hello.VN_Message_Local_Hello) is
    begin
-      null;
       Message.CUUID := App_Info.CUUID;
       Message.Component_Type := App_Info.Component_Type;
+      Message.Header.Source := App_Info.Logical_Address;
    end Get_Application_Information;
 
 end VN.Application_Information;
