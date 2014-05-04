@@ -25,6 +25,8 @@ package VN.Communication.PO_Wrapper is
 
    procedure Init(This: in out VN_PO_Wrapper);
 
+   type PO_Wrapper_Access is access all VN_PO_Wrapper'Class;
+
 private
 
    type VN_Buffer is array (1 .. 10) of VN.Message.VN_Message_Basic;
