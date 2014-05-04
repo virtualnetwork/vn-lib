@@ -24,10 +24,17 @@ package VN.Communication.PO_Routing is
                PO_Wrapper_Access: VN.Communication.PO_Wrapper.PO_Wrapper_Access);
 
 private
+   PROTOCOL_ROUTING_TABLE_SIZE : constant VN.VN_Logical_Address := 500;
+   MAX_NUMBER_OF_SUBNETS : constant Integer := 10;
+
+   subtype Protocol_Address_Type is Integer range 0 .. MAX_NUMBER_OF_SUBNETS; --the value 0 means Application Layer
+   type PO_Wrapper_Access_Array is array(1..MAX_NUMBER_OF_SUBNETS) of VN.Communication.PO_Wrapper.PO_Wrapper_Access;
 
    type PO_Router is new Com with
       record
-         Value: Integer := 0;
+        Number_Of_PO_Wrappers : Natural := 0;
+        PO_Wrapper_Array      : PO_Wrapper_Access_Array;
+        Value: Integer := 0;
       end record;
 
 end VN.Communication.PO_Routing;

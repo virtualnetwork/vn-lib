@@ -3,6 +3,7 @@ with System;
 with VN.Message.Factory;
 with VN.Communication.PO;
 with VN.Communication.PO_Wrapper;
+with VN.Communication.PO_Routing;
 
 package Global_Settings is
 
@@ -40,11 +41,12 @@ package Global_Settings is
    -- 3. Add PO_Router to Protocol_Router.
    -- 4. Create all needed PO_Wrappers for the SM-L
    -- 5. Add all PO_Wrappers to the PO_Router.
-   Com_SM_L          : VN.Communication.PO_Wrapper.VN_PO_Wrapper(
+   -- PO_Router_For_SM_L: VN.Communication.PO_Routing.PO_Router;
+   PO_Wrapper_To_App : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(
                                                             PO_To_Application,
                                                             temp_CUUID_SM'Access,
                                                             VN.Message.SM_L,
                                                             True);
-   -- Com_SM_L          : VN.Communication.Protocol_Router(???);
+   Com_SM_L          : VN.Communication.PO_Routing.PO_Router;
 
 end Global_Settings;
