@@ -35,6 +35,11 @@ package Global_Settings is
 --                                                           False);
 
    -- Communication object for SM-L
+   -- 1. Create a VN.Communication.Protocol_Routing.Protocol_Routing_Type
+   -- 2. Create a VN.Communication.PO_Routing.PO_Router
+   -- 3. Add PO_Router to Protocol_Router.
+   -- 4. Create all needed PO_Wrappers for the SM-L
+   -- 5. Add all PO_Wrappers to the PO_Router.
    Com_SM_L          : VN.Communication.PO_Wrapper.VN_PO_Wrapper(
                                                             PO_To_Application,
                                                             temp_CUUID_SM'Access,
