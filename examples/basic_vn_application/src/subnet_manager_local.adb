@@ -36,6 +36,8 @@ package body Subnet_Manager_Local is
 
          Global_Settings.Com_SM_L.Receive(Basic_Msg, Status);
 
+         Ada.Text_IO.Put_Line("STAT SM-L: Message handling started.");
+
          if Status = VN.NO_MSG_RECEIVED then
             Ada.Text_IO.Put_Line("RECV SM-L: Empty.");
          end if;
@@ -59,8 +61,10 @@ package body Subnet_Manager_Local is
          i := i + 1;
          exit when i = 40;
       end loop;
+
+      Ada.Text_IO.Put_Line("STAT SM-L: Stops");
       --Ada.Text_IO.Put_Line("Task type SM_L - End, ID:"
-      --                       & Integer'Image(Task_ID));
+       --                      & Integer'Image(Task_ID));
    end SM_L;
 
    -- Start one instance of the SM-L
