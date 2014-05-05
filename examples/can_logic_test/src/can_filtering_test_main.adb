@@ -5,7 +5,7 @@ with VN;
 with VN.Communication.CAN;
 with VN.Communication.CAN.CAN_Filtering;
 
-procedure Test_Utils is
+procedure CAN_Filtering_Test_Main is
    theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Type;
    temp : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
 
@@ -42,4 +42,4 @@ begin
 
    VN.Text_IO.Put_Line("Test done");
 
-end Test_Utils;
+end CAN_Filtering_Test_Main;
