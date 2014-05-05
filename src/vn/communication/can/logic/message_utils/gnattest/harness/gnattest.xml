@@ -1,0 +1,88 @@
+<tests_mapping mode="monolith">
+   <unit source_file="vn-communication-can-logic-message_utils.ads">
+      <test_unit target_file="vn-communication-can-logic-message_utils-test_data-tests.ads">
+         <setup file="vn-communication-can-logic-message_utils-test_data.adb" line="3"  column="4"/>
+         <teardown file="vn-communication-can-logic-message_utils-test_data.adb" line="9"  column="4"/>
+         <tested name="AddressQuestionToMessage" line="33" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="13" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="AddressQuestionFromMessage" line="36" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="34" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="AddressAnswerToMessage" line="38" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="55" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="AddressAnswerFromMessage" line="41" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="76" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="AssignLogicalAddressToMessage" line="44" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="97" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="AssignLogicalAddressFromMessage" line="47" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="118" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="ComponentTypeToMessage" line="49" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="139" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="ComponentTypeFromMessage" line="51" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="160" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="RequestCUUIDToMessage" line="53" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="181" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="CUUIDHalfToMessage" line="55" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="202" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="CUUIDHalfFromMessage" line="58" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="223" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="TransmissionToMessage" line="60" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="244" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="FlowControlToMessage" line="66" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="265" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="FlowControlFromMessage" line="70" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="286" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="StartTransmissionToMessage" line="74" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="307" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="StartTransmissionFromMessage" line="77" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="328" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="AssignCANAddressToMessage" line="80" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="349" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="AssignCANAddressFromMessage" line="83" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="370" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="RequestCANAddressToMessage" line="86" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="391" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="RequestCANAddressFromMessage" line="89" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="412" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="CANMasterAssignedToMessage" line="92" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="433" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="GetMessageID" line="94" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="454" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="Fragment" line="98" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="475" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="DeFragment" line="104" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="496" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="DataToU16" line="119" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="517" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <tested name="U16ToData" line="121" column="4">
+            <test file="vn-communication-can-logic-message_utils-test_data-tests.adb" line="538" column="1" timestamp="2014-04-16 06:28:06"/>
+         </tested>
+         <dangling>
+         </dangling>
+      </test_unit>
+   </unit>
+</tests_mapping>

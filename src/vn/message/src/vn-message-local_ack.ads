@@ -1,6 +1,6 @@
 package VN.Message.Local_Ack is
 
-   LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE : constant integer := MAX_PAYLOAD_SIZE - 1;
+   LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE : constant integer := MAX_PAYLOAD_SIZE - STATUS_SIZE;
 
    type VN_Local_Ack_Unknown_Payload is Array(1 ..
                                        LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE) of
@@ -15,28 +15,18 @@ package VN.Message.Local_Ack is
       end record;
 
    for VN_Message_Local_Ack use record
-      Header            at 0 range (CHECKSUM_SIZE * 8 +
-                                    STATUS_SIZE * 8 +
-                                    LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE * 8) ..
-                                   (CHECKSUM_SIZE * 8 +
-                                    STATUS_SIZE * 8 +
-                                    LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE * 8 +
-                                    HEADER_SIZE * 8 - 1);
+      Header            at 0 range 0 .. HEADER_SIZE * 8 - 1;
 
-      Unknown_Payload   at 0 range (CHECKSUM_SIZE * 8 +
-                                    STATUS_SIZE * 8) ..
-                                   (CHECKSUM_SIZE * 8 +
-                                    STATUS_SIZE * 8 +
-                                    LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE * 8 - 1);
+      Status            at 0 range HEADER_SIZE * 8 .. (HEADER_SIZE + STATUS_SIZE) * 8 - 1;
 
-      Status            at 0 range (CHECKSUM_SIZE * 8) ..
-                                   (CHECKSUM_SIZE * 8 +
-                                    STATUS_SIZE * 8 - 1);
+      Unknown_Payload   at 0 range (HEADER_SIZE + STATUS_SIZE) * 8 ..
+                                   (HEADER_SIZE + STATUS_SIZE  + LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE) * 8 - 1;
 
-      Checksum          at 0 range 0 .. (CHECKSUM_SIZE * 8 - 1);
+      Checksum          at 0 range (HEADER_SIZE + STATUS_SIZE  + LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE) * 8 ..
+        (HEADER_SIZE + STATUS_SIZE  + LOCAL_ACK_UNKNOWN_PAYLOAD_SIZE + CHECKSUM_SIZE) * 8 - 1;
    end record;
 
-   for VN_Message_Local_Ack'Alignment use 1;
+   for VN_Message_Local_Ack'Alignment use 2;
 
    procedure To_Basic(Local_Ack_VN_Msg: in VN_Message_Local_Ack;
                       Basic_VN_Msg: out VN_Message_Basic);

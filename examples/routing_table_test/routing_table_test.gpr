@@ -1,0 +1,12 @@
+with "../../src/vn/communication/routing_table/routing_table.gpr";
+with "../../src/vn/communication/communication.gpr";
+with "../../src/vn/communication/can/can.gpr";
+
+project Routing_Table_Test is
+
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Main use ("routing_table_test.adb");
+
+end Routing_Table_Test;
+

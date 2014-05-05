@@ -17,7 +17,7 @@ package body VN.Message.Assign_Address_Block is
                                     ASSIGN_ADDRESS_BLOCK_UNKNOWN_PAYLOAD_SIZE);
    begin
       Assign_Address_Block_VN_Msg.Header.Message_Type    := Type_Assign_Address_Block;
-      Assign_Address_Block_VN_Msg.Header.Opcode          := 16#4D#;
+      Assign_Address_Block_VN_Msg.Header.Opcode          := OPCODE_ASSIGN_ADDR_BLOCK;
       Assign_Address_Block_VN_Msg.Header.Payload_Length  := Payload_Length;
    end To_Assign_Address_Block;
 

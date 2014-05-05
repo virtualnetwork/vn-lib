@@ -17,7 +17,7 @@ package body VN.Message.Local_Hello is
                                     LOCAL_HELLO_UNKNOWN_PAYLOAD_SIZE);
    begin
       Local_Hello_VN_Msg.Header.Message_Type    := Type_Local_Hello;
-      Local_Hello_VN_Msg.Header.Opcode          := 16#20#;
+      Local_Hello_VN_Msg.Header.Opcode          := OPCODE_LOCAL_HELLO;
       Local_Hello_VN_Msg.Header.Payload_Length  := Payload_Length;
    end To_Local_Hello;
 
