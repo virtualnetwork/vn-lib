@@ -73,6 +73,10 @@ package body VN.Communication.CAN.CAN_Driver is
       end if;
    end Receive;
 
+   procedure Update_Filters(filterAccess : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+   begin
+      null; -- ToDo: Implement...
+   end Update_Filters;
 
    procedure PhysicalToLogical(msgIn : CAN_Message_Physical; msgOut : out CANPack.CAN_Message_Logical) is
       msgPrio : Interfaces.Unsigned_32 := Interfaces.Unsigned_32(msgIn.ID);

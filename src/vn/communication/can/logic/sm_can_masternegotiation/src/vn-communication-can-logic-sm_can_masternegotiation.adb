@@ -33,14 +33,6 @@ package body VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation is
                if msgIn.isNormal then
                   VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": SM_CAN_MasterNegotiation.Update: Started, normal message received, became Slave", 4);
 
-                  --testing:
---                      VN.Communication.CAN.Logic.DebugOutput(" msgPrio= " & msgIn.msgPrio'Img &
---                                             " msgType= " & msgIn.msgType'Img &
---                                             " Length= " & msgIn.Length'Img &
---                                             " Receiver= " & msgIn.Receiver'Img &
---                                             " Sender= " & msgIn.Sender'Img, 4);
-
-
                   this.currentState := Slave;
                   bWillSend := false;
                   return;
@@ -52,12 +44,15 @@ package body VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation is
                      VN.Communication.CAN.Logic.Message_Utils.RequestCANAddressFromMessage(msgIn, theUCID, bIs_SM_CAN);
 
                      if bIs_SM_CAN and theUCID < this.myUCID then
-                        VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": SM_CAN_MasterNegotiation.Update: Started, RequestCANAddress from lower UCID = " & theUCID'Img & " received, became slave", 4);
+                        VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": SM_CAN_MasterNegotiation.Update: Started, RequestCANAddress from lower UCID = " &
+                                                                 theUCID'Img & " received, became slave", 4);
                         this.currentState := Slave;
                         bWillSend := false;
                         return;
+
                      elsif bIs_SM_CAN then
-                        VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": SM_CAN_MasterNegotiation.Update: Started, RequestCANAddress from higher UCID = " & theUCID'Img & " received, replied", 4);
+                        VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": SM_CAN_MasterNegotiation.Update: Started, RequestCANAddress from higher UCID = " &
+                                                                 theUCID'Img & " received, replied", 4);
                         VN.Communication.CAN.Logic.Message_Utils.RequestCANAddressToMessage(msgOut, this.myUCID, true);
                         bWillSend := true;
                         this.timer := Ada.Real_Time.Clock;

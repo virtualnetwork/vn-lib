@@ -7,8 +7,6 @@
 -- Before it can be used, Receiver_Unit_Duty will need to be activated. This cannot
 -- be done until one has been assigned a CAN address.
 
--- ToDo: DeFragment must be implemented further
-
 pragma Profile (Ravenscar);
 
 with VN.Communication.CAN.Logic.Message_Utils;
@@ -125,12 +123,10 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
    procedure Activate(this : in out Receiver_Unit_Duty; address : VN.Communication.CAN.CAN_Address_Sender;
                       receiveBufferPtr : Receive_Buffer_ptr; pendingSendersPtr : Pending_Senders_ptr) is
    begin
-   --   if this.currentState = Unactivated then
          this.myCANAddress   := address;
          this.currentState   := Idle;
          this.receiveBuffer  := receiveBufferPtr;
          this.pendingSenders := pendingSendersPtr;
-     -- end if;
    end Activate;
 
    procedure Assign(this : in out Receiver_Unit_Duty; sender : VN.Communication.CAN.CAN_Address_Sender;

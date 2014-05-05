@@ -8,8 +8,6 @@
 -- CAN_Address_Assignment will assign CAN addresses to all other units on the
 -- CAN network.
 
--- ToDo: Use the information in Address_Entry in the discovery process.
-
 with VN.Communication.CAN.Logic.Message_Utils;
 
 package body VN.Communication.CAN.Logic.CAN_Address_Assignment is
@@ -39,9 +37,6 @@ package body VN.Communication.CAN.Logic.CAN_Address_Assignment is
 
                      VN.Communication.CAN.Logic.Message_Utils.AssignCANAddressToMessage(msgOut, receivedUCID, temp);
                      VN.Communication.CAN.Logic.DebugOutput("Assigned CAN address " & temp'Img & " to UCID " & receivedUCID'Img, 4);
-
---                       VN.Communication.CAN.Logic.DebugOutput("     msgIn.Sender=" & msgIn.Sender'Img & " msgIn.Receiver=" & msgIn.Receiver'Img &
---                                                                " msgIn.msgType=" &  msgIn.msgType'Img & " msgIn.Length= " & msgIn.Length'img, 4);
                   end;
 
                   bWillSend := true;

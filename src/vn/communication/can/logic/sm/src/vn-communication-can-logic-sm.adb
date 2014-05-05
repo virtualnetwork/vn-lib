@@ -39,11 +39,6 @@ package body VN.Communication.CAN.Logic.SM is
             this.DutyArray(i).Update(msgIn, false, msgOut, bWillSend);
 
             if bWillSend then
---                 if msgOut.isNormal and then msgOut.msgType = VN.Communication.CAN.Logic.TRANSMISSION then
---                    VN.Communication.CAN.Logic.DebugOutput("TRANSMISSION msg sent from " &
---                                                             msgOut.Sender'Img & " to " & msgOut.Receiver'Img, 4);
---                 end if;
-
                CAN_Message_Buffers.Insert(msgOut, ret);
             end if;
          end loop;
@@ -68,46 +63,71 @@ package body VN.Communication.CAN.Logic.SM is
          end loop;
       end if;
 
-      if this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.MASTER then
-         this.assigner.Activate(this.myUCID);
-         this.sender.Activate(0);
-         this.receiver.Activate(0);
-         this.cuuidResponder.Activate(this.myCUUID, 0, true);
-         this.cuuidHandler.Activate(this.myCUUID, 0, this.sender'Unchecked_Access);
-         --this.logicalAddressHandler.Activate(0, true);
+      if not this.hasRole then
+         if this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.MASTER then
 
-      elsif this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SLAVE then
-         this.addressReceiver.Activate;
+            this.hasCANAddress := true;
+            this.hasRole := true;
+
+            this.assigner.Activate(this.myUCID);
+            this.sender.Activate(0);
+            this.receiver.Activate(0);
+            this.cuuidResponder.Activate(this.myCUUID, 0, true);
+            this.cuuidHandler.Activate(this.myCUUID, 0, this.sender'Unchecked_Access);
+
+            --Change CAN message filters, SM_CAN_MasterNegotioation longer wishes to receceive
+            -- normal CAN messages, only RequestCANAddress messages:
+            this.theFilter.Change_Filter(this.negotioationFilterID, VN.Communication.CAN.CAN_message_ID(2 ** 28),
+                                         VN.Communication.CAN.CAN_message_ID(2 ** 28));
+
+            --Create filter to filter out messages addressed to the SM_CAN master's CAN address (0):
+            this.theFilter.Create_Transmission_Filter(this.transmissionFilterID, 0);
+
+         elsif this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.SLAVE then
+            this.addressReceiver.Activate;
+            this.hasRole := true;
+         end if;
       end if;
 
-      declare
-         isAssigned : boolean;
-         address    : VN.Communication.CAN.CAN_Address_Sender;
-      begin
-         this.addressReceiver.Address(address, isAssigned);
-         if isAssigned then
-            this.sender.Activate(address);
-            this.receiver.Activate(address);
-            this.cuuidResponder.Activate(this.myCUUID, address, true);
-            this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
-           -- this.logicalAddressHandler.Activate(address, false); --isSM_CAN is set to false here in some cases of testing
+      if not this.hasCANAddress then
+         declare
+            isAssigned : boolean;
+            address    : VN.Communication.CAN.CAN_Address_Sender;
+         begin
+            this.addressReceiver.Address(address, isAssigned);
+            if isAssigned then
+               this.hasCANAddress := true;
 
-            --FOR TESTING:
---              if not this.hasSent then
---                 VN.Communication.CAN.Logic.DebugOutput("Starting to send VN message", 3);
---                 this.hasSent := true;
---
---
---                 declare
---                    tempStr : String := "Hello world its working, sent from UCID " & this.myUCID'Img & "                        ";
---                    d : VN.Communication.CAN.Logic.DataArray := VN.Communication.CAN.Logic.DataArray(tempStr(VN.Communication.CAN.Logic.DataArray'Range));
---                    msg : VN.Communication.CAN.Logic.VN_Message_Internal := (d, 50, 0, address);
---                 begin
---                    this.sender.SendVNMessage(msg);
---                 end;
---              end if;
-         end if;
-      end;
+               this.sender.Activate(address);
+               this.receiver.Activate(address);
+               this.cuuidResponder.Activate(this.myCUUID, address, true);
+               this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
+
+               --Change CAN message filters, SM_CAN_MasterNegotioation does no longer wishe
+               -- to receceive any CAN messages:
+               this.theFilter.Remove_Filter(this.negotioationFilterID);
+
+               --Create filter to filter out messages addressed to the assigned CAN address:
+               this.theFilter.Create_Transmission_Filter(this.transmissionFilterID,
+                                                         VN.Communication.CAN.Convert(address));
+
+               --FOR TESTING:
+               --              if not this.hasSent then
+               --                 VN.Communication.CAN.Logic.DebugOutput("Starting to send VN message", 3);
+               --                 this.hasSent := true;
+               --
+               --
+               --                 declare
+               --                    tempStr : String := "Hello world its working, sent from UCID " & this.myUCID'Img & "                        ";
+               --                    d : VN.Communication.CAN.Logic.DataArray := VN.Communication.CAN.Logic.DataArray(tempStr(VN.Communication.CAN.Logic.DataArray'Range));
+               --                    msg : VN.Communication.CAN.Logic.VN_Message_Internal := (d, 50, 0, address);
+               --                 begin
+               --                    this.sender.SendVNMessage(msg);
+               --                 end;
+               --              end if;
+            end if;
+         end;
+      end if;
 
       --For testing:
 --          declare
@@ -122,31 +142,8 @@ package body VN.Communication.CAN.Logic.SM is
 --          end;
    end Update;
 
-   procedure Discover(this : in out SM_Duty; discoveredUnits : out Unit_Buffers.Buffer) is
-      isSet  : boolean;
-      aCUUID : VN.VN_CUUID;
-      aUnit  : Unit;
-      isSM_CAN  : boolean;
-   begin
-      if not this.isInitialized then
-         Init(this);
-      end if;
 
-      Unit_Buffers.Clear(discoveredUnits);
-
-      for i in VN.Communication.CAN.CAN_Address_Sender'range loop
-         this.cuuidHandler.ReadEntry(i, aCUUID, isSM_CAN, isSet);
-
-         if isSet then
-            aUnit.unitCANAddress := i;
-            aUnit.unitCUUID 	 := aCUUID;
-            aUnit.isSM_CAN := isSM_CAN;
-            Unit_Buffers.Insert(aUnit, discoveredUnits);
-         end if;
-      end loop;
-   end Discover;
-
-   procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
+   procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic;
                   result : out VN.Send_Status) is
       internal : VN.Communication.CAN.Logic.VN_Message_Internal;
       receiver : VN.Communication.CAN.CAN_Address_Sender;
@@ -184,7 +181,6 @@ package body VN.Communication.CAN.Logic.SM is
          internal.Receiver := VN.Communication.CAN.Convert(receiver);
          internal.Data := msg;
 
-         -- ToDo: test if this is right:
          internal.NumBytes := Interfaces.Unsigned_16(Integer(msg.Header.Payload_Length) +
                                                        VN.Message.HEADER_SIZE +
                                                          VN.Message.CHECKSUM_SIZE);
@@ -196,7 +192,7 @@ package body VN.Communication.CAN.Logic.SM is
       end if;
    end Send;
 
-   procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
+   procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; 
                      status : out VN.Receive_Status) is
 
       procedure Local_Ack_Response(internalMsg : VN.Communication.CAN.Logic.VN_Message_Internal) is
@@ -237,15 +233,12 @@ package body VN.Communication.CAN.Logic.SM is
 
       internal 	    : VN.Communication.CAN.Logic.VN_Message_Internal;
       msgLocalHello : VN.Message.Local_Hello.VN_Message_Local_Hello;
-
-      --stop 	    : boolean := false;
    begin
 
       if not this.isInitialized then
          Init(this);
       end if;
 
-      -- while not stop loop
       this.receiver.ReceiveVNMessage(internal, status);
 
       if status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or --TODO, this will need to be updated if more options for VN.Receive_Status are added
@@ -261,7 +254,6 @@ package body VN.Communication.CAN.Logic.SM is
             CUUID_CAN_Routing.Insert(msgLocalHello.CUUID, internal.Sender);
 
             Local_Ack_Response(internal); -- Respond with a LocalAck
-            --   stop := false;
 
             VN.Communication.CAN.Logic.DebugOutput("CAN address " & internal.Receiver'Img &
                                                      " received LocalHello from CAN address " &
@@ -270,7 +262,6 @@ package body VN.Communication.CAN.Logic.SM is
 
          elsif msg.Header.Opcode = VN.Message.OPCODE_LOCAL_ACK then
             -- ToDo: We should remember that our Local_Hello was acknowledged
-            --stop := false;
 
             VN.Communication.CAN.Logic.DebugOutput("CAN address " & internal.Receiver'Img &
                                                      " received LocalAck from CAN address " &
@@ -284,16 +275,12 @@ package body VN.Communication.CAN.Logic.SM is
             if msg.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
                Handle_Distribute_Route(internal);
             end if;
-            --     stop := true;
          end if;
-         --   else
-         --    stop := true;
       end if;
-      --end loop;
    end Receive;
 
    procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender;
-                     isAssigned : out boolean) is
+                           isAssigned : out boolean) is
       use VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation;
    begin
       if not this.isInitialized then
@@ -307,32 +294,6 @@ package body VN.Communication.CAN.Logic.SM is
          this.addressReceiver.Address(address, isAssigned);
       end if;
    end GetCANAddress;
-
-   --THIS IS JUST TESTING FUNCTIONALLITY FOR NODES, NOT SM-CANs
---     procedure GetLogicalAddress(this : in out SM_Duty; LogicalAddress : out VN.VN_Logical_Address;
---                                 isAssigned : out boolean) is
---     begin
---        this.logicalAddressHandler.GetAddress(LogicalAddress, isAssigned);
---     end GetLogicalAddress;
---
---
---     procedure SetMyAddress(this : in out SM_Duty; LogicalAddress : VN.VN_Logical_Address) is
---     begin
---        this.logicalAddressHandler.SetMyAddress(LogicalAddress);
---     end SetMyAddress;
---
---     procedure Assign(this : in out SM_Duty; CANAddress : CAN_Address_Sender;
---                      LogicalAddress : VN.VN_Logical_Address) is
---     begin
---        this.logicalAddressHandler.Assign(CANAddress, LogicalAddress);
---     end Assign;
---
---     procedure AddressQuestion(this : in out SM_Duty; LogicalAddress : VN.VN_Logical_Address;
---                               CANAddress : out CAN_Address_Sender; wasFound : out boolean) is
---     begin
---        this.logicalAddressHandler.AddressQuestion(LogicalAddress, CANAddress, wasFound);
---     end AddressQuestion;
-
 
    procedure Init(this : in out SM_Duty) is
       testCUUID : VN.VN_CUUID := (others => 42); --ToDo: For testing only!!!!
@@ -349,11 +310,18 @@ package body VN.Communication.CAN.Logic.SM is
       this.DutyArray(this.DutyArray'First + 5) := this.cuuidResponder'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 6) := this.cuuidHandler'Unchecked_Access;
 
+      -- Set CAN filters:
+      this.theFilter.Create_Filter(this.negotioationFilterID, 0, 0); --will listen to all CAN messages, for now
+
+      -- receiving messages sent to CAN address 255 (broadcast)
+      this.theFilter.Create_Transmission_Filter(this.broadcastFilterID, 255);
+
+      -- receiving messages sent to CAN address 254 (selective broadcast)
+      this.theFilter.Create_Transmission_Filter(this.selectiveBroadcastFilterID, 254);
+
       --ToDo: For testing only!!!!
       CAN_Routing.Insert(this.myTable, 1337, 42);
       CUUID_CAN_Routing.Insert(testCUUID, 42);
    end Init;
 
 end VN.Communication.CAN.Logic.SM;
-
-
