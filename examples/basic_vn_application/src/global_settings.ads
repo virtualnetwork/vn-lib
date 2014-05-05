@@ -23,14 +23,13 @@ package Global_Settings is
    CUUID_App : aliased VN.VN_CUUID := (others => 10);
    CUUID_SM : aliased VN.VN_CUUID := (others => 20);
    -- Communication between Application, CAS and SM-L
-   PO_To_Application : VN.Communication.PO.VN_PO_Access
-                                             := new VN.Communication.PO.VN_PO;
+   PO_To_Application : aliased VN.Communication.PO.VN_PO;
 --   PO_To_CAS         : VN.Communication.PO.VN_PO_Access
 --                                             := new VN.Communication.PO.VN_PO;
 
    -- Communication object for Application
    Com_Application   : VN.Communication.PO_Wrapper.VN_PO_Wrapper(
-                                                            PO_To_Application,
+                                                            PO_To_Application'Access,
                                                             CUUID_App'Access,
                                                             VN.Message.Other,
                                                             False);
@@ -46,11 +45,11 @@ package Global_Settings is
    -- 4. Create all needed PO_Wrappers for the SM-L
    -- 5. Add all PO_Wrappers to the PO_Router.
    -- PO_Router_For_SM_L: VN.Communication.PO_Routing.PO_Router;
-   PO_Router: aliased VN.Communication.Protocol_Routing.Protocol_Routing_Type;
-   Com_SM_L : VN.Communication.Protocol_Router.Protocol_Routing_Type;
+   PO_Router: aliased VN.Communication.Routing.Router;
+   Com_SM_L : VN.Communication.Routing.Router;
 
    PO_Wrapper_To_App : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(
-                                                            PO_To_Application,
+                                                            PO_To_Application'Access,
                                                             CUUID_SM'Access,
                                                             VN.Message.SM_L,
                                                             True);

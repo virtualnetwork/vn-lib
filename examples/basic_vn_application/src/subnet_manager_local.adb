@@ -32,8 +32,13 @@ package body Subnet_Manager_Local is
       loop
          delay until Next_Period;
          ----------------------------
+         Ada.Text_IO.Put_Line("STAT SM-L: Runs");
 
          Global_Settings.Com_SM_L.Receive(Basic_Msg, Status);
+
+         if Status = VN.NO_MSG_RECEIVED then
+            Ada.Text_IO.Put_Line("RECV SM-L: Empty.");
+         end if;
 
          if Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
             Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
