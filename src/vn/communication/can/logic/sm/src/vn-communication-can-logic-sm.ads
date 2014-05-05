@@ -92,6 +92,8 @@ package VN.Communication.CAN.Logic.SM is
    procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic;
                      status : out VN.Receive_Status);
 
+   --This function is only used for testing:
+   procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender; isAssigned : out boolean);
 private
 
    procedure Init(this : in out SM_Duty);

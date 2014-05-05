@@ -233,15 +233,12 @@ package body VN.Communication.CAN.Logic.SM is
 
       internal 	    : VN.Communication.CAN.Logic.VN_Message_Internal;
       msgLocalHello : VN.Message.Local_Hello.VN_Message_Local_Hello;
-
-      --stop 	    : boolean := false;
    begin
 
       if not this.isInitialized then
          Init(this);
       end if;
 
-      -- while not stop loop
       this.receiver.ReceiveVNMessage(internal, status);
 
       if status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or --TODO, this will need to be updated if more options for VN.Receive_Status are added
@@ -257,7 +254,6 @@ package body VN.Communication.CAN.Logic.SM is
             CUUID_CAN_Routing.Insert(msgLocalHello.CUUID, internal.Sender);
 
             Local_Ack_Response(internal); -- Respond with a LocalAck
-            --   stop := false;
 
             VN.Communication.CAN.Logic.DebugOutput("CAN address " & internal.Receiver'Img &
                                                      " received LocalHello from CAN address " &
@@ -266,7 +262,6 @@ package body VN.Communication.CAN.Logic.SM is
 
          elsif msg.Header.Opcode = VN.Message.OPCODE_LOCAL_ACK then
             -- ToDo: We should remember that our Local_Hello was acknowledged
-            --stop := false;
 
             VN.Communication.CAN.Logic.DebugOutput("CAN address " & internal.Receiver'Img &
                                                      " received LocalAck from CAN address " &
@@ -280,13 +275,25 @@ package body VN.Communication.CAN.Logic.SM is
             if msg.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
                Handle_Distribute_Route(internal);
             end if;
-            --     stop := true;
          end if;
-         --   else
-         --    stop := true;
       end if;
-      --end loop;
    end Receive;
+
+   procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender;
+                           isAssigned : out boolean) is
+      use VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation;
+   begin
+      if not this.isInitialized then
+         Init(this);
+      end if;
+
+      if this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.MASTER then
+         address := 0;
+         isAssigned := true;
+      else
+         this.addressReceiver.Address(address, isAssigned);
+      end if;
+   end GetCANAddress;
 
    procedure Init(this : in out SM_Duty) is
       testCUUID : VN.VN_CUUID := (others => 42); --ToDo: For testing only!!!!
