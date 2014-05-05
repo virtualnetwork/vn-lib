@@ -46,8 +46,8 @@ package Global_Settings is
    -- 4. Create all needed PO_Wrappers for the SM-L
    -- 5. Add all PO_Wrappers to the PO_Router.
    -- PO_Router_For_SM_L: VN.Communication.PO_Routing.PO_Router;
-   PO_Router: aliased VN.Communication.Routing.Router;
-   Com_SM_L : VN.Communication.Routing.Router;
+   PO_Router: aliased VN.Communication.Protocol_Routing.Protocol_Routing_Type;
+   Com_SM_L : VN.Communication.Protocol_Router.Protocol_Routing_Type;
 
    PO_Wrapper_To_App : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(
                                                             PO_To_Application,
