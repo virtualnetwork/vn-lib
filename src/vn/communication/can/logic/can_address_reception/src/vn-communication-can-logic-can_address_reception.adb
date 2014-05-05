@@ -32,8 +32,6 @@ package body VN.Communication.CAN.Logic.CAN_Address_Reception is
                   VN.Communication.CAN.Logic.Message_Utils.RequestCANAddressToMessage(msgOut, this.myUCID, false);
                   bWillSend:= true;
                   this.currentState := Started;
-
-                  --VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": Requested CAN address, this.currentState=" & this.currentState'Img, 4);
                   VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": Requested CAN address", 4);
 
                  this.timer := Ada.Real_Time.Clock;
@@ -66,7 +64,6 @@ package body VN.Communication.CAN.Logic.CAN_Address_Reception is
             if Ada.Real_Time.Clock - this.timer > TIME_TO_WAIT_FOR_ADDRESS then
                VN.Communication.CAN.Logic.Message_Utils.RequestCANAddressToMessage(msgOut, this.myUCID, false);
                bWillSend:= true;
-               --VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": Requested CAN address, this.currentState=" & this.currentState'Img, 4);
                VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": Requested CAN address", 4);
                this.timer := Ada.Real_Time.Clock;
             end if;

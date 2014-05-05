@@ -7,8 +7,6 @@
 -- Before it can be used, Sender_Unit_Duty will need to be activated. This cannot
 -- be done until one has been assigned a CAN address.
 
--- ToDo: Fragment must be tested 
-
 with VN.Communication.CAN.Logic.Message_Utils;
 
 package body VN.Communication.CAN.Logic.Sender_Unit is
@@ -111,9 +109,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
 
                   this.currentState := Transmitting;
                   this.blockCount := 0;
-               end if;
-           -- else
-               --VN.Communication.CAN.Logic.DebugOutput("", 5, true); --newline               
+               end if;  
             end if;
             bWillSend := false;
       end case;
@@ -131,10 +127,6 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
       VN.Communication.CAN.Logic.DebugOutput("Send VN Message: Sender CAN addr " & this.myCANAddress'Img & 
                                                ", receiver= " & this.Receiver'Img & " NumBytes= " & message.NumBytes'Img & 
                                                " Opcode= " & message.Data.Header.Opcode'img, 3);
-
---        VN.Communication.CAN.Logic.DebugOutput("", 4);
---        VN.Communication.CAN.Logic.DebugOutput("Sender_Unit_Duty.Send, opcode= " & message.Data.Header.Opcode'Img, 4);
---        VN.Communication.CAN.Logic.DebugOutput("", 4);
    end Send;
 
    procedure Activate(this : in out Sender_Unit_Duty; address : VN.Communication.CAN.CAN_Address_Sender) is

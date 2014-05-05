@@ -17,6 +17,8 @@ with VN;
 with VN.Communication;
 with VN.Communication.CAN;
 
+with VN.Communication.CAN.CAN_Filtering;
+
 
 -- Remove this (and any reference to System.BB) when compiling for PC, keep when compiling for SmartFusion2
 with System.BB.Interrupts;
@@ -28,6 +30,8 @@ package VN.Communication.CAN.CAN_Driver is
    function Send_Buffer_Full return Boolean;
 
    procedure Receive(message : out VN.Communication.CAN.CAN_Message_Logical; status : out VN.Receive_Status);
+
+   procedure Update_Filters(filterAccess : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access);
 
 --  private --ToDo: The things below are only public when testing, the test project can_driver_test uses these things.
 

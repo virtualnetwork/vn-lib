@@ -7,15 +7,15 @@
 -- Before it can be used, Sender_Unit_Duty will need to be activated. This cannot
 -- be done until one has been assigned a CAN address.
 
--- ToDo: Fragment must be tested
-
 with VN.Communication.CAN.Logic;
 with Interfaces;
 with Ada.Real_Time;
 
 package VN.Communication.CAN.Logic.Sender_Unit is
 
-   type Sender_Unit_Duty is new VN.Communication.CAN.Logic.Duty with private;
+   type Sender_Unit_Duty is
+     new VN.Communication.CAN.Logic.Duty with private;
+
    type Sender_Unit_Duty_ptr is access all Sender_Unit_Duty'Class;
 
    overriding procedure Update(this : in out Sender_Unit_Duty; msgIn : VN.Communication.CAN.CAN_Message_Logical; bMsgReceived : boolean;
@@ -36,7 +36,8 @@ private
    WAIT_TIME : Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(2000);
 
    type Sender_Unit_State is (Idle, Initiated, Started, Transmitting, BlockFull);
-   type Sender_Unit_Duty is new VN.Communication.CAN.Logic.Duty with
+   type Sender_Unit_Duty is
+     new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	: Sender_Unit_State := Idle;
          myCANAddress 	: VN.Communication.CAN.CAN_Address_Sender;
@@ -51,13 +52,6 @@ private
       end record;
 
    function NumMessagesToSend(messageLength : Interfaces.Unsigned_16) return Interfaces.Unsigned_16;
-
-   --Moved to message_utils
---     procedure Fragment(msgArray 	: VN.Message.VN_Message_Byte_Array;
---                        seqNumber : in out Interfaces.Unsigned_16;
---                        NumBytes 		: in Interfaces.Unsigned_16;
---                        CANMessage 	: in out VN.Communication.CAN.CAN_Message_Logical;
---                        isLastMessage 	: out boolean);
 
 end VN.Communication.CAN.Logic.Sender_Unit;
 

@@ -13,13 +13,16 @@ with System;
 with Ada.Real_Time;
 with VN.Communication.CAN.CAN_Interface;
 
+with VN.Communication.CAN.CAN_Filtering;
+
 --with BBB_CAN;
 
 package VN.Communication.CAN.Can_Task is
 
    task type CAN_Task_Type(myAccess : VN.Communication.CAN.CAN_Interface.CAN_Interface_Access;
                            Pri : System.Priority;
-                           thePeriod : access Ada.Real_Time.Time_Span) is --;
+                           thePeriod : access Ada.Real_Time.Time_Span;
+                           CANFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is --;
                          --  port : access String  -- SHALL NOT INCLUDE "/dev/"
                          --  ) is
       pragma Priority(Pri);
