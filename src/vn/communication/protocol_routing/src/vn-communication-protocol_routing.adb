@@ -151,9 +151,10 @@ package body VN.Communication.Protocol_Routing is
 
    procedure Add_Interface(this : in out Protocol_Routing_Type;
                            theInterface : VN.Communication.Com_Access) is
+      TOO_MANY_INTERFACES : exception;
    begin
       if this.numberOfInterfaces >= MAX_NUMBER_OF_SUBNETS then
-         return;
+         raise TOO_MANY_INTERFACES;
       end if;
 
       for i in Interface_Array'First .. Interface_Array'First + this.numberOfInterfaces - 1 loop
