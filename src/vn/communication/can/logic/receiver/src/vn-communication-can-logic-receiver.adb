@@ -52,7 +52,8 @@ package body VN.Communication.CAN.Logic.Receiver is
                                                                  ", transmission pending. Sender = "
                                                                & pending.sender'Img & " numMessages= " & pending.numMessages'img, 3);
 
-                        --Check whether this StartTransmission has been recieved eariler (the sender might resend the StartTransmission message)
+                        --Check whether this StartTransmission has been recieved eariler
+                        -- (the sender might resend the StartTransmission message)
                         -- if not, add it as a pending transmission:
                         if not Pending_Senders_pack.Find(pending, this.pendingSenders) then
                            Pending_Senders_pack.Insert(pending, this.pendingSenders);
@@ -61,10 +62,6 @@ package body VN.Communication.CAN.Logic.Receiver is
                   end if;
 
                elsif msgIn.msgType = VN.Communication.CAN.Logic.TRANSMISSION then
-
---                    VN.Communication.CAN.Logic.DebugOutput("RECEIVER AT ADDR " & this.myCANAddress'Img &
---                                                             " RECEVED TRANSMISSION MESSAGE FROM " & msgIn.Sender'Img, 4);
-
                   for i in this.units'range loop
                      if this.units(i).isActive and then this.units(i).Sender = msgIn.sender then
                         this.units(i).Update(msgIn, bMsgReceived, msgOut, bWillSend);

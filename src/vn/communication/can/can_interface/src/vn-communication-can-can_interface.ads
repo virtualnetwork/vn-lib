@@ -16,15 +16,22 @@
 
 with VN;
 with VN.Communication.CAN;
+with VN.Communication.CAN.CAN_Filtering;
 with VN.Communication.CAN.Logic.SM;
 
 package VN.Communication.CAN.CAN_Interface is
 
  type Unit_Type is (SM_CAN, Node);
 
-   type Private_Data(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID; unitType : Unit_Type) is limited private;
+   type Private_Data(theUCID   : access VN.Communication.CAN.UCID;
+                     theCUUID  : access VN.VN_CUUID;
+                     theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access;
+                     unitType  : Unit_Type) is limited private;
 
-   protected type CAN_Interface_Type(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID; unitType : Unit_Type) is
+   protected type CAN_Interface_Type(theUCID   : access VN.Communication.CAN.UCID;
+                                     theCUUID  : access VN.VN_CUUID;
+                                     theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access;
+                                     unitType  : Unit_Type) is
         new VN.Communication.Com with
 
       overriding procedure Send(Message: in VN.Message.VN_Message_Basic;
@@ -41,20 +48,23 @@ package VN.Communication.CAN.CAN_Interface is
 
    private
       isInitialized : Boolean := false;
-      data : Private_Data(theUCID, theCUUID, unitType);
+      data : Private_Data(theUCID, theCUUID, theFilter, unitType);
    end CAN_Interface_Type;
 
    type CAN_Interface_Access is access all CAN_Interface_Type;
 
 private
 
-   type Private_Data(theUCID : access VN.Communication.CAN.UCID; theCUUID : access VN.VN_CUUID; unitType : Unit_Type) is  --will be a variant record soon enough
+   type Private_Data(theUCID   : access VN.Communication.CAN.UCID;
+                     theCUUID  : access VN.VN_CUUID;
+                     theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access;
+                     unitType  : Unit_Type) is
       record
          case unitType is
             when SM_CAN =>
-               SMDuty : VN.Communication.CAN.Logic.SM.SM_Duty(theUCID, theCUUID);
+               SMDuty : VN.Communication.CAN.Logic.SM.SM_Duty(theUCID, theCUUID, theFilter);
             when Node =>
-               nodeDuty : VN.Communication.CAN.Logic.SM.SM_Duty(theUCID, theCUUID); -- VN.Communication.CAN.Logic.Node.Node_Duty(theUCID, theCUUID);
+               nodeDuty : VN.Communication.CAN.Logic.SM.SM_Duty(theUCID, theCUUID, theFilter); -- VN.Communication.CAN.Logic.Node.Node_Duty(theUCID, theCUUID);
          end case;
       end record;
 

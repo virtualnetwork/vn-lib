@@ -101,7 +101,6 @@ package body VN.Communication.CAN.Logic.Sender is
             bWillSend := false;
             loop
                if this.units(this.iterator).isActive  then
---                    VN.Communication.CAN.Logic.DebugOutput(this.iterator'Img& ": ", 4);
                   this.units(this.iterator).Update(msgIn, bMsgReceived, msgOut, bWillSend);
                end if;
 
@@ -119,6 +118,7 @@ package body VN.Communication.CAN.Logic.Sender is
    end Update;
 
    procedure Activate(this : in out Sender_Duty; address : VN.Communication.CAN.CAN_Address_Sender) is
+
    begin
       if this.currentState = Unactivated then
          this.currentState := Activated;

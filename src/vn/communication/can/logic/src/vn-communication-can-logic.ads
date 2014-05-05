@@ -30,30 +30,29 @@ package VN.Communication.CAN.Logic is
    START_TRANSMISSION 	: CAN_Message_Type := 6;
    FLOW_CONTROL 	: CAN_Message_Type := 7;
    TRANSMISSION 	: CAN_Message_Type := 8;
-   REQUEST_CUUID	: CAN_Message_Type := 9;
-   FIRST_CUUID_HALF 	: CAN_Message_Type := 10;
-   SECOND_CUUID_HALF 	: CAN_Message_Type := 11;
-   COMPONENT_TYPE	: CAN_Message_Type := 12;
-   ASSIGN_LOGICAL_ADDR	: CAN_Message_Type := 13;
+   DISCOVERY_REQUEST    : CAN_Message_Type := 9;
+   COMPONENT_TYPE	: CAN_Message_Type := 10;   
 
---     type DataArray is array(1..10) of Interfaces.Unsigned_8;
---     type DataArray is new String(1..50);
+--     REQUEST_CUUID	: CAN_Message_Type := 9;
+--     FIRST_CUUID_HALF 	: CAN_Message_Type := 10;
+--     SECOND_CUUID_HALF 	: CAN_Message_Type := 11;   
+--     ASSIGN_LOGICAL_ADDR	: CAN_Message_Type := 13;
 
    type VN_Message_Internal is
       record
---           Data 		: DataArray;
          Data		: VN.Message.VN_Message_Basic;
          NumBytes	: Interfaces.Unsigned_16;
          Receiver 	: CAN_Address_Receiver;
          Sender		: CAN_Address_Sender;
       end record;
 
-  -- procedure Assignment (destination : out VN_Message_Internal; source : in VN_Message_Internal);
-
    type Duty is abstract tagged limited private;
 
-   procedure Update(me : in out Duty; msg : CAN_Message_Logical; bMsgReceived : boolean;
-                    msgOut : out CAN_Message_Logical; bWillSend : out boolean) is abstract;
+   procedure Update(this : in out Duty; 
+                    msg : CAN_Message_Logical; 
+                    bMsgReceived : boolean;
+                    msgOut : out CAN_Message_Logical; 
+                    bWillSend : out boolean) is abstract;
 
    type Duty_Ptr is access all Duty'Class;
 

@@ -7,8 +7,6 @@
 -- Before it can be used, Receiver_Unit_Duty will need to be activated. This cannot
 -- be done until one has been assigned a CAN address.
 
--- ToDo: DeFragment must be tested
-
 pragma Profile (Ravenscar);
 
 with VN.Communication.CAN.Logic;
@@ -17,7 +15,9 @@ with Buffers;
 
 package VN.Communication.CAN.Logic.Receiver_Unit is
 
-   type Receiver_Unit_Duty is new VN.Communication.CAN.Logic.Duty with private;
+   type Receiver_Unit_Duty is
+     new VN.Communication.CAN.Logic.Duty with private;
+
    type Receiver_Unit_Duty_ptr is access all Receiver_Unit_Duty'Class;
 
    type Pending_Sender is
@@ -32,7 +32,6 @@ package VN.Communication.CAN.Logic.Receiver_Unit is
    use Pending_Senders_pack;
    type Pending_Senders_ptr is access all Pending_Senders_pack.Buffer(SIZE);
 
-   --package Receive_Buffer_pack is new Limited_Buffers(VN.Communication.CAN.Logic.VN_Message_Internal, VN.Communication.CAN.Logic.Assignment);
    package Receive_Buffer_pack is new Buffers(VN.Communication.CAN.Logic.VN_Message_Internal);
    use Receive_Buffer_pack;
    type Receive_Buffer_ptr is access all Receive_Buffer_pack.Buffer(SIZE);
@@ -58,7 +57,9 @@ private
    DEFAULT_BLOCK_SIZE : Interfaces.Unsigned_16 := 2;  --ToDO: Put this in a config file of some sort
 
    type Receiver_Unit_State is (Idle, Started, Transmitting);
-   type Receiver_Unit_Duty is new VN.Communication.CAN.Logic.Duty with
+
+   type Receiver_Unit_Duty is
+     new VN.Communication.CAN.Logic.Duty with
       record
          currentState 	: Receiver_Unit_State := Idle;
          myCANAddress 	: VN.Communication.CAN.CAN_Address_Sender;
@@ -75,12 +76,5 @@ private
          receiveBuffer 	: Receive_Buffer_ptr 	:= null;
          pendingSenders : Pending_Senders_ptr 	:= null;
       end record;
-
-   --Moved to message_utils:
---     procedure DeFragment(seqNumber 	 : Interfaces.Unsigned_16;
---                          numMessages	 : Interfaces.Unsigned_16; --total number of CAN messages that are to be received
---                          CANMessage 	 : VN.Communication.CAN.CAN_Message_Logical;
---                          VNMessageContent : in out VN.Message.VN_Message_Byte_Array;
---                          currentLength 	 : out Interfaces.Unsigned_16);
 
 end VN.Communication.CAN.Logic.Receiver_Unit;
