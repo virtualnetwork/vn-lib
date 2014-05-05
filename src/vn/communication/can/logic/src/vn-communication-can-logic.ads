@@ -48,8 +48,11 @@ package VN.Communication.CAN.Logic is
 
    type Duty is abstract tagged limited private;
 
-   procedure Update(me : in out Duty; msg : CAN_Message_Logical; bMsgReceived : boolean;
-                    msgOut : out CAN_Message_Logical; bWillSend : out boolean) is abstract;
+   procedure Update(this : in out Duty; 
+                    msg : CAN_Message_Logical; 
+                    bMsgReceived : boolean;
+                    msgOut : out CAN_Message_Logical; 
+                    bWillSend : out boolean) is abstract;
 
    type Duty_Ptr is access all Duty'Class;
 
