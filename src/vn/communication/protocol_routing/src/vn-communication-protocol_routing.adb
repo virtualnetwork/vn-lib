@@ -10,10 +10,6 @@
 -- delivered to the application layer or sent to another
 -- subnet, and if so, which one.
 
--- ToDo: Protocol_Routing_Type might not need to be protected?
--- ToDo: Only CAN subnet added so far.
--- ToDo: Some special cases not handled.
-
 with VN;
 with VN.Message;
 use VN.Message;
