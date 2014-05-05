@@ -39,11 +39,6 @@ package body VN.Communication.CAN.Logic.SM is
             this.DutyArray(i).Update(msgIn, false, msgOut, bWillSend);
 
             if bWillSend then
---                 if msgOut.isNormal and then msgOut.msgType = VN.Communication.CAN.Logic.TRANSMISSION then
---                    VN.Communication.CAN.Logic.DebugOutput("TRANSMISSION msg sent from " &
---                                                             msgOut.Sender'Img & " to " & msgOut.Receiver'Img, 4);
---                 end if;
-
                CAN_Message_Buffers.Insert(msgOut, ret);
             end if;
          end loop;
@@ -147,31 +142,8 @@ package body VN.Communication.CAN.Logic.SM is
 --          end;
    end Update;
 
---     procedure Discover(this : in out SM_Duty; discoveredUnits : out Unit_Buffers.Buffer) is
---        isSet  : boolean;
---        aCUUID : VN.VN_CUUID;
---        aUnit  : Unit;
---        isSM_CAN  : boolean;
---     begin
---        if not this.isInitialized then
---           Init(this);
---        end if;
---  
---        Unit_Buffers.Clear(discoveredUnits);
---  
---        for i in VN.Communication.CAN.CAN_Address_Sender'range loop
---           this.cuuidHandler.ReadEntry(i, aCUUID, isSM_CAN, isSet);
---  
---           if isSet then
---              aUnit.unitCANAddress := i;
---              aUnit.unitCUUID 	 := aCUUID;
---              aUnit.isSM_CAN := isSM_CAN;
---              Unit_Buffers.Insert(aUnit, discoveredUnits);
---           end if;
---        end loop;
---     end Discover;
 
-   procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
+   procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic;
                   result : out VN.Send_Status) is
       internal : VN.Communication.CAN.Logic.VN_Message_Internal;
       receiver : VN.Communication.CAN.CAN_Address_Sender;
@@ -209,7 +181,6 @@ package body VN.Communication.CAN.Logic.SM is
          internal.Receiver := VN.Communication.CAN.Convert(receiver);
          internal.Data := msg;
 
-         -- ToDo: test if this is right:
          internal.NumBytes := Interfaces.Unsigned_16(Integer(msg.Header.Payload_Length) +
                                                        VN.Message.HEADER_SIZE +
                                                          VN.Message.CHECKSUM_SIZE);
@@ -221,7 +192,7 @@ package body VN.Communication.CAN.Logic.SM is
       end if;
    end Send;
 
-   procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; --VN.Communication.CAN.Logic.VN_Message_Internal;
+   procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; 
                      status : out VN.Receive_Status) is
 
       procedure Local_Ack_Response(internalMsg : VN.Communication.CAN.Logic.VN_Message_Internal) is
@@ -316,22 +287,6 @@ package body VN.Communication.CAN.Logic.SM is
       end if;
       --end loop;
    end Receive;
-
-   procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender;
-                     isAssigned : out boolean) is
-      use VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation;
-   begin
-      if not this.isInitialized then
-         Init(this);
-      end if;
-
-      if this.masterNegotiation.CurrentMode = VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation.MASTER then
-         address := 0;
-         isAssigned := true;
-      else
-         this.addressReceiver.Address(address, isAssigned);
-      end if;
-   end GetCANAddress;
 
    procedure Init(this : in out SM_Duty) is
       testCUUID : VN.VN_CUUID := (others => 42); --ToDo: For testing only!!!!

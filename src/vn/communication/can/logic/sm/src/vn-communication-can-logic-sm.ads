@@ -85,17 +85,12 @@ package VN.Communication.CAN.Logic.SM is
    procedure Update(this : in out SM_Duty; msgsBuffer : in out CAN_Message_Buffers.Buffer;
                     ret : out CAN_Message_Buffers.Buffer);
 
-   --This function is most likely obsolete:
---     procedure Discover(this : in out SM_Duty; discoveredUnits : out Unit_Buffers.Buffer);
 
    procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic;
                                 result : out VN.Send_Status);
 
    procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic;
                      status : out VN.Receive_Status);
-
-   --This function is most likely obsolete:
-   procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender; isAssigned : out boolean);
 
 private
 
