@@ -82,18 +82,21 @@ package VN.Communication.CAN.Logic.SM is
 
    type SM_Duty_ptr is access all SM_Duty;
 
-   procedure Update(this : in out SM_Duty; msgsBuffer : in out CAN_Message_Buffers.Buffer;
+   procedure Update(this : in out SM_Duty;
+                    msgsBuffer : in out CAN_Message_Buffers.Buffer;
                     ret : out CAN_Message_Buffers.Buffer);
 
+   procedure Send(this : in out SM_Duty;
+                  msg : VN.Message.VN_Message_Basic;
+                  result : out VN.Send_Status);
 
-   procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic;
-                                result : out VN.Send_Status);
-
-   procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic;
+   procedure Receive(this : in out SM_Duty;
+                     msg : out VN.Message.VN_Message_Basic;
                      status : out VN.Receive_Status);
 
    --This function is only used for testing:
-   procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender; isAssigned : out boolean);
+   procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender;
+                           isAssigned : out boolean);
 private
 
    procedure Init(this : in out SM_Duty);
