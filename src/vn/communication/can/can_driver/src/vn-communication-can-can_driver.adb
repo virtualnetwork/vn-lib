@@ -56,8 +56,8 @@ package body VN.Communication.CAN.CAN_Driver is
    begin
 
       -- ToDo: This is just for testing, right now the CAN drivers don't work so we'll have to pretend we just didn't receive a message
-    status := VN.NO_MSG_RECEIVED;
-    return;
+      status := VN.NO_MSG_RECEIVED;
+      return;
 
       if CAN_Message_Buffers.Empty(ReceiveBuffer) then
          status := VN.NO_MSG_RECEIVED;
