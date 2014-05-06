@@ -79,11 +79,11 @@ int Receive_CAN_Message(C_CAN_Message_Type *msg) { //returns 1 if message was re
 
 void Test_Send() {
     CAN_MSGOBJECT pMsg;
-    pMsg.ID=0x120;
+    pMsg.ID=0x20;
     pMsg.DATALOW = 0x11111111;
     pMsg.DATAHIGH = 0x22222222;
     pMsg.NA0 = 1;
-    pMsg.DLC = 8;
+    pMsg.DLC = 4;
     pMsg.IDE = 1;
     pMsg.RTR = 0;
     pMsg.NA1 = 0; //???
@@ -115,7 +115,7 @@ int Init_CAN() {
     int ret;
 
     MSS_CAN_init(&g_can0,
-                 CAN_SPEED_32M_50K, //CAN_SPEED_32M_1M,
+                 CAN_SET_BITRATE(24)|CAN_SET_TSEG1(12)|CAN_SET_TSEG2(1), //CAN_SPEED_32M_50K, //CAN_SPEED_32M_1M,
                  (PCAN_CONFIG_REG)0,
                  6,
                  6);
