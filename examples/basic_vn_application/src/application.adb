@@ -52,7 +52,7 @@ package body Application is
 
             -- Send message
             Ada.Text_IO.Put("SEND App: ");
-            Global_Settings.Logging.Log(Basic_Msg);
+            Global_Settings.Logger.Log(Basic_Msg);
             Global_Settings.Com_Application.Send(Basic_Msg, Send_Status);
          else
             Ada.Text_IO.Put_Line("ERRO App: No Logical Address Set");

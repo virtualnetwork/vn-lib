@@ -47,7 +47,7 @@ package body Subnet_Manager_Local is
             Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
             Ada.Text_IO.Put("RECV SM-L: ");
-            Global_Settings.Logging.Log(Basic_Msg);
+            Global_Settings.Logger.Log(Basic_Msg);
 
             -- TODO: Check OpCode and convert to correct type
             To_Local_Hello(Basic_Msg, Local_Hello_Msg);

@@ -1,6 +1,6 @@
 with Ada.Real_Time;
 with System;
-with Logger.Print_Out;
+with Logging.Print_Out;
 with VN.Message.Factory;
 with VN.Communication.PO;
 with VN.Communication.PO_Wrapper;
@@ -19,7 +19,7 @@ package Global_Settings is
       First_Time: Boolean := True;
    end Start_Time;
 
-   Logging: aliased Logger.Print_Out.Print_Out_Logger;
+   Logger: aliased Logging.Print_Out.Print_Out_Logger;
 
    CUUID_App : aliased VN.VN_CUUID := (others => 10);
    CUUID_SM : aliased VN.VN_CUUID := (others => 20);
