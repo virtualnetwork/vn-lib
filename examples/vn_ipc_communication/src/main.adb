@@ -1,18 +1,26 @@
 with VN.Message.Factory;
 with VN.Communication.PO;
-with VN.Communication.IPC;
+with VN.Communication.PO_Wrapper;
 with Text_IO;
 
 procedure Main is
    use VN.Message;
 
+   CUUID_App : aliased VN.VN_CUUID := (others => 10);
+   CUUID_SM : aliased VN.VN_CUUID := (others => 20);
+
    PO_To_Application : VN.Communication.PO.VN_PO_Access
                                              := new VN.Communication.PO.VN_PO;
 
-   IPC_Com_SM_L         : VN.Communication.IPC.IPC_Wrapper(PO_To_Application,
-                                                           True);
-   IPC_Com_Application  : VN.Communication.IPC.IPC_Wrapper(PO_To_Application,
-                                                           False);
+   IPC_Com_SM_L         : VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_To_Application,
+                                                          CUUID_App'Access,
+                                                          VN.Message.SM_L,
+                                                          True);
+
+   IPC_Com_Application  : VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_To_Application,
+                                                          CUUID_App'Access,
+                                                          VN.Message.Other,
+                                                          False);
 
    Send_Status : VN.Send_Status;
    Recv_Status : VN.Receive_Status;

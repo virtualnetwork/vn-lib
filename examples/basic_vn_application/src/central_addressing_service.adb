@@ -5,9 +5,9 @@ with VN.Application_Information;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;
 
-package body Application is
+package body Central_Addressing_Service is
 
-   task body VN_Application is
+   task body CAS is
       use Ada.Real_Time;
       use VN;
       use VN.Message.Local_Hello;
@@ -26,11 +26,10 @@ package body Application is
                            Ada.Real_Time.Microseconds(Cycle_Time);
    begin
       App_Info.Component_Type := VN.Message.Other;
-      App_Info.Logical_Address := 5;
       -- App_Info.CUUID := ???;
 
-      --Ada.Text_IO.Put_Line("Task type VN_Application - Start, ID: "
-      --                        & Integer'Image(Task_ID));
+      --Ada.Text_IO.Put_Line("Task type CAS - Start, ID: "
+      --                       & Integer'Image(Task_ID));
 
       Global_Settings.Start_Time.Get(Next_Period);
 
@@ -40,22 +39,19 @@ package body Application is
          ----------------------------
 
          if App_Info.Has_Logical_Address then
-            -- Ada.Text_IO.Put_Line("APP - Logical address not found "
+            null;
+         else
+            -- Ada.Text_IO.Put_Line("CAS - Logical address not found "
             --                           & Integer'Image(Task_ID));
 
             -- Prepare message to be sent
             Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
-            Basic_Msg.Header.Destination := 10;
             To_Local_Hello(Basic_Msg, Local_Hello_Msg);
             App_Info.Get_Application_Information(Local_Hello_Msg);
             To_Basic(Local_Hello_Msg, Basic_Msg);
 
             -- Send message
-            Ada.Text_IO.Put("SEND App: ");
-            Global_Settings.Logger.Log(Basic_Msg);
             Global_Settings.Com_Application.Send(Basic_Msg, Send_Status);
-         else
-            Ada.Text_IO.Put_Line("ERRO App: No Logical Address Set");
          end if;
 
          ----------------------------
@@ -63,11 +59,11 @@ package body Application is
          i := i + 1;
          exit when i = 6;
       end loop;
-      --Ada.Text_IO.Put_Line("Task type VN_Application - End, ID:"
+      --Ada.Text_IO.Put_Line("Task type CAS - End, ID:"
       --                       & Integer'Image(Task_ID));
-   end VN_Application;
+   end CAS;
 
    -- Start one instance of the SM-L
-   App: VN_Application(30, 500000, 30, 3);
+   CAS1: CAS(20, 500000, 10, 3);
 
-end Application;
+end Central_Addressing_Service;
