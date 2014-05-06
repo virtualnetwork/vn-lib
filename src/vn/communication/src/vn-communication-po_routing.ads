@@ -1,5 +1,5 @@
 with VN.Message;
-with Ada.Text_IO;
+--  with Ada.Text_IO;
 with VN.Communication.PO;
 with VN.Communication.PO_Wrapper;
 with VN.Communication.Temp_Routing_Table;
