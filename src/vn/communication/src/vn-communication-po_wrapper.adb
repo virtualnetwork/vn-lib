@@ -1,4 +1,4 @@
-with Ada.Text_IO;
+with VN;
 with VN.Message;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;
@@ -11,10 +11,10 @@ package body VN.Communication.PO_Wrapper is
                   Status: out VN.Send_Status) is
    begin
       if This.Is_From_SM_L then
-         Ada.Text_IO.Put_Line("PO_Wrapper sends message to Other");
+         VN.Text_IO.Put_Line("PO_Wrapper sends message to Other");
          This.PO_Access.Send_To_Other(Message, Status);
       else
-         Ada.Text_IO.Put_Line("PO_Wrapper sends message to SM-L");
+         VN.Text_IO.Put_Line("PO_Wrapper sends message to SM-L");
          This.PO_Access.Send_To_SM_L(Message, Status);
       end if;
    end Send;
@@ -24,17 +24,17 @@ package body VN.Communication.PO_Wrapper is
                      Message: out VN.Message.VN_Message_Basic;
                      Status: out VN.Receive_Status) is
    begin
-      Ada.Text_IO.Put_Line("PO_Wrapper receive subprogram runs");
+   --   VN.Text_IO.Put_Line("PO_Wrapper receive subprogram runs");
       if This.Is_From_SM_L then
          This.PO_Access.Receive_From_Other(Message, Status);
-         Ada.Text_IO.Put_Line("PO_Wrapper reads message from Other");
+       --  VN.Text_IO.Put_Line("PO_Wrapper reads message from Other");
       else
          This.PO_Access.Receive_From_SM_L(Message, Status);
-         Ada.Text_IO.Put_Line("PO_Wrapper reads message from SM-L");
+      --   VN.Text_IO.Put_Line("PO_Wrapper reads message from SM-L");
       end if;
    end Receive;
 
-   -- If not a Subnet Manager this applikation should send a LocalHello
+   -- If not a Subnet Manager this application should send a LocalHello
    -- message.
    procedure Init(This: in out VN_PO_Wrapper) is
       Basic_Msg         : VN.Message.VN_Message_Basic;
@@ -52,6 +52,7 @@ package body VN.Communication.PO_Wrapper is
          null;
       else
          This.PO_Access.Send_To_SM_L(Basic_Msg, Status);
+         VN.Text_IO.Put_Line("PO_Wrapper sends LocalHello message to SM-L");
       end if;
    end Init;
 
