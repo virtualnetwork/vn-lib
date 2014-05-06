@@ -16,6 +16,8 @@ use VN.Message;
 with VN.Message.Local_Ack;
 with VN.Message.Local_Hello;
 with VN.Message.Assign_Address;
+with VN.Message.Request_Address_Block;
+
 with VN.Message.Factory;
 
 package body Protocol_Routing_Test is
@@ -46,7 +48,8 @@ package body Protocol_Routing_Test is
       msgLocalHello : VN.Message.Local_Hello.VN_Message_Local_Hello;
       msgLocalAck : VN.Message.Local_Ack.VN_Message_Local_Ack;
 
-      msgAssignAddr 	 : VN.Message.Assign_Address.VN_Message_Assign_Address;
+      msgAssignAddr     : VN.Message.Assign_Address.VN_Message_Assign_Address;
+      msgReqAddrBlock   : VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
 
       msg : VN.Message.VN_Message_Basic;
       receiveStatus : VN.Receive_Status;
@@ -111,8 +114,21 @@ package body Protocol_Routing_Test is
                VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
 
                if msgAssignAddr.CUUID = myCUUID.all then
-                  VN.Text_IO.Put_Line("Was assigned logical address= " & msgAssignAddr.Assigned_Address'Img &
+                  VN.Text_IO.Put_Line("Second_Task was assigned logical address= " & msgAssignAddr.Assigned_Address'Img &
                                         " by SM with logical address = " & msgAssignAddr.Header.Source'img);
+
+                  --Respond with a Request_Address_Block message, just for testing:
+                  msg := VN.Message.Factory.Create(VN.Message.Type_Request_Address_Block);
+                  VN.Message.Request_Address_Block.To_Request_Address_Block(msg, msgReqAddrBlock);
+                  msgReqAddrBlock.Header.Destination := msgAssignAddr.Header.Source;
+                  msgReqAddrBlock.Header.Source := msgAssignAddr.Assigned_Address;
+                  msgReqAddrBlock.CUUID := myCUUID.all;
+
+                  VN.Message.Request_Address_Block.To_Basic(msgReqAddrBlock, msg);
+
+                  myAccess.Send(msg, sendStatus);
+
+                  VN.Text_IO.Put_Line("Second_Task responds (just for testing) with Request_Address_Block message");
                end if;
             end if;
 

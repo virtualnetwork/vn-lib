@@ -57,7 +57,7 @@ package Protocol_Routing_Test is
    first_PO_Wrapper : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(ourPO'Access, C1'Access, VN.Message.SM_L, true);
    first_PO_Router : aliased VN.Communication.Protocol_Routing.Protocol_Routing_Type;
 
-   second_PO_Wrapper : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(ourPO'Access, C2'Access, VN.Message.CAS, false);
+   second_PO_Wrapper : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(ourPO'Access, C2'Access, VN.Message.SM_x, false);
    second_PO_Router : aliased VN.Communication.Protocol_Routing.Protocol_Routing_Type;
 
    secondTask : Second_Task_Type(C2'Access, second_PO_Router'Access, System.Priority'Last, CANPeriod'Access);
