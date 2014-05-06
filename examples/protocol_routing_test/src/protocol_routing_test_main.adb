@@ -29,6 +29,7 @@ procedure Protocol_Routing_Test_Main is
    msgAssign : VN.Message.Assign_Address.VN_Message_Assign_Address;
    msgReq    : VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
    Status    : VN.Send_Status;
+   recStatus : VN.Receive_Status;
 
    now : Ada.Real_Time.Time;
 
@@ -77,20 +78,20 @@ begin
 
 --  -------------------
 
-   VN.Message.Request_Address_Block.To_Basic(msgReq, msg);
-   Protocol_Routing_Test.myInterface.Send(msg, Status);
-
-   GNAT.IO.Put("VN message written to send buffer");
-   if Status = VN.OK then
-      GNAT.IO.Put(", Status = VN.OK");
-
-   elsif Status = VN.ERROR_BUFFER_FULL then
-      GNAT.IO.Put(", Status = VN.ERROR_BUFFER_FULL");
-
-   elsif Status = VN.ERROR_NO_ADDRESS_RECEIVED then
-      GNAT.IO.Put(", Status = VN.ERROR_NO_ADDRESS_RECEIVED");
-   end if;
-   GNAT.IO.Put_Line("");
+--     VN.Message.Request_Address_Block.To_Basic(msgReq, msg);
+--     Protocol_Routing_Test.myInterface.Send(msg, Status);
+--
+--     GNAT.IO.Put("VN message written to send buffer");
+--     if Status = VN.OK then
+--        GNAT.IO.Put(", Status = VN.OK");
+--
+--     elsif Status = VN.ERROR_BUFFER_FULL then
+--        GNAT.IO.Put(", Status = VN.ERROR_BUFFER_FULL");
+--
+--     elsif Status = VN.ERROR_NO_ADDRESS_RECEIVED then
+--        GNAT.IO.Put(", Status = VN.ERROR_NO_ADDRESS_RECEIVED");
+--     end if;
+--     GNAT.IO.Put_Line("");
 --  -------------------
 
    GNAT.IO.Put_Line("Main function entering infinte wait.");
@@ -98,5 +99,14 @@ begin
       now := Ada.Real_Time.Clock;
       delay until now + Ada.Real_Time.Milliseconds(3000);
       GNAT.IO.Put_Line("<Main function hearbeat>");
+
+      Protocol_Routing_Test.myInterface.Receive(msg, recStatus);
+
+      while recStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or recStatus = VN.MSG_RECEIVED_MORE_AVAILABLE loop
+         GNAT.IO.Put_Line("Main function (SM_L) received VN message, Opcode=" & msg.Header.Opcode'Img);
+
+         Protocol_Routing_Test.myInterface.Receive(msg, recStatus);
+      end loop;
+
    end loop;
 end Protocol_Routing_Test_Main;
