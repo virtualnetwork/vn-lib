@@ -102,58 +102,63 @@ package body VN.Communication.Protocol_Routing is
       sendStatus : VN.Send_Status;
    begin
 
-      while firstLoop or (not stop and wasNextInTurn /= this.nextProtocolInTurn) loop
+      if this.numberOfInterfaces > 0 then
+         while firstLoop or (not stop and wasNextInTurn /= this.nextProtocolInTurn) loop
 
-         firstLoop := false;
-         this.myInterfaces(this.nextProtocolInTurn).Receive(tempMsg, tempStatus);
+            firstLoop := false;
+            this.myInterfaces(this.nextProtocolInTurn).Receive(tempMsg, tempStatus);
 
-         --TODO, this will need to be updated if more options for VN.Receive_Status are added:
-         if tempStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
-           tempStatus = VN.MSG_RECEIVED_MORE_AVAILABLE then
+            --TODO, this will need to be updated if more options for VN.Receive_Status are added:
+            if tempStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
+              tempStatus = VN.MSG_RECEIVED_MORE_AVAILABLE then
 
-            --A special case of retreiving routing info:
-            if tempMsg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
-               HandleCUUIDRouting(tempMsg, this.nextProtocolInTurn);
-            else
-               Protocol_Router.Insert(this.myTable, tempMsg.Header.Source,
-                                      Protocol_Address_Type(this.nextProtocolInTurn));
-            end if;
+               --A special case of retreiving routing info:
+               if tempMsg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
+                  HandleCUUIDRouting(tempMsg, this.nextProtocolInTurn);
+               else
+                  Protocol_Router.Insert(this.myTable, tempMsg.Header.Source,
+                                         Protocol_Address_Type(this.nextProtocolInTurn));
+               end if;
 
-            --Check if the message shall be re-routed onto a subnet, or returned to the application layer:
-            if tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_HELLO and --LocalHello and LocalAck shall always be sent to the application layer
-              tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_ACK then
+               --Check if the message shall be re-routed onto a subnet, or returned to the application layer:
+               if tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_HELLO and --LocalHello and LocalAck shall always be sent to the application layer
+                 tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_ACK then
 
-               Protocol_Router.Search(this.myTable, tempMsg.Header.Destination, address, found);
+                  Protocol_Router.Search(this.myTable, tempMsg.Header.Destination, address, found);
 
-               if found and address /= 0 then --  address = 0 means send to Application layer
-                  this.myInterfaces(address).Send(tempMsg, sendStatus); --Pass the message on to another subnet
-                  tempStatus := VN.NO_MSG_RECEIVED;
+                  if found and address /= 0 then --  address = 0 means send to Application layer
+                     this.myInterfaces(address).Send(tempMsg, sendStatus); --Pass the message on to another subnet
+                     tempStatus := VN.NO_MSG_RECEIVED;
 
-                  stop := false;
+                     stop := false;
+                  else
+                     stop := true;
+                  end if;
                else
                   stop := true;
                end if;
-            else
-               stop := true;
+
+               if stop then
+                  Status  := tempStatus;
+                  Message := tempMsg;
+               end if;
             end if;
 
-            if stop then
-               Status  := tempStatus;
-               Message := tempMsg;
-            end if;
-         end if;
+            this.nextProtocolInTurn := this.nextProtocolInTurn rem this.numberOfInterfaces;
+            this.nextProtocolInTurn := this.nextProtocolInTurn + 1;
+         end loop;
 
-         this.nextProtocolInTurn := this.nextProtocolInTurn rem this.numberOfInterfaces;
-         this.nextProtocolInTurn := this.nextProtocolInTurn + 1;
-      end loop;
-
+      else
+         Status := VN.NO_MSG_RECEIVED;
+      end if;
    end Receive;
 
    procedure Add_Interface(this : in out Protocol_Routing_Type;
                            theInterface : VN.Communication.Com_Access) is
+      TOO_MANY_INTERFACES : exception;
    begin
       if this.numberOfInterfaces >= MAX_NUMBER_OF_SUBNETS then
-         return;
+         raise TOO_MANY_INTERFACES;
       end if;
 
       for i in Interface_Array'First .. Interface_Array'First + this.numberOfInterfaces - 1 loop
