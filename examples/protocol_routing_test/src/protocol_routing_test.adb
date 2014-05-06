@@ -57,11 +57,13 @@ package body Protocol_Routing_Test is
 
    begin
 
+      myPeriod := thePeriod.all;
+
+      Next_Period := Ada.Real_Time.Clock + Ada.Real_Time.Milliseconds(5000);
+      delay until Next_Period;
       VN.Text_IO.Put_Line("Second_Task started");
 
-      myPeriod := thePeriod.all;
       Next_Period := Ada.Real_Time.Clock;
-
       loop
          Next_Period := Next_Period + myPeriod;
          delay until Next_Period;

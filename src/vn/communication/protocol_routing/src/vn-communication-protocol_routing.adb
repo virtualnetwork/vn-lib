@@ -66,11 +66,15 @@ package body VN.Communication.Protocol_Routing is
          end if;
       end if;
 
+      VN.Text_IO.Put_Line("Routing lookup done");
+
       if found then
          if address = 0 then -- the case when the message is to be sent back to the application layer
             Status := ERROR_UNKNOWN; -- ToDo, what do we do if this happens!!???
          else
+            VN.Text_IO.Put_Line("Starting to send on interface, address=" & address'Img);
             this.myInterfaces(Integer(address)).Send(Message, Status);
+            VN.Text_IO.Put_Line("Done sending on interface");
          end if;
       else
          Status := ERROR_NO_ADDRESS_RECEIVED; --should not really happen?
@@ -118,6 +122,8 @@ package body VN.Communication.Protocol_Routing is
                else
                   Protocol_Router.Insert(this.myTable, tempMsg.Header.Source,
                                          Protocol_Address_Type(this.nextProtocolInTurn));
+
+                  VN.Text_IO.Put_Line("LocalHello message received on Subnet=" & this.nextProtocolInTurn'Img);
                end if;
 
                --Check if the message shall be re-routed onto a subnet, or returned to the application layer:

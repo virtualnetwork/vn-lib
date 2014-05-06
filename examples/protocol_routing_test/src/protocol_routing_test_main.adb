@@ -129,6 +129,8 @@ begin
                VN.Text_IO.Put_Line("Other");
             end if;
 
+-- *****************
+
             msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
             VN.Message.Assign_Address.To_Assign_Address(msg, msgAssign);
 
@@ -139,17 +141,20 @@ begin
 
             VN.Message.Assign_Address.To_Basic(msgAssign, msg);
             Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
+--
+--              VN.Text_IO.Put_Line("SM_L assinged Logical address " & msgAssign.Assigned_Address'Img &
+--                " to CUUD(1)= " & msgAssign.CUUID(1)'Img);
 
-            VN.Text_IO.Put_Line("SM_L assinged Logical address " & msgAssign.Assigned_Address'Img &
-              " to CUUD(1)= " & msgAssign.CUUID(1)'Img);
 
+            -- *****************
          elsif msg.Header.Opcode = VN.Message.OPCODE_REQUEST_ADDR_BLOCK then
-            VN.Message.Request_Address_Block.To_Request_Address_Block(msg, msgReqAddrBlock);
-
-            VN.Text_IO.Put_Line("Request_Address_Block received, CUUID(1)= " & msgReqAddrBlock.CUUID(1)'img &
-                          " Sender= " & msgReqAddrBlock.Header.Source'Img & " Sent to " & msgReqAddrBlock.Header.Destination'Img);
-            VN.Text_IO.New_Line;
-
+            null;
+--              VN.Message.Request_Address_Block.To_Request_Address_Block(msg, msgReqAddrBlock);
+--
+--              VN.Text_IO.Put_Line("Request_Address_Block received, CUUID(1)= " & msgReqAddrBlock.CUUID(1)'img &
+--                            " Sender= " & msgReqAddrBlock.Header.Source'Img & " Sent to " & msgReqAddrBlock.Header.Destination'Img);
+--              VN.Text_IO.New_Line;
+--
          end if;
 
          Protocol_Routing_Test.myInterface.Receive(msg, recStatus);
