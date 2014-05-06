@@ -1,4 +1,8 @@
+with "../../src/vn/communication/communication.gpr";
+--with "../../src/vn/communication/protocol_routing/protocol_routing.gpr";
 with "../../src/vn/message/message.gpr";
+with "../../src/vn/lib/logging/logging.gpr";
+with "../../src/vn/application_information/application_information.gpr";
 
 project Basic_VN_Application is
     for Source_Dirs use ("src");

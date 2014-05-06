@@ -16,7 +16,7 @@ all: clean
 	gnatmake -d -p -P vn_factory_example.gpr
 
 clean:
-	gnat clean -P vn_factory_example.gpr
+	-gnat clean -P vn_factory_example.gpr
 
 clean-all:
 	gnat clean -r -P vn_factory_example.gpr

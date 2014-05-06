@@ -17,7 +17,7 @@ package VN.Message is
    type VN_Serializiation_Type is (TXT, XML);
    for VN_Serializiation_Type'Size use 8;
 
-   type VN_Component_Type is (CAS, LS, SM_L, SM_x, SM_Gateway, Unknown);
+   type VN_Component_Type is (CAS, LS, SM_L, SM_x, SM_Gateway, Other);
    for VN_Component_Type'Size use 8;
 
    type VN_Version is mod 2 ** 8;

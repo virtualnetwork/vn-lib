@@ -1,14 +1,12 @@
 with VN.Message;
+with Buffers;
 
 package VN.Communication is
 
-   -- TODO: Modify code so the buffer is of variable length.
---   type VN_Message_Buffer is range 1 .. 10;
-   -- type VN_Message_Buffer is array (1 .. 10) of VN_Message.VN_Message_Basic;
-   -- TODO: Fix this VN_Buffer so it's a buffer of access variables to
-   -- VN_Message'Class instead.
+   package VN_Message_Buffer is
+         new Buffers(VN.Message.VN_Message_Basic);
 
-   type Com is limited interface; --changed "protected" to "limited"
+   type Com is limited interface;
 
    type Com_Access is access all Com'Class;
 
@@ -21,4 +19,5 @@ package VN.Communication is
                      Message: out VN.Message.VN_Message_Basic;
                      Status: out VN.Receive_Status)
                         is abstract;
+
 end VN.Communication;
