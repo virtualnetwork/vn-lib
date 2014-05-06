@@ -1,10 +1,7 @@
 with VN.Message;
-with Ada.Text_IO;
 with VN.Communication.PO;
 
 package VN.Communication.PO_Wrapper is
-
-   package Int_IO is new Ada.Text_IO.Integer_IO (Integer);
 
    -- This PO_Wrapper makes it possible to wrap two different Protected
    -- Objects in one "wrapper". The two different Protected Objects are
@@ -41,7 +38,6 @@ private
          Is_From_SM_L: Boolean := Is_SM_L;
          CUUID:  VN.VN_CUUID := CUUID_Access.all;
          This_Component_Type:  VN.Message.VN_Component_Type := Component_Type;
-         Value: Integer := 0;
       end record;
 
 end VN.Communication.PO_Wrapper;
