@@ -5,18 +5,18 @@ ubuntu: all
 
 ravenscar: clean
 	echo "pragma Profile(Ravenscar);" > project_pragmas
-	gnatmake -d -p -P logger.gpr
+	gnatmake -d -p -P logging.gpr
 
 restricted: clean
 	echo "pragma Profile(Restricted);" > project_pragmas
-	gnatmake -d -p -P logger.gpr
+	gnatmake -d -p -P logging.gpr
 
 all: clean
 	echo "" > project_pragmas
-	gnatmake -d -p -P logger.gpr
+	gnatmake -d -p -P logging.gpr
 
 clean:
-	-gnat clean -P logger.gpr
+	-gnat clean -P logging.gpr
 
 clean-all:
-	gnat clean -r -P logger.gpr
+	gnat clean -r -P logging.gpr

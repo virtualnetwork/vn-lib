@@ -1,11 +1,12 @@
 with Ada.Real_Time;
 with System;
-with Logger.Print_Out;
+with Logging.Print_Out;
 with VN.Message.Factory;
 with VN.Communication.PO;
 with VN.Communication.PO_Wrapper;
 with VN.Communication.PO_Routing;
-with VN.Communication.Routing;
+with VN.Communication.Temp_Protocol_Routing;
+--with VN.Communication.Protocol_Routing;
 
 package Global_Settings is
 
@@ -18,7 +19,7 @@ package Global_Settings is
       First_Time: Boolean := True;
    end Start_Time;
 
-   Logging: aliased Logger.Print_Out.Print_Out_Logger;
+   Logger: aliased Logging.Print_Out.Print_Out_Logger;
 
    CUUID_App : aliased VN.VN_CUUID := (others => 10);
    CUUID_SM : aliased VN.VN_CUUID := (others => 20);
@@ -45,8 +46,11 @@ package Global_Settings is
    -- 4. Create all needed PO_Wrappers for the SM-L
    -- 5. Add all PO_Wrappers to the PO_Router.
    -- PO_Router_For_SM_L: VN.Communication.PO_Routing.PO_Router;
-   PO_Router: aliased VN.Communication.Routing.Router;
-   Com_SM_L : VN.Communication.Routing.Router;
+   PO_Router: aliased VN.Communication.Temp_Protocol_Routing.Protocol_Routing_Type;
+   Com_SM_L : VN.Communication.Temp_Protocol_Routing.Protocol_Routing_Type;
+
+   -- PO_Router: aliased VN.Communication.Routing.Router;
+   --Com_SM_L : VN.Communication.Routing.Router;
 
    PO_Wrapper_To_App : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(
                                                             PO_To_Application'Access,

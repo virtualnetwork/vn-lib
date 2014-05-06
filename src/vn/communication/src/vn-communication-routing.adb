@@ -118,8 +118,10 @@ package body VN.Communication.Routing is
 
                Protocol_Router.Search(This.myTable, tempMsg.Header.Destination, address, found);
 
-               if found then
-                  This.Send(tempMsg, sendStatus);
+               if found and address /= 0 then -- address = 0 means send to Application layer
+                  This.Array_Of_Routes(address).Send(tempMsg, sendStatus); --Pass the message on to another subnet
+                  tempStatus := VN.NO_MSG_RECEIVED;
+
                   stop := false;
                else
                   stop := true;

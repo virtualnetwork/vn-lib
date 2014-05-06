@@ -19,7 +19,7 @@ with VN.Message.Distribute_Route;
 with VN.Message.Assign_Address;
 with VN.Message.Assign_Address_Block;
 
-package body VN.Communication.Protocol_Routing is
+package body VN.Communication.Temp_Protocol_Routing is
 
    procedure Send(this : in out Protocol_Routing_Type;
                              Message: in VN.Message.VN_Message_Basic;
@@ -181,4 +181,4 @@ package body VN.Communication.Protocol_Routing is
       GNAT.IO.Put_Line("Protocol_Routing initiated");
    end Init;
 
-end VN.Communication.Protocol_Routing;
+end VN.Communication.Temp_Protocol_Routing;

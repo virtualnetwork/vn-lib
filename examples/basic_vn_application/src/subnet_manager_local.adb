@@ -34,7 +34,10 @@ package body Subnet_Manager_Local is
          ----------------------------
          Ada.Text_IO.Put_Line("STAT SM-L: Runs");
 
+         -- TODO: This subprogram never returns. Debug Communication chain.
          Global_Settings.Com_SM_L.Receive(Basic_Msg, Status);
+
+         Ada.Text_IO.Put_Line("STAT SM-L: Message handling started.");
 
          if Status = VN.NO_MSG_RECEIVED then
             Ada.Text_IO.Put_Line("RECV SM-L: Empty.");
@@ -44,7 +47,7 @@ package body Subnet_Manager_Local is
             Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
             Ada.Text_IO.Put("RECV SM-L: ");
-            Global_Settings.Logging.Log(Basic_Msg);
+            Global_Settings.Logger.Log(Basic_Msg);
 
             -- TODO: Check OpCode and convert to correct type
             To_Local_Hello(Basic_Msg, Local_Hello_Msg);
@@ -59,8 +62,10 @@ package body Subnet_Manager_Local is
          i := i + 1;
          exit when i = 40;
       end loop;
+
+      Ada.Text_IO.Put_Line("STAT SM-L: Stops");
       --Ada.Text_IO.Put_Line("Task type SM_L - End, ID:"
-      --                       & Integer'Image(Task_ID));
+       --                      & Integer'Image(Task_ID));
    end SM_L;
 
    -- Start one instance of the SM-L
