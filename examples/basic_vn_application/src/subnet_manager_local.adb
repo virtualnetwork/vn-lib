@@ -34,6 +34,7 @@ package body Subnet_Manager_Local is
          ----------------------------
          Ada.Text_IO.Put_Line("STAT SM-L: Runs");
 
+         -- TODO: This subprogram never returns. Debug Communication chain.
          Global_Settings.Com_SM_L.Receive(Basic_Msg, Status);
 
          Ada.Text_IO.Put_Line("STAT SM-L: Message handling started.");
