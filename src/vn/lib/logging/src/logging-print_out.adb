@@ -3,7 +3,7 @@ with VN.Message;
 use VN.Message;
 with VN.Message.Local_Hello;
 
-package body Logger.Print_Out is
+package body Logging.Print_Out is
 
    procedure Log(This: in out Print_Out_Logger;
                  Message: out VN.Message.VN_Message_Basic) is
@@ -24,4 +24,4 @@ package body Logger.Print_Out is
       end if;
    end Log;
 
-end Logger.Print_Out;
+end Logging.Print_Out;

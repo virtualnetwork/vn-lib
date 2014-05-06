@@ -1,10 +1,10 @@
 with VN.Message;
 
-package Logger.Empty_Logger is
+package Logging.Empty_Logger is
 
    type Empty_Logger_Type is new Message_Logger with null record;
 
    procedure Log(This: in out Empty_Logger_Type;
                  Message: out VN.Message.VN_Message_Basic);
 
-end Logger.Empty_Logger;
+end Logging.Empty_Logger;
