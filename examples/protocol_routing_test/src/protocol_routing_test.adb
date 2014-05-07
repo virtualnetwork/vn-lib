@@ -25,14 +25,18 @@ package body Protocol_Routing_Test is
    procedure Init is
    begin
 
-      first_PO_Wrapper.Init;
-      second_PO_Wrapper.Init;
+      PO_Wrapper_1_2.Init;
+      PO_Wrapper_1_3.Init;
+      PO_Wrapper_2_1.Init;
+      PO_Wrapper_3_1.Init;
 
-      first_PO_Router.Add_Interface(first_PO_Wrapper'Access);
-      second_PO_Router.Add_Interface(second_PO_Wrapper'Access);
+      first_PO_Router.Add_Interface(PO_Wrapper_1_2'Access);
+      first_PO_Router.Add_Interface(PO_Wrapper_1_3'Access);
 
-      myInterface.Add_Interface(CANInterface'Access); -- ToDo: Commented out for testing
+      second_PO_Router.Add_Interface(PO_Wrapper_2_1'Access);
+      third_PO_Router.Add_Interface(PO_Wrapper_3_1'Access);
 
+      myInterface.Add_Interface(CANInterface'Access);
       myInterface.Add_Interface(first_PO_Router'Access);
 
       GNAT.IO.Put_Line("Protocol_Routing_Test Initiated");
@@ -61,7 +65,7 @@ package body Protocol_Routing_Test is
 
       Next_Period := Ada.Real_Time.Clock + Ada.Real_Time.Milliseconds(5000);
       delay until Next_Period;
-      VN.Text_IO.Put_Line("Second_Task started");
+      VN.Text_IO.Put_Line("Task " & myCUUID(1)'Img & " started");
 
       Next_Period := Ada.Real_Time.Clock;
       loop
@@ -72,51 +76,51 @@ package body Protocol_Routing_Test is
 
          if receiveStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or receiveStatus = VN.MSG_RECEIVED_MORE_AVAILABLE then
 
-            if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
-               VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
-               VN.Text_IO.Put("LocalHello, type= " & " CUUID(1)= " & msgLocalHello.CUUID(1)'img &
-                                     " component type = ");
-               if msgLocalHello.Component_Type = VN.Message.CAS then
-                  VN.Text_IO.Put_Line("CAS");
-               elsif msgLocalHello.Component_Type = VN.Message.SM_L then
-                  VN.Text_IO.Put_Line("SM_L");
-               elsif  msgLocalHello.Component_Type = VN.Message.LS then
-                  VN.Text_IO.Put_Line("LS");
-               elsif msgLocalHello.Component_Type = VN.Message.SM_Gateway then
-                  VN.Text_IO.Put_Line("SM_Gateway");
-               elsif msgLocalHello.Component_Type = VN.Message.SM_x then
-                  VN.Text_IO.Put_Line("SM_Gateway");
-               elsif msgLocalHello.Component_Type = VN.Message.Other then
-                  VN.Text_IO.Put_Line("Other");
-               end if;
-
-               -- Simulate SM-CAN master assigning addresses or address blocks:
-
-               msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
-               VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
-
-               msgAssignAddr.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
-               msgAssignAddr.Header.Source := 10;
-               msgAssignAddr.CUUID := msgLocalHello.CUUID;
-               msgAssignAddr.Assigned_Address := 20;
-
-               VN.Message.Assign_Address.To_Basic(msgAssignAddr, msg);
-               myAccess.Send(msg, sendStatus);
-
-               VN.Text_IO.Put_Line("Assinged Logical address");
-
-            end if;
+--              if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
+--                 VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
+--                 VN.Text_IO.Put("Task " & myCUUID(1)'Img & ": LocalHello, type= " & " CUUID(1)= " & msgLocalHello.CUUID(1)'img &
+--                                       " component type = ");
+--                 if msgLocalHello.Component_Type = VN.Message.CAS then
+--                    VN.Text_IO.Put_Line("CAS");
+--                 elsif msgLocalHello.Component_Type = VN.Message.SM_L then
+--                    VN.Text_IO.Put_Line("SM_L");
+--                 elsif  msgLocalHello.Component_Type = VN.Message.LS then
+--                    VN.Text_IO.Put_Line("LS");
+--                 elsif msgLocalHello.Component_Type = VN.Message.SM_Gateway then
+--                    VN.Text_IO.Put_Line("SM_Gateway");
+--                 elsif msgLocalHello.Component_Type = VN.Message.SM_x then
+--                    VN.Text_IO.Put_Line("SM_Gateway");
+--                 elsif msgLocalHello.Component_Type = VN.Message.Other then
+--                    VN.Text_IO.Put_Line("Other");
+--                 end if;
+--
+--                 -- Simulate SM-CAN master assigning addresses or address blocks:
+--
+--                 msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
+--                 VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
+--
+--                 msgAssignAddr.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
+--                 msgAssignAddr.Header.Source := 10;
+--                 msgAssignAddr.CUUID := msgLocalHello.CUUID;
+--                 msgAssignAddr.Assigned_Address := 20;
+--
+--                 VN.Message.Assign_Address.To_Basic(msgAssignAddr, msg);
+--                 myAccess.Send(msg, sendStatus);
+--
+--                 VN.Text_IO.Put_Line("Task " & myCUUID(1)'Img & " assinged Logical address ");
+--
+--              end if;
 
             if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_ACK then
                VN.Message.Local_Ack.To_Local_Ack(msg, msgLocalAck);
-               VN.Text_IO.Put_Line("LocalAck, type= " & " status = " & msgLocalAck.Status'img);
+               VN.Text_IO.Put_Line("Task " & myCUUID(1)'Img & ": LocalAck, type= " & " status = " & msgLocalAck.Status'img);
             end if;
 
             if msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
                VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
 
                if msgAssignAddr.CUUID = myCUUID.all then
-                  VN.Text_IO.Put_Line("Second_Task was assigned logical address= " & msgAssignAddr.Assigned_Address'Img &
+                  VN.Text_IO.Put_Line("Task " & myCUUID(1)'Img & " was assigned logical address= " & msgAssignAddr.Assigned_Address'Img &
                                         " by SM with logical address = " & msgAssignAddr.Header.Source'img);
 
                   --Respond with a Request_Address_Block message, just for testing:
@@ -130,7 +134,7 @@ package body Protocol_Routing_Test is
 
                   myAccess.Send(msg, sendStatus);
 
-                  VN.Text_IO.Put_Line("Second_Task responds (just for testing) with Request_Address_Block message");
+                  VN.Text_IO.Put_Line("Task " & myCUUID(1)'Img & "  responds (just for testing) with Request_Address_Block message");
                end if;
             end if;
 

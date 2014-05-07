@@ -135,7 +135,7 @@ begin
             msgAssign.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
             msgAssign.Header.Source := 10;
             msgAssign.CUUID := msgLocalHello.CUUID;
-            msgAssign.Assigned_Address := 20;
+            msgAssign.Assigned_Address := 20 + VN.VN_Logical_Address(msgLocalHello.CUUID(1));
 
             VN.Message.Assign_Address.To_Basic(msgAssign, msg);
             Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
