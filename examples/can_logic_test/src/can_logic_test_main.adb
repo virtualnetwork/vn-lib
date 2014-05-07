@@ -34,7 +34,7 @@ with Interfaces;
 
 with Utils;
 
-procedure main is
+procedure CAN_Logic_Test_Main is
 
    use VN.Communication.CAN.CAN_Message_Buffers;
    use VN.Communication.CAN.Logic.SM.Unit_Buffers;
@@ -187,4 +187,4 @@ begin
             
       end loop;
    end loop;
-end main;
+end CAN_Logic_Test_Main;
