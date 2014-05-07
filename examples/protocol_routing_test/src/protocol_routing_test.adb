@@ -31,7 +31,7 @@ package body Protocol_Routing_Test is
       first_PO_Router.Add_Interface(first_PO_Wrapper'Access);
       second_PO_Router.Add_Interface(second_PO_Wrapper'Access);
 
---        myInterface.Add_Interface(CANInterface'Access); -- ToDo: Commented out for testing
+      myInterface.Add_Interface(CANInterface'Access); -- ToDo: Commented out for testing
 
       myInterface.Add_Interface(first_PO_Router'Access);
 
