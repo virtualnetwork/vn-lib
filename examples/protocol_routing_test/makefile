@@ -1,6 +1,10 @@
 ########################################
 # Binary name
-NAME		?=	protocol_routing_test_main
+ifeq "$(NODE)" "TRUE"
+	NAME		?=	protocol_routing_node_test_main
+else
+	NAME		?=	protocol_routing_test_main
+endif
 
 ########################################
 # Ada project file
@@ -91,6 +95,7 @@ ifeq "$(EXIT)" "0"
 all: $(OBJECTS)
 	@echo
 	@echo
+	@echo "NAME= $(NAME)"
 	@echo "*** Creating library file obj/lib$(NAME)_c.a"
 	@echo
 	$(AR) rcs obj/lib$(NAME)_c.a $^
