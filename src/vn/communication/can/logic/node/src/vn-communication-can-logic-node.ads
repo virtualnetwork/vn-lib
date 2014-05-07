@@ -67,30 +67,30 @@ package VN.Communication.CAN.Logic.Node is
    use Unit_Buffers;
 
 
-   type SM_Duty(theUCID   : access VN.Communication.CAN.UCID;
-                theCUUID  : access VN.VN_CUUID;
-                theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is limited private;
+   type Node_Duty(theUCID   : access VN.Communication.CAN.UCID;
+                  theCUUID  : access VN.VN_CUUID;
+                  theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is limited private;
 
-   type SM_Duty_ptr is access all SM_Duty;
+   type Node_Duty_ptr is access all Node_Duty;
 
-   procedure Update(this : in out SM_Duty;
+   procedure Update(this : in out Node_Duty;
                     msgsBuffer : in out CAN_Message_Buffers.Buffer;
                     ret : out CAN_Message_Buffers.Buffer);
 
-   procedure Send(this : in out SM_Duty;
+   procedure Send(this : in out Node_Duty;
                   msg : VN.Message.VN_Message_Basic;
                   result : out VN.Send_Status);
 
-   procedure Receive(this : in out SM_Duty;
+   procedure Receive(this : in out Node_Duty;
                      msg : out VN.Message.VN_Message_Basic;
                      status : out VN.Receive_Status);
 
    --This function is only used for testing:
-   procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender;
+   procedure GetCANAddress(this : in out Node_Duty; address : out CAN_Address_Sender;
                            isAssigned : out boolean);
 private
 
-   procedure Init(this : in out SM_Duty);
+   procedure Init(this : in out Node_Duty);
 
    --ToDo: These constants should be put in a config file of some sort
    CAN_ROUTING_TABLE_SIZE : constant VN.VN_Logical_Address := 500;
@@ -98,7 +98,7 @@ private
 
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
-   type SM_Duty(theUCID   : access VN.Communication.CAN.UCID;
+   type Node_Duty(theUCID   : access VN.Communication.CAN.UCID;
                 theCUUID  : access VN.VN_CUUID;
                 theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is limited
       record
