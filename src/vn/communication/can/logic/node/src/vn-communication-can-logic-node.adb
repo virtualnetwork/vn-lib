@@ -22,7 +22,7 @@ with VN.Message.Assign_Address_Block;
 
 package body VN.Communication.CAN.Logic.Node is
 
-   procedure Update(this : in out SM_Duty; msgsBuffer : in out CAN_Message_Buffers.Buffer; ret : out CAN_Message_Buffers.Buffer) is
+   procedure Update(this : in out Node_Duty; msgsBuffer : in out CAN_Message_Buffers.Buffer; ret : out CAN_Message_Buffers.Buffer) is
 
       bWillSend : boolean;
       msgIn, msgOut : CAN_Message_Logical;
@@ -85,7 +85,7 @@ package body VN.Communication.CAN.Logic.Node is
    end Update;
 
 
-   procedure Send(this : in out SM_Duty; msg : VN.Message.VN_Message_Basic;
+   procedure Send(this : in out Node_Duty; msg : VN.Message.VN_Message_Basic;
                   result : out VN.Send_Status) is
       internal : VN.Communication.CAN.Logic.VN_Message_Internal;
       receiver : VN.Communication.CAN.CAN_Address_Sender;
@@ -134,7 +134,7 @@ package body VN.Communication.CAN.Logic.Node is
       end if;
    end Send;
 
-   procedure Receive(this : in out SM_Duty; msg : out VN.Message.VN_Message_Basic; 
+   procedure Receive(this : in out Node_Duty; msg : out VN.Message.VN_Message_Basic; 
                      status : out VN.Receive_Status) is
 
       procedure Local_Ack_Response(internalMsg : VN.Communication.CAN.Logic.VN_Message_Internal) is
@@ -221,7 +221,7 @@ package body VN.Communication.CAN.Logic.Node is
       end if;
    end Receive;
 
-   procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender;
+   procedure GetCANAddress(this : in out Node_Duty; address : out CAN_Address_Sender;
                            isAssigned : out boolean) is
    begin
       if not this.isInitialized then
@@ -231,7 +231,7 @@ package body VN.Communication.CAN.Logic.Node is
       this.addressReceiver.Address(address, isAssigned);
    end GetCANAddress;
 
-   procedure Init(this : in out SM_Duty) is
+   procedure Init(this : in out Node_Duty) is
       testCUUID : VN.VN_CUUID := (others => 42); --ToDo: For testing only!!!!
    begin
       VN.Communication.CAN.Logic.DebugOutput("Node_Duty initialized", 4);
