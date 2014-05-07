@@ -17,7 +17,7 @@ with VN.Message;
 
 package VN.Communication.CAN.Logic is
 
-   GIVE_DEBUG_OUTPUT : constant integer := 1;
+   GIVE_DEBUG_OUTPUT : constant integer := 4;
 
    procedure DebugOutput(str : String; level : Integer; newLine : boolean := true);
 
@@ -56,8 +56,35 @@ package VN.Communication.CAN.Logic is
 
    type Duty_Ptr is access all Duty'Class;
 
+   type Node_SM is abstract tagged limited private;
+   
+   procedure Update(this : in out Node_SM;
+                    msgsBuffer : in out CAN_Message_Buffers.Buffer;
+                    ret : out CAN_Message_Buffers.Buffer) is abstract;
+
+   procedure Send(this : in out Node_SM;
+                  msg : VN.Message.VN_Message_Basic;
+                  result : out VN.Send_Status) is abstract;
+
+   procedure Receive(this : in out Node_SM;
+                     msg : out VN.Message.VN_Message_Basic;
+                     status : out VN.Receive_Status) is abstract;
+
+   --This function is only used for testing:
+   procedure GetCANAddress(this : in out Node_SM; 
+                           address : out CAN_Address_Sender;
+                           isAssigned : out boolean) is abstract;
+
+   type Node_SM_Ptr is access all Node_SM'Class; 
+
 private
-     type Duty is abstract tagged limited
+
+   type Duty is abstract tagged limited
+      record
+         null;
+      end record;
+
+     type Node_SM is abstract tagged limited
       record
          null;
       end record;
