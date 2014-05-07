@@ -48,26 +48,27 @@ procedure CAN_Logic_Test_Main is
    U3 : aliased VN.Communication.CAN.UCID := 3;
    U4 : aliased VN.Communication.CAN.UCID := 4;
 
-   type dutiesRange is range 1..3;
+   type dutiesRange is range 1..4;
+
    type CUUID_Array_Type is array(dutiesRange) of aliased VN.VN_CUUID;
    C : aliased CUUID_Array_Type := ((1, others => 5),
                                     (2, others => 5),
-                                    (3, others => 5));
-   --  (4, others => 5)
+                                    (3, others => 5),
+                                    (4, others => 5));
 
 
    CANFilters : array(dutiesRange) of aliased VN.Communication.CAN.CAN_Filtering.CAN_Filter_Type;
    
---        DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.Node_SM_Ptr :=
---       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C(1)'Unchecked_Access, CANFilters(1)'Unchecked_Access),
---        new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access),
---        new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C(3)'Unchecked_Access, CANFilters(3)'Unchecked_Access),
---        new VN.Communication.CAN.Logic.SM.SM_Duty(U4'Unchecked_Access, C(4)'Unchecked_Access, CANFilters(4)'Unchecked_Access));
-
    DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.Node_SM_Ptr :=
      (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C(1)'Unchecked_Access, CANFilters(1)'Unchecked_Access),
-      new VN.Communication.CAN.Logic.Node.Node_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access),
-      new VN.Communication.CAN.Logic.Node.Node_Duty(U3'Unchecked_Access, C(3)'Unchecked_Access, CANFilters(3)'Unchecked_Access));
+      new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access),
+      new VN.Communication.CAN.Logic.Node.Node_Duty(U3'Unchecked_Access, C(3)'Unchecked_Access, CANFilters(3)'Unchecked_Access),
+      new VN.Communication.CAN.Logic.Node.Node_Duty(U4'Unchecked_Access, C(4)'Unchecked_Access, CANFilters(4)'Unchecked_Access));
+
+--     DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.Node_SM_Ptr :=
+--       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C(1)'Unchecked_Access, CANFilters(1)'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.Node.Node_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.Node.Node_Duty(U3'Unchecked_Access, C(3)'Unchecked_Access, CANFilters(3)'Unchecked_Access));
 
 --     DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.Node_SM_Ptr :=
 --       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C(1)'Unchecked_Access, CANFilters(1)'Unchecked_Access),
