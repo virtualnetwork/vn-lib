@@ -12,6 +12,7 @@ with VN;
 use VN;
 
 with VN.Communication.CAN.Logic.SM;
+with VN.Communication.CAN.Logic.Node;
 
 with Ada.Real_Time;
 use Ada.Real_Time;
@@ -43,32 +44,39 @@ procedure CAN_Logic_Test_Main is
    Period : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(200);
 
    U1 : aliased VN.Communication.CAN.UCID := 1;
-   C1 : aliased VN.VN_CUUID := (1, others => 5);
+--     C1 : aliased VN.VN_CUUID := (1, others => 5);
    U2 : aliased VN.Communication.CAN.UCID := 2;
-   C2 : aliased VN.VN_CUUID := (2, others => 5);
+--     C2 : aliased VN.VN_CUUID := (2, others => 5);
    U3 : aliased VN.Communication.CAN.UCID := 3;
-   C3 : aliased VN.VN_CUUID := (3, others => 5);
+--     C3 : aliased VN.VN_CUUID := (3, others => 5);
    U4 : aliased VN.Communication.CAN.UCID := 4;
-   C4 : aliased VN.VN_CUUID := (3, others => 5);
+--     C4 : aliased VN.VN_CUUID := (3, others => 5);
 
    type dutiesRange is range 1..2;
+   type CUUID_Array_Type is array(dutiesRange) of aliased VN.VN_CUUID;
+   C : aliased CUUID_Array_Type := ((1, others => 5),
+                                    (2, others => 5));
+                                  --  (3, others => 5),
+                                  --  (4, others => 5)
+
 
    CANFilters : array(dutiesRange) of aliased VN.Communication.CAN.CAN_Filtering.CAN_Filter_Type;
    
---        DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.SM.SM_Duty_ptr :=
---       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C1'Unchecked_Access, CANFilters(1)'Unchecked_Access),
---        new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C2'Unchecked_Access, CANFilters(2)'Unchecked_Access),
---        new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C3'Unchecked_Access, CANFilters(3)'Unchecked_Access),
---        new VN.Communication.CAN.Logic.SM.SM_Duty(U4'Unchecked_Access, C4'Unchecked_Access, CANFilters(4)'Unchecked_Access));
+--        DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.Node_SM_Ptr :=
+--       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C(1)'Unchecked_Access, CANFilters(1)'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C(3)'Unchecked_Access, CANFilters(3)'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U4'Unchecked_Access, C(4)'Unchecked_Access, CANFilters(4)'Unchecked_Access));
 
---     DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.SM.SM_Duty_ptr :=
---       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C1'Unchecked_Access, CANFilters(1)'Unchecked_Access),
---        new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C2'Unchecked_Access, CANFilters(2)'Unchecked_Access),
---        new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C3'Unchecked_Access, CANFilters(3)'Unchecked_Access));
+--     DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.Node_SM_Ptr :=
+--       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C(1)'Unchecked_Access, CANFilters(1)'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C(3)'Unchecked_Access, CANFilters(3)'Unchecked_Access));
 
-   DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.SM.SM_Duty_ptr :=
-     (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C1'Unchecked_Access, CANFilters(1)'Unchecked_Access),
-      new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C2'Unchecked_Access, CANFilters(2)'Unchecked_Access));
+   DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.Node_SM_Ptr :=
+     (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C(1)'Unchecked_Access, CANFilters(1)'Unchecked_Access),
+      new VN.Communication.CAN.Logic.Node.Node_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access));
+      --new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access));
    
    type BufferArray is array(DutyArray'Range) of VN.Communication.CAN.CAN_Message_Buffers.Buffer(100);
    messagesIn : BufferArray;
@@ -104,7 +112,8 @@ begin
 
       for i in DutyArray'Range loop
          VN.Communication.CAN.CAN_Message_Buffers.Clear(messagesOut(i));
-         VN.Communication.CAN.Logic.SM.Update(DutyArray(i).all, messagesIn(i), messagesOut(i));
+--           VN.Communication.CAN.Logic.SM.Update(DutyArray(i).all, messagesIn(i), messagesOut(i));
+         DutyArray(i).Update(messagesIn(i), messagesOut(i));
 
          VN.Communication.CAN.CAN_Message_Buffers.Clear(messagesIn(i));
       end loop;
@@ -129,8 +138,9 @@ begin
       end loop;
 
       for i in DutyArray'Range loop
-         VN.Communication.CAN.Logic.SM.Receive(DutyArray(i).all, msg, receiveStatus);
-         
+--           VN.Communication.CAN.Logic.SM.Receive(DutyArray(i).all, msg, receiveStatus);
+         DutyArray(i).Receive(msg, receiveStatus);
+                               
          if receiveStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or receiveStatus = VN.MSG_RECEIVED_MORE_AVAILABLE then
             VN.Text_IO.New_Line;
             
@@ -138,7 +148,9 @@ begin
                CANAddress : VN.Communication.CAN.CAN_Address_Sender;
                temp : boolean;
             begin
-               VN.Communication.CAN.Logic.SM.GetCANAddress(DutyArray(i).all, CANAddress, temp);
+--                 VN.Communication.CAN.Logic.SM.GetCANAddress(DutyArray(i).all, CANAddress, temp);
+               DutyArray(i).GetCANAddress(CANAddress, temp);
+
                VN.Text_IO.Put_Line("VN message received by duty on CAN address " & CANAddress'Img & " type= " & msg.Header.Message_Type'img & " Opcode= " & msg.Header.Opcode'img);
             end;
               
@@ -159,8 +171,9 @@ begin
                   msgAssignAddr.Assigned_Address := 20;
                   
                   VN.Message.Assign_Address.To_Basic(msgAssignAddr, msg);
-                  VN.Communication.CAN.Logic.SM.Send(DutyArray(i).all, msg, sendStatus);    
-
+--                    VN.Communication.CAN.Logic.SM.Send(DutyArray(i).all, msg, sendStatus);    
+                  DutyArray(i).Send(msg, sendStatus);
+                  
                   VN.Text_IO.Put_Line("Assinged Logical address");
                   
 
@@ -176,7 +189,7 @@ begin
             if msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then 
                VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
 
-               if msgAssignAddr.CUUID = DutyArray(i).theCUUID.all then
+               if msgAssignAddr.CUUID = C(i) then
                   VN.Text_IO.Put_Line("Was assigned logical address= " & msgAssignAddr.Assigned_Address'Img & 
                                         " by SM with logical address = " & msgAssignAddr.Header.Source'img);
                end if;
