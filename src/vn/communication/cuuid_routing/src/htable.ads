@@ -97,12 +97,12 @@ package HTable is
       --  Removes the latest inserted element pointer associated with the
       --  given key if any, does nothing if none.
 
-      function Get_First (this : in out Table) return Elmt_Ptr;
+      procedure Get_First (this : in out Table; ptr : out Elmt_Ptr);
       --  Returns Null_Ptr if the HTable is empty, otherwise returns one
       --  non specified element. There is no guarantee that two calls to this
       --  function will return the same element.
 
-      function Get_Next (this : in out Table) return Elmt_Ptr;
+      procedure Get_Next (this : in out Table; ptr : out Elmt_Ptr);
       --  Returns a non-specified element that has not been returned by the
       --  same function since the last call to Get_First or Null_Ptr if
       --  there is no such element or Get_First has never been called. If
