@@ -31,8 +31,6 @@ with Protocol_Routing_Second_Task;
 
 package Protocol_Routing_Node_Test is
 
-   pragma Elaborate_Body(Protocol_Routing_Test);
-
    theFilter : aliased VN.Communication.CAN.CAN_Filtering.CAN_Filter_Type;
 
    CANPeriod : aliased Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(100);
@@ -47,9 +45,5 @@ package Protocol_Routing_Node_Test is
      (CANInterface'Access, System.Priority'Last, CANPeriod'Access, theFilter'Unchecked_Access);
 
    mainTask : Protocol_Routing_Second_Task.Second_Task_Type(C1'Access, CANInterface'Access, System.Priority'Last, CANPeriod'Access);
-
-private
-
-   procedure Init;
 
 end Protocol_Routing_Node_Test;
