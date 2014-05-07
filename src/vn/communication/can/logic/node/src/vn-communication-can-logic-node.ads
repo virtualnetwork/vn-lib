@@ -69,25 +69,27 @@ package VN.Communication.CAN.Logic.Node is
 
    type Node_Duty(theUCID   : access VN.Communication.CAN.UCID;
                   theCUUID  : access VN.VN_CUUID;
-                  theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is limited private;
+                  theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is 
+     new Node_SM with private;
 
    type Node_Duty_ptr is access all Node_Duty;
 
-   procedure Update(this : in out Node_Duty;
-                    msgsBuffer : in out CAN_Message_Buffers.Buffer;
-                    ret : out CAN_Message_Buffers.Buffer);
+   overriding procedure Update(this : in out Node_Duty;
+                               msgsBuffer : in out CAN_Message_Buffers.Buffer;
+                               ret : out CAN_Message_Buffers.Buffer);
 
-   procedure Send(this : in out Node_Duty;
-                  msg : VN.Message.VN_Message_Basic;
-                  result : out VN.Send_Status);
+   overriding procedure Send(this : in out Node_Duty;
+                             msg : VN.Message.VN_Message_Basic;
+                             result : out VN.Send_Status);
 
-   procedure Receive(this : in out Node_Duty;
-                     msg : out VN.Message.VN_Message_Basic;
-                     status : out VN.Receive_Status);
+   overriding procedure Receive(this : in out Node_Duty;
+                                msg : out VN.Message.VN_Message_Basic;
+                                status : out VN.Receive_Status);
 
    --This function is only used for testing:
-   procedure GetCANAddress(this : in out Node_Duty; address : out CAN_Address_Sender;
-                           isAssigned : out boolean);
+   overriding procedure GetCANAddress(this : in out Node_Duty; 
+                                      address : out CAN_Address_Sender;
+                                      isAssigned : out boolean);
 private
 
    procedure Init(this : in out Node_Duty);
@@ -100,7 +102,8 @@ private
 
    type Node_Duty(theUCID   : access VN.Communication.CAN.UCID;
                 theCUUID  : access VN.VN_CUUID;
-                theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is limited
+                theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is 
+     new Node_SM with 
       record
 
          isInitialized : Boolean := false;
