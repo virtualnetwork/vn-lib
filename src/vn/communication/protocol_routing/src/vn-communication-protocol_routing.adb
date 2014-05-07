@@ -49,12 +49,12 @@ package body VN.Communication.Protocol_Routing is
       -- CUUID since the receiver does not have a logical address yet
       if Message.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
          VN.Message.Assign_Address.To_Assign_Address(Message, msgAssignAddr);
-         CUUID_Protocol_Routing.Search(msgAssignAddr.CUUID, address, found);
+         CUUID_Protocol_Routing.Search(this.myCUUIDTable, msgAssignAddr.CUUID, address, found);
 
       elsif Message.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
 
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(Message, msgAssignAddrBlock);
-         CUUID_Protocol_Routing.Search(msgAssignAddrBlock.CUUID, address, found);
+         CUUID_Protocol_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, address, found);
       else
          --Protocol_Address_Type(0) means that the message shall be returned to the application layer
          Protocol_Router.Insert(this.myTable, Message.Header.Source, Protocol_Address_Type(0));
@@ -66,15 +66,11 @@ package body VN.Communication.Protocol_Routing is
          end if;
       end if;
 
-      VN.Text_IO.Put_Line("Routing lookup done");
-
       if found then
          if address = 0 then -- the case when the message is to be sent back to the application layer
             Status := ERROR_UNKNOWN; -- ToDo, what do we do if this happens!!???
          else
-            VN.Text_IO.Put_Line("Starting to send on interface, address=" & address'Img);
             this.myInterfaces(Integer(address)).Send(Message, Status);
-            VN.Text_IO.Put_Line("Done sending on interface");
          end if;
       else
          Status := ERROR_NO_ADDRESS_RECEIVED; --should not really happen?
@@ -92,7 +88,7 @@ package body VN.Communication.Protocol_Routing is
          msgLocalHello : VN.Message.Local_Hello.VN_Message_Local_Hello;
       begin
          VN.Message.Local_Hello.To_Local_Hello(Message, msgLocalHello);
-         CUUID_Protocol_Routing.Insert(msgLocalHello.CUUID, source);
+         CUUID_Protocol_Routing.Insert(this.myCUUIDTable, msgLocalHello.CUUID, source);
       end HandleCUUIDRouting;
 
       tempMsg    : VN.Message.VN_Message_Basic;
@@ -122,8 +118,6 @@ package body VN.Communication.Protocol_Routing is
                else
                   Protocol_Router.Insert(this.myTable, tempMsg.Header.Source,
                                          Protocol_Address_Type(this.nextProtocolInTurn));
-
-                  VN.Text_IO.Put_Line("LocalHello message received on Subnet=" & this.nextProtocolInTurn'Img);
                end if;
 
                --Check if the message shall be re-routed onto a subnet, or returned to the application layer:
@@ -148,12 +142,13 @@ package body VN.Communication.Protocol_Routing is
                   Status  := tempStatus;
                   Message := tempMsg;
                end if;
+            else
+               Status  := tempStatus;
             end if;
 
             this.nextProtocolInTurn := this.nextProtocolInTurn rem this.numberOfInterfaces;
             this.nextProtocolInTurn := this.nextProtocolInTurn + 1;
          end loop;
-
       else
          Status := VN.NO_MSG_RECEIVED;
       end if;
@@ -182,7 +177,7 @@ package body VN.Communication.Protocol_Routing is
    begin
       this.Initiated := true;
       Protocol_Router.Insert(this.myTable, 1337, Protocol_Address_Type(1));
-      CUUID_Protocol_Routing.Insert(testCUUID, Protocol_Address_Type(1));
+      CUUID_Protocol_Routing.Insert(this.myCUUIDTable, testCUUID, Protocol_Address_Type(1));
 
       GNAT.IO.Put_Line("Protocol_Routing initiated");
    end Init;
