@@ -166,12 +166,12 @@ package body VN.Communication.CAN.Logic.SM is
       -- CUUID since the receiver does not have a logical address yet
       if msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
          VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
-         CUUID_CAN_Routing.Search(msgAssignAddr.CUUID, receiver, found);
+         CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddr.CUUID, receiver, found);
 
       elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
 
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(msg, msgAssignAddrBlock);
-         CUUID_CAN_Routing.Search(msgAssignAddrBlock.CUUID, receiver, found);
+         CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, receiver, found);
       else
 
          CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found);
@@ -251,7 +251,7 @@ package body VN.Communication.CAN.Logic.SM is
          if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
 
             VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
-            CUUID_CAN_Routing.Insert(msgLocalHello.CUUID, internal.Sender);
+            CUUID_CAN_Routing.Insert(this.myCUUIDTable, msgLocalHello.CUUID, internal.Sender);
 
             Local_Ack_Response(internal); -- Respond with a LocalAck
 
@@ -321,7 +321,7 @@ package body VN.Communication.CAN.Logic.SM is
 
       --ToDo: For testing only!!!!
       CAN_Routing.Insert(this.myTable, 1337, 42);
-      CUUID_CAN_Routing.Insert(testCUUID, 42);
+      CUUID_CAN_Routing.Insert(this.myCUUIDTable, testCUUID, 42);
    end Init;
 
 end VN.Communication.CAN.Logic.SM;
