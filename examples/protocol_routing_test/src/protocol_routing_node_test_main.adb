@@ -8,7 +8,7 @@
 
 pragma Profile (Ravenscar);
 
-
+with GNAT.IO;
 with Ada.Real_Time;
 use Ada.Real_Time;
 
