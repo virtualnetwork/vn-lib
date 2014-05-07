@@ -2,7 +2,7 @@
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
 -- Summary:
--- Simple implementation of routing table. A CUUID is mapped to 
+-- Simple implementation of routing table. A CUUID is mapped to
 -- a generic type of address, for example a CAN address, UDP-port, etc.
 -- A better implementation is recommended in the future.
 
@@ -13,51 +13,55 @@ use Interfaces;
 
 package body VN.Communication.CUUID_Routing is
 
-   function Number_Of_Entries return Natural is
+   function Number_Of_Entries(this : Table_Type) return Natural is
    begin
-        return Natural(numberOfEntries);
+        return Natural(this.numberOfEntries);
    end Number_Of_Entries;
 
-   procedure Insert(CUUID : VN.VN_CUUID;
+   procedure Insert(this : in out Table_Type;
+                    CUUID : VN.VN_CUUID;
                     Generic_Address : Generic_Address_Type) is
 
       HASH_TABLE_OVERFOW : exception;
       temp : Element_ptr;
    begin
 
-      temp := CUUID_Hashing.Get(CUUID);
+      temp := CUUID_Hashing.Get(this.myTable, CUUID);
 
       if temp /= NULL_PTR then -- the CUUID WAS in the has table already
          temp.address := Generic_Address;
 
       else -- the CUUID was NOT in the has table already
-         if numberOfEntries = Header_Num'Last then
+         if this.numberOfEntries = Header_Num'Last then
             raise HASH_TABLE_OVERFOW;
 
          else
 
-            AllEntries(numberOfEntries).key 	:= CUUID;
-            AllEntries(numberOfEntries).address := Generic_Address;
+            this.AllEntries(this.numberOfEntries).key     := CUUID;
+            this.AllEntries(this.numberOfEntries).address := Generic_Address;
 
-            if numberOfEntries = Header_Num'Last - 1 then
-               AllEntries(numberOfEntries).next := AllEntries(Header_Num'First)'Access;
+            if this.numberOfEntries = Header_Num'Last - 1 then
+               this.AllEntries(this.numberOfEntries).next := this.AllEntries(Header_Num'First)'Unchecked_Access;
             else
-               AllEntries(numberOfEntries).next := AllEntries(numberOfEntries + 1)'Access;
+               this.AllEntries(this.numberOfEntries).next :=
+                 this.AllEntries(this.numberOfEntries + 1)'Unchecked_Access;
             end if;
 
-            CUUID_Hashing.Set(AllEntries(numberOfEntries)'Access);
-            numberOfEntries := numberOfEntries + 1;
+            CUUID_Hashing.Set(this.myTable, this.AllEntries(this.numberOfEntries)'Unchecked_Access);
+            this.numberOfEntries := this.numberOfEntries + 1;
          end if;
       end if;
    end Insert;
 
 
-   procedure Search(CUUID : VN.VN_CUUID;
+   procedure Search(this : in out Table_Type;
+                    CUUID : VN.VN_CUUID;
                     Generic_Address : out Generic_Address_Type;
                     found : out Boolean) is
       temp : Element_ptr;
    begin
-      temp := CUUID_Hashing.Get(CUUID);
+
+      temp :=  CUUID_Hashing.Get(this.myTable, CUUID);
 
       if temp = NULL_PTR then
          found := false;
@@ -80,7 +84,7 @@ package body VN.Communication.CUUID_Routing is
    end CUUID_To_String;
 
    function Hash_CUUID(cuuid : in VN.VN_CUUID) return Header_Num is
-      function Hash_my_CUUID is new System.HTable.Hash(Header_Num);
+      function Hash_my_CUUID is new HTable.Hash(Header_Num);
 
       str : String(1 .. 16);
    begin
