@@ -41,23 +41,19 @@ procedure CAN_Logic_Test_Main is
    use VN.Communication.CAN.Logic.SM.Unit_Buffers;
 
    Next_Period : Ada.Real_Time.Time;
-   Period : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(200);
+   Period : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(100);
 
    U1 : aliased VN.Communication.CAN.UCID := 1;
---     C1 : aliased VN.VN_CUUID := (1, others => 5);
    U2 : aliased VN.Communication.CAN.UCID := 2;
---     C2 : aliased VN.VN_CUUID := (2, others => 5);
    U3 : aliased VN.Communication.CAN.UCID := 3;
---     C3 : aliased VN.VN_CUUID := (3, others => 5);
    U4 : aliased VN.Communication.CAN.UCID := 4;
---     C4 : aliased VN.VN_CUUID := (3, others => 5);
 
-   type dutiesRange is range 1..2;
+   type dutiesRange is range 1..3;
    type CUUID_Array_Type is array(dutiesRange) of aliased VN.VN_CUUID;
    C : aliased CUUID_Array_Type := ((1, others => 5),
-                                    (2, others => 5));
-                                  --  (3, others => 5),
-                                  --  (4, others => 5)
+                                    (2, others => 5),
+                                    (3, others => 5));
+   --  (4, others => 5)
 
 
    CANFilters : array(dutiesRange) of aliased VN.Communication.CAN.CAN_Filtering.CAN_Filter_Type;
@@ -68,14 +64,15 @@ procedure CAN_Logic_Test_Main is
 --        new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C(3)'Unchecked_Access, CANFilters(3)'Unchecked_Access),
 --        new VN.Communication.CAN.Logic.SM.SM_Duty(U4'Unchecked_Access, C(4)'Unchecked_Access, CANFilters(4)'Unchecked_Access));
 
---     DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.Node_SM_Ptr :=
---       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C(1)'Unchecked_Access, CANFilters(1)'Unchecked_Access),
---        new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access),
---        new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C(3)'Unchecked_Access, CANFilters(3)'Unchecked_Access));
-
    DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.Node_SM_Ptr :=
      (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C(1)'Unchecked_Access, CANFilters(1)'Unchecked_Access),
-      new VN.Communication.CAN.Logic.Node.Node_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access));
+      new VN.Communication.CAN.Logic.Node.Node_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access),
+      new VN.Communication.CAN.Logic.Node.Node_Duty(U3'Unchecked_Access, C(3)'Unchecked_Access, CANFilters(3)'Unchecked_Access));
+
+--     DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.Node_SM_Ptr :=
+--       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C(1)'Unchecked_Access, CANFilters(1)'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.Node.Node_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access));
+
       --new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access));
    
    type BufferArray is array(DutyArray'Range) of VN.Communication.CAN.CAN_Message_Buffers.Buffer(100);
@@ -168,13 +165,13 @@ begin
                   msgAssignAddr.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
                   msgAssignAddr.Header.Source := 10;
                   msgAssignAddr.CUUID := msgLocalHello.CUUID;
-                  msgAssignAddr.Assigned_Address := 20;
+                  msgAssignAddr.Assigned_Address := 20 + VN.VN_Logical_Address(msgLocalHello.CUUID(1));
                   
                   VN.Message.Assign_Address.To_Basic(msgAssignAddr, msg);
 --                    VN.Communication.CAN.Logic.SM.Send(DutyArray(i).all, msg, sendStatus);    
                   DutyArray(i).Send(msg, sendStatus);
                   
-                  VN.Text_IO.Put_Line("Assinged Logical address");
+                  VN.Text_IO.Put_Line("Assinged Logical address " & msgAssignAddr.Assigned_Address'Img);
                   
 
                end if;
