@@ -130,7 +130,7 @@ package body VN.Communication.CAN.Logic.Node is
          result := OK;
       else
          result := ERROR_NO_ADDRESS_RECEIVED;
-         VN.Communication.CAN.Logic.DebugOutput("VN.Communication.CAN.Logic.SM.Send, Status := ERROR_NO_ADDRESS_RECEIVED;", 5);
+         VN.Communication.CAN.Logic.DebugOutput("VN.Communication.CAN.Logic.Node.Send, Status := ERROR_NO_ADDRESS_RECEIVED;", 5);
       end if;
    end Send;
 
