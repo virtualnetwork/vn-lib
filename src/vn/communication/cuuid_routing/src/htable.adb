@@ -5,8 +5,7 @@
 
 pragma Compiler_Unit;
 
-with Ada.Unchecked_Deallocation;
-with System.String_Hash;
+--  with Ada.Unchecked_Deallocation;
 
 package body HTable is
 
@@ -42,30 +41,27 @@ package body HTable is
       -- Get_First --
       ---------------
 
-      function Get_First (this : in out Table) return Elmt_Ptr is
-         ret : Elmt_Ptr;
+      procedure Get_First (this : in out Table; ptr : out Elmt_Ptr) is
+
       begin
          this.Iterator_Started := True;
          this.Iterator_Index := this.Table'First;
          this.Iterator_Ptr := this.Table (this.Iterator_Index);
 
-         Get_Non_Null(this, ret);
-         return ret;
+         Get_Non_Null(this, ptr);
       end Get_First;
 
       --------------
       -- Get_Next --
       --------------
 
-      function Get_Next (this : in out Table) return Elmt_Ptr is
-         ret : Elmt_Ptr;
+      procedure Get_Next (this : in out Table; ptr : out Elmt_Ptr) is
       begin
          if not this.Iterator_Started then
-            return Null_Ptr;
+            ptr := Null_Ptr;
          else
             this.Iterator_Ptr := Next (this.Iterator_Ptr);
-            Get_Non_Null(this, ret);
-            return ret;
+            Get_Non_Null(this, ptr);
          end if;
       end Get_Next;
 
@@ -196,14 +192,22 @@ package body HTable is
    ----------
 
    function Hash (Key : String) return Header_Num is
+
       type Uns is mod 2 ** 32;
 
-      function Hash_Fun is
-         new System.String_Hash.Hash (Character, String, Uns);
+      function Rotate_Left (Value : Uns; Amount : Natural) return Uns;
+      pragma Import (Intrinsic, Rotate_Left);
+
+      Hash_Value : Uns;
 
    begin
+      Hash_Value := 0;
+      for J in Key'Range loop
+         Hash_Value := Rotate_Left (Hash_Value, 3) + Character'Pos (Key (J));
+      end loop;
+
       return Header_Num'First +
-        Header_Num'Base (Hash_Fun (Key) mod Header_Num'Range_Length);
+               Header_Num'Base (Hash_Value mod Header_Num'Range_Length);
    end Hash;
 
 end HTable;
