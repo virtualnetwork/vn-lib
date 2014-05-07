@@ -12,17 +12,19 @@ pragma Profile (Ravenscar);
 with Ada.Real_Time;
 use Ada.Real_Time;
 
-with Protocol_Routing_Test;
+with Protocol_Routing_Node_Test;
 
 
 procedure Protocol_Routing_Node_Test_Main is
 
+   now : Ada.Real_Time.Time;
 begin
 
    GNAT.IO.New_Line(2);
-   GNAT.IO.Put_Line("Hello world! Protocol_Routing__Node_Test started!");
+   GNAT.IO.Put_Line("Hello world! Protocol_Routing_Node_Test started!");
 
-
-
+   loop
+      now := Ada.Real_Time.Clock;
+      delay until now + Ada.Real_Time.Seconds(100);
    end loop;
 end Protocol_Routing_Node_Test_Main;
