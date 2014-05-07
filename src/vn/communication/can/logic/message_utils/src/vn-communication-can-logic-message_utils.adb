@@ -72,7 +72,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.isNormal := true;
       msg.msgPrio  := prio;
       msg.msgType  := VN.Communication.CAN.Logic.COMPONENT_TYPE;
-      msg.Receiver := 254;
+      msg.Receiver := 255;
       msg.Sender   := sender;
       msg.Length   := 1;
 
