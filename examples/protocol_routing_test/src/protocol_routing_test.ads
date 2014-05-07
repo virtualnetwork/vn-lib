@@ -25,6 +25,8 @@ with VN.Communication.PO_Wrapper;
 
 with VN.Communication.Protocol_Routing;
 
+with Protocol_Routing_Second_Task;
+
 package Protocol_Routing_Test is
 
    pragma Elaborate_Body(Protocol_Routing_Test);

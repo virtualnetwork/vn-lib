@@ -63,8 +63,9 @@ package body Protocol_Routing_Test is
 
       myPeriod := thePeriod.all;
 
-      Next_Period := Ada.Real_Time.Clock + Ada.Real_Time.Milliseconds(5000);
-      delay until Next_Period;
+--        Next_Period := Ada.Real_Time.Clock + Ada.Real_Time.Milliseconds(5000);
+--        delay until Next_Period;
+
       VN.Text_IO.Put_Line("Task " & myCUUID(1)'Img & " started");
 
       Next_Period := Ada.Real_Time.Clock;

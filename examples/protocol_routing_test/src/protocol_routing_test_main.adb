@@ -45,8 +45,8 @@ begin
    GNAT.IO.New_Line(2);
    GNAT.IO.Put_Line("Hello world! Protocol_Routing_Test started!");
 
-   now := Ada.Real_Time.Clock;
-   delay until now + Ada.Real_Time.Milliseconds(5000);
+--     now := Ada.Real_Time.Clock;
+--     delay until now + Ada.Real_Time.Milliseconds(5000);
 
    GNAT.IO.Put_Line("5 second wait ended.");
 
