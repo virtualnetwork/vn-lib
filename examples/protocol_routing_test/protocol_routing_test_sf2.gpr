@@ -11,7 +11,7 @@ project Protocol_Routing_Test_SF2 is
    for Object_Dir use "obj";
    for Languages use ("Ada", "C");
 
-   for Main use ("protocol_routing_test_main.adb");
+   for Main use ("protocol_routing_test_main.adb", "protocol_routing_node_test_main.adb");
 
    Link_File := external
         ("LDFILE", "../../../support/link-dbg-in-microsemi-sf2-esram.ld");
