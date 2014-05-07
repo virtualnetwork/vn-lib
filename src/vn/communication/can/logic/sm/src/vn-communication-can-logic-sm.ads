@@ -120,6 +120,8 @@ private
          myCUUID : VN.VN_CUUID := theCUUID.all;
          myTable : CAN_Routing.Table_Type(CAN_ROUTING_TABLE_SIZE);
 
+         myCUUIDTable : CUUID_CAN_Routing.Table_Type;
+
          negotioationFilterID : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
          transmissionFilterID : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
          broadcastFilterID    : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
