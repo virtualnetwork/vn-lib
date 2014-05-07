@@ -73,7 +73,8 @@ package body VN.Communication.CAN.Logic.Node is
 
                this.sender.Activate(address);
                this.receiver.Activate(address);
-               this.cuuidResponder.Activate(this.myCUUID, address, true);
+               this.cuuidResponder.Activate(this.myCUUID, address, false);
+               this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
 
 
                --Create filter to filter out messages addressed to the assigned CAN address:
