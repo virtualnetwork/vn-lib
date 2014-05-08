@@ -49,6 +49,8 @@ procedure Automated_Test_Main_Node is
 
 begin
 
+   GNAT.IO.Put_Line("Automated_Test_Node started, CUUID(1)=" & Automated_Test_Node.C1(1)'Img);
+
    loop
       now := Ada.Real_Time.Clock;
       delay until now + Ada.Real_Time.Milliseconds(500);
