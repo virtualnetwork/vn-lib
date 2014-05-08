@@ -4,9 +4,6 @@
 -- Summary:
 -- Protocol_Routing_Node_Test is testing the functionality of a node
 
--- ToDo: The VN.Communication.CAN.Logic package is as of now only implemented as a Subnet manager.
--- Only high level code will be run as a node as opposed to Subnet Manager.
-
 with System;
 with Ada.Real_Time;
 
