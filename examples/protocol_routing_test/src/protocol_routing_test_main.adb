@@ -48,7 +48,7 @@ begin
 --     now := Ada.Real_Time.Clock;
 --     delay until now + Ada.Real_Time.Milliseconds(5000);
 
-   GNAT.IO.Put_Line("5 second wait ended.");
+  -- GNAT.IO.Put_Line("5 second wait ended.");
 
    VN.Message.Assign_Address.To_Assign_Address
      (VN.Message.Factory.Create(VN.Message.Type_Assign_Address), msgAssign);
