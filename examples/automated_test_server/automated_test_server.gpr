@@ -1,3 +1,4 @@
+with "../../src/vn/lib/buffers/buffers.gpr";
 with "../../src/firmware/UartWrapper/uartwrapper.gpr";
 
 project Automated_Test_Server is
