@@ -140,11 +140,6 @@ int Init_CAN() {
         printf("\n\r Message Buffer configuration Error\r\n");
     }
 
-    MSS_CAN_init(&g_can0,
-                 CAN_SET_BITRATE(24)|CAN_SET_TSEG1(12)|CAN_SET_TSEG2(1), //CAN_SPEED_32M_50K, //CAN_SPEED_32M_1M,
-                 (PCAN_CONFIG_REG)0,
-                 6,
-                 6);
     err = MSS_CAN_init(
         &g_can0,
         //CAN_SPEED_32M_10K,
