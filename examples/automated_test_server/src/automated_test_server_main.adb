@@ -29,7 +29,7 @@ procedure Automated_Test_Server_Main is
 
    isCommand : Boolean := false;
 
-   package Read is
+   procedure Read is
    begin
       for i in str'Range loop
          if str(i) = '*' then
@@ -38,22 +38,25 @@ procedure Automated_Test_Server_Main is
             isCommand := false;
          else
             if isCommand then
+               Ada.Text_IO.Put(str(i));
                charBuffers.Insert(str(i), buffer);
             end if;
          end if;
       end loop;
    end Read;
 
+   procedure Handle is
+   begin
+
+   end Handle;
+
 begin
 
    loop
-
       uartHandler0.UartRead(str, bytesRead);
 --        Ada.Text_IO.Put_Line(str(1..bytesRead));
 
       Read;
-
-
 
       now := Ada.Real_Time.Clock;
       delay until now + Ada.Real_Time.Milliseconds(100);
