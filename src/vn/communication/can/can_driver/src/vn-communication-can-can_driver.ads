@@ -20,7 +20,6 @@ with VN.Communication.CAN;
 with VN.Communication.CAN.CAN_Filtering;
 
 
--- Remove this (and any reference to System.BB) when compiling for PC, keep when compiling for SmartFusion2
 with System.BB.Interrupts;
 
 package VN.Communication.CAN.CAN_Driver is
@@ -65,22 +64,6 @@ private
 
    package CANPack renames VN.Communication.CAN;
    package CAN_Message_Buffers is new Buffers(CAN_Message_Physical);
-
---     procedure CAN_Get_Msg_Filter_Mask(x : Interfaces.C.int; y : Interfaces.C.unsigned_char; z : Interfaces.C.unsigned_char);
---     pragma Import(C, CAN_Get_Msg_Filter_Mask, "MSS_CAN_get_msg_filter_mask");
-
---CAN_MSGOBJECT
---CAN_RXMSGOBJECT
---mss_can_instance_t
---MSS_CAN_send_message_n(&g_can0, 0, &pMsg);
---MSS_CAN_get_message_n(&g_can0, 0, &rx_buf)
---MSS_CAN_init(&g_can0, CAN_SPEED_32M_500K, (PCAN_CONFIG_REG)0, 6, 6);
---CAN_SPEED_32M_500K
---PCAN_CONFIG_REG
-
---MSS_CAN_set_mode(&g_can0,CANOP_MODE_NORMAL);
---MSS_CAN_start(&g_can0);
---MSS_CAN_config_buffer_n(&g_can0, 0, &rx_msg);
 
    function CAN_Init return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
    pragma Import(C, CAN_Init, "Init_CAN");

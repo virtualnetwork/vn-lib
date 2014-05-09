@@ -63,11 +63,11 @@ begin
    --   t := Integer(VN.Communication.CAN.CAN_Driver.Test);
    --   GNAT.IO.Put_Line("Test= " & t'img);
 
---        sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgSend'Unchecked_Access));
---        GNAT.IO.Put_Line("Message sent sendStatus=" & sendStatus'img);
+      sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgSend'Unchecked_Access));
+      GNAT.IO.Put_Line("Message sent sendStatus=" & sendStatus'img);
 
-      VN.Communication.CAN.CAN_Driver.Test_CAN_Send;
-      GNAT.IO.Put_Line("Test_CAN_Send");
+--        VN.Communication.CAN.CAN_Driver.Test_CAN_Send;
+--        GNAT.IO.Put_Line("Test_CAN_Send");
 
       GNAT.IO.New_Line;
 
