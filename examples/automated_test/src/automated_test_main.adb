@@ -78,7 +78,7 @@ begin
                VN.Message.Assign_Address.To_Basic(msgAssign, msg);
                Automated_Test.myInterface.Send(msg, sendStatus);
 
-               VN.Text_IO.Put_Line("***Assinged," & msgAssign.Assigned_Address'Img & "," & msgLocalHello.CUUID(1)'Img);
+               VN.Text_IO.Put_Line("*Assinged," & msgAssign.Assigned_Address'Img & "," & msgLocalHello.CUUID(1)'Img & "^");
 
 --              elsif msg.Header.Opcode = VN.Message.OPCODE_REQUEST_ADDR_BLOCK then
 --
@@ -95,7 +95,7 @@ begin
             VN.Message.Assign_Address.To_Assign_Address(msg, msgAssign);
 
             if msgAssign.CUUID = Automated_Test.C1 then
-               VN.Text_IO.Put_Line("***WasAssinged," & msgAssign.Assigned_Address'Img & "," & Automated_Test.C1(1)'Img);
+               VN.Text_IO.Put_Line("*WasAssinged," & msgAssign.Assigned_Address'Img & "," & Automated_Test.C1(1)'Img & "^");
                hasLogicalAddress := true;
                myAddress := msgAssign.Assigned_Address;
             end if;

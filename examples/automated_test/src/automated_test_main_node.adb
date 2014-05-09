@@ -64,7 +64,7 @@ begin
             VN.Message.Assign_Address.To_Assign_Address(msg, msgAssign);
 
             if msgAssign.CUUID = Automated_Test_Node.C1 then
-               VN.Text_IO.Put_Line("***WasAssinged," & msgAssign.Assigned_Address'Img & "," & Automated_Test_Node.C1(1)'Img);
+               VN.Text_IO.Put_Line("*WasAssinged," & msgAssign.Assigned_Address'Img & "," & Automated_Test_Node.C1(1)'Img & "^");
                hasLogicalAddress := true;
                myAddress := msgAssign.Assigned_Address;
             end if;
