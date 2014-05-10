@@ -104,7 +104,7 @@ begin
    loop
       now := Ada.Real_Time.Clock;
       delay until now + Ada.Real_Time.Milliseconds(500);
-      GNAT.IO.Put_Line("<Main function hearbeat>");
+  --    GNAT.IO.Put_Line("<Main function hearbeat>");
 
       Protocol_Routing_Test.myInterface.Receive(msg, recStatus);
 
