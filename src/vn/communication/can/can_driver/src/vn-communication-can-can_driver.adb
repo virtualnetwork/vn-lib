@@ -27,14 +27,23 @@ package body VN.Communication.CAN.CAN_Driver is
    procedure Send(message : VN.Communication.CAN.CAN_Message_Logical;
                   status : out VN.Send_Status) is
 
-      physicalMessage : CAN_Message_Physical;
+      physicalMessage : aliased CAN_Message_Physical;
+
+      use Interfaces.C;
    begin
 
       -- ToDo: This is just for testing, right now the CAN drivers don't work so we'll have to pretend we sent the message without doing so:
-      status := VN.OK;
-      return;
+--        status := VN.OK;
+--        return;
 
       LogicalToPhysical(message, physicalMessage);
+
+      if SendPhysical(physicalMessage'Unchecked_Access) = 1 then
+         status := VN.OK;
+      else
+         status := VN.ERROR_UNKNOWN;
+      end if;
+      return;
 
       if CAN_Message_Buffers.Full(SendBuffer) then
          status := VN.ERROR_BUFFER_FULL;
@@ -52,11 +61,21 @@ package body VN.Communication.CAN.CAN_Driver is
    procedure Receive(message : out VN.Communication.CAN.CAN_Message_Logical;
                      status : out VN.Receive_Status) is
 
-      physicalMessage : CAN_Message_Physical;
+      physicalMessage : aliased CAN_Message_Physical;
+      use Interfaces.C;
    begin
 
       -- ToDo: This is just for testing, right now the CAN drivers don't work so we'll have to pretend we just didn't receive a message
-      status := VN.NO_MSG_RECEIVED;
+--        status := VN.NO_MSG_RECEIVED;
+--        return;
+
+      if ReceivePhysical(physicalMessage'Unchecked_Access) = 1 then
+         status := VN.MSG_RECEIVED_NO_MORE_AVAILABLE;
+      else
+         status := VN.nO_MSG_RECEIVED;
+      end if;
+
+      PhysicalToLogical(physicalMessage, message);
       return;
 
       if CAN_Message_Buffers.Empty(ReceiveBuffer) then
@@ -178,15 +197,25 @@ package body VN.Communication.CAN.CAN_Driver is
 
 
    -- ToDo: This is just for testing, to make sure the C-code does not interfere:
-   function SendPhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int is
-   begin
-      return 1;
-   end SendPhysical;
-
-   function ReceivePhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int is
-   begin
-      return 0;
-   end ReceivePhysical;
+--     function SendPhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int is
+--     begin
+--        return 1;
+--     end SendPhysical;
+--
+--     function ReceivePhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int is
+--     begin
+--        return 0;
+--     end ReceivePhysical;
+--
+--     procedure Test_CAN_Send is
+--     begin
+--        null;
+--     end Test_CAN_Send;
+--
+--     function Test return Interfaces.C.int is
+--     begin
+--        null;
+--     end Test;
 
 begin
    Init;
