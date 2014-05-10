@@ -1,0 +1,14 @@
+with "aunit";
+with "../../physical_logical.gpr";
+project test_physical_logical is
+
+   for Source_Dirs use
+     ("../../obj/../gnattest/tests",
+      "common");
+
+   package Compiler is
+      for Default_Switches ("ada") use
+        ("-g", "-O1", "-gnatyM0", "-gnata");
+   end Compiler;
+
+end test_physical_logical;
