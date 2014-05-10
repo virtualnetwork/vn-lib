@@ -27,7 +27,41 @@ package body Physical_Logical.Test_Data.Tests is
 
    begin
 
+--        logMsg1.isNormal := false;
+--        logMsg1.Length := 1;
+--
+--        for n in VN.Communication.CAN.UCID'Range loop
+--           logMsg1.SenderUCID := n;
+--
+--           Physical_Logical.LogicalToPhysical(logMsg1, physMsg);
+--           Physical_Logical.PhysicalToLogical(physMsg, logMsg2);
+--
+--           AUnit.Assertions.Assert
+--             (logMsg1.isNormal = logMsg2.isNormal and logMsg1.SenderUCID = logMsg2.SenderUCID
+--              and logMsg1.Length = logMsg2.Length and logMsg1.Data(1) = logMsg2.Data(1),
+--              "Error logMsg1 /= logMsg2, n= " & n'Img & " logMsg1.SenderUCID= " & logMsg1.SenderUCID'Img &
+--                " logMsg2.SenderUCID= " & logMsg2.SenderUCID'Img);
+--        end loop;
+
+
+      logMsg1.isNormal := false;
+      logMsg1.Length := 0;
+
+      for i in VN.Communication.CAN.UCID'Range loop
+         logMsg1.SenderUCID := i;
+
+         Physical_Logical.LogicalToPhysical(logMsg1, physMsg);
+         Physical_Logical.PhysicalToLogical(physMsg, logMsg2);
+
+         AUnit.Assertions.Assert
+           (logMsg1.isNormal = logMsg2.isNormal and logMsg1.SenderUCID = logMsg2.SenderUCID
+            and logMsg1.Length = logMsg2.Length,
+            "Error logMsg1 /= logMsg2, i= " & i'Img & " logMsg1.SenderUCID= " & logMsg1.SenderUCID'Img &
+              " logMsg2.SenderUCID= " & logMsg2.SenderUCID'Img);
+      end loop;
+
       logMsg1.isNormal := true;
+
       for i in VN.Communication.CAN.CAN_Message_Prio'Range loop
          logMsg1.msgPrio := i;
 
@@ -63,23 +97,6 @@ package body Physical_Logical.Test_Data.Tests is
          end loop;
       end loop;
 
-      logMsg1.isNormal := false;
-      for i in VN.Communication.CAN.UCID'Range loop
-         logMsg1.SenderUCID := i;
-
-         Physical_Logical.LogicalToPhysical(logMsg1, physMsg);
-         Physical_Logical.PhysicalToLogical(physMsg, logMsg2);
-
-         AUnit.Assertions.Assert
-           (logMsg1.isNormal = logMsg2.isNormal and logMsg1.SenderUCID = logMsg2.SenderUCID,
-            "Error logMsg1 /= logMsg2, i= " & i'Img & " logMsg1.SenderUCID= " & logMsg1.SenderUCID'Img &
-              " logMsg2.SenderUCID= " & logMsg2.SenderUCID'Img);
-
-         for m in 1 .. logMsg2.Length loop
-            AUnit.Assertions.Assert
-              (logMsg1.Data(m) = logMsg2.Data(m), "Error logMsg1.Data /= logMsg2.Data");
-         end loop;
-      end loop;
 --  begin read only
    end Test_PhysicalToLogical;
 --  end read only
