@@ -26,6 +26,13 @@ PRGADR		?=	0x20000000
 
 PRGTTY		?=	/dev/ttyUSB0
 
+######## TEST ##############
+ifeq "$(PORT)" "1"
+	PRGTTY 	=	/dev/ttyUSB1
+else
+	PRGTTY 	=	/dev/ttyUSB0
+endif
+
 ########################################
 # Driver sources
 CSRC		+=	$(DRVPATH)/drivers/mss_uart/mss_uart.c
