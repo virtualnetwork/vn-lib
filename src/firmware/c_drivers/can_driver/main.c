@@ -12,9 +12,9 @@
  */
 #include "mss_can.h"
 //#include "drivers/mss_can/mss_can.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <stdint.h>
 
 
 CAN_MSGOBJECT tx_msg;
@@ -28,9 +28,72 @@ typedef struct C_CAN_Msg_T {
 } C_CAN_Message_Type;
 
 
+
+int Init_CAN() {
+
+    int32_t err;
+  //  CAN_CONFIG_REG CANReg;
+    CAN_FILTEROBJECT pFilter;
+    int ret;
+
+  /*  CANReg.CFG_BITRATE      = 219;
+    CANReg.CFG_TSEG1        = 12;
+    CANReg.CFG_TSEG2        = 1;
+    CANReg.AUTO_RESTART     = 0;
+    CANReg.CFG_SJW          = 0;
+    CANReg.SAMPLING_MODE    = 0;
+    CANReg.EDGE_MODE        = 0;
+    CANReg.ENDIAN           = 1; */
+
+    err = MSS_CAN_init(
+        &g_can0,
+        //CAN_SPEED_32M_10K,
+        CAN_SET_BITRATE(24) | CAN_SET_TSEG1(12) | CAN_SET_TSEG2(1), // 100kbit/s ???
+        (PCAN_CONFIG_REG)0,
+        6,
+        6
+    );
+
+    if (err == CAN_OK) {
+ //       printf("CAN-Controller initialized!\r\n");
+        ret = CAN_OK;
+    }
+    else {
+    //    printf("Failed initializing CAN-Controller! Error: %ld\r\n\n", err);
+        ret = CAN_OK - 1; //ToDo
+    }
+
+    MSS_CAN_set_mode(&g_can0, CANOP_MODE_NORMAL);
+    MSS_CAN_start(&g_can0);
+
+
+    tx_msg.ID       = 0x120;
+    tx_msg.DATALOW  = 0x00000000;
+    tx_msg.DATAHIGH = 0x00000000;
+    tx_msg.NA0      = 1;
+    tx_msg.DLC      = 8;
+    tx_msg.IDE      = 1;
+    tx_msg.RTR      = 0;
+
+   // printf("\r\n Initializing CAN-Controller... ");
+ //   fflush(stdout);
+
+    pFilter.ACR.L   = 0x00000000 ;
+    pFilter.AMR.L   = 0xFFFFFFFF;
+    pFilter.AMCR_D.MASK = 0xFFFF;
+    pFilter.AMCR_D.CODE = 0x00;
+
+    err = MSS_CAN_config_buffer(&g_can0, &pFilter);
+  /*  if (err != CAN_OK) {
+        printf("\n\r Message Buffer configuration Error\r\n");
+    } */
+}
+
 int test() {return 42;}
 
 int Send_CAN_Message(C_CAN_Message_Type *msg) {
+
+   // printf("main.c: Send_CAN_Message run!\r\n");
 
     while( MSS_CAN_send_message_ready(&g_can0) != CAN_OK); //wait until ready
     int i;
@@ -38,7 +101,7 @@ int Send_CAN_Message(C_CAN_Message_Type *msg) {
     tx_msg.ID  = msg->ID;
     tx_msg.DLC = msg->data_length;
 
-    for(i=0; i < msg->data_length-1; i++) {
+    for(i=0; i < msg->data_length; i++) {
           tx_msg.DATA[i] = msg->DATA[i];
     }
 
@@ -49,17 +112,16 @@ int Receive_CAN_Message(C_CAN_Message_Type *msg) { //returns 1 if message was re
 
     CAN_MSGOBJECT rx_msg;
     int i;
+   // printf("main.c: Receive_CAN_Message run!\r\n");
+
 
     if(CAN_VALID_MSG == MSS_CAN_get_message_av(&g_can0)) {
-
-
-
         MSS_CAN_get_message(&g_can0, &rx_msg);
 
         msg->ID = rx_msg.ID;  //??
         msg->data_length = rx_msg.DLC;//??
 
-        for(i=0; i < msg->data_length-1; i++) {
+        for(i=0; i < msg->data_length; i++) {
             msg->DATA[i] = 0xFF & rx_msg.DATA[i];
         }
 
@@ -103,64 +165,4 @@ void Test_Send() {
     MSS_CAN_send_message_n(&g_can0, 19, &pMsg); */
 }
 
-int Init_CAN() {
-
-    int32_t err;
-  //  CAN_CONFIG_REG CANReg;
-    CAN_FILTEROBJECT pFilter;
-    int ret;
-
-  /*  CANReg.CFG_BITRATE      = 219;
-    CANReg.CFG_TSEG1        = 12;
-    CANReg.CFG_TSEG2        = 1;
-    CANReg.AUTO_RESTART     = 0;
-    CANReg.CFG_SJW          = 0;
-    CANReg.SAMPLING_MODE    = 0;
-    CANReg.EDGE_MODE        = 0;
-    CANReg.ENDIAN           = 1; */
-
-    tx_msg.ID       = 0x120;
-    tx_msg.DATALOW  = 0x00000000;
-    tx_msg.DATAHIGH = 0x00000000;
-    tx_msg.NA0      = 1;
-    tx_msg.DLC      = 8;
-    tx_msg.IDE      = 1;
-    tx_msg.RTR      = 0;
-
-    printf("\r\n Initializing CAN-Controller... ");
-    fflush(stdout);
-
-    pFilter.ACR.L   = 0x00000000 ;
-    pFilter.AMR.L   = 0xFFFFFFFF;
-    pFilter.AMCR_D.MASK = 0xFFFF;
-    pFilter.AMCR_D.CODE = 0x00;
-
-    err = MSS_CAN_config_buffer(&g_can0, &pFilter);
-    if (err != CAN_OK) {
-        printf("\n\r Message Buffer configuration Error\r\n");
-    }
-
-    err = MSS_CAN_init(
-        &g_can0,
-        //CAN_SPEED_32M_10K,
-        CAN_SET_BITRATE(24) | CAN_SET_TSEG1(12) | CAN_SET_TSEG2(1), // 100kbit/s ???
-        (PCAN_CONFIG_REG)0,
-        6,
-        6
-    );
-
-    if (err == CAN_OK) {
-        printf("CAN-Controller initialized!\r\n");
-        ret = CAN_OK;
-    }
-    else {
-        printf("Failed initializing CAN-Controller! Error: %ld\r\n\n", err);
-        ret = CAN_OK - 1; //ToDo
-    }
-
-    MSS_CAN_set_mode(&g_can0, CANOP_MODE_NORMAL);
-    MSS_CAN_start(&g_can0);
-
-    return ret;
-}
 
