@@ -48,17 +48,19 @@ package VN.Communication.CAN.CAN_Driver is
 
    --will return 1 on success
    function SendPhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
- --  pragma Import(C, SendPhysical, "Send_CAN_Message");
+   pragma Import(C, SendPhysical, "Send_CAN_Message");
 
    --returns 1 if message was received, 0 otherwise
    function ReceivePhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
- --  pragma Import(C, ReceivePhysical, "Receive_CAN_Message");
+   pragma Import(C, ReceivePhysical, "Receive_CAN_Message");
 
 
    -- Remove this when compiling for PC, keep when compiling for SmartFusion2:
    procedure Test_CAN_Send;
    pragma Import(C, Test_CAN_Send, "Test_Send");
 
+   function Test return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
+   pragma Import(C, Test, "test");
 
 private
 
@@ -67,9 +69,6 @@ private
 
    function CAN_Init return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
    pragma Import(C, CAN_Init, "Init_CAN");
-
-   function Test return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
-   pragma Import(C, Test, "test");
 
 
    procedure PhysicalToLogical(msgIn : CAN_Message_Physical; msgOut : out CANPack.CAN_Message_Logical);
