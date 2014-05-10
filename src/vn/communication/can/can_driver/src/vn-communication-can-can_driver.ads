@@ -19,6 +19,7 @@ with VN.Communication.CAN;
 
 with VN.Communication.CAN.CAN_Filtering;
 
+with Physical_Logical;
 
 with System.BB.Interrupts;
 
@@ -34,24 +35,15 @@ package VN.Communication.CAN.CAN_Driver is
 
 --  private --ToDo: The things below are only public when testing, the test project can_driver_test uses these things.
 
-   type Data_Array is array(0..7) of Interfaces.C.signed_char;
-
-   type CAN_Message_Physical is
-      record
-         ID		: Interfaces.C.unsigned;
-         Length   	: Interfaces.C.unsigned;
-         Data     	: Data_Array;
-      end record;
-   pragma Convention (C, CAN_Message_Physical);
-
-   type CAN_Message_Physical_Access is access all CAN_Message_Physical;
+   type CAN_Message_Physical is new Physical_Logical.CAN_Message_Physical;
+   type CAN_Message_Physical_Access is new Physical_Logical.CAN_Message_Physical_Access;
 
    --will return 1 on success
-   function SendPhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
+   function SendPhysical(msg : Physical_Logical.CAN_Message_Physical_Access) return Interfaces.C.int;
    pragma Import(C, SendPhysical, "Send_CAN_Message");
 
    --returns 1 if message was received, 0 otherwise
-   function ReceivePhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int;
+   function ReceivePhysical(msg : Physical_Logical.CAN_Message_Physical_Access) return Interfaces.C.int;
    pragma Import(C, ReceivePhysical, "Receive_CAN_Message");
 
 
@@ -65,15 +57,10 @@ package VN.Communication.CAN.CAN_Driver is
 private
 
    package CANPack renames VN.Communication.CAN;
-   package CAN_Message_Buffers is new Buffers(CAN_Message_Physical);
+   package CAN_Message_Buffers is new Buffers(Physical_Logical.CAN_Message_Physical);
 
    function CAN_Init return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
    pragma Import(C, CAN_Init, "Init_CAN");
-
-
-   procedure PhysicalToLogical(msgIn : CAN_Message_Physical; msgOut : out CANPack.CAN_Message_Logical);
-
-   procedure LogicalToPhysical(msgIn : CANPack.CAN_Message_Logical; msgOut : out CAN_Message_Physical);
 
  --  procedure CANHandler(ID : System.BB.Interrupts.Interrupt_ID); -- Remove this when compiling for PC, keep when compiling for SmartFusion2
 
