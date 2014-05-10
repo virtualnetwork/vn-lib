@@ -10,9 +10,13 @@ use Ada.Real_Time;
 with GNAT.IO;
 use GNAT.IO;
 
+with VN;
+use VN;
+
 with VN.Communication.CAN.CAN_Driver;
 with CAN_Driver_Test;
 
+with VN.Communication.CAN.Logic;
 
 procedure CAN_Driver_Test_Main is
    now : Ada.Real_Time.Time;
@@ -23,6 +27,13 @@ procedure CAN_Driver_Test_Main is
 
    sendStatus : Integer;
    x : Interfaces.C.signed_char;
+   y : Interfaces.Unsigned_8 := 3;
+
+   logMsgSend : aliased VN.Communication.CAN.CAN_Message_Logical;
+   logMsgReceive  : aliased VN.Communication.CAN.CAN_Message_Logical;
+
+   logSendStatus : VN.Send_Status;
+   logReceiveStatus : VN.Receive_Status;
 
 begin
 
@@ -48,7 +59,23 @@ begin
    physMsgSend.Data(6) := x;
    physMsgSend.Data(7) := x;
 
-   VN.Communication.CAN.CAN_Driver.Test_CAN_Send;
+
+
+   logMsgSend.isNormal := true;
+   logMsgSend.msgType := VN.Communication.CAN.Logic.TRANSMISSION;
+   logMsgSend.Receiver := VN.Communication.CAN.CAN_Address_Receiver(1);
+   logMsgSend.Sender := VN.Communication.CAN.CAN_Address_Sender(2);
+   logMsgSend.Length := VN.Communication.CAN.DLC_Type(8);
+
+
+   logMsgSend.Data(1) := y;
+   logMsgSend.Data(2) := y;
+   logMsgSend.Data(3) := y;
+   logMsgSend.Data(4) := y;
+   logMsgSend.Data(5) := y;
+   logMsgSend.Data(6) := y;
+   logMsgSend.Data(7) := y;
+   logMsgSend.Data(8) := y;
 
    now := Ada.Real_Time.Clock;
    delay until now + Ada.Real_Time.Milliseconds(4000);
@@ -60,30 +87,52 @@ begin
 
 
    loop
-   --   t := Integer(VN.Communication.CAN.CAN_Driver.Test);
-   --   GNAT.IO.Put_Line("Test= " & t'img);
+--        t := Integer(VN.Communication.CAN.CAN_Driver.Test);
+--        GNAT.IO.Put_Line("Test= " & t'img);
+--
+--        sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgSend'Unchecked_Access));
+--        GNAT.IO.Put_Line("Message sent sendStatus=" & sendStatus'img);
+--
+--  --        VN.Communication.CAN.CAN_Driver.Test_CAN_Send;
+--  --        GNAT.IO.Put_Line("Test_CAN_Send");
+--
+--        GNAT.IO.New_Line;
+--
+--        if VN.Communication.CAN.CAN_Driver.ReceivePhysical(physMsgReceive'Unchecked_Access) = 1 then
+--           GNAT.IO.Put_Line("Message received");
+--           GNAT.IO.Put_Line("ID= " & physMsgReceive.ID'Img &
+--                              "Length= " & physMsgReceive.Length'Img);
+--
+--           GNAT.IO.Put_Line("Data(0)= " & physMsgReceive.Data(0)'img);
+--           GNAT.IO.Put_Line("Data(1)= " & physMsgReceive.Data(1)'img);
+--           GNAT.IO.Put_Line("Data(2)= " & physMsgReceive.Data(2)'img);
+--           GNAT.IO.Put_Line("Data(3)= " & physMsgReceive.Data(3)'img);
+--           GNAT.IO.Put_Line("Data(4)= " & physMsgReceive.Data(4)'img);
+--           GNAT.IO.Put_Line("Data(5)= " & physMsgReceive.Data(5)'img);
+--           GNAT.IO.Put_Line("Data(6)= " & physMsgReceive.Data(6)'img);
+--           GNAT.IO.Put_Line("Data(7)= " & physMsgReceive.Data(7)'img);
+--        end if;
 
-      sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgSend'Unchecked_Access));
-      GNAT.IO.Put_Line("Message sent sendStatus=" & sendStatus'img);
+      VN.Communication.CAN.CAN_Driver.Send(logMsgSend, logSendStatus);
+      if logSendStatus = VN.OK then
+         GNAT.IO.Put_Line("Message sent sendStatus= OK");
+      else
+         GNAT.IO.Put_Line("Message sent ERROR");
+      end if;
 
---        VN.Communication.CAN.CAN_Driver.Test_CAN_Send;
---        GNAT.IO.Put_Line("Test_CAN_Send");
+      VN.Communication.CAN.CAN_Driver.Receive(logMsgReceive, logReceiveStatus);
 
-      GNAT.IO.New_Line;
-
-      if VN.Communication.CAN.CAN_Driver.ReceivePhysical(physMsgReceive'Unchecked_Access) = 1 then
+      if logReceiveStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or logReceiveStatus = VN.MSG_RECEIVED_MORE_AVAILABLE then
          GNAT.IO.Put_Line("Message received");
-         GNAT.IO.Put_Line("ID= " & physMsgReceive.ID'Img &
-                            "Length= " & physMsgReceive.Length'Img);
-
-         GNAT.IO.Put_Line("Data(0)= " & physMsgReceive.Data(0)'img);
-         GNAT.IO.Put_Line("Data(1)= " & physMsgReceive.Data(1)'img);
-         GNAT.IO.Put_Line("Data(2)= " & physMsgReceive.Data(2)'img);
-         GNAT.IO.Put_Line("Data(3)= " & physMsgReceive.Data(3)'img);
-         GNAT.IO.Put_Line("Data(4)= " & physMsgReceive.Data(4)'img);
-         GNAT.IO.Put_Line("Data(5)= " & physMsgReceive.Data(5)'img);
-         GNAT.IO.Put_Line("Data(6)= " & physMsgReceive.Data(6)'img);
-         GNAT.IO.Put_Line("Data(7)= " & physMsgReceive.Data(7)'img);
+         GNAT.IO.Put_Line(" isNormal= " & logMsgReceive.isNormal'Img &
+                            " msgType= " & logMsgReceive.msgType'Img &
+                            " Receiver= " & logMsgReceive.Receiver'Img &
+                            " Sender= " & logMsgReceive.Sender'Img &
+                            " Length= " & logMsgReceive.Length'Img);
+         for i in 1 .. logMsgReceive.Length loop
+            GNAT.IO.Put(logMsgReceive.Data(i)'Img);
+         end loop;
+         GNAT.IO.New_Line(2);
       end if;
 
       now := Ada.Real_Time.Clock;
