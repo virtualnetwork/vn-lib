@@ -19,13 +19,67 @@ package body Physical_Logical.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
+      use VN.Communication.CAN;
+      use Interfaces;
+
+      logMsg1, logMsg2 : VN.Communication.CAN.CAN_Message_Logical;
+      physMsg : Physical_Logical.CAN_Message_Physical;
 
    begin
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      logMsg1.isNormal := true;
+      for i in VN.Communication.CAN.CAN_Message_Prio'Range loop
+         logMsg1.msgPrio := i;
 
+         for j in VN.Communication.CAN.CAN_Address_Receiver'Range loop
+            logMsg1.Receiver := j;
+
+            for k in VN.Communication.CAN.CAN_Address_Sender'Range loop
+               logMsg1.Sender := k;
+
+               for l in VN.Communication.CAN.DLC_Type'Range loop
+                  logMsg1.Length := l;
+
+                  for m in logMsg1.Data'Range loop
+                     logMsg1.Data(m) := 3;
+                  end loop;
+
+                  Physical_Logical.LogicalToPhysical(logMsg1, physMsg);
+                  Physical_Logical.PhysicalToLogical(physMsg, logMsg2);
+
+                  AUnit.Assertions.Assert
+                    (logMsg1.isNormal = logMsg2.isNormal and logMsg1.msgPrio = logMsg2.msgPrio and
+                       logMsg1.msgType = logMsg2.msgType and logMsg1.Receiver = logMsg2.Receiver and
+                         logMsg1.Sender = logMsg2.Sender and logMsg1.Length = logMsg2.Length,
+                     "Error logMsg1 /= logMsg2, i= " & i'Img & ", j= " & j'Img & ", k= " & k'Img &
+                       ", l= " & l'Img);
+
+                  for m in 1 .. logMsg2.Length loop
+                     AUnit.Assertions.Assert
+                       (logMsg1.Data(m) = logMsg2.Data(m), "Error logMsg1.Data /= logMsg2.Data");
+                  end loop;
+               end loop;
+            end loop;
+         end loop;
+      end loop;
+
+      logMsg1.isNormal := false;
+      for i in VN.Communication.CAN.UCID'Range loop
+         logMsg1.SenderUCID := i;
+
+         Physical_Logical.LogicalToPhysical(logMsg1, physMsg);
+         Physical_Logical.PhysicalToLogical(physMsg, logMsg2);
+
+         AUnit.Assertions.Assert
+           (logMsg1.isNormal = logMsg2.isNormal and logMsg1.SenderUCID = logMsg2.SenderUCID,
+            "Error logMsg1 /= logMsg2, i= " & i'Img & " logMsg1.SenderUCID= " & logMsg1.SenderUCID'Img &
+              " logMsg2.SenderUCID= " & logMsg2.SenderUCID'Img);
+
+         for m in 1 .. logMsg2.Length loop
+            AUnit.Assertions.Assert
+              (logMsg1.Data(m) = logMsg2.Data(m), "Error logMsg1.Data /= logMsg2.Data");
+         end loop;
+      end loop;
 --  begin read only
    end Test_PhysicalToLogical;
 --  end read only
@@ -44,7 +98,7 @@ package body Physical_Logical.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (true,
          "Test not implemented.");
 
 --  begin read only
