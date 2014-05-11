@@ -21,17 +21,17 @@ package VN.Communication.CAN.Logic is
 
    procedure DebugOutput(str : String; level : Integer; newLine : boolean := true);
 
-   ASSIGN_CAN_ADDRESS 	: CAN_Message_Type := 0;
-   CAN_MASTER_ASSIGNED 	: CAN_Message_Type := 1;
-   ADDRESS_QUESTION 	: CAN_Message_Type := 2;
-   ADDRESS_ANSWER 	: CAN_Message_Type := 3;
-   PING 		: CAN_Message_Type := 4;
-   PONG 		: CAN_Message_Type := 5;
-   START_TRANSMISSION 	: CAN_Message_Type := 6;
-   FLOW_CONTROL 	: CAN_Message_Type := 7;
-   TRANSMISSION 	: CAN_Message_Type := 8;
-   DISCOVERY_REQUEST    : CAN_Message_Type := 9;
-   COMPONENT_TYPE	: CAN_Message_Type := 10;   
+   ASSIGN_CAN_ADDRESS 	: CAN_Message_Type := 1;
+   CAN_MASTER_ASSIGNED 	: CAN_Message_Type := 2;
+   ADDRESS_QUESTION 	: CAN_Message_Type := 3;
+   ADDRESS_ANSWER 	: CAN_Message_Type := 4;
+   PING 		: CAN_Message_Type := 5;
+   PONG 		: CAN_Message_Type := 6;
+   START_TRANSMISSION 	: CAN_Message_Type := 7;
+   FLOW_CONTROL 	: CAN_Message_Type := 8;
+   TRANSMISSION 	: CAN_Message_Type := 9;
+   DISCOVERY_REQUEST    : CAN_Message_Type := 10;
+   COMPONENT_TYPE	: CAN_Message_Type := 11;   
 
 --     REQUEST_CUUID	: CAN_Message_Type := 9;
 --     FIRST_CUUID_HALF 	: CAN_Message_Type := 10;
