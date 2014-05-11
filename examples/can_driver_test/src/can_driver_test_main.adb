@@ -27,7 +27,7 @@ procedure CAN_Driver_Test_Main is
 
    sendStatus : Integer;
    x : Interfaces.C.signed_char;
-   y : Interfaces.Unsigned_8 := 3;
+   y : Interfaces.Unsigned_8 := 6;
 
    logMsgSend : aliased VN.Communication.CAN.CAN_Message_Logical;
    logMsgReceive  : aliased VN.Communication.CAN.CAN_Message_Logical;
@@ -45,7 +45,7 @@ begin
 
 --     CAN_Driver_Test.Init;
 
-   physMsgSend.ID := 1338;
+   physMsgSend.ID := 138;
    physMsgSend.Length := 8;
 
    x := 5;
@@ -62,9 +62,9 @@ begin
 
 
    logMsgSend.isNormal := true;
-   logMsgSend.msgType := VN.Communication.CAN.Logic.TRANSMISSION;
-   logMsgSend.Receiver := VN.Communication.CAN.CAN_Address_Receiver(1);
-   logMsgSend.Sender := VN.Communication.CAN.CAN_Address_Sender(2);
+   logMsgSend.msgType := VN.Communication.CAN.Logic.FLOW_CONTROL;
+   logMsgSend.Receiver := VN.Communication.CAN.CAN_Address_Receiver(6);
+   logMsgSend.Sender := VN.Communication.CAN.CAN_Address_Sender(32);
    logMsgSend.Length := VN.Communication.CAN.DLC_Type(8);
 
 
