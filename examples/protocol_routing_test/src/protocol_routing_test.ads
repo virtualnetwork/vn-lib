@@ -32,16 +32,17 @@ package Protocol_Routing_Test is
 
    theFilter : aliased VN.Communication.CAN.CAN_Filtering.CAN_Filter_Type;
 
-   CANPeriod : aliased Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(100);
---     U1 : aliased VN.Communication.CAN.UCID := 1;
+   CANPeriod : aliased Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(10);
+--     U1 : aliased VN.Communication.CAN.UCID := 0;
 --     C1 : aliased VN.VN_CUUID := (1, others => 5);
+
+   U1 : aliased VN.Communication.CAN.UCID := 1; -- <-- 1
+   C1 : aliased VN.VN_CUUID := (4, others => 5);
+
+--     C2 : aliased VN.VN_CUUID := (5, others => 5);
+--     C3 : aliased VN.VN_CUUID := (6, others => 5);
 --     C2 : aliased VN.VN_CUUID := (2, others => 5);
 --     C3 : aliased VN.VN_CUUID := (3, others => 5);
-
-   U1 : aliased VN.Communication.CAN.UCID := 2;
-   C1 : aliased VN.VN_CUUID := (4, others => 5);
-   C2 : aliased VN.VN_CUUID := (5, others => 5);
-   C3 : aliased VN.VN_CUUID := (6, others => 5);
 
    CANInterface : aliased VN.Communication.CAN.CAN_Interface.CAN_Interface_Type
      (U1'Unchecked_Access, C1'Unchecked_Access,
