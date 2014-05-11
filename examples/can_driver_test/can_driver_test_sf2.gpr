@@ -1,4 +1,5 @@
 with "../../src/vn/communication/can/can_driver/can_driver.gpr";
+with "../../src/vn/communication/can/physical_logical/physical_logical.gpr";
 with "../../src/vn/communication/can/logic/logic.gpr";
 
 project CAN_Driver_Test_SF2 is

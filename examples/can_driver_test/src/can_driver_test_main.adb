@@ -18,11 +18,16 @@ with CAN_Driver_Test;
 
 with VN.Communication.CAN.Logic;
 
+with Physical_Logical;
+
 procedure CAN_Driver_Test_Main is
    now : Ada.Real_Time.Time;
 
-   physMsgSend : aliased VN.Communication.CAN.CAN_Driver.CAN_Message_Physical;
-   physMsgReceive  : aliased VN.Communication.CAN.CAN_Driver.CAN_Message_Physical;
+--     physMsgSend : aliased VN.Communication.CAN.CAN_Driver.CAN_Message_Physical;
+--     physMsgReceive  : aliased VN.Communication.CAN.CAN_Driver.CAN_Message_Physical;
+
+   physMsgSend : aliased Physical_Logical.CAN_Message_Physical;
+   physMsgReceive  : aliased Physical_Logical.CAN_Message_Physical;
    t : integer := 0;
 
    sendStatus : Integer;
@@ -48,29 +53,38 @@ procedure CAN_Driver_Test_Main is
                for j in Interfaces.C.unsigned(0) .. Interfaces.C.unsigned(8) loop
                   for k in Interfaces.C.signed_char(0) .. Interfaces.C.signed_char(20) loop
 
+
+                     now := Ada.Real_Time.Clock;
+                     delay until now + Ada.Real_Time.Milliseconds(100);
+
                      GNAT.IO.Put_Line(i'Img & j'Img & k'Img);
 
                      if VN.Communication.CAN.CAN_Driver.ReceivePhysical(physMsgReceive'Unchecked_Access) = 1 then
+
                         if physMsgSend.ID /= physMsgReceive.ID then
                            GNAT.IO.Put_Line("ID incorrect!");
                         end if;
                         if physMsgSend.Length /= physMsgReceive.Length then
-                           GNAT.IO.Put_Line("ID incorrect!");
+                           GNAT.IO.Put_Line("Length incorrect!");
                         end if;
 
                         correct := true;
-                        for x in 0 .. physMsgReceive.Length - 1 loop
+                        for x in 0 .. Integer(physMsgReceive.Length) - 1 loop
                            if physMsgSend.Data(x) /= physMsgReceive.Data(x) then
                               correct := false;
                               exit;
                            end if;
+                        end loop;
+
+                        if not correct then
+                           GNAT.IO.Put_Line("Data incorrect!");
                         end if;
+                     else
+                        GNAT.IO.Put_Line("Message not received!");
                      end if;
 
                      physMsgSend.ID := i;
                      physMsgSend.Length := j;
-
-                     k := 5;
 
                      physMsgSend.Data(0) := k;
                      physMsgSend.Data(1) := k;
@@ -82,17 +96,20 @@ procedure CAN_Driver_Test_Main is
                      physMsgSend.Data(7) := k;
 
                      sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgSend'Unchecked_Access));
+                     GNAT.IO.Put_Line("sendStatus = " & sendStatus'Img);
                   end loop;
                end loop;
             end loop;
 
          end loop;
-         else
-            loop
+      else
+         loop
             now := Ada.Real_Time.Clock;
             delay until now + Ada.Real_Time.Milliseconds(10);
+
             if VN.Communication.CAN.CAN_Driver.ReceivePhysical(physMsgReceive'Unchecked_Access) = 1 then
                sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgSend'Unchecked_Access));
+               GNAT.IO.Put_Line("message bounced! sendStatus= " & sendStatus'Img);
             end if;
          end loop;
       end if;
