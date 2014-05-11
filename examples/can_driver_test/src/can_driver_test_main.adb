@@ -35,7 +35,25 @@ procedure CAN_Driver_Test_Main is
    logSendStatus : VN.Send_Status;
    logReceiveStatus : VN.Receive_Status;
 
+   procedure Test is
+      isSender : Boolean := true;
+
+   begin
+
+      if isSender then
+         loop
+
+         end loop;
+      else
+         loop
+
+         end loop;
+      end if;
+   end Test;
+
 begin
+
+   Test;
 
 --     loop
 --        now := Ada.Real_Time.Clock;
