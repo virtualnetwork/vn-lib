@@ -29,7 +29,7 @@ package body VN.Communication.CAN.Can_Task is
 
       Next_Period : Ada.Real_Time.Time;
 
-      BUFFER_SIZE : constant integer := 20; --ToDO: Put this in a config file of some sort
+      BUFFER_SIZE : constant integer := 100; --ToDO: Put this in a config file of some sort
       msgsIn, msgsOut : buf.Buffer(BUFFER_SIZE);
 
       procedure Input is
