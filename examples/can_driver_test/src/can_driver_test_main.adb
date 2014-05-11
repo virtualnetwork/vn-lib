@@ -37,16 +37,63 @@ procedure CAN_Driver_Test_Main is
 
    procedure Test is
       isSender : Boolean := true;
-
+      correct : Boolean;
    begin
 
       if isSender then
          loop
+            GNAT.IO.Put_Line("Testing");
+
+            for i in Interfaces.C.unsigned(0) .. Interfaces.C.unsigned(100) loop
+               for j in Interfaces.C.unsigned(0) .. Interfaces.C.unsigned(8) loop
+                  for k in Interfaces.C.signed_char(0) .. Interfaces.C.signed_char(20) loop
+
+                     GNAT.IO.Put_Line(i'Img & j'Img & k'Img);
+
+                     if VN.Communication.CAN.CAN_Driver.ReceivePhysical(physMsgReceive'Unchecked_Access) = 1 then
+                        if physMsgSend.ID /= physMsgReceive.ID then
+                           GNAT.IO.Put_Line("ID incorrect!");
+                        end if;
+                        if physMsgSend.Length /= physMsgReceive.Length then
+                           GNAT.IO.Put_Line("ID incorrect!");
+                        end if;
+
+                        correct := true;
+                        for x in 0 .. physMsgReceive.Length - 1 loop
+                           if physMsgSend.Data(x) /= physMsgReceive.Data(x) then
+                              correct := false;
+                              exit;
+                           end if;
+                        end if;
+                     end if;
+
+                     physMsgSend.ID := i;
+                     physMsgSend.Length := j;
+
+                     k := 5;
+
+                     physMsgSend.Data(0) := k;
+                     physMsgSend.Data(1) := k;
+                     physMsgSend.Data(2) := k;
+                     physMsgSend.Data(3) := k;
+                     physMsgSend.Data(4) := k;
+                     physMsgSend.Data(5) := k;
+                     physMsgSend.Data(6) := k;
+                     physMsgSend.Data(7) := k;
+
+                     sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgSend'Unchecked_Access));
+                  end loop;
+               end loop;
+            end loop;
 
          end loop;
-      else
-         loop
-
+         else
+            loop
+            now := Ada.Real_Time.Clock;
+            delay until now + Ada.Real_Time.Milliseconds(10);
+            if VN.Communication.CAN.CAN_Driver.ReceivePhysical(physMsgReceive'Unchecked_Access) = 1 then
+               sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgSend'Unchecked_Access));
+            end if;
          end loop;
       end if;
    end Test;
