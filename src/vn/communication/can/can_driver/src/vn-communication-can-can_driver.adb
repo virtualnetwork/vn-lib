@@ -27,17 +27,32 @@ package body VN.Communication.CAN.CAN_Driver is
       use Interfaces.C;
    begin
 
+
+
       -- ToDo: This is just for testing, right now the CAN drivers don't work so we'll have to pretend we sent the message without doing so:
 --        status := VN.OK;
 --        return;
 
       Physical_Logical.LogicalToPhysical(message, physicalMessage);
 
+      if message.isNormal and message.msgType = VN.Communication.CAN.CAN_Message_Type(1) then
+         GNAT.IO.Put_Line("Sent Assign_CAN_Address, address= " & physicalMessage.Data(4)'Img);
+         GNAT.IO.Put_Line("ID= " & physicalMessage.ID'Img);
+         GNAT.IO.Put_Line("Length= " & physicalMessage.Length'Img);
+
+         GNAT.IO.Put_Line("Data= " & physicalMessage.Data(0)'Img & physicalMessage.Data(1)'Img & physicalMessage.Data(2)'Img
+                          & physicalMessage.Data(3)'Img& physicalMessage.Data(4)'Img & physicalMessage.Data(5)'Img
+                          & physicalMessage.Data(6)'Img & physicalMessage.Data(7)'Img);
+
+      end if;
+
+
       if SendPhysical(physicalMessage'Unchecked_Access) = 1 then
          status := VN.OK;
       else
          status := VN.ERROR_UNKNOWN;
       end if;
+
       return;
 
       if CAN_Message_Buffers.Full(SendBuffer) then
@@ -60,17 +75,29 @@ package body VN.Communication.CAN.CAN_Driver is
       use Interfaces.C;
    begin
 
+
       -- ToDo: This is just for testing, right now the CAN drivers don't work so we'll have to pretend we just didn't receive a message
 --        status := VN.NO_MSG_RECEIVED;
 --        return;
 
       if ReceivePhysical(physicalMessage'Unchecked_Access) = 1 then
          status := VN.MSG_RECEIVED_NO_MORE_AVAILABLE;
+         Physical_Logical.PhysicalToLogical(physicalMessage, message);
+
+         if message.isNormal and message.msgType = VN.Communication.CAN.CAN_Message_Type(1) then
+            GNAT.IO.Put_Line("Received Assign_CAN_Address, address= " & physicalMessage.Data(4)'Img);
+            GNAT.IO.Put_Line("ID= " & physicalMessage.ID'Img);
+            GNAT.IO.Put_Line("Length= " & physicalMessage.Length'Img);
+
+            GNAT.IO.Put_Line("Data= " & physicalMessage.Data(0)'Img & physicalMessage.Data(1)'Img & physicalMessage.Data(2)'Img
+                             & physicalMessage.Data(3)'Img& physicalMessage.Data(4)'Img & physicalMessage.Data(5)'Img
+                             & physicalMessage.Data(6)'Img & physicalMessage.Data(7)'Img);
+
+         end if;
       else
-         status := VN.nO_MSG_RECEIVED;
+         status := VN.NO_MSG_RECEIVED;
       end if;
 
-      Physical_Logical.PhysicalToLogical(physicalMessage, message);
       return;
 
       if CAN_Message_Buffers.Empty(ReceiveBuffer) then
