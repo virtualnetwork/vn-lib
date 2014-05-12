@@ -145,6 +145,8 @@ procedure CAN_Driver_Test_Main is
 
 begin
 
+   CAN_Driver_Test.Init;
+
    Test;
 
 --     loop
