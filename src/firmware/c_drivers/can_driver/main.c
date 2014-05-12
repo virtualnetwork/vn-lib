@@ -87,6 +87,13 @@ int Init_CAN() {
   /*  if (err != CAN_OK) {
         printf("\n\r Message Buffer configuration Error\r\n");
     } */
+
+
+    //MSS_CAN_set_int_ebl(&g_can0, CAN_INT_RX_MSG | CAN_INT_TX_MSG);
+    MSS_CAN_set_int_ebl(&g_can0, CAN_INT_RX_MSG | CAN_INT_TX_MSG | CAN_INT_GLOBAL | CAN_INT_BIT_ERR | CAN_INT_ACK_ERR | CAN_INT_CRC_ERR
+       | CAN_INT_RX_MSG_LOST);
+
+    return ret;
 }
 
 int test() {return 42;}
@@ -94,8 +101,6 @@ int test() {return 42;}
 int Send_CAN_Message(C_CAN_Message_Type *msg) {
 
    // printf("main.c: Send_CAN_Message run!\r\n");
-
-    while( MSS_CAN_send_message_ready(&g_can0) != CAN_OK); //wait until ready
     int i;
 
     tx_msg.ID  = msg->ID;
@@ -104,6 +109,8 @@ int Send_CAN_Message(C_CAN_Message_Type *msg) {
     for(i=0; i < msg->data_length; i++) {
           tx_msg.DATA[i] = msg->DATA[i];
     }
+
+    while( MSS_CAN_send_message_ready(&g_can0) != CAN_OK); //wait until ready
 
     return MSS_CAN_send_message_n(&g_can0, 6, &tx_msg);
 }
@@ -163,6 +170,16 @@ void Test_Send() {
     MSS_CAN_send_message_n(&g_can0, 17, &pMsg);
     MSS_CAN_send_message_n(&g_can0, 18, &pMsg);
     MSS_CAN_send_message_n(&g_can0, 19, &pMsg); */
+}
+
+
+// Will return 1 on success
+int Set_Filter(uint8_t mailbox_number, uint32_t mask, uint32_t template) {
+    uint16_t temp = 0xFFFFFFFF;
+    if (MSS_CAN_set_mask_n(&g_can0, mailbox_number, mask, template, temp, temp) == CAN_OK)
+        return 1;
+    else
+	return 0;
 }
 
 
