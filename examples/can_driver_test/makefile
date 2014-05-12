@@ -14,8 +14,6 @@ DRVPATH		=	$(SPTPATH)/microsemi-drivers
 # Path to Ada RTS
 RTS_DIR		=	$(shell pwd)/../../../../bap-arm-ravenscar-repository-rev280/rts/boards/sf2-starter-kit-010
 
-EXTPATH     	=       $(shell pwd)/../../../../bap-arm-ravenscar-repository-rev280/externals
-
 ########################################
 # Link command file, set defaults
 LDFILE		?=	$(SPTPATH)/link-dbg-in-microsemi-sf2-esram.ld
