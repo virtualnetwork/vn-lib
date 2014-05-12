@@ -5,7 +5,9 @@ package body CAN_Driver_Test is
 
    procedure Init is
    begin
---        System.BB.Interrupts.Attach_Handler(Handler'Access, System.BB.Interrupts.Interrupt_ID(32));
+      System.BB.Interrupts.Attach_Handler(Handler'Access, System.BB.Interrupts.Interrupt_ID(16));
+
+
 --        System.BB.Interrupts.Attach_Handler(Handler'Access, System.BB.Interrupts.Interrupt_ID(32));
 
 
@@ -21,8 +23,9 @@ package body CAN_Driver_Test is
 
 
    procedure Handler(ID : System.BB.Interrupts.Interrupt_ID) is
+      intID : Integer := Integer(ID);
    begin
-      GNAT.IO.Put_Line("Handler called");
+      GNAT.IO.Put_Line("Handler called, ID= " & intID'Img);
    end Handler;
 
    procedure TestHandler(ID : System.BB.Interrupts.Interrupt_ID) is
