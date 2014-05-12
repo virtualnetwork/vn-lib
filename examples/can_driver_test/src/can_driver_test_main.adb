@@ -104,7 +104,7 @@ procedure CAN_Driver_Test_Main is
                      procentDataErrors 	 := (numDataErrors * 100) / numMessages;
                      procentIDErrors	 := (numIDErrors * 100) / numMessages;
 
-                     GNAT.IO.Put_Line(numLostMessages'img & " lost messages, " & numLengthErrors'Img & " length errors, " &
+                     GNAT.IO.Put_Line(numMessages'Img & " Messages total, " & numLostMessages'img & " lost messages, " & numLengthErrors'Img & " length errors, " &
                                         numIDErrors'Img & " ID errors, " & numDataErrors'Img & " data errors");
 
                      GNAT.IO.Put_Line(procentLostMessages'img & "% lost messages, " & procentLengthErrors'Img & "% length errors, " &
