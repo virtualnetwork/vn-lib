@@ -40,6 +40,17 @@ procedure CAN_Driver_Test_Main is
    logSendStatus : VN.Send_Status;
    logReceiveStatus : VN.Receive_Status;
 
+   numMessages 		: Integer := 0;
+   numLostMessages	: Integer := 0;
+   numLengthErrors	: Integer := 0;
+   numDataErrors	: Integer := 0;
+   numIDErrors		: Integer := 0;
+
+   procentLostMessages	: Integer;
+   procentLengthErrors	: Integer;
+   procentDataErrors	: Integer;
+   procentIDErrors	: Integer;
+
    procedure Test is
       isSender : Boolean := true;
       correct : Boolean;
@@ -49,10 +60,11 @@ procedure CAN_Driver_Test_Main is
          loop
             GNAT.IO.Put_Line("Testing");
 
-            for i in Interfaces.C.unsigned(0) .. Interfaces.C.unsigned(100) loop
+            for i in Interfaces.C.unsigned(0) .. Interfaces.C.unsigned(200) loop
                for j in Interfaces.C.unsigned(0) .. Interfaces.C.unsigned(8) loop
                   for k in Interfaces.C.signed_char(0) .. Interfaces.C.signed_char(20) loop
 
+                     numMessages := numMessages + 1;
 
                      now := Ada.Real_Time.Clock;
                      delay until now + Ada.Real_Time.Milliseconds(100);
@@ -63,13 +75,15 @@ procedure CAN_Driver_Test_Main is
 
                         if physMsgSend.ID /= physMsgReceive.ID then
                            GNAT.IO.Put_Line("ID incorrect!");
+                           numIDErrors := numIDErrors + 1;
                         end if;
                         if physMsgSend.Length /= physMsgReceive.Length then
                            GNAT.IO.Put_Line("Length incorrect!");
+                           numLengthErrors := numLengthErrors + 1;
                         end if;
 
                         correct := true;
-                        for x in 0 .. Integer(physMsgReceive.Length) - 1 loop
+                        for x in 0 .. Integer(physMsgSend.Length) - 1 loop
                            if physMsgSend.Data(x) /= physMsgReceive.Data(x) then
                               correct := false;
                               exit;
@@ -78,10 +92,24 @@ procedure CAN_Driver_Test_Main is
 
                         if not correct then
                            GNAT.IO.Put_Line("Data incorrect!");
+                           numDataErrors := numDataErrors + 1;
                         end if;
                      else
                         GNAT.IO.Put_Line("Message not received!");
+                        numLostMessages := numLostMessages + 1;
                      end if;
+
+                     procentLostMessages := (numLostMessages* 100) / numMessages ;
+                     procentLengthErrors := (numLengthErrors * 100) / numMessages;
+                     procentDataErrors 	 := (numDataErrors * 100) / numMessages;
+                     procentIDErrors	 := (numIDErrors * 100) / numMessages;
+
+                     GNAT.IO.Put_Line(numLostMessages'img & " lost messages, " & numLengthErrors'Img & " length errors, " &
+                                        numIDErrors'Img & " ID errors, " & numDataErrors'Img & " data errors");
+
+                     GNAT.IO.Put_Line(procentLostMessages'img & "% lost messages, " & procentLengthErrors'Img & "% length errors, " &
+                                        procentIDErrors'Img & "% ID errors, " & procentDataErrors'Img & "% data errors");
+
 
                      physMsgSend.ID := i;
                      physMsgSend.Length := j;
@@ -105,10 +133,10 @@ procedure CAN_Driver_Test_Main is
       else
          loop
             now := Ada.Real_Time.Clock;
-            delay until now + Ada.Real_Time.Milliseconds(10);
+            delay until now + Ada.Real_Time.Milliseconds(100);
 
             if VN.Communication.CAN.CAN_Driver.ReceivePhysical(physMsgReceive'Unchecked_Access) = 1 then
-               sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgSend'Unchecked_Access));
+               sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgReceive'Unchecked_Access));
                GNAT.IO.Put_Line("message bounced! sendStatus= " & sendStatus'Img);
             end if;
          end loop;
