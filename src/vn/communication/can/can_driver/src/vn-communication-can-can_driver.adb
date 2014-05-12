@@ -115,8 +115,26 @@ package body VN.Communication.CAN.CAN_Driver is
    end Receive;
 
    procedure Update_Filters(filterAccess : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+      mask_C, template_C : Interfaces.C.unsigned;
+      mask, template : VN.Communication.CAN.CAN_message_ID;
+      isUsed, hasChanged : Boolean;
+
+      ret : Interfaces.C.int;
+
+      use Interfaces.C;
    begin
-      null; -- ToDo: Implement...
+
+      for i in VN.Communication.CAN.CAN_Filtering.Filter_ID_Type'Range loop
+         filterAccess.Get_Filter(i, mask, template, isUsed, hasChanged);
+
+         if isUsed and hasChanged then
+            ret := Set_CAN_Filter(Interfaces.C.unsigned_char(i), Interfaces.C.unsigned(mask), Interfaces.C.unsigned(template));
+
+            if ret /= 1 then
+               GNAT.IO.Put_Line("Update of CAN filter failed");
+            end if;
+         end if;
+      end loop;
    end Update_Filters;
 
 
