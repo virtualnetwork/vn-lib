@@ -33,7 +33,7 @@ package VN.Communication.CAN.CAN_Driver is
 
    procedure Update_Filters(filterAccess : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access);
 
---  private --ToDo: The things below are only public when testing, the test project can_driver_test uses these things.
+   --  private --ToDo: The things below are only public when testing, the test project can_driver_test uses these things.
 
    type CAN_Message_Physical is new Physical_Logical.CAN_Message_Physical;
    type CAN_Message_Physical_Access is new Physical_Logical.CAN_Message_Physical_Access;
@@ -62,7 +62,14 @@ private
    function CAN_Init return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
    pragma Import(C, CAN_Init, "Init_CAN");
 
- --  procedure CANHandler(ID : System.BB.Interrupts.Interrupt_ID); -- Remove this when compiling for PC, keep when compiling for SmartFusion2
+
+   --Will return 1 on success
+   function Set_CAN_Filter(mailbox_number : Interfaces.C.unsigned_char;
+                           mask : Interfaces.C.unsigned; template : Interfaces.C.unsigned)
+                           return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
+   pragma Import(C, Set_CAN_Filter, "Set_Filter");
+
+   --  procedure CANHandler(ID : System.BB.Interrupts.Interrupt_ID); -- Remove this when compiling for PC, keep when compiling for SmartFusion2
 
    procedure Init;
 
