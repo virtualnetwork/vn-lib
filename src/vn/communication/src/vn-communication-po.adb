@@ -10,7 +10,7 @@ package body VN.Communication.PO is
       procedure Send_To_Other(Message: in VN.Message.VN_Message_Basic;
                               Status: out VN.Send_Status) is
       begin
-         VN.Text_IO.Put_Line("PO send_to_other runs");
+        -- VN.Text_IO.Put_Line("PO send_to_other runs");
          if VN_Message_Buffer.Full(Buffer_To_Other) then
             Status := VN.ERROR_BUFFER_FULL;
          else
@@ -28,7 +28,7 @@ package body VN.Communication.PO is
          else
             VN_Message_Buffer.Remove(Message, Buffer_To_SM_L);
 
-            VN.Text_IO.Put_Line("PO receive_from_other runs, message received");
+        --    VN.Text_IO.Put_Line("PO receive_from_other runs, message received");
 
             if VN_Message_Buffer.Empty(Buffer_To_SM_L) then
                Status := VN.MSG_RECEIVED_NO_MORE_AVAILABLE;
@@ -42,7 +42,7 @@ package body VN.Communication.PO is
       procedure Send_To_SM_L(Message: in VN.Message.VN_Message_Basic;
                       Status: out VN.Send_Status) is
       begin
-         VN.Text_IO.Put_Line("PO send_to_SM_L runs");
+     --    VN.Text_IO.Put_Line("PO send_to_SM_L runs");
          if VN_Message_Buffer.Full(Buffer_To_SM_L) then
             Status := VN.ERROR_BUFFER_FULL;
          else
@@ -60,7 +60,7 @@ package body VN.Communication.PO is
          else
             VN_Message_Buffer.Remove(Message, Buffer_To_Other);
 
-            VN.Text_IO.Put_Line("PO receive_from_SM_L runs, message received");
+        --    VN.Text_IO.Put_Line("PO receive_from_SM_L runs, message received");
 
             if VN_Message_Buffer.Empty(Buffer_To_Other) then
                Status := VN.MSG_RECEIVED_NO_MORE_AVAILABLE;
