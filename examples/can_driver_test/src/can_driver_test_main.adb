@@ -71,7 +71,7 @@ procedure CAN_Driver_Test_Main is
             GNAT.IO.Put_Line("Testing");
 
 
-               for j in Interfaces.C.unsigned(1) .. Interfaces.C.unsigned(1) loop
+               for j in Interfaces.C.unsigned(8) .. Interfaces.C.unsigned(8) loop
                   for k in Interfaces.C.signed_char(8) .. Interfaces.C.signed_char(8) loop
 
 for i in Interfaces.C.unsigned(0) .. Interfaces.C.unsigned(200) loop
