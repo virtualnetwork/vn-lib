@@ -23,7 +23,7 @@ package VN.Communication.CAN.Logic.Logical_Address_Handler is
 
    procedure Received_From_Address(this : in out Logical_Address_Handler; Address : VN.VN_Logical_Address);
 
-   procedure Sent_To_Address(this : in out Logical_Address_Handler; Address : VN.VN_Logical_Address);
+   procedure Sent_From_Address(this : in out Logical_Address_Handler; Address : VN.VN_Logical_Address);
 
    procedure Activate(this : in out Logical_Address_Handler; 
                       theCANAddress : VN.Communication.CAN.CAN_Address_Sender);
