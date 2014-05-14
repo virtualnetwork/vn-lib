@@ -45,20 +45,20 @@ package body VN.Communication.CAN.Logic.CAN_Address_Reception is
 
          when Start =>
 
-            --              if bMsgReceived then
-            --                 if msgIn.isNormal then
+            if bMsgReceived then
+               if msgIn.isNormal then
 
-            VN.Communication.CAN.Logic.Message_Utils.RequestCANAddressToMessage(msgOut, this.myUCID, false);
-            bWillSend:= true;
-            this.currentState := Started;
-            VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": Requested CAN address", 4);
+                  VN.Communication.CAN.Logic.Message_Utils.RequestCANAddressToMessage(msgOut, this.myUCID, false);
+                  bWillSend:= true;
+                  this.currentState := Started;
+                  VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": Requested CAN address", 4);
 
-            this.timer := Ada.Real_Time.Clock;
+                  this.timer := Ada.Real_Time.Clock;
 
-            --                    return;
-            --                 end if;
-            --              end if;
-            --              bWillSend:=false;
+                  return;
+               end if;
+            end if;
+            bWillSend:=false;
 
          when Started =>
 
