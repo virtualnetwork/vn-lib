@@ -72,9 +72,16 @@ procedure CAN_Logic_Test_Main is
 
 --     DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.Node_SM_Ptr :=
 --       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C(1)'Unchecked_Access, CANFilters(1)'Unchecked_Access),
---        new VN.Communication.CAN.Logic.Node.Node_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access));
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U3'Unchecked_Access, C(3)'Unchecked_Access, CANFilters(3)'Unchecked_Access));
 
-      --new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access));
+--     DutyArray : Array(dutiesRange) of VN.Communication.CAN.Logic.Node_SM_Ptr :=
+--       (new VN.Communication.CAN.Logic.SM.SM_Duty(U1'Unchecked_Access, C(1)'Unchecked_Access, CANFilters(1)'Unchecked_Access),
+--        new VN.Communication.CAN.Logic.SM.SM_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access));
+
+   --new VN.Communication.CAN.Logic.Node.Node_Duty(U2'Unchecked_Access, C(2)'Unchecked_Access, CANFilters(2)'Unchecked_Access));
+
+     
    
    type BufferArray is array(DutyArray'Range) of VN.Communication.CAN.CAN_Message_Buffers.Buffer(100);
    messagesIn : BufferArray;
@@ -105,6 +112,8 @@ begin
    Next_Period := Ada.Real_Time.Clock;
 
    loop
+      VN.Text_IO.New_Line(1);
+        
       Next_Period := Next_Period + Period;
       delay until Next_Period;
 
