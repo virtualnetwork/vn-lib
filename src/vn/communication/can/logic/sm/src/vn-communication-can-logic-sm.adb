@@ -206,7 +206,7 @@ package body VN.Communication.CAN.Logic.SM is
          this.sender.SendVNMessage(internal, result);
          result := OK;
 
-         this.logAddrHandler.Sent_To_Address(msg.Header.Destination);
+         this.logAddrHandler.Sent_From_Address(msg.Header.Source);
       else
          result := ERROR_NO_ADDRESS_RECEIVED;
          VN.Communication.CAN.Logic.DebugOutput("VN.Communication.CAN.Logic.SM.Send, Status := ERROR_NO_ADDRESS_RECEIVED;", 5);
