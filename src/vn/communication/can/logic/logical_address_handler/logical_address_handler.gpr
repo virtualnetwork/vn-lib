@@ -1,0 +1,12 @@
+with "../message_utils/message_utils.gpr";
+with "../../../../lib/buffers/buffers.gpr";
+with "../../../routing_table/routing_table.gpr";
+with "../logic.gpr";
+
+project Logical_Address_Handler is
+
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+
+end Logical_Address_Handler;
+
