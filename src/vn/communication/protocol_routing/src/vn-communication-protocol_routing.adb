@@ -173,13 +173,14 @@ package body VN.Communication.Protocol_Routing is
    end Add_Interface;
 
    procedure Init(this : in out Protocol_Routing_Type) is -- ToDo: For testing only!!!!!!!!!!
-      testCUUID : VN.VN_CUUID := (others => 42);
+--      testCUUID : VN.VN_CUUID := (others => 42);
    begin
-      this.Initiated := true;
-      Protocol_Router.Insert(this.myTable, 1337, Protocol_Address_Type(1));
-      CUUID_Protocol_Routing.Insert(this.myCUUIDTable, testCUUID, Protocol_Address_Type(1));
+--        this.Initiated := true;
+--        Protocol_Router.Insert(this.myTable, 1337, Protocol_Address_Type(1));
+--        CUUID_Protocol_Routing.Insert(this.myCUUIDTable, testCUUID, Protocol_Address_Type(1));
 
-      GNAT.IO.Put_Line("Protocol_Routing initiated");
+--        GNAT.IO.Put_Line("Protocol_Routing initiated");
+      null;
    end Init;
 
 end VN.Communication.Protocol_Routing;
