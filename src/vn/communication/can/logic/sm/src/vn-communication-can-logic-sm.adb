@@ -186,6 +186,9 @@ package body VN.Communication.CAN.Logic.SM is
       if msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
          VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
          CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddr.CUUID, receiver, found);
+         
+         VN.Text_IO.Put_Line("CAN routing: OPCODE_ASSIGN_ADDR, CUUID(1)= " & msgAssignAddr.CUUID(1)'Img & 
+                             ", address found = " & found'Img);
 
       elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
 
@@ -278,8 +281,9 @@ package body VN.Communication.CAN.Logic.SM is
 
             VN.Communication.CAN.Logic.DebugOutput("CAN address " & internal.Receiver'Img &
                                                      " received LocalHello from CAN address " &
-                                                     internal.Sender'Img &
-                                                     " responded with LocalAck", 2);
+                                                     internal.Sender'Img & " CUUID(1)= " &
+                                                     msgLocalHello.CUUID(1)'Img &
+                                                     " responded with LocalAck", 0);
 
          elsif msg.Header.Opcode = VN.Message.OPCODE_LOCAL_ACK then
             -- ToDo: We should remember that our Local_Hello was acknowledged
