@@ -35,6 +35,7 @@ with VN.Communication.CAN.Logic.Sender;
 with VN.Communication.CAN.Logic.Receiver;
 with VN.Communication.CAN.Logic.ComponentType_Responder;
 with VN.Communication.CAN.Logic.ComponentType_Handler;
+with VN.Communication.CAN.Logic.Logical_Address_Handler;
 
 with VN.Communication.Routing_Table;
 with VN.Communication.CUUID_Routing;
@@ -96,7 +97,7 @@ private
 
    --ToDo: These constants should be put in a config file of some sort
    CAN_ROUTING_TABLE_SIZE : constant VN.VN_Logical_Address := 500;
-   NUM_DUTIES : constant integer := 5;
+   NUM_DUTIES : constant integer := 6;
 
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
@@ -128,6 +129,8 @@ private
          cuuidResponder : aliased VN.Communication.CAN.Logic.ComponentType_Responder.ComponentType_Responder;
 
          cuuidHandler : aliased VN.Communication.CAN.Logic.ComponentType_Handler.ComponentType_Handler;
+
+         logAddrHandler : aliased VN.Communication.CAN.Logic.Logical_Address_Handler.Logical_Address_Handler;
 
          DutyArray : ArrayOfDuties;
 
