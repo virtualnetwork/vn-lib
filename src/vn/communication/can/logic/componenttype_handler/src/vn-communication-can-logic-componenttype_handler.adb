@@ -32,7 +32,7 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
                      VN.Communication.CAN.Logic.Message_Utils.ComponentTypeFromMessage(msgIn, wasSM_CAN);
                      this.units(msgIn.Sender).isSM_CAN := wasSM_CAN;
                      this.units(msgIn.Sender).isComponentTypeSet := true;
-                     VN.Communication.CAN.Logic.DebugOutput("Recieved ComponentType from address " & msgIn.Sender'Img, 5);
+                     VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img & " recieved ComponentType from address " & msgIn.Sender'Img, 5);
 
                      this.HelloProc(this.mySender, msgIn.Sender, wasSM_CAN); -- Send LocalHello etc.
                   end if;
@@ -44,7 +44,7 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
                -- this.hasRequested := true;
                this.timer := Ada.Real_Time.Clock; --send DiscoveryRequests periodically, not just once
 
-               VN.Communication.CAN.Logic.DebugOutput("Discovery request sent from address " & this.myCANAddress'Img, 5);
+               VN.Communication.CAN.Logic.DebugOutput("Discovery request sent from address " & this.myCANAddress'Img, 4);
                VN.Communication.CAN.Logic.Message_Utils.DiscoveryRequestToMessage(msgOut, this.myCANAddress, 0);
                bWillSend := true;
             end if;
@@ -59,7 +59,7 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
 
       if this.currentState = Unactivated then
          this.timer := Ada.Real_Time.Clock;
-         VN.Communication.CAN.Logic.DebugOutput("ComponentType_Handler at address " & CANAddress'Img & " activated", 5);
+         VN.Communication.CAN.Logic.DebugOutput("ComponentType_Handler at address " & CANAddress'Img & " activated", 4);
 
          this.mySender     := sender;
          this.myCUUID      := theCUUID;
@@ -91,7 +91,8 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
       result : VN.Send_Status;
    begin
 
-      VN.Communication.CAN.Logic.DebugOutput("SM_Duty discovered a unit, CANAddress= " &
+      VN.Communication.CAN.Logic.DebugOutput("CAN adddress " & this.myCANAddress'Img &
+                                               " discovered a unit, CANAddress= " &
                                                CANAddress'Img & " isSM_CAN = " &
                                                isSM_CAN'img, 4);
 
