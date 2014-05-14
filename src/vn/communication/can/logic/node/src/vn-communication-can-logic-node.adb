@@ -20,6 +20,8 @@ with VN.Message.Distribute_Route;
 with VN.Message.Assign_Address;
 with VN.Message.Assign_Address_Block;
 
+with VN.Communication.CAN.Logic.Message_Utils;
+
 package body VN.Communication.CAN.Logic.Node is
 
    procedure Update(this : in out Node_Duty; msgsBuffer : in out CAN_Message_Buffers.Buffer; ret : out CAN_Message_Buffers.Buffer) is
@@ -27,6 +29,8 @@ package body VN.Communication.CAN.Logic.Node is
       bWillSend : boolean;
       msgIn, msgOut : CAN_Message_Logical;
 
+      logAddress : VN.VN_Logical_Address;
+      CANAddress : VN.Communication.CAN.CAN_Address_Sender;
    begin
       if not this.isInitialized then
          Init(this);
@@ -46,14 +50,24 @@ package body VN.Communication.CAN.Logic.Node is
 
             CAN_Message_Buffers.Remove(msgIn, msgsBuffer);
 
-            for i in this.DutyArray'Range loop
+            if msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.ADDRESS_ANSWER then
+               -- Receive routing information from AddressAnswer message
 
-               this.DutyArray(i).Update(msgIn, true, msgOut, bWillSend);
+               VN.Communication.CAN.Logic.Message_Utils.AddressAnswerFromMessage(msgIn, CANAddress, logAddress);               
+               CAN_Routing.Insert(this.myTable, logAddress, CANAddress);
 
-               if bWillSend then
-                  CAN_Message_Buffers.Insert(msgOut, ret);
-               end if;
-            end loop;
+               VN.Communication.CAN.Logic.DebugOutput(this.myUCID'Img & ": AddresAnswer: Logical address " & logAddress'Img & 
+                                                        " exists on CAN address " & CANAddress'Img, 3);               
+            else
+
+               for i in this.DutyArray'Range loop
+                  this.DutyArray(i).Update(msgIn, true, msgOut, bWillSend);
+
+                  if bWillSend then
+                     CAN_Message_Buffers.Insert(msgOut, ret);
+                  end if;
+               end loop;
+            end if;
          end loop;
       end if;
 
@@ -73,6 +87,7 @@ package body VN.Communication.CAN.Logic.Node is
 
                this.sender.Activate(address);
                this.receiver.Activate(address);
+               this.logAddrHandler.Activate(address);
                this.cuuidResponder.Activate(this.myCUUID, address, false);
                this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
 
@@ -128,6 +143,9 @@ package body VN.Communication.CAN.Logic.Node is
                                                        VN.Message.HEADER_SIZE +
                                                          VN.Message.CHECKSUM_SIZE);
          this.sender.SendVNMessage(internal, result);
+
+         this.logAddrHandler.Sent_From_Address(msg.Header.Source);
+
          result := OK;
       else
          result := ERROR_NO_ADDRESS_RECEIVED;
@@ -215,6 +233,8 @@ package body VN.Communication.CAN.Logic.Node is
             --Store information about the sender of the message:
             CAN_Routing.Insert(this.myTable, internal.Data.Header.Source, internal.Sender);
 
+            this.logAddrHandler.Received_From_Address(msg.Header.Source);
+
             if msg.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
                Handle_Distribute_Route(internal);
             end if;
@@ -244,6 +264,7 @@ package body VN.Communication.CAN.Logic.Node is
       this.DutyArray(this.DutyArray'First + 2) := this.receiver'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 3) := this.cuuidResponder'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 4) := this.cuuidHandler'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 5) := this.logAddrHandler'Unchecked_Access;
 
       -- receiving messages sent to CAN address 255 (broadcast)
       this.theFilter.Create_Transmission_Filter(this.broadcastFilterID, 255);
