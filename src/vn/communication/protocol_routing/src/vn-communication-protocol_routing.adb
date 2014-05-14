@@ -51,6 +51,9 @@ package body VN.Communication.Protocol_Routing is
          VN.Message.Assign_Address.To_Assign_Address(Message, msgAssignAddr);
          CUUID_Protocol_Routing.Search(this.myCUUIDTable, msgAssignAddr.CUUID, address, found);
 
+         VN.Text_IO.Put_Line("Protocol routing: OPCODE_ASSIGN_ADDR, CUUID(1)= " & msgAssignAddr.CUUID(1)'Img &
+                               " address found = " & found'Img);
+
       elsif Message.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
 
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(Message, msgAssignAddrBlock);
