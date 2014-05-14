@@ -373,7 +373,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
          isLastMessage := true;
       end if;
 
-      CANMessage.Length := VN.Communication.CAN.DLC_Type(Last + 1);
+      CANMessage.Length := 8; -- CANMessage.Length := VN.Communication.CAN.DLC_Type(Last + 1);
 
       startIndex := Integer(seqNumber) * 8; --where in the msgArray the first byte should be taken
 
