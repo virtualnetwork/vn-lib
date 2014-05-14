@@ -34,15 +34,19 @@ package body VN.Communication.CAN.Logic.Logical_Address_Handler is
             else
                
                if this.timer - Ada.Real_Time.Clock > ADDRESS_DISTRIBUTION_PERIOD then
+
+                  this.timer := Ada.Real_Time.Clock;
                   
-                  VN.Communication.CAN.Logic.Message_Utils.AddressAnswerToMessage(msgOut, 255, this.myCANAddress, this.myCANAddress,  
-                                                                                  this.list(this.list'First), 0);
+                  VN.Communication.CAN.Logic.Message_Utils.AddressAnswerToMessage(msgOut, 255, this.myCANAddress, this.myCANAddress, 
+                                                                                  this.list(this.list'First), 0); 
                   bWillSend := true;
 
                   if this.numAddresses > 1 then
                      this.currentState := Distributing;
                      this.distIndex := this.distIndex + 1;
                   end if;
+               else 
+                     bWillSend := false;
                end if;
             end if;
 
@@ -54,8 +58,9 @@ package body VN.Communication.CAN.Logic.Logical_Address_Handler is
                this.distIndex := this.distIndex + 1;
                bWillSend := true;
             else 
-               bWillSend := false;
+               this.distIndex := this.list'First;            
                this.currentState := Activated;
+               bWillSend := false;
             end if;
       end case;
    end Update;
@@ -96,10 +101,12 @@ package body VN.Communication.CAN.Logic.Logical_Address_Handler is
    procedure Activate(this : in out Logical_Address_Handler; 
                       theCANAddress : VN.Communication.CAN.CAN_Address_Sender) is
    begin 
-      this.myCANAddress := theCANAddress;
-      this.currentState := Activated;
+      if this.currentState = Unactivated then
+         this.myCANAddress := theCANAddress;
+         this.currentState := Activated;
       
-      this.timer := Ada.Real_Time.Clock;
+         this.timer := Ada.Real_Time.Clock;
+      end if;
    end Activate;
  
 end VN.Communication.CAN.Logic.Logical_Address_Handler;
