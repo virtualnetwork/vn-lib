@@ -29,16 +29,22 @@ package body VN.Communication.CAN.Logic.Logical_Address_Handler is
                Address_Buffers.Remove(address, this.sendBuffer);               
                VN.Communication.CAN.Logic.Message_Utils.AddressAnswerToMessage(msgOut, 255, this.myCANAddress, 
                                                                                this.myCANAddress, address, 0);
+
+               VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img & " sent AddressAnswer about log addr " & address'Img, 4);
+               
                bWillSend := true;
                return;
             else
                
-               if this.timer - Ada.Real_Time.Clock > ADDRESS_DISTRIBUTION_PERIOD then
+               if Ada.Real_Time.Clock - this.timer > ADDRESS_DISTRIBUTION_PERIOD and this.numAddresses > 0 then
 
                   this.timer := Ada.Real_Time.Clock;
                   
                   VN.Communication.CAN.Logic.Message_Utils.AddressAnswerToMessage(msgOut, 255, this.myCANAddress, this.myCANAddress, 
                                                                                   this.list(this.list'First), 0); 
+                  
+                  VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img & " REsent AddressAnswer about log addr " & this.list(this.list'First)'Img, 4);
+                  
                   bWillSend := true;
 
                   if this.numAddresses > 1 then
@@ -54,6 +60,8 @@ package body VN.Communication.CAN.Logic.Logical_Address_Handler is
             if this.distIndex < this.numAddresses then
                VN.Communication.CAN.Logic.Message_Utils.AddressAnswerToMessage(msgOut, 255, this.myCANAddress, this.myCANAddress,  
                                                                                this.list(this.distIndex), 0);
+               
+               VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img & " distributed AddressAnswer about log addr " & this.list(this.distIndex)'Img, 4);
                
                this.distIndex := this.distIndex + 1;
                bWillSend := true;
@@ -72,10 +80,15 @@ package body VN.Communication.CAN.Logic.Logical_Address_Handler is
    end Received_From_Address;
 
 
-   procedure Sent_To_Address(this : in out Logical_Address_Handler; Address : VN.VN_Logical_Address) is
+   procedure Sent_From_Address(this : in out Logical_Address_Handler; Address : VN.VN_Logical_Address) is
       found : Boolean;
       temp : Boolean;
    begin
+
+      if Address = VN.LOGICAL_ADDRES_UNKNOWN then
+         return;
+      end if;
+        
       Bool_Routing.Search(this.hasReceivedFrom, Address, temp, found);
       
       if not found then
@@ -96,7 +109,7 @@ package body VN.Communication.CAN.Logic.Logical_Address_Handler is
             end if;
          end if;
       end if;
-   end Sent_To_Address; 
+   end Sent_From_Address; 
 
    procedure Activate(this : in out Logical_Address_Handler; 
                       theCANAddress : VN.Communication.CAN.CAN_Address_Sender) is
