@@ -22,11 +22,11 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
             bWillSend := false;
 
          when Initiated =>
-            VN.Communication.CAN.Logic.Message_Utils.StartTransmissionToMessage(msgOut, this.receiver, this.myCANAddress,
-                                                              NumMessagesToSend(this.numBytesToSend));
+            VN.Communication.CAN.Logic.Message_Utils.StartTransmissionToMessage(msgOut, this.receiver, 
+                                                                                this.myCANAddress, this.numBytesToSend);
 
             VN.Communication.CAN.Logic.DebugOutput("StartTransmission message sent from address " & this.myCANAddress'img
-                                 & " to " & this.receiver'img & " numMessages= " & NumMessagesToSend(this.numBytesToSend)'img, 3);
+                                 & " to " & this.receiver'img & " numMessages= " & this.numBytesToSend'img, 3);
 
             this.currentState := Started;
             this.time := Ada.Real_Time.Clock;
@@ -59,10 +59,10 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
             --resends the StartTransmission message if no FlowControl message is received
             if this.currentState = Started and Ada.Real_Time.Clock - this.time > WAIT_TIME then
                VN.Communication.CAN.Logic.Message_Utils.StartTransmissionToMessage(msgOut, this.receiver, this.myCANAddress,
-                                                                 NumMessagesToSend(this.numBytesToSend));
+                                                                                   this.numBytesToSend);
 
                VN.Communication.CAN.Logic.DebugOutput("StartTransmission message was resent from address " & this.myCANAddress'img
-                                    & " to " & this.receiver'img & " numMessages= " & NumMessagesToSend(this.numBytesToSend)'img, 3);
+                                    & " to " & this.receiver'img & " numBytes= " & this.numBytesToSend'img, 3);
 
                this.time := Ada.Real_Time.Clock;
                this.currentState := Started;

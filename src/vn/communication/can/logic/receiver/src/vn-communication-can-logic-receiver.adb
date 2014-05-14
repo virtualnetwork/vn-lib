@@ -44,13 +44,13 @@ package body VN.Communication.CAN.Logic.Receiver is
                   end loop;
 
                   if (not alreadyReceiving) and (not Pending_Senders_pack.Full(this.pendingSenders)) then
-                     VN.Communication.CAN.Logic.Message_Utils.StartTransmissionFromMessage(msgIn, rec, pending.sender, pending.numMessages);
+                     VN.Communication.CAN.Logic.Message_Utils.StartTransmissionFromMessage(msgIn, rec, pending.sender, pending.numBytes);
 
-                        if rec = this.myCANAddress then
+                     if rec = this.myCANAddress then
 
                         VN.Communication.CAN.Logic.DebugOutput("StartTransmission message recieved by CAN address " & this.myCANAddress'Img &
                                                                  ", transmission pending. Sender = "
-                                                               & pending.sender'Img & " numMessages= " & pending.numMessages'img, 3);
+                                                               & pending.sender'Img & " numBytes= " & pending.numBytes'img, 3);
 
                         --Check whether this StartTransmission has been recieved eariler
                         -- (the sender might resend the StartTransmission message)
@@ -77,7 +77,7 @@ package body VN.Communication.CAN.Logic.Receiver is
                if freeUnit /= null then
                   Pending_Senders_pack.Remove(pending, this.pendingSenders);
 
-                  freeUnit.Assign(pending.sender, pending.numMessages);
+                  freeUnit.Assign(pending.sender, pending.numBytes);
                   freeUnit.Update(msgIn, false, msgOut, bWillSend);
              end if;
             end if;

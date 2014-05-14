@@ -56,8 +56,9 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
                if msgIn.Sender = this.sender and msgIn.Receiver = this.myCANAddress then
 
-                  VN.Communication.CAN.Logic.DebugOutput("DeFragment. receiver= " & this.myCANAddress'img & " sender= " & this.sender'img & " sequence no= "& this.sequenceNumber'Img, 4);
-                  VN.Communication.CAN.Logic.Message_Utils.DeFragment(this.sequenceNumber, this.numMessages, msgIn, this.receivedData, currentLength);
+                  VN.Communication.CAN.Logic.DebugOutput("DeFragment. receiver= " & this.myCANAddress'img & " sender= " & this.sender'img &
+                                                           " sequence no= "& this.sequenceNumber'Img & " numBytes= " & this.numBytes'Img, 4);
+                  VN.Communication.CAN.Logic.Message_Utils.DeFragment(this.sequenceNumber, this.numBytes, msgIn, this.receivedData, currentLength);
 
 
                   this.sequenceNumber := this.sequenceNumber + 1;
@@ -68,7 +69,8 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
                                          "  blockCount= " & this.blockCount'Img & " blockSize=" & this.blockSize'img
                                        & " FlowCtrl= " & this.useFlowControl'Img & " sequence no= "& this.sequenceNumber'Img, 4);
 
-                  if this.useFlowControl and this.blockCount >= this.blockSize and this.sequenceNumber < this.numMessages then
+                  -- Flow control is used, block is full and we are not done receiving
+                  if this.useFlowControl and this.blockCount >= this.blockSize and this.sequenceNumber * 8 < this.numBytes then
 
                      VN.Communication.CAN.Logic.Message_Utils.FlowControlToMessage(msgOut, VN.Communication.CAN.Convert(this.sender),
                                                                  this.myCANAddress, false, this.blockSize);
@@ -78,7 +80,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
                                                               " sequence no= "& this.sequenceNumber'Img, 4);
                      return;
 
-                  elsif this.sequenceNumber >= this.numMessages then
+                  elsif this.sequenceNumber * 8 >= this.numBytes then -- transmission done
 
                      VN.Communication.CAN.Logic.DebugOutput("Receiver unit on CAN address " & this.myCANAddress'Img &
                                                               ": Transmission from CAN address " & this.sender'Img & " complete,"  &
@@ -89,7 +91,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
                      VN.Communication.CAN.Logic.DebugOutput(" Opcode= " & VN_msg.Data.Header.Opcode'img, 3, false);
 
-                     VN_msg.NumBytes := currentLength;
+                     VN_msg.NumBytes := this.numBytes;
                      VN_msg.Receiver := VN.Communication.CAN.Convert(this.myCANAddress);
                      VN_msg.Sender   := this.sender;
 
@@ -100,7 +102,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
                      if not Pending_Senders_pack.Empty(this.pendingSenders.all) then
 
                         Pending_Senders_pack.Remove(tempSender, this.pendingSenders.all);
-                        this.Assign(tempSender.sender, tempSender.numMessages);
+                        this.Assign(tempSender.sender, tempSender.numBytes);
 
 
                         VN.Communication.CAN.Logic.DebugOutput(" started new transmission from CAN address " & tempSender.sender'img, 3);
@@ -130,13 +132,13 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
    end Activate;
 
    procedure Assign(this : in out Receiver_Unit_Duty; sender : VN.Communication.CAN.CAN_Address_Sender;
-                    numMessages	: Interfaces.Unsigned_16) is
+                    numBytes	: Interfaces.Unsigned_16) is
    begin
       this.currentState   := Started;
       this.Sender  	  := sender;
-      this.numMessages    := numMessages;
+      this.numBytes       := numBytes;
 
-      VN.Communication.CAN.Logic.DebugOutput("Reciever unit assigned, sender= " & this.Sender'Img & " numMessages= " & this.numMessages'img, 4);
+      VN.Communication.CAN.Logic.DebugOutput("Reciever unit assigned, sender= " & this.Sender'Img & " numBytes= " & this.numBytes'img, 4);
    end Assign;
 
    function isActive(this : in Receiver_Unit_Duty) return boolean is

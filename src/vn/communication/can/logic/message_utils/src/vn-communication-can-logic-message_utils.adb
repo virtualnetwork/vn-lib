@@ -20,7 +20,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.msgType  := VN.Communication.CAN.Logic.ADDRESS_QUESTION;
       msg.Receiver := receiver;
       msg.Sender   := sender;
-      msg.Length   := 4;
+      msg.Length   := 8; --4
 
       U16ToData(Interfaces.Unsigned_16(logicalAddress), msg.Data);
    end AddressQuestionToMessage;
@@ -29,7 +29,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       INCORRECT_MESSAGE_AddressQuestion : exception;
       temp : Interfaces.Unsigned_16;
    begin
-      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ADDRESS_QUESTION and msg.Length = 4 then
+      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ADDRESS_QUESTION and msg.Length >= 4 then
          DataToU16(msg.Data, temp);
          logicalAddress := VN.VN_Logical_Address(temp);
       else
@@ -48,7 +48,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.msgType  := VN.Communication.CAN.Logic.ADDRESS_ANSWER;
       msg.Receiver := receiver;
       msg.Sender   := sender;
-      msg.Length   := 5;
+      msg.Length   := 8; --5;
 
       for i in temp'Range loop
          msg.Data(i) := temp(i);
@@ -65,7 +65,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       for temp'Address use logicalAddress'Address;
 
    begin
-      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ADDRESS_ANSWER and msg.Length = 5 then
+      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ADDRESS_ANSWER and msg.Length >= 5 then
 
          for i in temp'Range loop
             temp(i) := msg.Data(i);
@@ -84,7 +84,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.msgType  := VN.Communication.CAN.Logic.COMPONENT_TYPE;
       msg.Receiver := 255;
       msg.Sender   := sender;
-      msg.Length   := 1;
+      msg.Length   := 8; --1;
 
       if isSM_CAN then
          msg.Data(msg.Data'First) := 3;
@@ -97,7 +97,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    procedure ComponentTypeFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical;  isSM_CAN : out boolean) is
       INCORRECT_MESSAGE_ComponentType : exception;
    begin
-      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.COMPONENT_TYPE and msg.Length = 1 then
+      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.COMPONENT_TYPE and msg.Length >= 1 then
          if msg.Data(msg.Data'First) = 3 then
             isSM_CAN := true;
          else
@@ -166,7 +166,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
 --        end if;
 --     end CUUIDHalfFromMessage;
 
-
+   -- This procedure is obsolete
    procedure TransmissionToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
                                    sender : VN.Communication.CAN.CAN_Address_Sender) is
    begin
@@ -188,10 +188,10 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.sender 	:= Sender;
 
       if useFlowControl then
-         msg.Length	:= 2;
+         msg.Length	:= 8; --2;
          U16ToData(blockSize, msg.Data);
       else
-         msg.Length	:= 0;
+         msg.Length	:= 8; --0;
       end if;
    end FlowControlToMessage;
 
@@ -200,10 +200,10 @@ package body VN.Communication.CAN.Logic.Message_Utils is
                                     blockSize : out Interfaces.Unsigned_16) is
       INCORRECT_MESSAGE_FlowControl : exception;
    begin
-      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.FLOW_CONTROL and (msg.Length = 2 or msg.Length = 0) then
+      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.FLOW_CONTROL then --and (msg.Length = 2 or msg.Length = 0) then
          receiver := msg.Receiver;
          sender   := msg.Sender;
-         if msg.Length = 2 then
+         if msg.Length >= 2 then
             useFlowControl := true;
             DataToU16(msg.Data, blockSize);
 
@@ -219,27 +219,27 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    end FlowControlFromMessage;
 
    procedure StartTransmissionToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
-                                        sender : VN.Communication.CAN.CAN_Address_Sender; numMessages : Interfaces.Unsigned_16) is
+                                        sender : VN.Communication.CAN.CAN_Address_Sender; numBytes : Interfaces.Unsigned_16) is
    begin
       msg.isNormal 	:= true;
       msg.msgPrio 	:= 0;
       msg.msgType 	:= VN.Communication.CAN.Logic.START_TRANSMISSION;
       msg.receiver 	:= Receiver;
       msg.sender 	:= Sender;
-      msg.Length	:= 2;
+      msg.Length	:= 8; --2;
 
-      U16ToData(numMessages, msg.Data);
+      U16ToData(numBytes, msg.Data);
    end StartTransmissionToMessage;
 
 
    procedure StartTransmissionFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; receiver : out VN.Communication.CAN.CAN_Address_Receiver;
-                                          sender : out VN.Communication.CAN.CAN_Address_Sender; numMessages : out Interfaces.Unsigned_16) is
+                                          sender : out VN.Communication.CAN.CAN_Address_Sender; numBytes : out Interfaces.Unsigned_16) is
 
       INCORRECT_MESSAGE_StartTransmission : exception;
    begin
 
-      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.START_TRANSMISSION and msg.Length = 2 then
-         DataToU16(msg.Data, numMessages);
+      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.START_TRANSMISSION and msg.Length >= 2 then
+         DataToU16(msg.Data, numBytes);
          receiver    := msg.Receiver;
          sender      := msg.Sender;
       else
@@ -267,7 +267,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.msgType := VN.Communication.CAN.Logic.ASSIGN_CAN_ADDRESS;
       msg.receiver := 255;
       msg.sender := 0;
-      msg.Length := 5;
+      msg.Length := 8; --5;
    end AssignCANAddressToMessage;
 
    procedure AssignCANAddressFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical;
@@ -277,7 +277,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       y : VN.Communication.CAN.UCID;
       for x'Address use y'Address;
    begin
-      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ASSIGN_CAN_ADDRESS and msg.Length = 5 then
+      if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ASSIGN_CAN_ADDRESS and msg.Length >= 5 then
          for i in x'Range loop
             x(i) := msg.Data(VN.Communication.CAN.DLC_Type(i));
          end loop;
@@ -295,7 +295,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.isNormal:=false;
       msg.senderUCID:= theUCID;
       if bIs_SM_CAN then
-         msg.Length  := 1;
+         msg.Length  := 8; --1;
          msg.Data(1) := 3;
       else
          msg.Length  := 0;
@@ -405,57 +405,60 @@ package body VN.Communication.CAN.Logic.Message_Utils is
          begin
             VN.Communication.CAN.Logic.DebugOutput("Fragment. Array(" & temp'Img & ") := " & msgArray(temp)'img, 6);
          end;
-
---           declare
---              temp : integer := msgArray'First + index;
---           begin
---              VN.Text_IO.Put_Line("Fragment, Array(" & temp'Img & ") := " & msgArray(temp)'img);
---           end;
-
-         --reverse index on msgArray:
---           CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i)) :=
---             msgArray(msgArray'Last - index);
       end loop;
 
       seqNumber := seqNumber + 1;
    end Fragment;
 
    procedure DeFragment(seqNumber 	 : Interfaces.Unsigned_16;
-                        numMessages	 : Interfaces.Unsigned_16;
+                        numBytes	 : Interfaces.Unsigned_16;
                         CANMessage 	 : VN.Communication.CAN.CAN_Message_Logical;
                         VNMessageContent : in out VN.Message.VN_Message_Byte_Array;
                         currentLength 	 : out Interfaces.Unsigned_16) is
 
-      index, startIndex, lastIndex : Integer; -- zerobased
+      index, startIndex, bytesRead, lastIndex : Integer; -- zerobased
+
+      CAN_MESSAGE_TOO_SHORT : exception;
    begin
+
+      currentLength := seqNumber * 8;
+
+      if numBytes - currentLength <= 8 then
+         bytesRead := Integer(numBytes - currentLength);
+         currentLength := numBytes;
+
+         if Integer(CANMessage.Length) < bytesRead then
+            raise CAN_MESSAGE_TOO_SHORT;
+         end if;
+      else
+         bytesRead := 8;
+         currentLength := (seqNumber + 1) * 8;
+
+         if CANMessage.Length < 8 then
+            raise CAN_MESSAGE_TOO_SHORT;
+         end if;
+      end if;
 
       startIndex := Integer(seqNumber) * 8;
 
-      for i in 0 .. CANMessage.Length - 1 loop
-         index := startIndex + Integer(i);
+      for i in 0 .. bytesRead - 1 loop
+         index := startIndex + i;
 
          VNMessageContent(VNMessageContent'First + index) :=
-           CANMessage.Data(CANMessage.Data'First + i);
+           CANMessage.Data(CANMessage.Data'First + VN.Communication.CAN.DLC_Type(i));
 
-         declare
-            temp : integer := VNMessageContent'First + index;
-         begin
-            VN.Communication.CAN.Logic.DebugOutput("DeFragment. Array(" & temp'Img & ") := " & VNMessageContent(temp)'img, 6);
-         end;
-
-
-         --reverse index on VNMessageContent:
---           VNMessageContent(VNMessageContent'Last - index) :=
---             CANMessage.Data(CANMessage.Data'First + i);
+--           declare
+--              temp : integer := VNMessageContent'First + index;
+--           begin
+--              VN.Communication.CAN.Logic.DebugOutput("DeFragment. Array(" & temp'Img & ") := " & VNMessageContent(temp)'img, 6);
+--           end;
       end loop;
-
-      currentLength := seqNumber * 8 + Interfaces.Unsigned_16(CANMessage.Length);
 
       -- If the last CAN message has been received, move the
       -- two last received bytes to the end of the array.
       -- These two bytes are the checksum and should allways be put at the end of the array.
-      if seqNumber + 1 = numMessages then
-         lastIndex := startIndex + Integer(CANMessage.Length);
+      if currentLength >= numBytes then
+         lastIndex := startIndex + bytesRead;
 
          VNMessageContent(VNMessageContent'Last)     :=  VNMessageContent(lastIndex);
          VNMessageContent(VNMessageContent'Last - 1) :=  VNMessageContent(lastIndex - 1);
@@ -466,10 +469,6 @@ package body VN.Communication.CAN.Logic.Message_Utils is
             VN.Communication.CAN.Logic.DebugOutput("DeFragment. Last message. Array(" & temp'Img & ") := " & VNMessageContent(VNMessageContent'Last - 1)'img &
                                                      ",  Array(" & VNMessageContent'Last'Img & ") := " & VNMessageContent(VNMessageContent'Last )'img, 6);
          end;
-
-         --reverse index on VNMessageContent:
---           VNMessageContent(VNMessageContent'First)     :=  VNMessageContent(VNMessageContent'Last - lastIndex);
---           VNMessageContent(VNMessageContent'First + 1) :=  VNMessageContent(VNMessageContent'Last - lastIndex - 1);
       end if;
    end DeFragment;
 
