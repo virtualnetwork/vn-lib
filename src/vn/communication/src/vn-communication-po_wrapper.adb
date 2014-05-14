@@ -11,10 +11,10 @@ package body VN.Communication.PO_Wrapper is
                   Status: out VN.Send_Status) is
    begin
       if This.Is_From_SM_L then
-         VN.Text_IO.Put_Line("PO_Wrapper sends message to Other");
+    --     VN.Text_IO.Put_Line("PO_Wrapper sends message to Other");
          This.PO_Access.Send_To_Other(Message, Status);
       else
-         VN.Text_IO.Put_Line("PO_Wrapper sends message to SM-L");
+     --    VN.Text_IO.Put_Line("PO_Wrapper sends message to SM-L");
          This.PO_Access.Send_To_SM_L(Message, Status);
       end if;
    end Send;
