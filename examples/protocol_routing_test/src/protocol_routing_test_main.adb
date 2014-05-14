@@ -109,7 +109,7 @@ begin
       Protocol_Routing_Test.myInterface.Receive(msg, recStatus);
 
       while recStatus = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or recStatus = VN.MSG_RECEIVED_MORE_AVAILABLE loop
-         GNAT.IO.Put_Line("Main function (SM_L) received VN message, Opcode=" & msg.Header.Opcode'Img);
+      --   GNAT.IO.Put_Line("Main function (SM_L) received VN message, Opcode=" & msg.Header.Opcode'Img);
 
          if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
             VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
@@ -150,6 +150,9 @@ begin
             VN.Text_IO.Put_Line("Request_Address_Block received, CUUID(1)= " & msgReqAddrBlock.CUUID(1)'img &
                           " Sender= " & msgReqAddrBlock.Header.Source'Img & " Sent to " & msgReqAddrBlock.Header.Destination'Img);
             VN.Text_IO.New_Line;
+
+         elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
+            VN.Text_IO.Put_Line("Assign address message received from logical address " & msg.Header.Source'Img);
 
          end if;
 
