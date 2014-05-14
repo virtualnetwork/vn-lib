@@ -54,15 +54,27 @@ procedure CAN_Driver_Test_Main is
    procedure Test is
       isSender : Boolean := true;
       correct : Boolean;
+
+      function Min (Left  : in Integer;
+                    Right : in Integer)  return Integer is
+      begin
+         if Left < Right then
+            return Left;
+         else
+            return Right;
+         end if;
+      end Min;
    begin
 
       if isSender then
          loop
             GNAT.IO.Put_Line("Testing");
 
-            for i in Interfaces.C.unsigned(0) .. Interfaces.C.unsigned(200) loop
-               for j in Interfaces.C.unsigned(0) .. Interfaces.C.unsigned(8) loop
-                  for k in Interfaces.C.signed_char(0) .. Interfaces.C.signed_char(20) loop
+
+               for j in Interfaces.C.unsigned(1) .. Interfaces.C.unsigned(1) loop
+                  for k in Interfaces.C.signed_char(8) .. Interfaces.C.signed_char(8) loop
+
+for i in Interfaces.C.unsigned(0) .. Interfaces.C.unsigned(200) loop
 
                      numMessages := numMessages + 1;
 
@@ -83,15 +95,19 @@ procedure CAN_Driver_Test_Main is
                         end if;
 
                         correct := true;
-                        for x in 0 .. Integer(physMsgSend.Length) - 1 loop
+                        for x in 0 .. Min(Integer(physMsgSend.Length) - 1, 7) loop
                            if physMsgSend.Data(x) /= physMsgReceive.Data(x) then
                               correct := false;
-                              exit;
+
+                              GNAT.IO.Put_Line("bit " & x'Img & ": " & physMsgSend.Data(x)'Img & " => " & physMsgReceive.Data(x)'Img);
+                           else
+
+                              GNAT.IO.Put_Line("bit " & x'Img & ": correct");
                            end if;
                         end loop;
 
                         if not correct then
-                           GNAT.IO.Put_Line("Data incorrect!");
+                       --    GNAT.IO.Put_Line("Data incorrect!");
                            numDataErrors := numDataErrors + 1;
                         end if;
                      else
@@ -114,17 +130,20 @@ procedure CAN_Driver_Test_Main is
                      physMsgSend.ID := i;
                      physMsgSend.Length := j;
 
-                     physMsgSend.Data(0) := k;
-                     physMsgSend.Data(1) := k;
-                     physMsgSend.Data(2) := k;
-                     physMsgSend.Data(3) := k;
-                     physMsgSend.Data(4) := k;
-                     physMsgSend.Data(5) := k;
-                     physMsgSend.Data(6) := k;
-                     physMsgSend.Data(7) := k;
+                     physMsgSend.Data(0) := 1;
+                     physMsgSend.Data(1) := 2;
+                     physMsgSend.Data(2) := 3;
+                     physMsgSend.Data(3) := 3;
+                     physMsgSend.Data(4) := 6;
+                     physMsgSend.Data(5) := 3;
+                     physMsgSend.Data(6) := 3;
+                     physMsgSend.Data(7) := 3;
 
                      sendStatus := Integer(VN.Communication.CAN.CAN_Driver.SendPhysical(physMsgSend'Unchecked_Access));
                      GNAT.IO.Put_Line("sendStatus = " & sendStatus'Img);
+
+                     GNAT.IO.Put_Line("");
+
                   end loop;
                end loop;
             end loop;

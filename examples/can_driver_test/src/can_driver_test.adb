@@ -5,7 +5,7 @@ package body CAN_Driver_Test is
 
    procedure Init is
    begin
-      System.BB.Interrupts.Attach_Handler(Handler'Access, System.BB.Interrupts.Interrupt_ID(16));
+--        System.BB.Interrupts.Attach_Handler(Handler'Access, System.BB.Interrupts.Interrupt_ID(16));
 
 
 --        System.BB.Interrupts.Attach_Handler(Handler'Access, System.BB.Interrupts.Interrupt_ID(32));
