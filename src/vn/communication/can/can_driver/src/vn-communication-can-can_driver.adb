@@ -35,16 +35,16 @@ package body VN.Communication.CAN.CAN_Driver is
 
       Physical_Logical.LogicalToPhysical(message, physicalMessage);
 
-      if message.isNormal and message.msgType = VN.Communication.CAN.CAN_Message_Type(1) then
-         GNAT.IO.Put_Line("Sent Assign_CAN_Address, address= " & physicalMessage.Data(4)'Img);
-         GNAT.IO.Put_Line("ID= " & physicalMessage.ID'Img);
-         GNAT.IO.Put_Line("Length= " & physicalMessage.Length'Img);
-
-         GNAT.IO.Put_Line("Data= " & physicalMessage.Data(0)'Img & physicalMessage.Data(1)'Img & physicalMessage.Data(2)'Img
-                          & physicalMessage.Data(3)'Img& physicalMessage.Data(4)'Img & physicalMessage.Data(5)'Img
-                          & physicalMessage.Data(6)'Img & physicalMessage.Data(7)'Img);
-
-      end if;
+--        if message.isNormal and message.msgType = VN.Communication.CAN.CAN_Message_Type(1) then
+--           GNAT.IO.Put_Line("Sent Assign_CAN_Address, address= " & physicalMessage.Data(4)'Img);
+--           GNAT.IO.Put_Line("ID= " & physicalMessage.ID'Img);
+--           GNAT.IO.Put_Line("Length= " & physicalMessage.Length'Img);
+--
+--           GNAT.IO.Put_Line("Data= " & physicalMessage.Data(0)'Img & physicalMessage.Data(1)'Img & physicalMessage.Data(2)'Img
+--                            & physicalMessage.Data(3)'Img& physicalMessage.Data(4)'Img & physicalMessage.Data(5)'Img
+--                            & physicalMessage.Data(6)'Img & physicalMessage.Data(7)'Img);
+--
+--        end if;
 
 
       if SendPhysical(physicalMessage'Unchecked_Access) = 1 then
@@ -84,16 +84,16 @@ package body VN.Communication.CAN.CAN_Driver is
          status := VN.MSG_RECEIVED_NO_MORE_AVAILABLE;
          Physical_Logical.PhysicalToLogical(physicalMessage, message);
 
-         if message.isNormal and message.msgType = VN.Communication.CAN.CAN_Message_Type(1) then
-            GNAT.IO.Put_Line("Received Assign_CAN_Address, address= " & physicalMessage.Data(4)'Img);
-            GNAT.IO.Put_Line("ID= " & physicalMessage.ID'Img);
-            GNAT.IO.Put_Line("Length= " & physicalMessage.Length'Img);
-
-            GNAT.IO.Put_Line("Data= " & physicalMessage.Data(0)'Img & physicalMessage.Data(1)'Img & physicalMessage.Data(2)'Img
-                             & physicalMessage.Data(3)'Img& physicalMessage.Data(4)'Img & physicalMessage.Data(5)'Img
-                             & physicalMessage.Data(6)'Img & physicalMessage.Data(7)'Img);
-
-         end if;
+--           if message.isNormal and message.msgType = VN.Communication.CAN.CAN_Message_Type(1) then
+--              GNAT.IO.Put_Line("Received Assign_CAN_Address, address= " & physicalMessage.Data(4)'Img);
+--              GNAT.IO.Put_Line("ID= " & physicalMessage.ID'Img);
+--              GNAT.IO.Put_Line("Length= " & physicalMessage.Length'Img);
+--
+--              GNAT.IO.Put_Line("Data= " & physicalMessage.Data(0)'Img & physicalMessage.Data(1)'Img & physicalMessage.Data(2)'Img
+--                               & physicalMessage.Data(3)'Img& physicalMessage.Data(4)'Img & physicalMessage.Data(5)'Img
+--                               & physicalMessage.Data(6)'Img & physicalMessage.Data(7)'Img);
+--
+--           end if;
       else
          status := VN.NO_MSG_RECEIVED;
       end if;
