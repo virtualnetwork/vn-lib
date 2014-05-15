@@ -91,7 +91,7 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
       result : VN.Send_Status;
    begin
 
-      VN.Communication.CAN.Logic.DebugOutput("CAN adddress " & this.myCANAddress'Img &
+      VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img &
                                                " discovered a unit, CANAddress= " &
                                                CANAddress'Img & " isSM_CAN = " &
                                                isSM_CAN'img, 4);
