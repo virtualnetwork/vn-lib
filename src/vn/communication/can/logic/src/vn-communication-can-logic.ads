@@ -2,8 +2,8 @@
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
 -- Summary:
--- VN.Communication.CAN.Logic is a package that implements the logic 
--- of the VN-CAN protocol itself. 
+-- VN.Communication.CAN.Logic is a package that implements the logic
+-- of the VN-CAN protocol itself.
 -- This file includes:
 -- Definition of lowlevel datatypes, constants and operations as well as
 -- definition of abstract base class Duty. Duty is a base class for
@@ -31,11 +31,11 @@ package VN.Communication.CAN.Logic is
    FLOW_CONTROL 	: CAN_Message_Type := 8;
    TRANSMISSION 	: CAN_Message_Type := 9;
    DISCOVERY_REQUEST    : CAN_Message_Type := 10;
-   COMPONENT_TYPE	: CAN_Message_Type := 11;   
+   COMPONENT_TYPE	: CAN_Message_Type := 11;
 
 --     REQUEST_CUUID	: CAN_Message_Type := 9;
 --     FIRST_CUUID_HALF 	: CAN_Message_Type := 10;
---     SECOND_CUUID_HALF 	: CAN_Message_Type := 11;   
+--     SECOND_CUUID_HALF 	: CAN_Message_Type := 11;
 --     ASSIGN_LOGICAL_ADDR	: CAN_Message_Type := 13;
 
    type VN_Message_Internal is
@@ -48,16 +48,16 @@ package VN.Communication.CAN.Logic is
 
    type Duty is abstract tagged limited private;
 
-   procedure Update(this : in out Duty; 
-                    msg : CAN_Message_Logical; 
+   procedure Update(this : in out Duty;
+                    msg : CAN_Message_Logical;
                     bMsgReceived : boolean;
-                    msgOut : out CAN_Message_Logical; 
+                    msgOut : out CAN_Message_Logical;
                     bWillSend : out boolean) is abstract;
 
    type Duty_Ptr is access all Duty'Class;
 
    type Node_SM is abstract tagged limited private;
-   
+
    procedure Update(this : in out Node_SM;
                     msgsBuffer : in out CAN_Message_Buffers.Buffer;
                     ret : out CAN_Message_Buffers.Buffer) is abstract;
@@ -71,11 +71,11 @@ package VN.Communication.CAN.Logic is
                      status : out VN.Receive_Status) is abstract;
 
    --This function is only used for testing:
-   procedure GetCANAddress(this : in out Node_SM; 
+   procedure GetCANAddress(this : in out Node_SM;
                            address : out CAN_Address_Sender;
                            isAssigned : out boolean) is abstract;
 
-   type Node_SM_Ptr is access all Node_SM'Class; 
+   type Node_SM_Ptr is access all Node_SM'Class;
 
 private
 
