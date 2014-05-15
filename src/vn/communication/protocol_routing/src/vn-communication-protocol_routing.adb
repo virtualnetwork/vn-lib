@@ -124,8 +124,10 @@ package body VN.Communication.Protocol_Routing is
                end if;
 
                --Check if the message shall be re-routed onto a subnet, or returned to the application layer:
-               if tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_HELLO and --LocalHello and LocalAck shall always be sent to the application layer
-                 tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_ACK then
+               if tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_HELLO and --LocalHello, LocalAck, AssignAddr and AssignAddrBlock shall always be sent to the application layer
+                 tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_ACK and
+                 tempMsg.Header.Opcode /= VN.Message.OPCODE_ASSIGN_ADDR and
+                 tempMsg.Header.Opcode /= VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
 
                   Protocol_Router.Search(this.myTable, tempMsg.Header.Destination, address, found);
 
