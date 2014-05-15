@@ -207,12 +207,15 @@ package body VN.Communication.CAN.Logic.SM is
                                                        VN.Message.HEADER_SIZE +
                                                          VN.Message.CHECKSUM_SIZE);
          this.sender.SendVNMessage(internal, result);
-         result := OK;
 
-         this.logAddrHandler.Sent_From_Address(msg.Header.Source);
+         if result /= VN.OK then
+            VN.Text_IO.Put_Line("CAN routing: Send-result /= VN.OK ");
+         end if;
+
+         this.logAddrHandler.Sent_From_Address(msg.Header.Source); 
       else
          result := ERROR_NO_ADDRESS_RECEIVED;
-         VN.Communication.CAN.Logic.DebugOutput("VN.Communication.CAN.Logic.SM.Send, Status := ERROR_NO_ADDRESS_RECEIVED;", 5);
+         VN.Communication.CAN.Logic.DebugOutput("VN.Communication.CAN.Logic.SM.Send, Status := ERROR_NO_ADDRESS_RECEIVED;", 3);
       end if;
    end Send;
 
