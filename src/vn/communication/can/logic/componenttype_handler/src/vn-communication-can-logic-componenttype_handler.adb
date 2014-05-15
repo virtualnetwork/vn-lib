@@ -44,7 +44,7 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
                -- this.hasRequested := true;
                this.timer := Ada.Real_Time.Clock; --send DiscoveryRequests periodically, not just once
 
-               VN.Communication.CAN.Logic.DebugOutput("Discovery request sent from address " & this.myCANAddress'Img, 4);
+               VN.Communication.CAN.Logic.DebugOutput("Discovery request sent from address " & this.myCANAddress'Img, 3);
                VN.Communication.CAN.Logic.Message_Utils.DiscoveryRequestToMessage(msgOut, this.myCANAddress, 0);
                bWillSend := true;
             end if;
@@ -59,7 +59,7 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
 
       if this.currentState = Unactivated then
          this.timer := Ada.Real_Time.Clock;
-         VN.Communication.CAN.Logic.DebugOutput("ComponentType_Handler at address " & CANAddress'Img & " activated", 4);
+         VN.Communication.CAN.Logic.DebugOutput("ComponentType_Handler at address " & CANAddress'Img & " activated", 3);
 
          this.mySender     := sender;
          this.myCUUID      := theCUUID;
@@ -94,7 +94,7 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
       VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img &
                                                " discovered a unit, CANAddress= " &
                                                CANAddress'Img & " isSM_CAN = " &
-                                               isSM_CAN'img, 4);
+                                               isSM_CAN'img, 3);
 
       -- Send LocalHello message:
       if isSM_CAN then
