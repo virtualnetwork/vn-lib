@@ -25,10 +25,10 @@ package body Protocol_Routing_Test is
    procedure Init is
    begin
 
-      PO_Wrapper_1_2.Init;
-      PO_Wrapper_1_3.Init;
-      PO_Wrapper_2_1.Init;
-      PO_Wrapper_3_1.Init;
+--        PO_Wrapper_1_2.Init;
+--        PO_Wrapper_1_3.Init;
+--        PO_Wrapper_2_1.Init;
+--        PO_Wrapper_3_1.Init;
 
 --        first_PO_Router.Add_Interface(PO_Wrapper_1_2'Access);
 --        first_PO_Router.Add_Interface(PO_Wrapper_1_3'Access);

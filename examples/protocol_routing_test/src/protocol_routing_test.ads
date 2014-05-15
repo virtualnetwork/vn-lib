@@ -22,9 +22,9 @@ with VN.Communication.CAN.CAN_Filtering;
 
 with VN.Communication.Protocol_Routing;
 
---  with VN.Communication.PO;
---  with VN.Communication.PO_Wrapper;
---  with Protocol_Routing_Second_Task;
+with VN.Communication.PO;
+with VN.Communication.PO_Wrapper;
+with Protocol_Routing_Second_Task;
 
 package Protocol_Routing_Test is
 
@@ -34,7 +34,7 @@ package Protocol_Routing_Test is
 
    CANPeriod : aliased Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(10);
 
-   Temp : constant Integer := 1;
+   Temp : constant Integer := 0;
 
    U1 : aliased VN.Communication.CAN.UCID := VN.Communication.CAN.UCID(Temp * 10);
    C1 : aliased VN.VN_CUUID := (Interfaces.Unsigned_8(1 + Temp * 10), others => 5);
@@ -51,10 +51,10 @@ package Protocol_Routing_Test is
 
    myInterface : VN.Communication.Protocol_Routing.Protocol_Routing_Type;
 
---     PO_1_2, PO_1_3 : aliased VN.Communication.PO.VN_PO;
---
---     PO_Wrapper_1_2 : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_1_2'Access, C1'Access, VN.Message.SM_L, true);
---     PO_Wrapper_1_3 : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_1_3'Access, C1'Access, VN.Message.SM_L, true);
+   PO_1_2, PO_1_3 : aliased VN.Communication.PO.VN_PO;
+
+   PO_Wrapper_1_2 : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_1_2'Access, C1'Access, VN.Message.SM_L, true);
+   PO_Wrapper_1_3 : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_1_3'Access, C1'Access, VN.Message.SM_L, true);
 --     first_PO_Router : aliased VN.Communication.Protocol_Routing.Protocol_Routing_Type;
 --
 --     PO_Wrapper_2_1 : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_1_2'Access, C2'Access, VN.Message.SM_x, false);
