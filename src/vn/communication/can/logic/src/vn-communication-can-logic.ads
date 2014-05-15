@@ -17,7 +17,7 @@ with VN.Message;
 
 package VN.Communication.CAN.Logic is
 
-   GIVE_DEBUG_OUTPUT : constant integer := 1;
+   GIVE_DEBUG_OUTPUT : constant integer := 4;
 
    procedure DebugOutput(str : String; level : Integer; newLine : boolean := true);
 
