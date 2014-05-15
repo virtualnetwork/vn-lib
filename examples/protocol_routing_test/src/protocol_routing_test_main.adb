@@ -42,7 +42,7 @@ procedure Protocol_Routing_Test_Main is
 
    msg, msg2 : VN.Message.VN_Message_Basic;
    msgAssign : VN.Message.Assign_Address.VN_Message_Assign_Address;
-   msgReq    : VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
+--     msgReq    : VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
    msgRoute  : VN.Message.Distribute_Route.VN_Message_Distribute_Route;
 
    sendStatus : VN.Send_Status;
@@ -64,16 +64,11 @@ begin
      (VN.Message.Factory.Create(VN.Message.Type_Assign_Address), msgAssign);
 
    VN.Message.Request_Address_Block.To_Request_Address_Block
-     (VN.Message.Factory.Create(VN.Message.Type_Request_Address_Block), msgReq);
+     (VN.Message.Factory.Create(VN.Message.Type_Request_Address_Block), msgReqAddrBlock);
 
-   msgReq.Header.Source := 5;
-   msgReq.Header.Destination := 1337;
-   msgReq.CUUID := (others => 43);
+   VN.Message.Distribute_Route.To_Distribute_Route
+     (VN.Message.Factory.Create(VN.Message.Type_Distribute_Route), msgRoute);
 
-   msgAssign.Header.Source := 5;
-   msgAssign.Header.Destination := 2;
-   msgAssign.CUUID := (others => 42);
-   msgAssign.Assigned_Address := 1;
 
    if Protocol_Routing_Test.Temp = 0 then
       myAddress := 100 + VN.VN_Logical_Address(Protocol_Routing_Test.C1(1));
@@ -83,7 +78,7 @@ begin
    loop
       now := Ada.Real_Time.Clock;
       delay until now + Ada.Real_Time.Milliseconds(500);
-      GNAT.IO.Put_Line("<Main function hearbeat>");
+--        GNAT.IO.Put_Line("<Main function hearbeat>");
 
       Protocol_Routing_Test.myInterface.Receive(msg, recStatus);
 
@@ -109,8 +104,8 @@ begin
             end if;
 
             if Protocol_Routing_Test.Temp = 0 then
-               msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
-               VN.Message.Assign_Address.To_Assign_Address(msg, msgAssign);
+--                 msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
+--                 VN.Message.Assign_Address.To_Assign_Address(msg, msgAssign);
 
                msgAssign.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
                msgAssign.Header.Source := myAddress;
@@ -143,8 +138,6 @@ begin
 
 
             if Protocol_Routing_Test.Temp = 0 then
-               msg2 := VN.Message.Factory.Create(VN.Message.Type_Distribute_Route);
-               VN.Message.Distribute_Route.To_Distribute_Route(msg2, msgRoute);
 
                msgRoute.Header.Source := myAddress;
 
@@ -154,8 +147,8 @@ begin
                   msgRoute.Component_Type    := myTable(i).compType;
                   msgRoute.Component_Address := myTable(i).address;
 
-                  VN.Message.Distribute_Route.To_Basic(msgRoute, msg2);
-                  Protocol_Routing_Test.myInterface.Send(msg2, sendStatus);
+                  VN.Message.Distribute_Route.To_Basic(msgRoute, msg);
+                  Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
 
                   VN.Text_IO.Put_Line("Sening Route regarding log addr " & msgRoute.Component_Address'Img &
                                         " to " & msgRoute.Header.Destination'Img);
@@ -166,6 +159,21 @@ begin
          elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
             VN.Text_IO.Put_Line("Assign address message received from logical address " & msg.Header.Source'Img);
 
+            VN.Message.Assign_Address.To_Assign_Address(msg, msgAssign);
+            myAddress := msgAssign.Assigned_Address;
+
+            --Respond with a Request_Address_Block message, just for testing:
+            msg := VN.Message.Factory.Create(VN.Message.Type_Request_Address_Block);
+            VN.Message.Request_Address_Block.To_Request_Address_Block(msg, msgReqAddrBlock);
+
+            msgReqAddrBlock.Header.Destination := msgAssign.Header.Source;
+            msgReqAddrBlock.Header.Source := msgAssign.Assigned_Address;
+            msgReqAddrBlock.CUUID := Protocol_Routing_Test.C1;
+
+            VN.Message.Request_Address_Block.To_Basic(msgReqAddrBlock, msg);
+            Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
+
+            VN.Text_IO.Put_Line("Responds (just for testing) with Request_Address_Block message");
          end if;
 
          Protocol_Routing_Test.myInterface.Receive(msg, recStatus);
