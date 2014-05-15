@@ -55,14 +55,14 @@ package Protocol_Routing_Test is
 
    PO_Wrapper_1_2 : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_1_2'Access, C1'Access, VN.Message.SM_L, true);
    PO_Wrapper_1_3 : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_1_3'Access, C1'Access, VN.Message.SM_L, true);
---     first_PO_Router : aliased VN.Communication.Protocol_Routing.Protocol_Routing_Type;
---
---     PO_Wrapper_2_1 : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_1_2'Access, C2'Access, VN.Message.SM_x, false);
---     second_PO_Router : aliased VN.Communication.Protocol_Routing.Protocol_Routing_Type;
---
---     PO_Wrapper_3_1 : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_1_3'Access, C3'Access, VN.Message.SM_x, false);
---     third_PO_Router : aliased VN.Communication.Protocol_Routing.Protocol_Routing_Type;
---
+   --     first_PO_Router : aliased VN.Communication.Protocol_Routing.Protocol_Routing_Type;
+   --
+   PO_Wrapper_2_1 : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_1_2'Access, C2'Access, VN.Message.SM_x, false);
+   --     second_PO_Router : aliased VN.Communication.Protocol_Routing.Protocol_Routing_Type;
+   --
+   PO_Wrapper_3_1 : aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(PO_1_3'Access, C3'Access, VN.Message.SM_x, false);
+   --     third_PO_Router : aliased VN.Communication.Protocol_Routing.Protocol_Routing_Type;
+   --
 --     secondTask : Protocol_Routing_Second_Task.Second_Task_Type(C2'Access, second_PO_Router'Access, System.Priority'Last, CANPeriod'Access);
 --     thirdTask  : Protocol_Routing_Second_Task.Second_Task_Type(C3'Access, third_PO_Router'Access, System.Priority'Last, CANPeriod'Access);
 
