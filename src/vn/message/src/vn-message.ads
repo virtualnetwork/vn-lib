@@ -65,12 +65,12 @@ package VN.Message is
    RESPONSE_TYPE_SIZE      : constant integer := 1;
    VN_LOGICAL_ADDRESS_SIZE : constant integer := 4;
 
-   OPCODE_LOCAL_HELLO 		: constant VN_Opcode := 16#20#;
-   OPCODE_LOCAL_ACK 		: constant VN_Opcode := 16#21#;  
-   OPCODE_DISTRIBUTE_ROUTE 	: constant VN_Opcode := 16#72#;  
-   OPCODE_ASSIGN_ADDR_BLOCK	: constant VN_Opcode := 16#4D#;
-   OPCODE_ASSIGN_ADDR		: constant VN_Opcode := 16#7B#;
-   OPCODE_REQUEST_ADDR_BLOCK	: constant VN_Opcode := 16#4C#;
+   OPCODE_LOCAL_HELLO 		: constant VN_Opcode := 16#20#; -- 32
+   OPCODE_LOCAL_ACK 		: constant VN_Opcode := 16#21#; -- 33
+   OPCODE_DISTRIBUTE_ROUTE 	: constant VN_Opcode := 16#72#; -- 114
+   OPCODE_ASSIGN_ADDR_BLOCK	: constant VN_Opcode := 16#4D#; -- 77
+   OPCODE_ASSIGN_ADDR		: constant VN_Opcode := 16#7B#; -- 123
+   OPCODE_REQUEST_ADDR_BLOCK	: constant VN_Opcode := 16#4C#; -- 76
 
    type VN_Header is
       record
