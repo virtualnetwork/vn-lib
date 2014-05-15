@@ -40,7 +40,7 @@ procedure Protocol_Routing_Test_Main is
    myTable : Address_Table;
    numAddresses : Integer := 0;
 
-   msg, msg2 : VN.Message.VN_Message_Basic;
+   msg : VN.Message.VN_Message_Basic;
    msgAssign : VN.Message.Assign_Address.VN_Message_Assign_Address;
 --     msgReq    : VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
    msgRoute  : VN.Message.Distribute_Route.VN_Message_Distribute_Route;
@@ -58,7 +58,7 @@ procedure Protocol_Routing_Test_Main is
 begin
 
    GNAT.IO.New_Line(2);
-   GNAT.IO.Put_Line("Hello world! Protocol_Routing_Test started!");
+   GNAT.IO.Put_Line("Hello world! Protocol_Routing_Test started! CUUID(1)= " & Protocol_Routing_Test.C1(1)'Img);
 
    VN.Message.Assign_Address.To_Assign_Address
      (VN.Message.Factory.Create(VN.Message.Type_Assign_Address), msgAssign);
@@ -78,7 +78,7 @@ begin
    loop
       now := Ada.Real_Time.Clock;
       delay until now + Ada.Real_Time.Milliseconds(500);
---        GNAT.IO.Put_Line("<Main function hearbeat>");
+      GNAT.IO.Put_Line("<Main function hearbeat>");
 
       Protocol_Routing_Test.myInterface.Receive(msg, recStatus);
 
@@ -119,8 +119,6 @@ begin
                                      " to CUUD(1)= " & msgAssign.CUUID(1)'Img);
 
                -- store the assigned address:
-
-               --              myTable(numAddresses + 1).exists   := true;
                numAddresses := numAddresses + 1;
                myTable(numAddresses).CUUID    := msgAssign.CUUID;
                myTable(numAddresses).compType := msgLocalHello.Component_Type;
@@ -141,19 +139,20 @@ begin
 
                msgRoute.Header.Source := myAddress;
 
-               for i in 1 .. numAddresses loop
-                  -- if myTable(i).exists then
-                  msgRoute.CUUID := myTable(i).CUUID;
-                  msgRoute.Component_Type    := myTable(i).compType;
-                  msgRoute.Component_Address := myTable(i).address;
+               if numAddresses > 0 then
+                  for i in 1 .. numAddresses loop
 
-                  VN.Message.Distribute_Route.To_Basic(msgRoute, msg);
-                  Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
+                     msgRoute.CUUID := myTable(i).CUUID;
+                     msgRoute.Component_Type    := myTable(i).compType;
+                     msgRoute.Component_Address := myTable(i).address;
 
-                  VN.Text_IO.Put_Line("Sening Route regarding log addr " & msgRoute.Component_Address'Img &
-                                        " to " & msgRoute.Header.Destination'Img);
-                  --   end if;
-               end loop;
+                     VN.Message.Distribute_Route.To_Basic(msgRoute, msg);
+                     Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
+
+                     VN.Text_IO.Put_Line("Sending Route regarding log addr " & msgRoute.Component_Address'Img &
+                                           " to " & msgRoute.Header.Destination'Img);
+                  end loop;
+               end if;
             end if;
 
          elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
