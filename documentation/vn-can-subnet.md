@@ -38,7 +38,7 @@ Section *Unit discovery process* in *VN generic subnet protocol* shall be follow
 
 ### Route discovery process
 #### For routes to overlying units
-See Section *For routes to overlying units* in *VN generic subnet protocol*.
+Section *For routes to overlying units* in *VN generic subnet protocol* shall be followed. Section *Low level* will give further specifications for how this is to be done.
 
 #### For routes to underlying units
 See Section *For routes to underlying units* in *VN generic subnet protocol*.
@@ -225,6 +225,22 @@ The **LocalHello** message is a mid level message that is used to inform the rec
 All SM-CANs shall respond to **DiscoveryRequest** messages with a **ComponentType** message.
 
 
+#### Route discovery process to overlying units
+Whenever a the CAN subnet sends a VN message it can conclude that it can route VN messages to the sender of that VN message, 
+*assuming it has not received a message from this address*.
+For this reason, the unit will send a **AddressAnswer** message containing the sender's logical address and the unit's own CAN address.  <br/>
+The **AddressAnswer** message will inform all other units that VN messages addressed to this logical address shall be sent to this CAN address, thus the VN message can be sent directly to the receiver. <br/>
+If this is not done it is very likely that the only source of routing information that units will get is **DistributeRoute** messages, which will mean that VN messages will be sent via the unit that sent a **DistributeRoute** message rather than directly to the receiver. <br/>
+*Example:* Unit A is aware of units B and C and sends a **DistributeRoute** message to B about C, and vice versa. 
+B wil now know that if it wants to send a message to C it can do so by sending it to A, but it will not know on which CAN address that C 
+resides on and can therefore not send the message directly. <br/>
+When C sends an **AddressAnswer** message B will know to which CAN address it shall send the message, and it can therefore send the 
+message directly.
+
+A unit may periodically resend **AddressAnswer** messages regarding all logical addresses that it has sent but not received messages from. 
+This will inform units that may not have been active when the first **AddressAnswer** messages were sent.
+
+
 ### Transmission of VN messages
 The following section describes how the transmission of a VN message shall be done. It applies to any unit on the CAN network, the SM-CANs (master or slaves) and nodes. This section assumes that the receiver's CAN address is known. <br/>
 Transmission of a VN message will be done as follows:
@@ -240,4 +256,6 @@ This will continue until all **Transmission** messages have been sent.
 5. Once a sender has sent a **StartTransmission** message to a receiver regarding a particular VN message it shall not send another  **StartTransmission** message regarding another VN message to that receiver before having transferred all of the previous VN message (all **Transmission** messages). <br/>
 Hence, the transmission a VN message cannot be interrupted by the transmission of another VN message that is sent from the same sender to the same receiver. <br/>
 However, any sender is allowed to simultaneously transmit VN messages to several receivers and receivers are allowed to receive VN messages from several senders simultaneously.
+
+
 
