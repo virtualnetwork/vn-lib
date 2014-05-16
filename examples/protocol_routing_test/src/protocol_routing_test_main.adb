@@ -78,7 +78,7 @@ begin
    loop
       now := Ada.Real_Time.Clock;
       delay until now + Ada.Real_Time.Milliseconds(500);
-      GNAT.IO.Put_Line("<Main function hearbeat>");
+--        GNAT.IO.Put_Line("<Main function hearbeat>");
 
       Protocol_Routing_Test.myInterface.Receive(msg, recStatus);
 
@@ -87,7 +87,7 @@ begin
 
          if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
             VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
-            VN.Text_IO.Put("LocalHello, CUUID(1)= " & msgLocalHello.CUUID(1)'img & " component type = ");
+            VN.Text_IO.Put("Application received LocalHello, CUUID(1)= " & msgLocalHello.CUUID(1)'img & " component type = ");
 
             if msgLocalHello.Component_Type = VN.Message.CAS then
                VN.Text_IO.Put_Line("CAS");
@@ -138,6 +138,7 @@ begin
             if Protocol_Routing_Test.Temp = 0 then
 
                msgRoute.Header.Source := myAddress;
+               msgRoute.Header.Destination := msg.Header.Source;
 
                if numAddresses > 0 then
                   for i in 1 .. numAddresses loop
