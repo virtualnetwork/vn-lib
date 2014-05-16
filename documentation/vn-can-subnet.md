@@ -1,5 +1,6 @@
 VN CAN Subnet Protocol
 ==========================
+This protocol defines the communication for Virtual Network over the Controller Area Network.
 
 ## High level
 
@@ -231,9 +232,9 @@ Transmission of a VN message will be done as follows:
 1. The unit will send an **StartTransmission** message containing the number of **Transmission** messages needed to send the VN message.
 If there is no **FlowControl** message in response the sending unit shall retry a few times before giving up. Perferably, the failure to send the message should be reported to the overlying protocol.
 2. The receiver will answer with a **FlowControl** message containing its preferred block size. If the receiver is too busy at the moment, it can deny the transmission by simply not replying.
-3. Once the sending node receives the **FlowControl** message it will send **Transmission** messages according to:
-	3.1.  If the FlowControl message did not indicate the use of flow control, or if the Block Size is smaller than the number of **Transmission** messages needed to send the VN message, all **Transmission** messages will be sent.
-	3.2.  Otherwise, the sender will send as many **Transmission** messages as specified in the **FlowControl** message.
+3. Once the sending node receives the **FlowControl** message it will send **Transmission** messages according to: <br/>
+	3.1.  If the FlowControl message did not indicate the use of flow control, or if the Block Size is smaller than the number of **Transmission** messages needed to send the VN message, all **Transmission** messages will be sent. <br/>
+	3.2.  Otherwise, the sender will send as many **Transmission** messages as specified in the **FlowControl** message.<br/>
 4. Once the sender receives another FlowControl message it will send another block size of Transmission messages, or the remaining **Transmission** messages if the number of remaining **Transmission** messages is smaller than the block size.
 This will continue until all **Transmission** messages have been sent.
 5. Once a sender has sent a **StartTransmission** message to a receiver regarding a particular VN message it shall not send another  **StartTransmission** message regarding another VN message to that receiver before having transferred all of the previous VN message (all **Transmission** messages). <br/>
