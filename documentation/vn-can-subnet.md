@@ -181,9 +181,9 @@ The CAN addresses are grouped according to the table below. Please note that *no
 *The SM-CAN master negotiation process takes place as soon as at least one SM-CAN starts up.*
 
  1.  Each SM-CAN shall send a RequestCANAddress message when it starts.
- 2.  The SM-CAN shall delay for XXXXX ms. During this time it shall listen to **RequestCANAddress** and any **Normal CAN message**. 
- 	2.1.  If the SM-CAN receives a **Normal CAN message**, or a **RequestCANAddress** message from an SM-CAN with a lower UCID, it shall become an SM-CAN slave.  <br/>
- 	2.2.  If the  SM-CAN receives a **RequestCANAddress** message from an SM-CAN with a higher UCID it shall respond with a **RequestCANAddress** message of its own. 
+ 2.  The SM-CAN shall delay for XXXXX ms. During this time it shall listen to **RequestCANAddress** and any **Normal CAN message**.  <br/>
+ 	2.1.    If the SM-CAN receives a **Normal CAN message**, or a **RequestCANAddress** message from an SM-CAN with a lower UCID, it shall become an SM-CAN slave.  <br/>
+ 	2.2.    If the  SM-CAN receives a **RequestCANAddress** message from an SM-CAN with a higher UCID it shall respond with a **RequestCANAddress** message of its own. 
  3.  If the delay has passed without the SM-CAN becoming a slave it shall become an SM-CAN master.
  4.  If the SM-CAN master receives a **RequestCANAddress** message from an SM-CAN it shall respond with a *Normal CAN message*, such as the **CANMasterAssigned** message. *This responsibility of the SM-CAN master remains indefinitely.*
  5.  Once assigned as a slave, an SM-CAN has no further responsibilities with regards to the SM-CAN master negotiation process.
@@ -233,8 +233,8 @@ Transmission of a VN message will be done as follows:
 If there is no **FlowControl** message in response the sending unit shall retry a few times before giving up. Perferably, the failure to send the message should be reported to the overlying protocol.
 2. The receiver will answer with a **FlowControl** message containing its preferred block size. If the receiver is too busy at the moment, it can deny the transmission by simply not replying.
 3. Once the sending node receives the **FlowControl** message it will send **Transmission** messages according to: <br/>
-	3.1.  If the FlowControl message did not indicate the use of flow control, or if the Block Size is smaller than the number of **Transmission** messages needed to send the VN message, all **Transmission** messages will be sent. <br/>
-	3.2.  Otherwise, the sender will send as many **Transmission** messages as specified in the **FlowControl** message.<br/>
+	3.1.    If the FlowControl message did not indicate the use of flow control, or if the Block Size is smaller than the number of **Transmission** messages needed to send the VN message, all **Transmission** messages will be sent. <br/>
+	3.2.    Otherwise, the sender will send as many **Transmission** messages as specified in the **FlowControl** message.<br/>
 4. Once the sender receives another FlowControl message it will send another block size of Transmission messages, or the remaining **Transmission** messages if the number of remaining **Transmission** messages is smaller than the block size.
 This will continue until all **Transmission** messages have been sent.
 5. Once a sender has sent a **StartTransmission** message to a receiver regarding a particular VN message it shall not send another  **StartTransmission** message regarding another VN message to that receiver before having transferred all of the previous VN message (all **Transmission** messages). <br/>
