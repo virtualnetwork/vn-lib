@@ -161,7 +161,7 @@ No payload data.
 One byte. An ordinary node sets the first byte equal to 5. SM-CANs set this byte equal to 3. 
 
 
-#### CAN Addresses
+### CAN Addresses
 
 The CAN addresses are grouped according to the table below. Please note that *node addresses* (1 to 127) can belong to either nodes or SM-CAN slaves.
 
@@ -189,7 +189,7 @@ The CAN addresses are grouped according to the table below. Please note that *no
  6.  Once a SM-CAN has been assigned an SM-CAN master, it shall be ready to receive VN messages. <br/>
 This means that it shall listen for StartTransmission and Transmission messages and be ready to answer with FlowControl messages.
 
-#### For nodes and SM-CAN slaves
+#### Discovery process for nodes and SM-CAN slaves
 *This process takes place after the SM-CAN master negotiation process. Please note that both nodes and SM-CAN slaves are referred to as “nodes” in this section.*
 
 1. All SM-CANs shall participate in the Discovery process on their Processing nodes according to VN. See VN-CAN high level protocol for further details.
@@ -223,7 +223,8 @@ The **LocalHello** message is a mid level message that is used to inform the rec
 ##### For all SM-CANs
 All SM-CANs shall respond to **DiscoveryRequest** messages with a **ComponentType** message.
 
-#### Transmission of VN messages
+
+### Transmission of VN messages
 The following section describes how the transmission of a VN message shall be done. It applies to any unit on the CAN network, the SM-CANs (master or slaves) and nodes. This section assumes that the receiver's CAN address is known. <br/>
 Transmission of a VN message will be done as follows:
  
