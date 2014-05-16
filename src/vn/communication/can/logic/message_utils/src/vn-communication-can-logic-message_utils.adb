@@ -5,6 +5,10 @@
 -- Contains functions for coding and decoding CAN messages, i.e. putting
 -- information into CAN messages and retrieving information from CAN messages.
 
+-- Please note: The drivers currently used malfunction when 1 to 7 bytes are sent. 
+-- Therefore this code has been adapted to send CAN messages that contain either 0 
+-- or 8 bytes. 
+
 with Interfaces;
 with Ada.Exceptions;
 
