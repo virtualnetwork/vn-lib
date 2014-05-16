@@ -25,15 +25,6 @@ package body VN.Communication.Protocol_Routing is
                              Message: in VN.Message.VN_Message_Basic;
                              Status: out VN.Send_Status) is
 
-      procedure Handle_Distribute_Route(Message: in VN.Message.VN_Message_Basic;
-                                        source : Protocol_Address_Type) is
-
-         msgDistribute : VN.Message.Distribute_Route.VN_Message_Distribute_Route;
-      begin
-         VN.Message.Distribute_Route.To_Distribute_Route(Message, msgDistribute);
-         Protocol_Router.Insert(this.myTable, msgDistribute.Component_Address, source);
-      end Handle_Distribute_Route;
-
       found   : Boolean;
       address : Protocol_Address_Type;
 
@@ -59,20 +50,22 @@ package body VN.Communication.Protocol_Routing is
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(Message, msgAssignAddrBlock);
          CUUID_Protocol_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, address, found);
       else
-         --Protocol_Address_Type(0) means that the message shall be returned to the application layer
-         Protocol_Router.Insert(this.myTable, Message.Header.Source, Protocol_Address_Type(0));
          Protocol_Router.Search(this.myTable, Message.Header.Destination, address, found);
 
-         --Get routing info from Distribute Route messages:
-         if Message.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
-            Handle_Distribute_Route(Message, address);
-         end if;
       end if;
 
       if found then
          if address = 0 then -- the case when the message is to be sent back to the application layer
             Status := ERROR_UNKNOWN; -- ToDo, what do we do if this happens!!???
          else
+
+            if Message.Header.Opcode /= VN.Message.OPCODE_LOCAL_HELLO and
+              Message.Header.Opcode /= VN.Message.OPCODE_LOCAL_ACK then
+               -- Add routing info,
+               --Protocol_Address_Type(0) means that the message shall be returned to the application layer
+               Protocol_Router.Insert(this.myTable, Message.Header.Source, Protocol_Address_Type(0));
+            end if;
+
             this.myInterfaces(Integer(address)).Send(Message, Status);
          end if;
       else
@@ -84,6 +77,15 @@ package body VN.Communication.Protocol_Routing is
    procedure Receive(this : in out Protocol_Routing_Type;
                                 Message : out VN.Message.VN_Message_Basic;
                                 Status: out VN.Receive_Status) is
+
+      procedure Handle_Distribute_Route(Message: in VN.Message.VN_Message_Basic;
+                                        source : Protocol_Address_Type) is
+
+         msgDistribute : VN.Message.Distribute_Route.VN_Message_Distribute_Route;
+      begin
+         VN.Message.Distribute_Route.To_Distribute_Route(Message, msgDistribute);
+         Protocol_Router.Insert(this.myTable, msgDistribute.Component_Address, source);
+      end Handle_Distribute_Route;
 
       procedure HandleCUUIDRouting(Message : VN.Message.VN_Message_Basic;
                                    source : Protocol_Address_Type) is
@@ -118,13 +120,20 @@ package body VN.Communication.Protocol_Routing is
                --A special case of retreiving routing info:
                if tempMsg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
                   HandleCUUIDRouting(tempMsg, this.nextProtocolInTurn);
-               else
+
+               elsif tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_ACK then
                   Protocol_Router.Insert(this.myTable, tempMsg.Header.Source,
                                          Protocol_Address_Type(this.nextProtocolInTurn));
                end if;
 
+               --Get routing info from Distribute Route messages:
+               if Message.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
+                  Handle_Distribute_Route(Message, this.nextProtocolInTurn);
+               end if;
+
                --Check if the message shall be re-routed onto a subnet, or returned to the application layer:
-               if tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_HELLO and --LocalHello, LocalAck, AssignAddr and AssignAddrBlock shall always be sent to the application layer
+               --LocalHello, LocalAck, AssignAddr and AssignAddrBlock shall always be sent to the application layer
+               if tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_HELLO and
                  tempMsg.Header.Opcode /= VN.Message.OPCODE_LOCAL_ACK and
                  tempMsg.Header.Opcode /= VN.Message.OPCODE_ASSIGN_ADDR and
                  tempMsg.Header.Opcode /= VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
