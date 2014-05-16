@@ -270,8 +270,8 @@ package body VN.Communication.CAN.Logic.Node is
       this.theFilter.Create_Transmission_Filter(this.broadcastFilterID, 255);
       
       --ToDo: For testing only!!!!
-      CAN_Routing.Insert(this.myTable, 1337, 42);
-      CUUID_CAN_Routing.Insert(this.myCUUIDTable, testCUUID, 42);
+--        CAN_Routing.Insert(this.myTable, 1337, 42);
+--        CUUID_CAN_Routing.Insert(this.myCUUIDTable, testCUUID, 42);
    end Init;
 
 end VN.Communication.CAN.Logic.Node;
