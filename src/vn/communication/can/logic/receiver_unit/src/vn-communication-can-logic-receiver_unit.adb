@@ -57,7 +57,8 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
                if msgIn.Sender = this.sender and msgIn.Receiver = this.myCANAddress then
 
                   VN.Communication.CAN.Logic.DebugOutput("DeFragment. receiver= " & this.myCANAddress'img & " sender= " & this.sender'img &
-                                                           " sequence no= "& this.sequenceNumber'Img & " numBytes= " & this.numBytes'Img, 4);
+                                                           " sequence no= "& this.sequenceNumber'Img & " numBytes= " & this.numBytes'Img, 6);
+
                   VN.Communication.CAN.Logic.Message_Utils.DeFragment(this.sequenceNumber, this.numBytes, msgIn, this.receivedData, currentLength);
 
 
