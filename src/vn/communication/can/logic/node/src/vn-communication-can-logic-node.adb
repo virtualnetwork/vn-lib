@@ -88,8 +88,8 @@ package body VN.Communication.CAN.Logic.Node is
                this.sender.Activate(address);
                this.receiver.Activate(address);
                this.logAddrHandler.Activate(address);
-               this.cuuidResponder.Activate(this.myCUUID, address, false);
-               this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
+               this.componentTypeResponder.Activate(this.myCUUID, address, false);
+               this.componentTypeHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
 
 
                --Create filter to filter out messages addressed to the assigned CAN address:
@@ -262,8 +262,8 @@ package body VN.Communication.CAN.Logic.Node is
       this.DutyArray(this.DutyArray'First) := this.addressReceiver'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 1) := this.sender'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 2) := this.receiver'Unchecked_Access;
-      this.DutyArray(this.DutyArray'First + 3) := this.cuuidResponder'Unchecked_Access;
-      this.DutyArray(this.DutyArray'First + 4) := this.cuuidHandler'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 3) := this.componentTypeResponder'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 4) := this.componentTypeHandler'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 5) := this.logAddrHandler'Unchecked_Access;
 
       -- receiving messages sent to CAN address 255 (broadcast)
