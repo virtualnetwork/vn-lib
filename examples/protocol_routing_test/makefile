@@ -27,7 +27,9 @@ PRGADR		?=	0x20000000
 PRGTTY		?=	/dev/ttyUSB0
 
 ######## TEST ##############
-ifeq "$(PORT)" "2"
+ifeq "$(PORT)" "3"
+	PRGTTY 	=	/dev/ttyUSB3
+else ifeq "$(PORT)" "2"
 	PRGTTY 	=	/dev/ttyUSB2
 else ifeq "$(PORT)" "1"
 	PRGTTY 	=	/dev/ttyUSB1
