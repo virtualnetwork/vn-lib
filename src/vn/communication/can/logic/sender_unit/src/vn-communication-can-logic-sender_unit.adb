@@ -25,7 +25,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
             VN.Communication.CAN.Logic.Message_Utils.StartTransmissionToMessage(msgOut, this.receiver, 
                                                                                 this.myCANAddress, this.numBytesToSend);
 
-            VN.Communication.CAN.Logic.DebugOutput("StartTransmission message sent from address " & this.myCANAddress'img
+            VN.Communication.CAN.Logic.DebugOutput("Sender_Unit: StartTransmission message sent from address " & this.myCANAddress'img
                                  & " to " & this.receiver'img & " numMessages= " & this.numBytesToSend'img, 3);
 
             this.currentState := Started;
@@ -61,7 +61,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
                VN.Communication.CAN.Logic.Message_Utils.StartTransmissionToMessage(msgOut, this.receiver, this.myCANAddress,
                                                                                    this.numBytesToSend);
 
-               VN.Communication.CAN.Logic.DebugOutput("StartTransmission message was resent from address " & this.myCANAddress'img
+               VN.Communication.CAN.Logic.DebugOutput("Sender_Unit: StartTransmission message was resent from address " & this.myCANAddress'img
                                     & " to " & this.receiver'img & " numBytes= " & this.numBytesToSend'img, 3);
 
                this.time := Ada.Real_Time.Clock;
@@ -105,7 +105,8 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
             if bMsgReceived and then msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.FLOW_CONTROL then
                if msgIn.Sender = this.receiver and then msgIn.Receiver = this.myCANAddress then
 
-                 VN.Communication.CAN.Logic.DebugOutput("Received Flow control message, blockCount reset", 4);
+                  VN.Communication.CAN.Logic.DebugOutput("Sender_Unit: Received Flow control message from CAN address " & 
+                                                           this.Receiver'Img & ", blockCount reset", 4);
 
                   this.currentState := Transmitting;
                   this.blockCount := 0;
@@ -124,7 +125,7 @@ package body VN.Communication.CAN.Logic.Sender_Unit is
       this.numBytesToSend := message.NumBytes;   
       this.Receiver := message.Receiver;     
 
-      VN.Communication.CAN.Logic.DebugOutput("Send VN Message: Sender CAN addr " & this.myCANAddress'Img & 
+      VN.Communication.CAN.Logic.DebugOutput("Sender_Unit: Send VN Message: Sender CAN addr " & this.myCANAddress'Img & 
                                                ", receiver= " & this.Receiver'Img & " NumBytes= " & message.NumBytes'Img & 
                                                " Opcode= " & message.Data.Header.Opcode'img, 3);
    end Send;
