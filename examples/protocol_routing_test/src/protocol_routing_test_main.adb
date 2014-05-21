@@ -104,8 +104,8 @@ begin
             end if;
 
             if Protocol_Routing_Test.Temp = 0 then
---                 msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
---                 VN.Message.Assign_Address.To_Assign_Address(msg, msgAssign);
+               msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
+               VN.Message.Assign_Address.To_Assign_Address(msg, msgAssign);
 
                msgAssign.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
                msgAssign.Header.Source := myAddress;
@@ -125,13 +125,34 @@ begin
                myTable(numAddresses).address  := msgAssign.Assigned_Address;
             end if;
 
+         elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
+
+
+            VN.Message.Assign_Address.To_Assign_Address(msg, msgAssign);
+            myAddress := msgAssign.Assigned_Address;
+
+            VN.Text_IO.Put_Line("Assign address message received from logical address " & msg.Header.Source'Img & " was assigned logical address " & myAddress'Img);
+
+            --Respond with a Request_Address_Block message, just for testing:
+            msg := VN.Message.Factory.Create(VN.Message.Type_Request_Address_Block);
+            VN.Message.Request_Address_Block.To_Request_Address_Block(msg, msgReqAddrBlock);
+
+            msgReqAddrBlock.Header.Destination := msgAssign.Header.Source;
+            msgReqAddrBlock.Header.Source := msgAssign.Assigned_Address;
+            msgReqAddrBlock.CUUID := Protocol_Routing_Test.C1;
+
+            VN.Message.Request_Address_Block.To_Basic(msgReqAddrBlock, msg);
+
+            VN.Text_IO.Put_Line("Responds (just for testing) with Request_Address_Block message");
+            Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
 
          elsif msg.Header.Opcode = VN.Message.OPCODE_REQUEST_ADDR_BLOCK then
 
             VN.Message.Request_Address_Block.To_Request_Address_Block(msg, msgReqAddrBlock);
 
-            VN.Text_IO.Put_Line("Request_Address_Block received, CUUID(1)= " & msgReqAddrBlock.CUUID(1)'img &
-                          " Sender= " & msgReqAddrBlock.Header.Source'Img & " Sent to " & msgReqAddrBlock.Header.Destination'Img);
+            VN.Text_IO.Put_Line("Request_Address_Block message received, CUUID(1)= " & msgReqAddrBlock.CUUID(1)'img &
+                          " Sender= " & msgReqAddrBlock.Header.Source'Img & " sent to " & msgReqAddrBlock.Header.Destination'Img);
+
             VN.Text_IO.New_Line;
 
 
@@ -143,37 +164,41 @@ begin
                if numAddresses > 0 then
                   for i in 1 .. numAddresses loop
 
-                     msgRoute.CUUID := myTable(i).CUUID;
-                     msgRoute.Component_Type    := myTable(i).compType;
-                     msgRoute.Component_Address := myTable(i).address;
+                     if myTable(i).address /= msg.Header.Source then
+                        msgRoute.CUUID := myTable(i).CUUID;
+                        msgRoute.Component_Type    := myTable(i).compType;
+                        msgRoute.Component_Address := myTable(i).address;
 
-                     VN.Message.Distribute_Route.To_Basic(msgRoute, msg);
-                     Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
+                        VN.Message.Distribute_Route.To_Basic(msgRoute, msg);
+                        Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
 
-                     VN.Text_IO.Put_Line("Sending Route regarding log addr " & msgRoute.Component_Address'Img &
-                                           " to " & msgRoute.Header.Destination'Img);
+                        VN.Text_IO.Put_Line("Sending Route regarding log addr " & msgRoute.Component_Address'Img &
+                                              " to " & msgRoute.Header.Destination'Img);
+                     end if;
                   end loop;
                end if;
             end if;
 
-         elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
-            VN.Text_IO.Put_Line("Assign address message received from logical address " & msg.Header.Source'Img);
+         elsif msg.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
+            VN.Message.Distribute_Route.To_Distribute_Route(msg, msgRoute);
 
-            VN.Message.Assign_Address.To_Assign_Address(msg, msgAssign);
-            myAddress := msgAssign.Assigned_Address;
+            VN.Text_IO.Put_Line("Distribute_Route message received, CUUID(1)= " & msgRoute.CUUID(1)'img &
+                                  " logical address = " & msgRoute.Component_Address'Img &
+                                  " Sender= " & msgRoute.Header.Source'Img & " sent to " & msgRoute.Header.Destination'Img);
 
             --Respond with a Request_Address_Block message, just for testing:
             msg := VN.Message.Factory.Create(VN.Message.Type_Request_Address_Block);
             VN.Message.Request_Address_Block.To_Request_Address_Block(msg, msgReqAddrBlock);
 
-            msgReqAddrBlock.Header.Destination := msgAssign.Header.Source;
-            msgReqAddrBlock.Header.Source := msgAssign.Assigned_Address;
+            msgReqAddrBlock.Header.Destination := msgRoute.Component_Address;
+            msgReqAddrBlock.Header.Source := myAddress;
             msgReqAddrBlock.CUUID := Protocol_Routing_Test.C1;
 
             VN.Message.Request_Address_Block.To_Basic(msgReqAddrBlock, msg);
-            Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
 
             VN.Text_IO.Put_Line("Responds (just for testing) with Request_Address_Block message");
+            Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
+
          end if;
 
          Protocol_Routing_Test.myInterface.Receive(msg, recStatus);
