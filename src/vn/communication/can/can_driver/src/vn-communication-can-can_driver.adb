@@ -84,6 +84,10 @@ package body VN.Communication.CAN.CAN_Driver is
          status := VN.MSG_RECEIVED_NO_MORE_AVAILABLE;
          Physical_Logical.PhysicalToLogical(physicalMessage, message);
 
+--           if message.isNormal then
+--              GNAT.IO.Put_Line("message.isNormal, receiver= " & message.Receiver'Img);
+--           end if;
+
 --           if message.isNormal and message.msgType = VN.Communication.CAN.CAN_Message_Type(1) then
 --              GNAT.IO.Put_Line("Received Assign_CAN_Address, address= " & physicalMessage.Data(4)'Img);
 --              GNAT.IO.Put_Line("ID= " & physicalMessage.ID'Img);
@@ -115,7 +119,6 @@ package body VN.Communication.CAN.CAN_Driver is
    end Receive;
 
    procedure Update_Filters(filterAccess : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
-      mask_C, template_C : Interfaces.C.unsigned;
       mask, template : VN.Communication.CAN.CAN_message_ID;
       isUsed, hasChanged : Boolean;
 
