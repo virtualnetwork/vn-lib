@@ -103,7 +103,12 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
          msgLocalHello.Header.Source 		:= VN.LOGICAL_ADDRES_UNKNOWN;
          msgLocalHello.Header.Destination 	:= VN.LOGICAL_ADDRES_UNKNOWN;
          msgLocalHello.CUUID := this.myCUUID;
-         msgLocalHello.Component_Type := VN.Message.SM_x;
+
+         if this.is_SM_Not_Node then
+            msgLocalHello.Component_Type := VN.Message.SM_x;
+         else
+            msgLocalHello.Component_Type := VN.Message.Other;
+         end if;
 
          VN.Message.Local_Hello.To_Basic(msgLocalHello, msg.Data);
 
