@@ -98,7 +98,7 @@ begin
             elsif msgLocalHello.Component_Type = VN.Message.SM_Gateway then
                VN.Text_IO.Put_Line("SM_Gateway");
             elsif msgLocalHello.Component_Type = VN.Message.SM_x then
-               VN.Text_IO.Put_Line("SM_Gateway");
+               VN.Text_IO.Put_Line("SM_x");
             elsif msgLocalHello.Component_Type = VN.Message.Other then
                VN.Text_IO.Put_Line("Other");
             end if;
