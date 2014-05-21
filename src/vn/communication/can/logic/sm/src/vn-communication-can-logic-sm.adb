@@ -90,8 +90,8 @@ package body VN.Communication.CAN.Logic.SM is
             this.sender.Activate(0);
             this.receiver.Activate(0);
             this.logAddrHandler.Activate(0);
-            this.cuuidResponder.Activate(this.myCUUID, 0, true);
-            this.cuuidHandler.Activate(this.myCUUID, 0, this.sender'Unchecked_Access);
+            this.componentTypeResponder.Activate(this.myCUUID, 0, true);
+            this.componentTypeHandler.Activate(this.myCUUID, 0, this.sender'Unchecked_Access);
 
             --Change CAN message filters, SM_CAN_MasterNegotioation longer wishes to receceive
             -- normal CAN messages, only RequestCANAddress messages:
@@ -119,8 +119,8 @@ package body VN.Communication.CAN.Logic.SM is
                this.sender.Activate(address);
                this.receiver.Activate(address);
                this.logAddrHandler.Activate(address);
-               this.cuuidResponder.Activate(this.myCUUID, address, true);
-               this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
+               this.componentTypeResponder.Activate(this.myCUUID, address, true);
+               this.componentTypeHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
 
                --Change CAN message filters, SM_CAN_MasterNegotioation does no longer wishe
                -- to receceive any CAN messages:
@@ -337,8 +337,8 @@ package body VN.Communication.CAN.Logic.SM is
       this.DutyArray(this.DutyArray'First + 2) := this.assigner'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 3) := this.sender'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 4) := this.receiver'Unchecked_Access;
-      this.DutyArray(this.DutyArray'First + 5) := this.cuuidResponder'Unchecked_Access;
-      this.DutyArray(this.DutyArray'First + 6) := this.cuuidHandler'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 5) := this.componentTypeResponder'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 6) := this.componentTypeHandler'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 7) := this.logAddrHandler'Unchecked_Access;
 
       -- Set CAN filters:
