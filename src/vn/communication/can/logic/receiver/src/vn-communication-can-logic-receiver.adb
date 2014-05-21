@@ -22,7 +22,7 @@ package body VN.Communication.CAN.Logic.Receiver is
       pending  	: VN.Communication.CAN.Logic.Receiver_Unit.Pending_Sender;
       rec 	: VN.Communication.CAN.CAN_Address_Receiver;
 
-      alreadyReceiving : boolean := false;
+      alreadyReceiving : boolean := false; --not needed
    begin
 
       case this.currentState is
@@ -39,7 +39,9 @@ package body VN.Communication.CAN.Logic.Receiver is
                   for i in this.units'Range loop
                      if this.units(i).isActive and then this.units(i).Sender = msgIn.Sender then
                         alreadyReceiving := true;
-                        exit;
+
+                        this.units(i).Update(msgIn, bMsgReceived, msgOut, bWillSend);
+                        return;
                      end if;
                   end loop;
 
