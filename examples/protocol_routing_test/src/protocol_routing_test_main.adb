@@ -113,10 +113,11 @@ begin
                msgAssign.Assigned_Address := 100 + VN.VN_Logical_Address(msgLocalHello.CUUID(1));
 
                VN.Message.Assign_Address.To_Basic(msgAssign, msg);
-               Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
 
                VN.Text_IO.Put_Line("SM_L assinged Logical address " & msgAssign.Assigned_Address'Img &
                                      " to CUUD(1)= " & msgAssign.CUUID(1)'Img);
+
+               Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
 
                -- store the assigned address:
                numAddresses := numAddresses + 1;
@@ -164,16 +165,17 @@ begin
                if numAddresses > 0 then
                   for i in 1 .. numAddresses loop
 
-                     if myTable(i).address /= msg.Header.Source then
+                     if myTable(i).address /= msgRoute.Header.Destination then
                         msgRoute.CUUID := myTable(i).CUUID;
                         msgRoute.Component_Type    := myTable(i).compType;
                         msgRoute.Component_Address := myTable(i).address;
 
                         VN.Message.Distribute_Route.To_Basic(msgRoute, msg);
-                        Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
 
-                        VN.Text_IO.Put_Line("Sending Route regarding log addr " & msgRoute.Component_Address'Img &
+                        VN.Text_IO.Put_Line("Sending Route regarding logical address " & msgRoute.Component_Address'Img &
                                               " to " & msgRoute.Header.Destination'Img);
+
+                        Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
                      end if;
                   end loop;
                end if;
