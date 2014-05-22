@@ -42,8 +42,8 @@ package body VN.Communication.Protocol_Routing is
          VN.Message.Assign_Address.To_Assign_Address(Message, msgAssignAddr);
          CUUID_Protocol_Routing.Search(this.myCUUIDTable, msgAssignAddr.CUUID, address, found);
 
-         VN.Text_IO.Put_Line("Protocol routing: OPCODE_ASSIGN_ADDR, CUUID(1)= " & msgAssignAddr.CUUID(1)'Img &
-                               " address found = " & found'Img);
+--           VN.Text_IO.Put_Line("Protocol routing: OPCODE_ASSIGN_ADDR, CUUID(1)= " & msgAssignAddr.CUUID(1)'Img &
+--                                 " address found = " & found'Img);
 
       elsif Message.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
 
@@ -51,6 +51,9 @@ package body VN.Communication.Protocol_Routing is
          CUUID_Protocol_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, address, found);
       else
          Protocol_Router.Search(this.myTable, Message.Header.Destination, address, found);
+
+--           VN.Text_IO.Put_Line("Protocol routing: Normal message. Destination " & Message.Header.Destination'Img &
+--                                 " address found = " & found'Img);
 
       end if;
 
@@ -85,6 +88,9 @@ package body VN.Communication.Protocol_Routing is
       begin
          VN.Message.Distribute_Route.To_Distribute_Route(Message, msgDistribute);
          Protocol_Router.Insert(this.myTable, msgDistribute.Component_Address, source);
+
+--           VN.Text_IO.Put_Line("Protocol routing: Received route to Destination " & msgDistribute.Component_Address'Img &
+--                                 " source = " & source'Img);
       end Handle_Distribute_Route;
 
       procedure HandleCUUIDRouting(Message : VN.Message.VN_Message_Basic;
@@ -127,8 +133,10 @@ package body VN.Communication.Protocol_Routing is
                end if;
 
                --Get routing info from Distribute Route messages:
-               if Message.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
-                  Handle_Distribute_Route(Message, this.nextProtocolInTurn);
+               if tempMsg.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
+                  Handle_Distribute_Route(tempMsg, this.nextProtocolInTurn);
+--                 else
+--                    VN.Text_IO.Put_Line("Protocol routing: Message not OPCODE_DISTRIBUTE_ROUTE");
                end if;
 
                --Check if the message shall be re-routed onto a subnet, or returned to the application layer:
@@ -143,6 +151,8 @@ package body VN.Communication.Protocol_Routing is
                   if found and address /= 0 then --  address = 0 means send to Application layer
                      this.myInterfaces(address).Send(tempMsg, sendStatus); --Pass the message on to another subnet
                      tempStatus := VN.NO_MSG_RECEIVED;
+
+--                       VN.Text_IO.Put_Line("Protocol routing: Message rerouted to Destination " & tempMsg.Header.Destination'Img);
 
                      stop := false;
                   else
