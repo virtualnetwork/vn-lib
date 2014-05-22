@@ -187,8 +187,8 @@ package body VN.Communication.CAN.Logic.SM is
          VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
          CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddr.CUUID, receiver, found);
          
-         VN.Text_IO.Put_Line("CAN routing: OPCODE_ASSIGN_ADDR, CUUID(1)= " & msgAssignAddr.CUUID(1)'Img & 
-                             ", address found = " & found'Img);
+--           VN.Text_IO.Put_Line("CAN routing: OPCODE_ASSIGN_ADDR, CUUID(1)= " & msgAssignAddr.CUUID(1)'Img & 
+--                               ", address found = " & found'Img);
 
       elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
 
@@ -197,6 +197,9 @@ package body VN.Communication.CAN.Logic.SM is
       else
 
          CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found);
+
+--           VN.Text_IO.Put_Line("CAN routing: Normal message. Destination " & msg.Header.Destination'Img &
+--                                 " address found = " & found'Img);
       end if;
 
       if found then
