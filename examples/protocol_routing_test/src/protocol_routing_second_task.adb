@@ -74,9 +74,8 @@ package body Protocol_Routing_Second_Task is
 
                   VN.Message.Request_Address_Block.To_Basic(msgReqAddrBlock, msg);
 
-                  myAccess.Send(msg, sendStatus);
-
                   VN.Text_IO.Put_Line("Task " & myCUUID(1)'Img & "  responds (just for testing) with Request_Address_Block message");
+                  myAccess.Send(msg, sendStatus);
                end if;
 
                VN.Text_IO.New_Line;
