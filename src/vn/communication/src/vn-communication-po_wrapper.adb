@@ -1,4 +1,4 @@
--- with Ada.Text_IO;
+with Ada.Text_IO;
 with VN.Message;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;
@@ -21,12 +21,17 @@ package body VN.Communication.PO_Wrapper is
    procedure Receive( This: in out VN_PO_Wrapper;
                      Message: out VN.Message.VN_Message_Basic;
                      Status: out VN.Receive_Status) is
+      use VN.Message;
    begin
       if This.Is_From_SM_L then
          This.PO_Access.Receive_From_Other(Message, Status);
+
+         if Message.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
+            -- Reply with LOCAL_ACK
+            Ada.Text_IO.Put_Line("once");
+         end if;
       else
          This.PO_Access.Receive_From_SM_L(Message, Status);
-
       end if;
    end Receive;
 
