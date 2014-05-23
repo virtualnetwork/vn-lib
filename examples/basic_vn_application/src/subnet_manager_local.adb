@@ -88,6 +88,8 @@ package body Subnet_Manager_Local is
          ----------------------------
          -- Send loop
          ----------------------------
+
+         -- Assign Address
         if not Unsigned_8_Buffer.Empty(Assign_Address_Buffer) then
            Unsigned_8_Buffer.Remove(Temp_Uint8, Assign_Address_Buffer);
 

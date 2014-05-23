@@ -23,13 +23,13 @@ package Global_Settings is
 
    CUUID_CAS   : aliased VN.VN_CUUID := (others => 11);
    CUUID_SM    : aliased VN.VN_CUUID := (others => 22);
---   CUUID_LS    : aliased VN.VN_CUUID := (others => 33);
+   CUUID_LS    : aliased VN.VN_CUUID := (others => 33);
    CUUID_App   : aliased VN.VN_CUUID := (others => 44);
 
    -- Communication between Application, CAS, LS and SM-L
    PO_To_Application : aliased VN.Communication.PO.VN_PO;
    PO_To_CAS         : aliased VN.Communication.PO.VN_PO;
---   PO_To_LS          : aliased VN.Communication.PO.VN_PO;
+   PO_To_LS          : aliased VN.Communication.PO.VN_PO;
 
    -- Communication object for Application
    Com_Application   : VN.Communication.PO_Wrapper.VN_PO_Wrapper(
@@ -44,11 +44,11 @@ package Global_Settings is
                                                             VN.Message.CAS,
                                                             False);
 
---   Com_LS            : VN.Communication.PO_Wrapper.VN_PO_Wrapper(
---                                                            PO_To_LS'Access,
---                                                            CUUID_LS'Access,
---                                                            VN.Message.LS,
---                                                            False);
+   Com_LS            : VN.Communication.PO_Wrapper.VN_PO_Wrapper(
+                                                            PO_To_LS'Access,
+                                                            CUUID_LS'Access,
+                                                            VN.Message.LS,
+                                                            False);
    -- Communication object for SM-L
    -- 1. Create a VN.Communication.Protocol_Routing.Protocol_Routing_Type
    --    for routing between protocols.
@@ -71,12 +71,12 @@ package Global_Settings is
                                                             VN.Message.SM_L,
                                                             True);
 
---   PO_Wrapper_To_LS: aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(
---                                                            PO_To_LS'Access,
---                                                            CUUID_SM'Access,
---                                                            VN.Message.SM_L,
---                                                            True);
---
+   PO_Wrapper_To_LS: aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(
+                                                            PO_To_LS'Access,
+                                                            CUUID_SM'Access,
+                                                            VN.Message.SM_L,
+                                                            True);
+
    -- 4. Add PO_Router to Protocol_Router (during run time, main.adb).
    -- 5. Add all PO_Wrappers to the PO_Router (during run time, main.adb).
 
