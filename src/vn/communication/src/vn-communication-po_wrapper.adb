@@ -11,10 +11,8 @@ package body VN.Communication.PO_Wrapper is
                   Status: out VN.Send_Status) is
    begin
       if This.Is_From_SM_L then
-         -- Ada.Text_IO.Put_Line("PO_Wrapper sends message to Other");
          This.PO_Access.Send_To_Other(Message, Status);
       else
-         -- Ada.Text_IO.Put_Line("PO_Wrapper sends message to SM-L");
          This.PO_Access.Send_To_SM_L(Message, Status);
       end if;
    end Send;
@@ -24,13 +22,10 @@ package body VN.Communication.PO_Wrapper is
                      Message: out VN.Message.VN_Message_Basic;
                      Status: out VN.Receive_Status) is
    begin
-      -- Ada.Text_IO.Put_Line("PO_Wrapper receive subprogram runs");
       if This.Is_From_SM_L then
          This.PO_Access.Receive_From_Other(Message, Status);
-         -- Ada.Text_IO.Put_Line("PO_Wrapper reads message from Other");
       else
          This.PO_Access.Receive_From_SM_L(Message, Status);
-         -- Ada.Text_IO.Put_Line("PO_Wrapper reads message from SM-L");
       end if;
    end Receive;
 
@@ -44,6 +39,8 @@ package body VN.Communication.PO_Wrapper is
       Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
       VN.Message.Local_Hello.To_Local_Hello(Basic_Msg, Local_Hello_Msg);
       Local_Hello_Msg.CUUID := This.CUUID;
+      Local_Hello_Msg.Header.Source := 2;
+      Local_Hello_Msg.Header.Destination := 2;
       Local_Hello_Msg.Component_Type := This.This_Component_Type;
       VN.Message.Local_Hello.To_Basic(Local_Hello_Msg, Basic_Msg);
 

@@ -19,6 +19,7 @@ package body Application is
       Basic_Msg: VN.Message.VN_Message_Basic;
       Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
 
+      Recv_Status: VN.Receive_Status;
       Send_Status: VN.Send_Status;
 
       Next_Period : Ada.Real_Time.Time;
@@ -26,45 +27,60 @@ package body Application is
                            Ada.Real_Time.Microseconds(Cycle_Time);
    begin
       App_Info.Component_Type := VN.Message.Other;
-      App_Info.Logical_Address := 5;
+      App_Info.Logical_Address := 2;
       -- App_Info.CUUID := ???;
-
-      --Ada.Text_IO.Put_Line("Task type VN_Application - Start, ID: "
-      --                        & Integer'Image(Task_ID));
 
       Global_Settings.Start_Time.Get(Next_Period);
 
-
+      ----------------------------
       loop
          delay until Next_Period;
+
          ----------------------------
+         -- Receive loop
+         ----------------------------
+         Global_Settings.Com_Application.Receive(Basic_Msg, Recv_Status);
 
-         if App_Info.Has_Logical_Address then
-            -- Ada.Text_IO.Put_Line("APP - Logical address not found "
-            --                           & Integer'Image(Task_ID));
+         if Recv_Status = VN.NO_MSG_RECEIVED then
+            Ada.Text_IO.Put_Line("APPL RECV: Empty.");
+         elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
+            Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
-            -- Prepare message to be sent
-            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
-            Basic_Msg.Header.Destination := 10;
-            To_Local_Hello(Basic_Msg, Local_Hello_Msg);
-            App_Info.Get_Application_Information(Local_Hello_Msg);
-            To_Basic(Local_Hello_Msg, Basic_Msg);
-
-            -- Send message
-            Ada.Text_IO.Put("APPL SEND: ");
+            Ada.Text_IO.Put("APPL RECV: ");
             Global_Settings.Logger.Log(Basic_Msg);
-            Global_Settings.Com_Application.Send(Basic_Msg, Send_Status);
-         else
-            Ada.Text_IO.Put_Line("APPL ERRO: No Logical Address Set");
+
+            -- TODO: Check OpCode and convert to correct type
+            To_Local_Hello(Basic_Msg, Local_Hello_Msg);
+
          end if;
 
          ----------------------------
+         -- Send loop
+         ----------------------------
+         if App_Info.Has_Logical_Address then
+            null;
+         elsif not App_Info.Has_Logical_Address then
+            null;
+            -- Prepare message to be sent
+            --Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
+            --Basic_Msg.Header.Destination := 0;
+            --To_Local_Hello(Basic_Msg, Local_Hello_Msg);
+            --App_Info.Get_Application_Information(Local_Hello_Msg);
+            --To_Basic(Local_Hello_Msg, Basic_Msg);
+
+            -- Send message
+            --Ada.Text_IO.Put("APPL SEND: ");
+            --Global_Settings.Logger.Log(Basic_Msg);
+            --Global_Settings.Com_Application.Send(Basic_Msg, Send_Status);
+         end if;
+
+
          Next_Period := Next_Period + Period;
          i := i + 1;
          exit when i = 6;
       end loop;
-      --Ada.Text_IO.Put_Line("Task type VN_Application - End, ID:"
-      --                       & Integer'Image(Task_ID));
+      ----------------------------
+
    end VN_Application;
 
    -- Start one instance of the SM-L

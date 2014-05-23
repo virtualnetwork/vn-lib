@@ -42,17 +42,18 @@ package body Central_Addressing_Service is
          if App_Info.Has_Logical_Address then
             null;
          else
+            null;
             -- Ada.Text_IO.Put_Line("CAS - Logical address not found "
             --                           & Integer'Image(Task_ID));
 
             -- Prepare message to be sent
-            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
-            To_Local_Hello(Basic_Msg, Local_Hello_Msg);
-            App_Info.Get_Application_Information(Local_Hello_Msg);
-            To_Basic(Local_Hello_Msg, Basic_Msg);
+            --Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
+            --To_Local_Hello(Basic_Msg, Local_Hello_Msg);
+            --App_Info.Get_Application_Information(Local_Hello_Msg);
+            --To_Basic(Local_Hello_Msg, Basic_Msg);
 
-            -- Send message
-            Global_Settings.Com_Application.Send(Basic_Msg, Send_Status);
+            ---- Send message
+            --Global_Settings.Com_Application.Send(Basic_Msg, Send_Status);
          end if;
 
          ----------------------------
