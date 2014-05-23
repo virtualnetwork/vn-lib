@@ -87,8 +87,8 @@ The types of messages present are listed below. Please note that in the case of 
 | 6 | **StartTransmission** | Tells the receiver that the sender intends to transfer a VN message. Contains the number of **Transmission** messages needed to send the VN message. |
 | 7 | **FlowControl** | Is sent as response of StartTransmission. Contains BlockSize. Also sent to control the flow of **Transmission** messages. |
 | 8 | **Transmission** | Contains the VN message. All **Transmission** messages for a given VN message shall be set to the same priority as the **StartTransmission** message of the VN message. |
-| 9 | **DiscoveryRequest** | Is sent by any unit. Any SM-CAN that receives this message shall respond with a ComponentType message. Is sent to CAN address 254 by any unit when it receives a CAN address as a part of the discovery process. |
-| 10 | **ComponentType** | Informs the receiver about the sender's type. |
+| 9 | **DiscoveryRequest** | Is sent by any unit. Any SM-CAN that receives this message shall respond with a ComponentType message. Is sent to CAN address 254 by any unit when it receives a CAN address as a part of the discovery process, or to a single unit's CAN address. |
+| 10 | **ComponentType** | Informs the receiver about the sender's type in response to DiscoveryRequest. Sent to CAN address 255 if the DiscoveryRequest was sent to address 254 or to the CAN address of the sender of the DiscoveryRequest if it was sent to one's own CAN address. |
 
 
 

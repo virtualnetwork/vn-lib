@@ -39,7 +39,10 @@ package body VN.Communication.CAN.Logic.Message_Utils is
 
    procedure AddressAnswerToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver; sender : VN.Communication.CAN.CAN_Address_Sender;
                                     CANAddress : VN.Communication.CAN.CAN_Address_Sender; logicalAddress : VN.VN_Logical_Address; prio : VN.Communication.CAN.CAN_Message_Prio) is
+      temp : FourBytes;
+      for temp'Address use logicalAddress'Address;
    begin
+
       msg.isNormal := true;
       msg.msgPrio  := prio;
       msg.msgType  := VN.Communication.CAN.Logic.ADDRESS_ANSWER;
@@ -47,7 +50,10 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.Sender   := sender;
       msg.Length   := 5;
 
-      U16ToData(Interfaces.Unsigned_16(logicalAddress), msg.Data);
+      for i in temp'Range loop
+         msg.Data(i) := temp(i);
+      end loop;
+
       msg.Data(msg.Data'First + 4) := Interfaces.Unsigned_8(CANAddress);
    end AddressAnswerToMessage;
 
@@ -55,11 +61,15 @@ package body VN.Communication.CAN.Logic.Message_Utils is
    procedure AddressAnswerFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; CANAddress : out VN.Communication.CAN.CAN_Address_Sender;
                                       logicalAddress : out VN.VN_Logical_Address) is
       INCORRECT_MESSAGE_AddressAnswer : exception;
-      temp : Interfaces.Unsigned_16;
+      temp : FourBytes;
+      for temp'Address use logicalAddress'Address;
+
    begin
       if msg.isNormal and msg.msgType = VN.Communication.CAN.Logic.ADDRESS_ANSWER and msg.Length = 5 then
-         DataToU16(msg.Data, temp);
-         logicalAddress := VN.VN_Logical_Address(temp);
+
+         for i in temp'Range loop
+            temp(i) := msg.Data(i);
+         end loop;
 
          CANAddress := VN.Communication.CAN.CAN_Address_Sender(msg.Data(msg.Data'First + 4));
       else
@@ -72,7 +82,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.isNormal := true;
       msg.msgPrio  := prio;
       msg.msgType  := VN.Communication.CAN.Logic.COMPONENT_TYPE;
-      msg.Receiver := 254;
+      msg.Receiver := 255;
       msg.Sender   := sender;
       msg.Length   := 1;
 
@@ -103,7 +113,7 @@ package body VN.Communication.CAN.Logic.Message_Utils is
       msg.isNormal := true;
       msg.msgPrio  := prio;
       msg.msgType  := VN.Communication.CAN.Logic.DISCOVERY_REQUEST;
-      msg.Receiver := 255;
+      msg.Receiver := 254;
       msg.Sender   := sender;
       msg.Length   := 0;
    end DiscoveryRequestToMessage;

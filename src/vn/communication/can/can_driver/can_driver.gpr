@@ -1,3 +1,4 @@
+with "../physical_logical/physical_logical.gpr";
 with "../can.gpr";
 with "../can_filtering/can_filtering.gpr";
 with "../../../lib/buffers/buffers.gpr";

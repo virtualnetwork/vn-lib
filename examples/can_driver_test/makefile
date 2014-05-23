@@ -30,6 +30,7 @@ CSRC		+=	../../src/firmware/c_drivers/can_driver/main.c
 #CSRC		+=	$(DRVPATH)/drivers/mss_usb/mss_usb_device.c
 #CSRC		+=	$(DRVPATH)/drivers/mss_ethernet_mac/mss_ethernet_mac.c
 CSRC		+=	$(SPTPATH)/bap-drivers/uart/uart.c
+
 # Driver paths
 INCPATH		+=	$(SPTPATH)/bap-drivers/
 

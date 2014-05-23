@@ -34,7 +34,7 @@ package body VN.Communication.PO_Wrapper is
       end if;
    end Receive;
 
-   -- If not a Subnet Manager this applikation should send a LocalHello
+   -- If not a Subnet Manager this application should send a LocalHello
    -- message.
    procedure Init(This: in out VN_PO_Wrapper) is
       Basic_Msg         : VN.Message.VN_Message_Basic;

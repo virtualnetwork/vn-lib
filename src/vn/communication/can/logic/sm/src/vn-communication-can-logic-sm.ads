@@ -44,6 +44,7 @@ with VN.Communication.CAN.Logic.Sender;
 with VN.Communication.CAN.Logic.Receiver;
 with VN.Communication.CAN.Logic.ComponentType_Responder;
 with VN.Communication.CAN.Logic.ComponentType_Handler;
+with VN.Communication.CAN.Logic.Logical_Address_Handler;
 
 with VN.Communication.Routing_Table;
 with VN.Communication.CUUID_Routing;
@@ -78,38 +79,40 @@ package VN.Communication.CAN.Logic.SM is
 
    type SM_Duty(theUCID   : access VN.Communication.CAN.UCID;
                 theCUUID  : access VN.VN_CUUID;
-                theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is limited private;
+                theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+     new Node_SM with private;
 
    type SM_Duty_ptr is access all SM_Duty;
 
-   procedure Update(this : in out SM_Duty;
-                    msgsBuffer : in out CAN_Message_Buffers.Buffer;
-                    ret : out CAN_Message_Buffers.Buffer);
+   overriding procedure Update(this : in out SM_Duty;
+                               msgsBuffer : in out CAN_Message_Buffers.Buffer;
+                               ret : out CAN_Message_Buffers.Buffer);
 
-   procedure Send(this : in out SM_Duty;
-                  msg : VN.Message.VN_Message_Basic;
-                  result : out VN.Send_Status);
+   overriding procedure Send(this : in out SM_Duty;
+                             msg : VN.Message.VN_Message_Basic;
+                             result : out VN.Send_Status);
 
-   procedure Receive(this : in out SM_Duty;
-                     msg : out VN.Message.VN_Message_Basic;
-                     status : out VN.Receive_Status);
+   overriding procedure Receive(this : in out SM_Duty;
+                                msg : out VN.Message.VN_Message_Basic;
+                                status : out VN.Receive_Status);
 
    --This function is only used for testing:
-   procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender;
-                           isAssigned : out boolean);
+   overriding procedure GetCANAddress(this : in out SM_Duty; address : out CAN_Address_Sender;
+                                      isAssigned : out boolean);
 private
 
    procedure Init(this : in out SM_Duty);
 
    --ToDo: These constants should be put in a config file of some sort
    CAN_ROUTING_TABLE_SIZE : constant VN.VN_Logical_Address := 500;
-   NUM_DUTIES : constant integer := 7;
+   NUM_DUTIES : constant integer := 8;
 
    type ArrayOfDuties is array(1..NUM_DUTIES) of VN.Communication.CAN.Logic.Duty_Ptr;
 
    type SM_Duty(theUCID   : access VN.Communication.CAN.UCID;
                 theCUUID  : access VN.VN_CUUID;
-                theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is limited
+                theFilter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Access) is
+     new Node_SM with
       record
 
          isInitialized : Boolean := false;
@@ -119,6 +122,8 @@ private
          myUCID  : VN.Communication.CAN.UCID  := theUCID.all;
          myCUUID : VN.VN_CUUID := theCUUID.all;
          myTable : CAN_Routing.Table_Type(CAN_ROUTING_TABLE_SIZE);
+
+         myCUUIDTable : CUUID_CAN_Routing.Table_Type;
 
          negotioationFilterID : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
          transmissionFilterID : VN.Communication.CAN.CAN_Filtering.Filter_ID_Type;
@@ -138,6 +143,8 @@ private
          cuuidResponder : aliased VN.Communication.CAN.Logic.ComponentType_Responder.ComponentType_Responder;
 
          cuuidHandler : aliased VN.Communication.CAN.Logic.ComponentType_Handler.ComponentType_Handler;
+
+         logAddrHandler : aliased VN.Communication.CAN.Logic.Logical_Address_Handler.Logical_Address_Handler;
 
          DutyArray : ArrayOfDuties;
 

@@ -1,4 +1,6 @@
 with "../../src/vn/communication/can/logic/sm/sm.gpr";
+with "../../src/vn/communication/can/logic/node/node.gpr";
+
 project CAN_Logic_Test is
 
    for Source_Dirs use ("src");

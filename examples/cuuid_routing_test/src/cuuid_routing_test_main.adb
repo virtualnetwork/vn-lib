@@ -21,6 +21,8 @@ procedure CUUID_Routing_Test_Main is
 
   package CAN_CUUID_Routing is new VN.Communication.CUUID_Routing(VN.Communication.CAN.CAN_Address_Sender);
 
+   routingTable : CAN_CUUID_Routing.Table_Type;
+
    c : array(1..127) of VN.VN_CUUID;
    a : array(c'Range) of VN.Communication.CAN.CAN_Address_Sender;
    b : array(c'Range) of VN.Communication.CAN.CAN_Address_Sender;
@@ -50,22 +52,22 @@ begin
 
       a(i) := VN.Communication.CAN.CAN_Address_Sender(i);
       b(i) := VN.Communication.CAN.CAN_Address_Sender(0);
-      CAN_CUUID_Routing.Insert(c(i), a(i));
+      CAN_CUUID_Routing.Insert(routingTable, c(i), a(i));
 
-      if CAN_CUUID_Routing.Number_Of_Entries /= i then
+      if CAN_CUUID_Routing.Number_Of_Entries(routingTable) /= i then
           GNAT.IO.Put_Line("Number_Of_Entries was incorrect");
       end if;
 
    end loop;
 
    for i in c'Range loop
-      CAN_CUUID_Routing.Search(c(i), b(i), found);
+      CAN_CUUID_Routing.Search(routingTable, c(i), b(i), found);
 
       if a(i) /= b(i) and found then
          GNAT.IO.Put_Line("Index " & i'Img & " is incorrect");
       end if;
 
-      CAN_CUUID_Routing.Search(d(i), b(i), found);
+      CAN_CUUID_Routing.Search(routingTable, d(i), b(i), found);
       if found then
          GNAT.IO.Put_Line("Index " & i'Img & " was incorrectly found");
       end if;

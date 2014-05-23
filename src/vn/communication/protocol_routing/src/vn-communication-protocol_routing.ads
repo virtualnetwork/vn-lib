@@ -54,6 +54,8 @@ private
       record
          myInterfaces       : Interface_Array;
          myTable 	    : Protocol_Router.Table_Type(PROTOCOL_ROUTING_TABLE_SIZE);
+         myCUUIDTable 	    : CUUID_Protocol_Routing.Table_Type;
+
          nextProtocolInTurn : Protocol_Address_Type := Interface_Array'First;
          numberOfInterfaces : Natural := 0;
 

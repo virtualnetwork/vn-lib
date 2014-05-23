@@ -20,6 +20,8 @@ with VN.Message.Distribute_Route;
 with VN.Message.Assign_Address;
 with VN.Message.Assign_Address_Block;
 
+with VN.Communication.CAN.Logic.Message_Utils;
+
 package body VN.Communication.CAN.Logic.SM is
 
    procedure Update(this : in out SM_Duty; msgsBuffer : in out CAN_Message_Buffers.Buffer; ret : out CAN_Message_Buffers.Buffer) is
@@ -28,6 +30,9 @@ package body VN.Communication.CAN.Logic.SM is
 
       bWillSend : boolean;
       msgIn, msgOut : CAN_Message_Logical;
+
+      logAddress : VN.VN_Logical_Address;
+      CANAddress : VN.Communication.CAN.CAN_Address_Sender;
 
    begin
       if not this.isInitialized then
@@ -48,18 +53,30 @@ package body VN.Communication.CAN.Logic.SM is
 
             CAN_Message_Buffers.Remove(msgIn, msgsBuffer);
 
-            for i in this.DutyArray'Range loop
+            if msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.ADDRESS_ANSWER then
+               -- Receive routing information from AddressAnswer message
 
-               this.DutyArray(i).Update(msgIn, true, msgOut, bWillSend);
+               VN.Communication.CAN.Logic.Message_Utils.AddressAnswerFromMessage(msgIn, CANAddress, logAddress);
+               
+               CAN_Routing.Insert(this.myTable, logAddress, CANAddress);
 
-               if bWillSend then
-                  if msgOut.isNormal and then msgOut.msgType = VN.Communication.CAN.Logic.TRANSMISSION then
-                     VN.Communication.CAN.Logic.DebugOutput("TRANSMISSION msg sent from " &
-                                                              msgOut.Sender'Img & " to " & msgOut.Receiver'Img, 4);
+               VN.Communication.CAN.Logic.DebugOutput(this.myUCID'Img & ": AddresAnswer: Logical address " & logAddress'Img & 
+                                                        " exists on CAN address " & CANAddress'Img, 3);
+               
+            else
+               for i in this.DutyArray'Range loop
+
+                  this.DutyArray(i).Update(msgIn, true, msgOut, bWillSend);
+
+                  if bWillSend then
+--                       if msgOut.isNormal and then msgOut.msgType = VN.Communication.CAN.Logic.TRANSMISSION then
+--                          VN.Communication.CAN.Logic.DebugOutput("TRANSMISSION msg sent from " &
+--                                                                   msgOut.Sender'Img & " to " & msgOut.Receiver'Img, 4);
+--                       end if;
+                     CAN_Message_Buffers.Insert(msgOut, ret);
                   end if;
-                  CAN_Message_Buffers.Insert(msgOut, ret);
-               end if;
-            end loop;
+               end loop;
+            end if;
          end loop;
       end if;
 
@@ -72,6 +89,7 @@ package body VN.Communication.CAN.Logic.SM is
             this.assigner.Activate(this.myUCID);
             this.sender.Activate(0);
             this.receiver.Activate(0);
+            this.logAddrHandler.Activate(0);
             this.cuuidResponder.Activate(this.myCUUID, 0, true);
             this.cuuidHandler.Activate(this.myCUUID, 0, this.sender'Unchecked_Access);
 
@@ -100,6 +118,7 @@ package body VN.Communication.CAN.Logic.SM is
 
                this.sender.Activate(address);
                this.receiver.Activate(address);
+               this.logAddrHandler.Activate(address);
                this.cuuidResponder.Activate(this.myCUUID, address, true);
                this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
 
@@ -166,12 +185,12 @@ package body VN.Communication.CAN.Logic.SM is
       -- CUUID since the receiver does not have a logical address yet
       if msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
          VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
-         CUUID_CAN_Routing.Search(msgAssignAddr.CUUID, receiver, found);
+         CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddr.CUUID, receiver, found);
 
       elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
 
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(msg, msgAssignAddrBlock);
-         CUUID_CAN_Routing.Search(msgAssignAddrBlock.CUUID, receiver, found);
+         CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, receiver, found);
       else
 
          CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found);
@@ -186,6 +205,8 @@ package body VN.Communication.CAN.Logic.SM is
                                                          VN.Message.CHECKSUM_SIZE);
          this.sender.SendVNMessage(internal, result);
          result := OK;
+
+         this.logAddrHandler.Sent_From_Address(msg.Header.Source);
       else
          result := ERROR_NO_ADDRESS_RECEIVED;
          VN.Communication.CAN.Logic.DebugOutput("VN.Communication.CAN.Logic.SM.Send, Status := ERROR_NO_ADDRESS_RECEIVED;", 5);
@@ -251,7 +272,7 @@ package body VN.Communication.CAN.Logic.SM is
          if msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
 
             VN.Message.Local_Hello.To_Local_Hello(msg, msgLocalHello);
-            CUUID_CAN_Routing.Insert(msgLocalHello.CUUID, internal.Sender);
+            CUUID_CAN_Routing.Insert(this.myCUUIDTable, msgLocalHello.CUUID, internal.Sender);
 
             Local_Ack_Response(internal); -- Respond with a LocalAck
 
@@ -271,6 +292,8 @@ package body VN.Communication.CAN.Logic.SM is
 
             --Store information about the sender of the message:
             CAN_Routing.Insert(this.myTable, internal.Data.Header.Source, internal.Sender);
+
+            this.logAddrHandler.Received_From_Address(msg.Header.Source);
 
             if msg.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
                Handle_Distribute_Route(internal);
@@ -309,6 +332,7 @@ package body VN.Communication.CAN.Logic.SM is
       this.DutyArray(this.DutyArray'First + 4) := this.receiver'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 5) := this.cuuidResponder'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 6) := this.cuuidHandler'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 7) := this.logAddrHandler'Unchecked_Access;
 
       -- Set CAN filters:
       this.theFilter.Create_Filter(this.negotioationFilterID, 0, 0); --will listen to all CAN messages, for now
@@ -321,7 +345,7 @@ package body VN.Communication.CAN.Logic.SM is
 
       --ToDo: For testing only!!!!
       CAN_Routing.Insert(this.myTable, 1337, 42);
-      CUUID_CAN_Routing.Insert(testCUUID, 42);
+      CUUID_CAN_Routing.Insert(this.myCUUIDTable, testCUUID, 42);
    end Init;
 
 end VN.Communication.CAN.Logic.SM;

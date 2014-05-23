@@ -41,7 +41,9 @@ package body VN.Communication.CAN.Logic.ComponentType_Handler is
             bWillSend := false;
 
             if not this.hasRequested and Ada.Real_Time.Clock - this.timer >= DELAY_TIME then
-               this.hasRequested := true;
+               -- this.hasRequested := true;
+               this.timer := Ada.Real_Time.Clock; --send DiscoveryRequests periodically, not just once
+
                VN.Communication.CAN.Logic.DebugOutput("Discovery request sent from address " & this.myCANAddress'Img, 5);
                VN.Communication.CAN.Logic.Message_Utils.DiscoveryRequestToMessage(msgOut, this.myCANAddress, 0);
                bWillSend := true;

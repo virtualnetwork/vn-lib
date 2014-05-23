@@ -20,6 +20,25 @@ package body VN.Communication.CAN.Logic.CAN_Address_Reception is
       use Ada.Real_Time;
 
    begin
+
+
+      if bMsgReceived then
+         if msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.ASSIGN_CAN_ADDRESS then
+            VN.Communication.CAN.Logic.Message_Utils.AssignCANAddressFromMessage(msgIn, msgUCID, msgCANAddr);
+
+            if msgUCID = this.myUCID then
+               this.myCANAddress := msgCANAddr;
+               this.currentState := Assigned;
+
+               VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": Was assigned CAN address " & this.myCANAddress'img, 4);
+               bWillSend:=false;
+               return;
+            else
+               VN.Communication.CAN.Logic.DebugOutput(this.myUCID'Img & ": message NOT for me, msgUCID=" & msgUCID'Img, 4);
+            end if;
+         end if;
+      end if;
+
       case this.currentState is
          when Unactivated =>
             bWillSend:=false;
@@ -34,7 +53,7 @@ package body VN.Communication.CAN.Logic.CAN_Address_Reception is
                   this.currentState := Started;
                   VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": Requested CAN address", 4);
 
-                 this.timer := Ada.Real_Time.Clock;
+                  this.timer := Ada.Real_Time.Clock;
 
                   return;
                end if;
@@ -42,24 +61,6 @@ package body VN.Communication.CAN.Logic.CAN_Address_Reception is
             bWillSend:=false;
 
          when Started =>
-
-            if bMsgReceived then
-
-               if msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.ASSIGN_CAN_ADDRESS then
-                  VN.Communication.CAN.Logic.Message_Utils.AssignCANAddressFromMessage(msgIn, msgUCID, msgCANAddr);
-
-                  if msgUCID = this.myUCID then
-                     this.myCANAddress := msgCANAddr;
-                     this.currentState := Assigned;
-
-                     VN.Communication.CAN.Logic.DebugOutput(Integer(this.myUCID)'Img & ": Was assigned CAN address " & this.myCANAddress'img, 4);
-                     bWillSend:=false;
-                     return;
-                  else
-                     VN.Communication.CAN.Logic.DebugOutput(this.myUCID'Img & ": message NOT for me, msgUCID=" & msgUCID'Img, 4);
-                  end if;
-               end if;
-            end if;
 
             if Ada.Real_Time.Clock - this.timer > TIME_TO_WAIT_FOR_ADDRESS then
                VN.Communication.CAN.Logic.Message_Utils.RequestCANAddressToMessage(msgOut, this.myUCID, false);
