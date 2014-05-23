@@ -81,7 +81,6 @@ package body Application is
 
    end VN_Application;
 
-   -- Start one instance of the SM-L
    App: VN_Application(30, 5000000, 30, 3);
 
 end Application;

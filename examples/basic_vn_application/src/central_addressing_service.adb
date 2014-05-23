@@ -19,55 +19,64 @@ package body Central_Addressing_Service is
       Basic_Msg: VN.Message.VN_Message_Basic;
       Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
 
+      Recv_Status: VN.Receive_Status;
       Send_Status: VN.Send_Status;
 
       Next_Period : Ada.Real_Time.Time;
       Period : constant Ada.Real_Time.Time_Span :=
                            Ada.Real_Time.Microseconds(Cycle_Time);
    begin
+      App_Info.Logical_Address := 1;
       App_Info.Component_Type := VN.Message.Other;
-      -- App_Info.CUUID := ???;
-
-      --Ada.Text_IO.Put_Line("Task type CAS - Start, ID: "
-      --                       & Integer'Image(Task_ID));
 
       Global_Settings.Start_Time.Get(Next_Period);
       Ada.Text_IO.Put_Line("CAS  STAT: Starts.");
 
-
+      ----------------------------
       loop
          delay until Next_Period;
+
          ----------------------------
-         Ada.Text_IO.Put_Line("CAS  STAT: Runs");
+         -- Receive loop
+         ----------------------------
+         Global_Settings.Com_CAS.Receive(Basic_Msg, Recv_Status);
 
-         if App_Info.Has_Logical_Address then
-            null;
-         else
-            null;
-            -- Ada.Text_IO.Put_Line("CAS - Logical address not found "
-            --                           & Integer'Image(Task_ID));
+         if Recv_Status = VN.NO_MSG_RECEIVED then
+            Ada.Text_IO.Put_Line("CAS  RECV: Empty.");
+         elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
+            Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
-            -- Prepare message to be sent
-            --Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
-            --To_Local_Hello(Basic_Msg, Local_Hello_Msg);
-            --App_Info.Get_Application_Information(Local_Hello_Msg);
-            --To_Basic(Local_Hello_Msg, Basic_Msg);
+            Ada.Text_IO.Put("CAS  RECV: ");
+            Global_Settings.Logger.Log(Basic_Msg);
 
-            ---- Send message
-            --Global_Settings.Com_Application.Send(Basic_Msg, Send_Status);
+         --   if Basic_Msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
+         --      To_Assign_Address(Basic_Msg, Assign_Address_Msg);
+         --      App_Info.Logical_Address := Assign_Address_Msg.Assigned_Address;
+         --   end if;
+
          end if;
 
          ----------------------------
+         -- Send loop
+         ----------------------------
+         --if App_Info.Has_Logical_Address then
+         --   null;
+         --elsif not App_Info.Has_Logical_Address then
+         --   null;
+         --end if
+
+
          Next_Period := Next_Period + Period;
          i := i + 1;
          exit when i = 6;
       end loop;
-      Ada.Text_IO.Put_Line("CAS  STAT: Stops");
-      --Ada.Text_IO.Put_Line("Task type CAS - End, ID:"
-      --                       & Integer'Image(Task_ID));
+      ----------------------------
+
+      Ada.Text_IO.Put_Line("CAS  Stop. Logical Address: " &
+                                 App_Info.Logical_Address'Img);
+
    end CAS;
 
-   -- Start one instance of the SM-L
    CAS1: CAS(20, 5000000, 10, 3);
 
 end Central_Addressing_Service;
