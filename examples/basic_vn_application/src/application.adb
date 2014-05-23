@@ -32,7 +32,6 @@ package body Application is
    begin
       App_Info.Component_Type := VN.Message.Other;
       App_Info.Logical_Address := 2;
-      -- App_Info.CUUID := ???;
 
       Global_Settings.Start_Time.Get(Next_Period);
       Ada.Text_IO.Put_Line("APPL STAT: Starts.");
@@ -64,22 +63,11 @@ package body Application is
          ----------------------------
          -- Send loop
          ----------------------------
-         if App_Info.Has_Logical_Address then
-            null;
-         elsif not App_Info.Has_Logical_Address then
-            null;
-            -- Prepare message to be sent
-            --Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
-            --Basic_Msg.Header.Destination := 0;
-            --To_Local_Hello(Basic_Msg, Local_Hello_Msg);
-            --App_Info.Get_Application_Information(Local_Hello_Msg);
-            --To_Basic(Local_Hello_Msg, Basic_Msg);
-
-            -- Send message
-            --Ada.Text_IO.Put("APPL SEND: ");
-            --Global_Settings.Logger.Log(Basic_Msg);
-            --Global_Settings.Com_Application.Send(Basic_Msg, Send_Status);
-         end if;
+         --if App_Info.Has_Logical_Address then
+         --   null;
+         --elsif not App_Info.Has_Logical_Address then
+         --   null;
+         --end if;
 
 
          Next_Period := Next_Period + Period;
