@@ -30,6 +30,7 @@ package body Subnet_Manager_Local is
       SM_L_Info.Logical_Address := 2;
 
       Global_Settings.Start_Time.Get(Next_Period);
+      Ada.Text_IO.Put_Line("SM-L STAT: Starts.");
 
       ----------------------------
       loop
@@ -40,8 +41,8 @@ package body Subnet_Manager_Local is
          ----------------------------
          Global_Settings.Com_SM_L.Receive(Basic_Msg, Recv_Status);
 
-         Ada.Text_IO.Put_Line("SM-L RECV Status: " &
-                                VN.Receive_Status'Image(Recv_Status));
+         --Ada.Text_IO.Put_Line("SM-L RECV Status: " &
+         --                       VN.Receive_Status'Image(Recv_Status));
 
          if Recv_Status = VN.NO_MSG_RECEIVED then
             Ada.Text_IO.Put_Line("SM-L RECV: Empty.");

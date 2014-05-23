@@ -26,6 +26,7 @@ package body VN.Communication.PO_Wrapper is
          This.PO_Access.Receive_From_Other(Message, Status);
       else
          This.PO_Access.Receive_From_SM_L(Message, Status);
+
       end if;
    end Receive;
 
@@ -39,8 +40,8 @@ package body VN.Communication.PO_Wrapper is
       Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
       VN.Message.Local_Hello.To_Local_Hello(Basic_Msg, Local_Hello_Msg);
       Local_Hello_Msg.CUUID := This.CUUID;
-      Local_Hello_Msg.Header.Source := 2;
-      Local_Hello_Msg.Header.Destination := 2;
+      Local_Hello_Msg.Header.Source := 0;
+      Local_Hello_Msg.Header.Destination := 0;
       Local_Hello_Msg.Component_Type := This.This_Component_Type;
       VN.Message.Local_Hello.To_Basic(Local_Hello_Msg, Basic_Msg);
 

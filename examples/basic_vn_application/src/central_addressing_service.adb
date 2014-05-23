@@ -32,6 +32,7 @@ package body Central_Addressing_Service is
       --                       & Integer'Image(Task_ID));
 
       Global_Settings.Start_Time.Get(Next_Period);
+      Ada.Text_IO.Put_Line("CAS  STAT: Starts.");
 
 
       loop

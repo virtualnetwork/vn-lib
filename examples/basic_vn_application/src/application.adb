@@ -31,6 +31,7 @@ package body Application is
       -- App_Info.CUUID := ???;
 
       Global_Settings.Start_Time.Get(Next_Period);
+      Ada.Text_IO.Put_Line("APPL STAT: Starts.");
 
       ----------------------------
       loop

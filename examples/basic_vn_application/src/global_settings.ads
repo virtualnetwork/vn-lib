@@ -23,12 +23,13 @@ package Global_Settings is
 
    CUUID_CAS   : aliased VN.VN_CUUID := (others => 11);
    CUUID_SM    : aliased VN.VN_CUUID := (others => 22);
-   -- CUUID_LS    : aliased VN.VN_CUUID := (others => 33);
+   CUUID_LS    : aliased VN.VN_CUUID := (others => 33);
    CUUID_App   : aliased VN.VN_CUUID := (others => 44);
-   -- Communication between Application, CAS and SM-L
+
+   -- Communication between Application, CAS, LS and SM-L
    PO_To_Application : aliased VN.Communication.PO.VN_PO;
---   PO_To_CAS         : VN.Communication.PO.VN_PO_Access
---                                             := new VN.Communication.PO.VN_PO;
+   PO_To_CAS         : aliased VN.Communication.PO.VN_PO;
+   PO_To_LS          : aliased VN.Communication.PO.VN_PO;
 
    -- Communication object for Application
    Com_Application   : VN.Communication.PO_Wrapper.VN_PO_Wrapper(
@@ -37,10 +38,17 @@ package Global_Settings is
                                                             VN.Message.Other,
                                                             False);
 
---   -- Communication object for Central Addressing Service
---   Com_CAS           : VN.Communication.IPC.IPC_Wrapper(PO_To_Application,
---                                                           False);
+   Com_CAS           : VN.Communication.PO_Wrapper.VN_PO_Wrapper(
+                                                            PO_To_CAS'Access,
+                                                            CUUID_CAS'Access,
+                                                            VN.Message.CAS,
+                                                            False);
 
+   Com_LS            : VN.Communication.PO_Wrapper.VN_PO_Wrapper(
+                                                            PO_To_LS'Access,
+                                                            CUUID_LS'Access,
+                                                            VN.Message.LS,
+                                                            False);
    -- Communication object for SM-L
    -- 1. Create a VN.Communication.Protocol_Routing.Protocol_Routing_Type
    -- 2. Create a VN.Communication.PO_Routing.PO_Router
