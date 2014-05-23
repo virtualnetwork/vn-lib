@@ -37,7 +37,7 @@ package body Central_Addressing_Service is
       loop
          delay until Next_Period;
          ----------------------------
-         Ada.Text_IO.Put_Line("CAS STAT: Runs");
+         Ada.Text_IO.Put_Line("CAS  STAT: Runs");
 
          if App_Info.Has_Logical_Address then
             null;
@@ -60,7 +60,7 @@ package body Central_Addressing_Service is
          i := i + 1;
          exit when i = 6;
       end loop;
-      Ada.Text_IO.Put_Line("CAS STAT: Stops");
+      Ada.Text_IO.Put_Line("CAS  STAT: Stops");
       --Ada.Text_IO.Put_Line("Task type CAS - End, ID:"
       --                       & Integer'Image(Task_ID));
    end CAS;
