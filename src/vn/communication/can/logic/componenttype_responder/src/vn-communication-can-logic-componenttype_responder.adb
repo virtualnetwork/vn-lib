@@ -17,11 +17,24 @@ package body VN.Communication.CAN.Logic.ComponentType_Responder is
             bWillSend := false;
 
          when Activated =>
-            if bMsgReceived and then msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.DISCOVERY_REQUEST then
+            if bMsgReceived and then msgIn.isNormal and then msgIn.Receiver = this.myCANAddress and then
+              msgIn.msgType = VN.Communication.CAN.Logic.DISCOVERY_REQUEST then
+
 
                VN.Communication.CAN.Logic.Message_Utils.ComponentTypeToMessage(msgOut, this.myCANAddress, 0, this.isSM_CAN); --ToDo: prio???
                bWillSend := true;
-               this.currentState := Activated;
+
+               msgOut.Receiver := VN.Communication.CAN.Convert(msgIn.Sender); -- set the recever address to the sender of the request
+
+               VN.Communication.CAN.Logic.DebugOutput("Sent component type (node or SM-CAN) from CAN address " & this.myCANAddress'img, 5);
+
+            elsif bMsgReceived and then msgIn.isNormal and then msgIn.Receiver = VN.Communication.CAN.CAN_Address_Receiver(254) and then
+              msgIn.msgType = VN.Communication.CAN.Logic.DISCOVERY_REQUEST then
+
+               VN.Communication.CAN.Logic.Message_Utils.ComponentTypeToMessage(msgOut, this.myCANAddress, 0, this.isSM_CAN); --ToDo: prio???
+               bWillSend := true;
+               msgOut.Receiver := 255; -- set the recever address to the broadcast address
+
                VN.Communication.CAN.Logic.DebugOutput("Sent component type (node or SM-CAN) from CAN address " & this.myCANAddress'img, 5);
             else
                bWillSend := false;

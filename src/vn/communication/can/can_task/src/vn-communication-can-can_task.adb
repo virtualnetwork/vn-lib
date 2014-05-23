@@ -18,7 +18,7 @@ with VN.Communication.CAN.CAN_Driver;
 
 with Ada.Exceptions;
 
-package body VN.Communication.CAN.Can_Task is
+package body VN.Communication.CAN.CAN_Task is
 
    package buf renames VN.Communication.CAN.CAN_Message_Buffers;
 
@@ -29,7 +29,7 @@ package body VN.Communication.CAN.Can_Task is
 
       Next_Period : Ada.Real_Time.Time;
 
-      BUFFER_SIZE : constant integer := 20; --ToDO: Put this in a config file of some sort
+      BUFFER_SIZE : constant integer := 100; --ToDO: Put this in a config file of some sort
       msgsIn, msgsOut : buf.Buffer(BUFFER_SIZE);
 
       procedure Input is
@@ -93,4 +93,4 @@ package body VN.Communication.CAN.Can_Task is
       end loop;
 
    end CAN_Task_Type;
-end VN.Communication.CAN.Can_Task;
+end VN.Communication.CAN.CAN_Task;

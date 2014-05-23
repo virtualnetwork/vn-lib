@@ -1,0 +1,23 @@
+with "../logical_address_handler/logical_address_handler.gpr";
+with "../../can_filtering/can_filtering.gpr";
+with "../../../cuuid_routing/cuuid_routing.gpr";
+with "../../../routing_table/routing_table.gpr";
+with "../../../../lib/buffers/buffers.gpr";
+with "../componenttype_handler/componenttype_handler.gpr";
+with "../componenttype_responder/componenttype_responder.gpr";
+with "../receiver/receiver.gpr";
+with "../sender/sender.gpr";
+with "../can_address_reception/can_address_reception.gpr";
+with "../message_utils/message_utils.gpr";
+with "../logic.gpr";
+with "../../can.gpr";
+with "../../../communication.gpr";
+with "../../../../vn.gpr";
+
+project Node is
+
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+
+end Node;
+

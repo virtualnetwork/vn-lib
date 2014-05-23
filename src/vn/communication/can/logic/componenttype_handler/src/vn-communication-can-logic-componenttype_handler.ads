@@ -47,7 +47,7 @@ private
    type ComponentType_Handler_State is (Unactivated, Activated);
 
    --ToDO: Put this in a config file of some sort:
-   DELAY_TIME : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(1400);
+   DELAY_TIME : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(5000);
 
    type ComponentType_Handler is
      new VN.Communication.CAN.Logic.Duty with

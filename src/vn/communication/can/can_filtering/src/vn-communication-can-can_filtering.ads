@@ -5,6 +5,9 @@
 -- CAN_Filtering keeps track of what the hardware filters of the CAN controller should be.
 -- The purpose of this is to filter out all CAN messages that are not needed.
 
+-- Please note: The use of the hasChanged variable assumes that the
+-- Get_Filter procedure is only read by one thread.
+
 with VN;
 with VN.Communication;
 with VN.Communication.CAN;
@@ -35,7 +38,8 @@ package VN.Communication.CAN.CAN_Filtering is
                         filterID : Filter_ID_Type;
                         template : out CAN_message_ID;
                         mask 	 : out CAN_message_ID;
-                        isUsed 	 : out Boolean);
+                        isUsed 	 : out Boolean;
+                        hasChanged  : out Boolean);
 
    procedure Create_Transmission_Filter(this : in out CAN_Filter_Type;
                                         filterID   : out Filter_ID_Type;
@@ -51,6 +55,7 @@ private
          template : CAN_message_ID;
          mask 	  : CAN_message_ID;
          isUsed   : Boolean := false;
+         hasChanged   : Boolean := false;
       end record;
 
    type Filter_Array_Type is array(Filter_ID_Type) of Filter_Type;

@@ -18,6 +18,8 @@ package body Utils is
       POWER28 	  : constant CANPack.CAN_message_ID := CANPack.CAN_message_ID(2 ** 28);
 
       use CANPack;
+
+
    begin
       if msgIn.isNormal then
          msgIDOut := CANPack.CAN_message_ID(Interfaces.Shift_Left(msgPrio, CANPack.OFFSET_CAN_PRIORITY) +
@@ -34,7 +36,7 @@ package body Utils is
                                filter : VN.Communication.CAN.CAN_Filtering.CAN_Filter_Type) return boolean is
       msgID : CANPack.CAN_message_ID;
       template, mask : CANPack.CAN_message_ID;
-      isUsed : Boolean;
+      isUsed, hasChanged : Boolean;
 
       use CANPack;
       temp : CANPack.CAN_message_ID;
@@ -42,7 +44,7 @@ package body Utils is
       To_Physical(msg, msgID);
 
       for i in VN.Communication.CAN.CAN_Filtering.Filter_ID_Type'Range loop
-         filter.Get_Filter(i, template, mask, isUsed);
+         filter.Get_Filter(i, template, mask, isUsed, hasChanged);
 
          if isUsed then
             temp := msgID xor template;

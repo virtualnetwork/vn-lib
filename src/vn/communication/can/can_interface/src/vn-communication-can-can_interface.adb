@@ -27,8 +27,7 @@ package body VN.Communication.CAN.CAN_Interface is
                VN.Communication.CAN.Logic.SM.Send(data.SMDuty, Message, Status);
 
             when Node =>
-               null;
-             --  VN.Communication.CAN.Logic.Node.Send(data.nodeDuty, Message, Status);
+               VN.Communication.CAN.Logic.Node.Send(data.nodeDuty, Message, Status);
          end case;
       end Send;
 
@@ -40,8 +39,7 @@ package body VN.Communication.CAN.CAN_Interface is
                VN.Communication.CAN.Logic.SM.Receive(data.SMDuty, Message, Status);
 
             when Node =>
-               null;
-              -- VN.Communication.CAN.Logic.Node.Receive(data.nodeDuty, Message, Status);
+               VN.Communication.CAN.Logic.Node.Receive(data.nodeDuty, Message, Status);
          end case;
       end Receive;
 
@@ -54,11 +52,9 @@ package body VN.Communication.CAN.CAN_Interface is
          case data.unitType is
             when SM_CAN =>
                VN.Communication.CAN.Logic.SM.Update(data.SMDuty, msgsBuffer, ret);
---                 data.SMDuty.Update(msgsBuffer, ret);
 
             when Node =>
-               null;
---                 VN.Communication.CAN.Logic.Node.Update(data.nodeDuty, msgsBuffer, ret);
+               VN.Communication.CAN.Logic.Node.Update(data.nodeDuty, msgsBuffer, ret);
          end case;
    end Update;
 

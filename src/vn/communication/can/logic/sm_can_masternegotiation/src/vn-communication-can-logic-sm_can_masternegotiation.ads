@@ -29,7 +29,7 @@ package VN.Communication.CAN.Logic.SM_CAN_MasterNegotiation is
 
 private
 
-   WAIT_TIME : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(Integer(2000));
+   WAIT_TIME : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(Integer(4000));
 
    type SM_CAN_MN_State is (Start, Started, Slave, Master);
 

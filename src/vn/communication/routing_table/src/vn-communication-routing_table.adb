@@ -48,6 +48,7 @@ package body VN.Communication.Routing_Table is
 
       index : VN.VN_Logical_Address := Logical_Address rem this.Capacity;
    begin
+      found := false;
       for i in index..this.Values'Last loop
          if this.Values(i).isUsed then
             if this.Values(i).Logical_Address = Logical_Address then
@@ -56,9 +57,10 @@ package body VN.Communication.Routing_Table is
 
                return;
             end if;
+         else 
+            return;
          end if;
       end loop;
-      found := false;
    end Search;
 
 end VN.Communication.Routing_Table;
