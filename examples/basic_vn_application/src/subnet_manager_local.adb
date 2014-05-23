@@ -1,21 +1,33 @@
 with Ada.Real_Time;
 with Ada.Text_IO;
+with Buffers;
 with Global_Settings;
 with VN.Application_Information;
+with VN.Message.Factory;
 with VN.Message.Local_Hello;
+with VN.Message.Assign_Address;
+with Interfaces;
 
 package body Subnet_Manager_Local is
+
+   package Natural_Buffer is
+      new Buffers(Natural);
+
+   package Unsigned_8_Buffer is
+      new Buffers(Interfaces.Unsigned_8);
 
    task body SM_L is
       use Ada.Real_Time;
       use VN;
       use VN.Message.Local_Hello;
+      use VN.Message.Assign_Address;
       Counter_For_Testing: Integer := 1;
 
       SM_L_Info: VN.Application_Information.VN_Application_Information;
 
       Basic_Msg: VN.Message.VN_Message_Basic;
       Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
+      Assign_Address_Msg: VN.Message.Assign_Address.VN_Message_Assign_Address;
 
       Recv_Status: VN.Receive_Status;
       Send_Status: VN.Send_Status;
@@ -25,6 +37,14 @@ package body Subnet_Manager_Local is
       Next_Period : Ada.Real_Time.Time;
       Period : constant Ada.Real_Time.Time_Span :=
                            Ada.Real_Time.Microseconds(Cycle_Time);
+
+      Assign_Address_Buffer: Unsigned_8_Buffer.Buffer(10);
+
+      Temp_Uint8: Interfaces.Unsigned_8;
+
+      Assigned_Address : VN.VN_Logical_Address := 10;
+
+      use VN.Message;
    begin
       SM_L_Info.Component_Type := VN.Message.SM_L;
       SM_L_Info.Logical_Address := 2;
@@ -50,17 +70,39 @@ package body Subnet_Manager_Local is
          elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
             Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
+            -- Print debug text.
             Ada.Text_IO.Put("SM-L RECV: ");
             Global_Settings.Logger.Log(Basic_Msg);
 
-            -- TODO: Check OpCode and convert to correct type
-            To_Local_Hello(Basic_Msg, Local_Hello_Msg);
+            -- Process incoming message.
+            if Basic_Msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
+               To_Local_Hello(Basic_Msg, Local_Hello_Msg);
+               Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Assign_Address_Buffer);
+            end if;
 
          end if;
 
          ----------------------------
          -- Send loop
          ----------------------------
+        if not Unsigned_8_Buffer.Empty(Assign_Address_Buffer) then
+           Unsigned_8_Buffer.Remove(Temp_Uint8, Assign_Address_Buffer);
+
+           Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
+           Basic_Msg.Header.Destination := 0;
+           To_Assign_Address(Basic_Msg, Assign_Address_Msg);
+           Assign_Address_Msg.CUUID := (others => Temp_Uint8);
+           Assign_Address_Msg.Assigned_Address := Assigned_Address;
+           To_Basic(Assign_Address_Msg, Basic_Msg);
+
+           Assigned_Address := Assigned_Address + 1;
+
+           Ada.Text_IO.Put("SM-L SEND: ");
+           Global_Settings.Logger.Log(Basic_Msg);
+           Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+
+        end if;
+
         -- if SM_L_Info.Has_Logical_Address then
         --    null;
         -- end if;

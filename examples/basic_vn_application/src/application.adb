@@ -4,13 +4,16 @@ with Global_Settings;
 with VN.Application_Information;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;
+with VN.Message.Assign_Address;
 
 package body Application is
 
    task body VN_Application is
       use Ada.Real_Time;
       use VN;
+      use VN.Message;
       use VN.Message.Local_Hello;
+      use VN.Message.Assign_Address;
 
       i: Integer := 1;
 
@@ -18,6 +21,7 @@ package body Application is
 
       Basic_Msg: VN.Message.VN_Message_Basic;
       Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
+      Assign_Address_Msg: VN.Message.Assign_Address.VN_Message_Assign_Address;
 
       Recv_Status: VN.Receive_Status;
       Send_Status: VN.Send_Status;
@@ -50,8 +54,10 @@ package body Application is
             Ada.Text_IO.Put("APPL RECV: ");
             Global_Settings.Logger.Log(Basic_Msg);
 
-            -- TODO: Check OpCode and convert to correct type
-            To_Local_Hello(Basic_Msg, Local_Hello_Msg);
+            if Basic_Msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
+               To_Assign_Address(Basic_Msg, Assign_Address_Msg);
+               App_Info.Logical_Address := Assign_Address_Msg.Assigned_Address;
+            end if;
 
          end if;
 
@@ -81,6 +87,9 @@ package body Application is
          exit when i = 6;
       end loop;
       ----------------------------
+
+      Ada.Text_IO.Put_Line("APPL Stop. Logical Address: " &
+                                 App_Info.Logical_Address'Img);
 
    end VN_Application;
 
