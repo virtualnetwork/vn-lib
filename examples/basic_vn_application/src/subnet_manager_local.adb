@@ -40,7 +40,7 @@ package body Subnet_Manager_Local is
          Ada.Text_IO.Put_Line("SM-L STAT: Message handling started.");
 
          if Status = VN.NO_MSG_RECEIVED then
-            Ada.Text_IO.Put_Line("SM-L RECV : Empty.");
+            Ada.Text_IO.Put_Line("SM-L RECV: Empty.");
          end if;
 
          if Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
