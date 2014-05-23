@@ -18,6 +18,7 @@ with VN;
 with VN.Communication.CAN;
 with VN.Communication.CAN.CAN_Filtering;
 with VN.Communication.CAN.Logic.SM;
+with VN.Communication.CAN.Logic.Node;
 
 package VN.Communication.CAN.CAN_Interface is
 
@@ -64,7 +65,7 @@ private
             when SM_CAN =>
                SMDuty : VN.Communication.CAN.Logic.SM.SM_Duty(theUCID, theCUUID, theFilter);
             when Node =>
-               nodeDuty : VN.Communication.CAN.Logic.SM.SM_Duty(theUCID, theCUUID, theFilter); -- VN.Communication.CAN.Logic.Node.Node_Duty(theUCID, theCUUID);
+               nodeDuty : VN.Communication.CAN.Logic.Node.Node_Duty(theUCID, theCUUID, theFilter);
          end case;
       end record;
 

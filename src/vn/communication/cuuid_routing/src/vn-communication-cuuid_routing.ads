@@ -9,7 +9,7 @@
 -- ToDo: Only a simple implementation, could be optimized.
 
 
-with System.HTable;
+with HTable;
 with VN;
 
 generic
@@ -18,12 +18,16 @@ generic
 package VN.Communication.CUUID_Routing is
    pragma Elaborate_Body;
 
-   function Number_Of_Entries return Natural;
+   type Table_Type is private;
 
-   procedure Insert(CUUID : VN.VN_CUUID;
+   function Number_Of_Entries(this : Table_Type) return Natural;
+
+   procedure Insert(this : in out Table_Type;
+                    CUUID : VN.VN_CUUID;
                     Generic_Address : Generic_Address_Type);
 
-   procedure Search(CUUID : VN.VN_CUUID;
+   procedure Search(this : in out Table_Type;
+                    CUUID : VN.VN_CUUID;
                     Generic_Address : out Generic_Address_Type;
                     found : out Boolean);
 
@@ -57,14 +61,18 @@ private
    function Get_Key (E : Element_ptr) 		return VN.VN_CUUID;
    function Hash    (F : VN.VN_CUUID)      	return Header_Num;
 
-   package CUUID_Hashing is new System.HTable.Static_HTable(Header_Num => Header_Num, Element => Element,
-                                                            Elmt_Ptr => Element_ptr, Null_Ptr => NULL_PTR,
-                                                            Set_Next => Set_Next, Next => Next, Key => VN.VN_CUUID,
-                                                            Get_Key => Get_Key, Hash => Hash, Equal => "=");
+   package CUUID_Hashing is new HTable.Static_HTable(Header_Num => Header_Num, Element => Element,
+                                                     Elmt_Ptr => Element_ptr, Null_Ptr => NULL_PTR,
+                                                     Set_Next => Set_Next, Next => Next, Key => VN.VN_CUUID,
+                                                     Get_Key => Get_Key, Hash => Hash, Equal => "=");
 
-   numberOfEntries : Header_Num := 0;
+   type Entry_Array is array(Header_Num) of aliased Element;   
 
-   type Entry_Array is array(Header_Num) of aliased Element;
-   AllEntries : Entry_Array;
+   type Table_Type is 
+      record
+         myTable : CUUID_Hashing.Table;
+         AllEntries : Entry_Array;
+         numberOfEntries : Header_Num := 0;
+      end record;
 
 end VN.Communication.CUUID_Routing;

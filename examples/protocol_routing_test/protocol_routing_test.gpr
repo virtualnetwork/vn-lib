@@ -10,7 +10,7 @@ project Protocol_Routing_Test is
 
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
-   for Main use ("protocol_routing_test_main.adb");
+   for Main use ("protocol_routing_test_main.adb", "protocol_routing_node_test_main.adb");
 
 end Protocol_Routing_Test;
 

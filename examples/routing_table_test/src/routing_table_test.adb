@@ -21,7 +21,7 @@ with VN.Communication.Routing_Table;
 with Interfaces;
 use Interfaces;
 
-with System.BB.Interrupts; -- Remove when compiling for PC, keep when compiling for SmartFusion2
+--  with System.BB.Interrupts; -- Remove when compiling for PC, keep when compiling for SmartFusion2
 
 procedure Routing_Table_Test is
 
@@ -67,6 +67,21 @@ begin
       Put_Line("Minitest passed");
    else
       Put_Line("Minitest failed");
+   end if;
+
+   pack2.Search(Table2, 1336, address, found);
+   if found then
+      Put_Line("Extra test failed");
+   end if;
+
+   pack2.Search(Table2, 16, address, found);
+   if found then
+      Put_Line("Extra test failed");
+   end if;
+
+   pack2.Search(Table2, 11, address, found);
+   if found then
+      Put_Line("Extra test failed");
    end if;
 
    for i in VN.Communication.CAN.CAN_Address_Sender'Range loop
