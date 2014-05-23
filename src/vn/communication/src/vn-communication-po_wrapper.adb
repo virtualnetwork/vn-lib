@@ -2,6 +2,7 @@ with Ada.Text_IO;
 with VN.Message;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;
+--with VN.Message.Local_Ack;
 
 package body VN.Communication.PO_Wrapper is
 
@@ -18,7 +19,7 @@ package body VN.Communication.PO_Wrapper is
    end Send;
 
    -- PO Wrapper Receive procedure
-   procedure Receive( This: in out VN_PO_Wrapper;
+   procedure Receive(This: in out VN_PO_Wrapper;
                      Message: out VN.Message.VN_Message_Basic;
                      Status: out VN.Receive_Status) is
       use VN.Message;
@@ -26,9 +27,11 @@ package body VN.Communication.PO_Wrapper is
       if This.Is_From_SM_L then
          This.PO_Access.Receive_From_Other(Message, Status);
 
-         if Message.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
+         if Message.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO and
+               (Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
+                Status = VN.MSG_RECEIVED_MORE_AVAILABLE) then
             -- Reply with LOCAL_ACK
-            Ada.Text_IO.Put_Line("once");
+            This.Send_Local_Ack;
          end if;
       else
          This.PO_Access.Receive_From_SM_L(Message, Status);
@@ -58,4 +61,17 @@ package body VN.Communication.PO_Wrapper is
       end if;
    end Init;
 
+   -- If Subnet Manager send a LocalAck in response to LocalHello
+   -- message.
+   procedure Send_Local_Ack(This: in out VN_PO_Wrapper) is
+      Basic_Msg         : VN.Message.VN_Message_Basic;
+      Status            : VN.Send_Status;
+   begin
+      Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Ack);
+      Basic_Msg.Header.Source := 0;
+      Basic_Msg.Header.Destination := 0;
+
+      This.PO_Access.Send_To_Other(Basic_Msg, Status);
+
+   end Send_Local_Ack;
 end VN.Communication.PO_Wrapper;

@@ -72,6 +72,11 @@ package VN.Message is
    OPCODE_ASSIGN_ADDR		: constant VN_Opcode := 16#7B#;
    OPCODE_REQUEST_ADDR_BLOCK	: constant VN_Opcode := 16#4C#;
 
+   LOCAL_ACK_OK      : constant integer := 0;
+   LOCAL_ACK_ERRROR  : constant integer := 1;
+   LOCAL_ACK_INITIAL_ROUTE_RECVD : constant integer := 2;
+   LOCAL_ACK_BRIDGE_ONTO_PROCESSOR : constant integer := 3;
+
    type VN_Header is
       record
          Message_Type   : VN_Message_Type := Type_Basic;

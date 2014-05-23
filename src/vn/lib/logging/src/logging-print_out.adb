@@ -20,7 +20,7 @@ package body Logging.Print_Out is
             VN.Message.VN_Component_Type'Image(Local_Hello_Msg.Component_Type));
          Put_Line("");
       elsif Message.Header.Opcode = OPCODE_LOCAL_ACK then
-         Put("Local_Ack");
+         Put_Line("Local_Ack");
       end if;
    end Log;
 
