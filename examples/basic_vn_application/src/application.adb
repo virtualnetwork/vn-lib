@@ -51,11 +51,11 @@ package body Application is
             To_Basic(Local_Hello_Msg, Basic_Msg);
 
             -- Send message
-            Ada.Text_IO.Put("SEND App: ");
+            Ada.Text_IO.Put("APPL SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
             Global_Settings.Com_Application.Send(Basic_Msg, Send_Status);
          else
-            Ada.Text_IO.Put_Line("ERRO App: No Logical Address Set");
+            Ada.Text_IO.Put_Line("APPL ERRO: No Logical Address Set");
          end if;
 
          ----------------------------
@@ -68,6 +68,6 @@ package body Application is
    end VN_Application;
 
    -- Start one instance of the SM-L
-   App: VN_Application(30, 500000, 30, 3);
+   App: VN_Application(30, 5000000, 30, 3);
 
 end Application;
