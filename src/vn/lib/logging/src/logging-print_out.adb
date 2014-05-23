@@ -15,12 +15,15 @@ package body Logging.Print_Out is
 
       if Message.Header.Opcode = OPCODE_LOCAL_HELLO then
 
+         VN.Message.Local_Hello.To_Local_Hello(Message, Local_Hello_Msg);
          Put("Local Hello from:" &
              VN.VN_Logical_Address'Image(Local_Hello_Msg.Header.Source) &
             " to " &
             VN.VN_Logical_Address'Image(Local_Hello_Msg.Header.Destination) &
-            " (logical addresses) Comp_Type is " &
-            VN.Message.VN_Component_Type'Image(Local_Hello_Msg.Component_Type));
+            " (logical addresses), Comp_Type is " &
+            VN.Message.VN_Component_Type'Image(Local_Hello_Msg.Component_Type) &
+            ", CUUID is " &
+            Local_Hello_Msg.CUUID(1)'Img);
          Put_Line("");
 
       elsif Message.Header.Opcode = OPCODE_LOCAL_ACK then

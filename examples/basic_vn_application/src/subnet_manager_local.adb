@@ -77,7 +77,10 @@ package body Subnet_Manager_Local is
             -- Process incoming message.
             if Basic_Msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
                To_Local_Hello(Basic_Msg, Local_Hello_Msg);
-               Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Assign_Address_Buffer);
+               if (Local_Hello_Msg.Component_Type = VN.Message.Other or
+                  Local_Hello_Msg.Component_Type = VN.Message.LS) then
+                     Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Assign_Address_Buffer);
+               end if;
             end if;
 
          end if;
