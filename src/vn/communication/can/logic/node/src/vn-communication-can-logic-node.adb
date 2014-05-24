@@ -54,10 +54,10 @@ package body VN.Communication.CAN.Logic.Node is
                -- Receive routing information from AddressAnswer message
 
                VN.Communication.CAN.Logic.Message_Utils.AddressAnswerFromMessage(msgIn, CANAddress, logAddress);               
-               CAN_Routing.Insert(this.myTable, logAddress, CANAddress);
+               CAN_Routing.Insert(this.myTable, logAddress, CANAddress, true);
 
                VN.Communication.CAN.Logic.DebugOutput(this.myUCID'Img & ": AddresAnswer: Logical address " & logAddress'Img & 
-                                                        " exists on CAN address " & CANAddress'Img, 3);               
+                                                        " exists on CAN address " & CANAddress'Img, 1);               
             else
 
                for i in this.DutyArray'Range loop
@@ -109,6 +109,8 @@ package body VN.Communication.CAN.Logic.Node is
 
       msgAssignAddr 	 : VN.Message.Assign_Address.VN_Message_Assign_Address;
       msgAssignAddrBlock : VN.Message.Assign_Address_Block.VN_Message_Assign_Address_Block;
+
+      isDirect : aliased Boolean;
    begin
       if not this.isInitialized then
          Init(this);
@@ -132,7 +134,12 @@ package body VN.Communication.CAN.Logic.Node is
          CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, receiver, found);
       else
 
-         CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found);
+         CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found, isDirect'Access);
+
+         if isDirect then
+            VN.Text_IO.Put_Line("CAN routing: Sending VN message via direct routing. Destination " & msg.Header.Destination'Img &
+                                  " CAN address = " & receiver'Img);
+         end if;
       end if;
 
       if found then
