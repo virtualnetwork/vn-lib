@@ -20,20 +20,24 @@ package body VN.Communication.Routing_Table is
 
    procedure Insert(this : in out Table_Type;
                     Logical_Address : VN.VN_Logical_Address;
-                    Generic_Address : Generic_Address_Type) is
+                    Generic_Address : Generic_Address_Type;
+                    isDirect 	    : Boolean := false) is
 
       ROUTING_TABLE_OVERFLOW : exception;
       index : VN.VN_Logical_Address := Logical_Address rem this.Capacity;
    begin
       for i in index..this.Values'Last loop
          if not this.Values(i).isUsed or else
-           this.Values(i).Logical_Address = Logical_Address then
+           (this.Values(i).Logical_Address = Logical_Address and (isDirect or not this.Values(i).isDirect)) then
 
             this.Values(i).isUsed := true;
             this.Values(i).Logical_Address := Logical_Address;
             this.Values(i).Generic_Address := Generic_Address;
+            this.Values(i).isDirect 	   := isDirect;
             this.count := this.count + 1;
 
+            return;
+         elsif this.Values(i).Logical_Address = Logical_Address and (not isDirect or this.Values(i).isDirect) then
             return;
          end if;
       end loop;
@@ -44,7 +48,8 @@ package body VN.Communication.Routing_Table is
    procedure Search(this : in Table_Type;
                     Logical_Address : VN.VN_Logical_Address;
                     Generic_Address : out Generic_Address_Type;
-                    found : out Boolean) is
+                    found    : out Boolean;
+                    isDirect : access Boolean := null) is
 
       index : VN.VN_Logical_Address := Logical_Address rem this.Capacity;
    begin
@@ -53,7 +58,11 @@ package body VN.Communication.Routing_Table is
          if this.Values(i).isUsed then
             if this.Values(i).Logical_Address = Logical_Address then
                Generic_Address := this.Values(i).Generic_Address;
-               found := true;
+               found    := true;
+
+               if isDirect /= null then
+                  isDirect.all := this.Values(i).isDirect;
+               end if;
 
                return;
             end if;
