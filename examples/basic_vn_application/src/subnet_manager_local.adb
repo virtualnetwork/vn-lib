@@ -10,41 +10,18 @@ with Interfaces;
 
 package body Subnet_Manager_Local is
 
-   package Natural_Buffer is
-      new Buffers(Natural);
-
-   package Unsigned_8_Buffer is
-      new Buffers(Interfaces.Unsigned_8);
-
    task body SM_L is
       use Ada.Real_Time;
       use VN;
+      use VN.Message;
       use VN.Message.Local_Hello;
       use VN.Message.Assign_Address;
       Counter_For_Testing: Integer := 1;
-
-      SM_L_Info: VN.Application_Information.VN_Application_Information;
-
-      Basic_Msg: VN.Message.VN_Message_Basic;
-      Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
-      Assign_Address_Msg: VN.Message.Assign_Address.VN_Message_Assign_Address;
-
-      Recv_Status: VN.Receive_Status;
-      Send_Status: VN.Send_Status;
-
-      Version: VN.Message.VN_Version;
 
       Next_Period : Ada.Real_Time.Time;
       Period : constant Ada.Real_Time.Time_Span :=
                            Ada.Real_Time.Microseconds(Cycle_Time);
 
-      Assign_Address_Buffer: Unsigned_8_Buffer.Buffer(10);
-
-      Temp_Uint8: Interfaces.Unsigned_8;
-
-      Assigned_Address : VN.VN_Logical_Address := 10;
-
-      use VN.Message;
    begin
       SM_L_Info.Component_Type := VN.Message.SM_L;
       SM_L_Info.Logical_Address := 2;
@@ -90,7 +67,8 @@ package body Subnet_Manager_Local is
          ----------------------------
 
          -- Assign Address
-        if not Unsigned_8_Buffer.Empty(Assign_Address_Buffer) then
+        if not Unsigned_8_Buffer.Empty(Assign_Address_Buffer) and
+            Has_Received_Address_Block then
            Unsigned_8_Buffer.Remove(Temp_Uint8, Assign_Address_Buffer);
 
            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
@@ -114,11 +92,32 @@ package body Subnet_Manager_Local is
       end loop;
       ----------------------------
 
-      Ada.Text_IO.Put_Line("SM-L Stop.");
+      Ada.Text_IO.Put_Line("SM-L STAT: Stop.");
 
    end SM_L;
 
    -- Start one instance of the SM-L
    SM_L1: SM_L(20, 1000000, 80, 3);
+
+   ----------------------------
+   -- Helper functions below
+   ----------------------------
+   function Get_Address_To_Assign(CUUID_Uint8: in Interfaces.Unsigned_8)
+         return VN.VN_Logical_Address is
+      use VN;
+      Assigned_Address : VN.VN_Logical_Address := 10;
+   begin
+      return Assigned_Address + 1;
+   end Get_Address_To_Assign;
+
+   function Has_Received_Address_Block return Boolean is
+      use VN;
+   begin
+      if Received_Address_Block /= 0 then
+         return true;
+      else
+         return false;
+      end if;
+   end Has_Received_Address_Block;
 
 end Subnet_Manager_Local;

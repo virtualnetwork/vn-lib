@@ -76,7 +76,7 @@ package body Application is
       end loop;
       ----------------------------
 
-      Ada.Text_IO.Put_Line("APPL Stop. Logical Address: " &
+      Ada.Text_IO.Put_Line("APPL STAT: Stop. Logical Address: " &
                                  App_Info.Logical_Address'Img);
 
    end VN_Application;

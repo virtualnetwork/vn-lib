@@ -72,7 +72,7 @@ package body Central_Addressing_Service is
       end loop;
       ----------------------------
 
-      Ada.Text_IO.Put_Line("CAS  Stop. Logical Address: " &
+      Ada.Text_IO.Put_Line("CAS  STAT: Stop. Logical Address: " &
                                  App_Info.Logical_Address'Img);
 
    end CAS;

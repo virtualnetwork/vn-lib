@@ -76,7 +76,7 @@ package body Lookup_Service is
       end loop;
       ----------------------------
 
-      Ada.Text_IO.Put_Line("LS   Stop. Logical Address: " &
+      Ada.Text_IO.Put_Line("LS   STAT: Stop. Logical Address: " &
                                  App_Info.Logical_Address'Img);
 
    end LS;
