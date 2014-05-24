@@ -19,12 +19,14 @@ package VN.Communication.Routing_Table is
 
    procedure Insert(this : in out Table_Type;
                     Logical_Address : VN.VN_Logical_Address;
-                    Generic_Address : Generic_Address_Type);
+                    Generic_Address : Generic_Address_Type;
+                    isDirect 	    : Boolean := false);
 
    procedure Search(this : in Table_Type;
                     Logical_Address : VN.VN_Logical_Address;
                     Generic_Address : out Generic_Address_Type;
-                    found : out Boolean);
+                    found    : out Boolean;
+                    isDirect : access Boolean := null);
 private
 
    type Element_Type is
@@ -32,6 +34,7 @@ private
          isUsed 	 : Boolean := false;
          Logical_Address : VN.VN_Logical_Address;
          Generic_Address : Generic_Address_Type;
+         isDirect	 : Boolean := false;
       end record;
 
    type Content is array (VN.VN_Logical_Address range <>) of Element_Type;
