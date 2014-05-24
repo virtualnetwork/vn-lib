@@ -44,7 +44,7 @@ package Protocol_Routing_Test is
 
    CANInterface : aliased VN.Communication.CAN.CAN_Interface.CAN_Interface_Type
      (U1'Unchecked_Access, C1'Unchecked_Access,
-      theFilter'Unchecked_Access, VN.Communication.CAN.CAN_Interface.SM_CAN);
+      theFilter'Unchecked_Access, VN.Communication.CAN.CAN_Interface.Node);
 
    myTask : aliased VN.Communication.CAN.Can_Task.CAN_Task_Type
      (CANInterface'Access, System.Priority'Last, CANPeriod'Access, theFilter'Unchecked_Access);
