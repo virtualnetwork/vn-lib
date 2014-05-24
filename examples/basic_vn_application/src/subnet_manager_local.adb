@@ -6,6 +6,7 @@ with VN.Application_Information;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;
 with VN.Message.Assign_Address;
+with VN.Message.Request_Address_Block;
 with Interfaces;
 
 package body Subnet_Manager_Local is
@@ -16,6 +17,7 @@ package body Subnet_Manager_Local is
       use VN.Message;
       use VN.Message.Local_Hello;
       use VN.Message.Assign_Address;
+      use VN.Message.Request_Address_Block;
       Counter_For_Testing: Integer := 1;
 
       Next_Period : Ada.Real_Time.Time;
@@ -65,9 +67,22 @@ package body Subnet_Manager_Local is
          ----------------------------
          -- Send loop
          ----------------------------
+        if not Has_Received_Address_Block then
+           Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Request_Address_Block);
+           -- TODO: From where should SM-L request address block?
+           -- Is the CUUID the CUUID of CAS requesting SM-L? (check
+           -- standards at home)
+           Basic_Msg.Header.Destination := 2;
+           To_Request_Address_Block(Basic_Msg, Request_Address_Block_Msg);
+           Request_Address_Block_Msg.CUUID := App_Info.CUUID;
+           To_Basic(Request_Address_Block_Msg, Basic_Msg);
+
+           Ada.Text_IO.Put("SM-L SEND: ");
+           Global_Settings.Logger.Log(Basic_Msg);
+           Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
 
          -- Assign Address
-        if not Unsigned_8_Buffer.Empty(Assign_Address_Buffer) and
+        elsif not Unsigned_8_Buffer.Empty(Assign_Address_Buffer) and
             Has_Received_Address_Block then
            Unsigned_8_Buffer.Remove(Temp_Uint8, Assign_Address_Buffer);
 

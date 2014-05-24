@@ -31,6 +31,7 @@ package Subnet_Manager_Local is
       Basic_Msg: VN.Message.VN_Message_Basic;
       Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
       Assign_Address_Msg: VN.Message.Assign_Address.VN_Message_Assign_Address;
+      Request_Address_Block_Msg: VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
 
       Recv_Status: VN.Receive_Status;
       Send_Status: VN.Send_Status;
