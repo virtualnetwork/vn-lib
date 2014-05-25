@@ -61,7 +61,7 @@ package body Central_Addressing_Service is
 
            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address_Block);
            Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
-           Basic_Msg.Header.Source := 0;
+           Basic_Msg.Header.Source := VN.LOGICAL_ADDRES_UNKNOWN;
 
            To_Assign_Address_Block(Basic_Msg, Assign_Address_Block_Msg);
            Assign_Address_Block_Msg.CUUID := (others => Temp_Uint8);
