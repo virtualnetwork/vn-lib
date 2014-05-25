@@ -23,7 +23,7 @@ package body Central_Addressing_Service is
       Period : constant Ada.Real_Time.Time_Span :=
                            Ada.Real_Time.Microseconds(Cycle_Time);
    begin
-      CAS_Info.Logical_Address := 1;
+      CAS_Info.Logical_Address := VN.CAS_LOGICAL_ADDRESS;
       CAS_Info.Component_Type := VN.Message.Other;
 
       Global_Settings.Start_Time.Get(Next_Period);
@@ -61,7 +61,7 @@ package body Central_Addressing_Service is
 
            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address_Block);
            Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
-           Basic_Msg.Header.Source := 0;
+           Basic_Msg.Header.Source := CAS_Info.Logical_Address;
 
            To_Assign_Address_Block(Basic_Msg, Assign_Address_Block_Msg);
            Assign_Address_Block_Msg.CUUID := (others => Temp_Uint8);
