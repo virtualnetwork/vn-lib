@@ -3,12 +3,14 @@ with System;
 with Ada.Text_IO;
 with Buffers;
 with Global_Settings;
+with VN;
 with VN.Application_Information;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;
 with VN.Message.Assign_Address;
 with VN.Message.Assign_Address_Block;
 with VN.Message.Request_Address_Block;
+with VN.Message.Request_LS_Probe;
 with Interfaces;
 
 package Subnet_Manager_Local is
@@ -22,8 +24,11 @@ package Subnet_Manager_Local is
 
    private
 
-      package Natural_Buffer is
-         new Buffers(Natural);
+      -- package Natural_Buffer is
+      --   new Buffers(Natural);
+
+      package VN_Logical_Address_Buffer is
+         new Buffers(VN.VN_Logical_Address);
 
       package Unsigned_8_Buffer is
          new Buffers(Interfaces.Unsigned_8);
@@ -35,19 +40,30 @@ package Subnet_Manager_Local is
       Assign_Address_Msg: VN.Message.Assign_Address.VN_Message_Assign_Address;
       Assign_Address_Block_Msg: VN.Message.Assign_Address_Block.VN_Message_Assign_Address_Block;
       Request_Address_Block_Msg: VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
+      Request_LS_Probe_Msg: VN.Message.Request_LS_Probe.VN_Message_Request_LS_Probe;
 
       Recv_Status: VN.Receive_Status;
       Send_Status: VN.Send_Status;
 
       Version: VN.Message.VN_Version;
 
+      Sent_CAS_Request_LS_Probe : boolean := false;
+      CAS_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
+
+      LS_CUUID: Interfaces.Unsigned_8;
+      LS_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
+
       Temp_Uint8: Interfaces.Unsigned_8;
+      Temp_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
       Received_Address_Block : VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
       Assigned_Address : VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
       -- TODO: Change this buffer to some kind of data store.
       Assign_Address_Buffer: Unsigned_8_Buffer.Buffer(10);
+
+      -- TODO: Change this buffer to some kind of data store.
+      Request_LS_Probe_Buffer: VN_Logical_Address_Buffer.Buffer(10);
 
       function Get_Address_To_Assign(CUUID_Uint8: in Interfaces.Unsigned_8)
          return VN.VN_Logical_Address;

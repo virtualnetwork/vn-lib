@@ -4,6 +4,7 @@ with VN.Message.Local_Hello;
 with VN.Message.Assign_Address;
 with VN.Message.Assign_Address_Block;
 with VN.Message.Request_Address_Block;
+with VN.Message.Request_LS_Probe;
 
 package body Logging.Print_Out is
 
@@ -16,6 +17,8 @@ package body Logging.Print_Out is
             VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
       Assign_Address_Block_Msg:
             VN.Message.Assign_Address_Block.VN_Message_Assign_Address_Block;
+      Request_LS_Probe_Msg:
+            VN.Message.Request_LS_Probe.VN_Message_Request_LS_Probe;
    begin
 
       if Message.Header.Opcode = OPCODE_LOCAL_HELLO then
@@ -71,7 +74,17 @@ package body Logging.Print_Out is
        --     Assign_Address_Block_Msg.Assigned_Base_Address'Img);
          Put_Line("");
 
+      elsif Message.Header.Opcode = OPCODE_REQUEST_LS_PROBE then
+         VN.Message.Request_LS_Probe.To_Request_LS_Probe(Message, Request_LS_Probe_Msg);
+         Put("Request LS Probe from:" &
+             VN.VN_Logical_Address'Image(Request_LS_Probe_Msg.Header.Source) &
+            " to " &
+            VN.VN_Logical_Address'Image(Request_LS_Probe_Msg.Header.Destination) &
+            " (logical addresses), for logical address " &
+            Request_LS_Probe_Msg.Component_Address'Img);
+         Put_Line("");
       end if;
+
    end Log;
 
 end Logging.Print_Out;

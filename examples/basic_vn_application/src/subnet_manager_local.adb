@@ -19,6 +19,8 @@ package body Subnet_Manager_Local is
       use VN.Message.Assign_Address;
       use VN.Message.Assign_Address_Block;
       use VN.Message.Request_Address_Block;
+      use VN.Message.Request_LS_Probe;
+      use Interfaces;
       Counter_For_Testing: Integer := 1;
 
       Next_Period : Ada.Real_Time.Time;
@@ -54,9 +56,16 @@ package body Subnet_Manager_Local is
             -- Process incoming message.
             if Basic_Msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
                To_Local_Hello(Basic_Msg, Local_Hello_Msg);
+
                if (Local_Hello_Msg.Component_Type = VN.Message.Other or
                   Local_Hello_Msg.Component_Type = VN.Message.LS) then
+
                      Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Assign_Address_Buffer);
+
+                     if Local_Hello_Msg.Component_Type = VN.Message.LS then
+                        LS_CUUID := Local_Hello_Msg.CUUID(1);
+                     end if;
+
                end if;
 
             elsif Basic_Msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
@@ -67,6 +76,8 @@ package body Subnet_Manager_Local is
                   SM_L_Info.Logical_Address := Received_Address_Block;
                   -- Assigned_Address := Received_Address_Block; -- This is correct
                   Assigned_Address := Received_Address_Block - 1; -- This is for debugging
+
+                  CAS_Logical_Address := Assign_Address_Block_Msg.Header.Source;
                end if;
             end if;
          end if;
@@ -75,18 +86,9 @@ package body Subnet_Manager_Local is
          -- Send loop
          ----------------------------
         if not Has_Received_Address_Block and false then
+           null;
            -- TODO: This function should send out Request_Address_Blocks for
            -- other SM-x on the same local interconnect.
-           Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Request_Address_Block);
-           Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
-           Basic_Msg.Header.Source := VN.LOGICAL_ADDRES_UNKNOWN;
-           To_Request_Address_Block(Basic_Msg, Request_Address_Block_Msg);
-           Request_Address_Block_Msg.CUUID := SM_L_Info.CUUID;
-           To_Basic(Request_Address_Block_Msg, Basic_Msg);
-
-           VN.Text_IO.Put("SM-L SEND: ");
-           Global_Settings.Logger.Log(Basic_Msg);
-           Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
 
          -- Assign Address
         elsif not Unsigned_8_Buffer.Empty(Assign_Address_Buffer) and
@@ -99,11 +101,41 @@ package body Subnet_Manager_Local is
            To_Assign_Address(Basic_Msg, Assign_Address_Msg);
            Assign_Address_Msg.CUUID := (others => Temp_Uint8);
            Assign_Address_Msg.Assigned_Address := Get_Address_To_Assign(Temp_Uint8);
+
            To_Basic(Assign_Address_Msg, Basic_Msg);
 
            VN.Text_IO.Put("SM-L SEND: ");
            Global_Settings.Logger.Log(Basic_Msg);
            Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+
+           -- TODO: Fix proper lookup table to keep track of LS, CAS and
+           -- other SM-x
+            if Temp_Uint8 = LS_CUUID then
+                  LS_Logical_Address := Assign_Address_Msg.Assigned_Address;
+               else
+                  VN_Logical_Address_Buffer.Insert(Assign_Address_Msg.Assigned_Address, Request_LS_Probe_Buffer);
+            end if;
+
+            if Sent_CAS_Request_LS_Probe = false and
+               CAS_Logical_Address /= VN.LOGICAL_ADDRES_UNKNOWN then
+                  VN_Logical_Address_Buffer.Insert(CAS_Logical_Address, Request_LS_Probe_Buffer);
+                  Sent_CAS_Request_LS_Probe := true;
+            end if;
+
+        elsif not VN_Logical_Address_Buffer.Empty(Request_LS_Probe_Buffer) then
+            VN_Logical_Address_Buffer.Remove(Temp_Logical_Address, Request_LS_Probe_Buffer);
+
+            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Request_LS_Probe);
+            Basic_Msg.Header.Source := SM_L_Info.Logical_Address;
+            Basic_Msg.Header.Destination := LS_Logical_Address;
+            To_Request_LS_Probe(Basic_Msg, Request_LS_Probe_Msg);
+            Request_LS_Probe_Msg.Component_Address := Temp_Logical_Address;
+
+            To_Basic(Request_LS_Probe_Msg, Basic_Msg);
+
+            VN.Text_IO.Put("SM-L SEND: ");
+            Global_Settings.Logger.Log(Basic_Msg);
+            Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
 
         end if;
 
