@@ -43,6 +43,8 @@ package Subnet_Manager_Local is
 
       Received_Address_Block : VN.VN_Logical_Address := 0;
       Assigned_Address : VN.VN_Logical_Address := 10;
+
+      -- TODO: Change this buffer to some kind of data store.
       Assign_Address_Buffer: Unsigned_8_Buffer.Buffer(10);
 
       function Get_Address_To_Assign(CUUID_Uint8: in Interfaces.Unsigned_8)

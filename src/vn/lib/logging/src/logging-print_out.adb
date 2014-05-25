@@ -3,6 +3,7 @@ with VN.Message;
 use VN.Message;
 with VN.Message.Local_Hello;
 with VN.Message.Assign_Address;
+with VN.Message.Assign_Address_Block;
 with VN.Message.Request_Address_Block;
 
 package body Logging.Print_Out is
@@ -14,6 +15,8 @@ package body Logging.Print_Out is
       Assign_Address_Msg: VN.Message.Assign_Address.VN_Message_Assign_Address;
       Request_Address_Block_Msg:
             VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
+      Assign_Address_Block_Msg:
+            VN.Message.Assign_Address_Block.VN_Message_Assign_Address_Block;
    begin
 
       if Message.Header.Opcode = OPCODE_LOCAL_HELLO then
@@ -23,7 +26,7 @@ package body Logging.Print_Out is
              VN.VN_Logical_Address'Image(Local_Hello_Msg.Header.Source) &
             " to " &
             VN.VN_Logical_Address'Image(Local_Hello_Msg.Header.Destination) &
-            " (logical addresses), Comp_Type is " &
+            " (logical addresses), Component_Type is " &
             VN.Message.VN_Component_Type'Image(Local_Hello_Msg.Component_Type) &
             ", CUUID is " &
             Local_Hello_Msg.CUUID(1)'Img);
@@ -52,6 +55,21 @@ package body Logging.Print_Out is
             VN.VN_Logical_Address'Image(Request_Address_Block_Msg.Header.Destination) &
             " (logical addresses), from CUUID " &
             Request_Address_Block_Msg.CUUID(1)'Img);
+         Put_Line("");
+
+      elsif Message.Header.Opcode = OPCODE_ASSIGN_ADDR_BLOCK then
+         VN.Message.Assign_Address_Block.To_Assign_Address_Block(Message, Assign_Address_Block_Msg);
+         Put("Assign Address Block from:" &
+             VN.VN_Logical_Address'Image(Assign_Address_Block_Msg.Header.Source) &
+            " to " &
+            VN.VN_Logical_Address'Image(Assign_Address_Block_Msg.Header.Destination) &
+            " (logical addresses), to CUUID " &
+            Assign_Address_Block_Msg.CUUID(1)'Img &
+            " with logical addresses block " &
+            Assign_Address_Block_Msg.Assigned_Base_Address'Img);
+       --     Assign_Address_Block_Msg.Assigned_Base_Address'Img &
+       --     " the request was " &
+       --     Assign_Address_Block_Msg.Assigned_Base_Address'Img);
          Put_Line("");
 
       end if;

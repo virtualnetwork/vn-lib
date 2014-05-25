@@ -58,8 +58,8 @@ package body VN.Communication.PO_Wrapper is
       Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Hello);
       VN.Message.Local_Hello.To_Local_Hello(Basic_Msg, Local_Hello_Msg);
       Local_Hello_Msg.CUUID := This.CUUID;
-      Local_Hello_Msg.Header.Source := 0;
-      Local_Hello_Msg.Header.Destination := 0;
+      Local_Hello_Msg.Header.Source := VN.LOGICAL_ADDRES_UNKNOWN;
+      Local_Hello_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
       Local_Hello_Msg.Component_Type := This.This_Component_Type;
       VN.Message.Local_Hello.To_Basic(Local_Hello_Msg, Basic_Msg);
 
@@ -79,7 +79,7 @@ package body VN.Communication.PO_Wrapper is
    begin
       Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Local_Ack);
       Basic_Msg.Header.Source := VN.LOGICAL_ADDRES_UNKNOWN;
-      Basic_Msg.Header.Destination := 0;
+      Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
 
       This.PO_Access.Send_To_Other(Basic_Msg, Status);
 
@@ -98,7 +98,7 @@ package body VN.Communication.PO_Wrapper is
       Request_Address_Block_Msg.CUUID := This.CUUID;
       VN.Message.Request_Address_Block.To_Basic(Request_Address_Block_Msg, Basic_Msg);
       Basic_Msg.Header.Source := VN.LOGICAL_ADDRES_UNKNOWN;
-      Basic_Msg.Header.Destination := 0;
+      Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
 
       This.PO_Access.Send_To_Other(Basic_Msg, Status);
 

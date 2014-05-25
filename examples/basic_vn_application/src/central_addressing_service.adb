@@ -4,30 +4,28 @@ with Global_Settings;
 with VN.Application_Information;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;
+with VN.Message.Request_Address_Block;
+with VN.Message.Assign_Address_Block;
 
 package body Central_Addressing_Service is
 
    task body CAS is
       use Ada.Real_Time;
       use VN;
+      use VN.Message;
       use VN.Message.Local_Hello;
+      use VN.Message.Request_Address_Block;
+      use VN.Message.Assign_Address_Block;
 
       i: Integer := 1;
 
-      App_Info: VN.Application_Information.VN_Application_Information;
-
-      Basic_Msg: VN.Message.VN_Message_Basic;
-      Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
-
-      Recv_Status: VN.Receive_Status;
-      Send_Status: VN.Send_Status;
 
       Next_Period : Ada.Real_Time.Time;
       Period : constant Ada.Real_Time.Time_Span :=
                            Ada.Real_Time.Microseconds(Cycle_Time);
    begin
-      App_Info.Logical_Address := 1;
-      App_Info.Component_Type := VN.Message.Other;
+      CAS_Info.Logical_Address := 1;
+      CAS_Info.Component_Type := VN.Message.Other;
 
       Global_Settings.Start_Time.Get(Next_Period);
       Ada.Text_IO.Put_Line("CAS  STAT: Starts.");
@@ -49,21 +47,36 @@ package body Central_Addressing_Service is
             Ada.Text_IO.Put("CAS  RECV: ");
             Global_Settings.Logger.Log(Basic_Msg);
 
-         --   if Basic_Msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
-         --      To_Assign_Address(Basic_Msg, Assign_Address_Msg);
-         --      App_Info.Logical_Address := Assign_Address_Msg.Assigned_Address;
-         --   end if;
+            if Basic_Msg.Header.Opcode = VN.Message.OPCODE_REQUEST_ADDR_BLOCK then
+               To_Request_Address_Block(Basic_Msg, Request_Address_Block_Msg);
+               Unsigned_8_Buffer.Insert(Request_Address_Block_Msg.CUUID(1), Assign_Address_Block_Buffer);
+            end if;
 
          end if;
 
          ----------------------------
          -- Send loop
          ----------------------------
-         --if App_Info.Has_Logical_Address then
-         --   null;
-         --elsif not App_Info.Has_Logical_Address then
-         --   null;
-         --end if
+        if not Unsigned_8_Buffer.Empty(Assign_Address_Block_Buffer) then
+           Unsigned_8_Buffer.Remove(Temp_Uint8, Assign_Address_Block_Buffer);
+
+           Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address_Block);
+           Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
+           Basic_Msg.Header.Source := 0;
+
+           To_Assign_Address_Block(Basic_Msg, Assign_Address_Block_Msg);
+           Assign_Address_Block_Msg.CUUID := (others => Temp_Uint8);
+           Assign_Address_Block_Msg.Assigned_Base_Address := Assigned_Address_Block;
+           -- Assign_Address_Block_Msg.Response_Type := Assigned_Address_Block;
+           To_Basic(Assign_Address_Block_Msg, Basic_Msg);
+
+           Assigned_Address_Block := Assigned_Address_Block + 65535;
+
+           Ada.Text_IO.Put("CAS  SEND: ");
+           Global_Settings.Logger.Log(Basic_Msg);
+           Global_Settings.Com_CAS.Send(Basic_Msg, Send_Status);
+
+        end if;
 
 
          Next_Period := Next_Period + Period;
@@ -73,7 +86,7 @@ package body Central_Addressing_Service is
       ----------------------------
 
       Ada.Text_IO.Put_Line("CAS  STAT: Stop. Logical Address: " &
-                                 App_Info.Logical_Address'Img);
+                                 CAS_Info.Logical_Address'Img);
 
    end CAS;
 

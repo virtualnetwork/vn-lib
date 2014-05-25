@@ -73,6 +73,7 @@ package body Subnet_Manager_Local is
            -- Is the CUUID the CUUID of CAS requesting SM-L? (check
            -- standards at home)
            Basic_Msg.Header.Destination := 2;
+           Basic_Msg.Header.Source := 2;
            To_Request_Address_Block(Basic_Msg, Request_Address_Block_Msg);
            Request_Address_Block_Msg.CUUID := SM_L_Info.CUUID;
            To_Basic(Request_Address_Block_Msg, Basic_Msg);

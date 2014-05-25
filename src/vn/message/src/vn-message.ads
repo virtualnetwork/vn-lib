@@ -50,8 +50,6 @@ package VN.Message is
    ACK_OK 	: constant VN_Status := 0;
    ACK_ERROR 	: constant VN_Status := 1;
 
-
-
    type VN_Response_Type is (Valid, Invalid);
    for VN_Response_Type'Size use 8;
 
