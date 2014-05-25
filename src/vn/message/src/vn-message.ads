@@ -91,7 +91,10 @@ package VN.Message is
    OPCODE_DISTRIBUTE_ROUTE 	: constant VN_Opcode := 16#72#;
    OPCODE_ASSIGN_ADDR_BLOCK	: constant VN_Opcode := 16#4D#;
    OPCODE_ASSIGN_ADDR		: constant VN_Opcode := 16#7B#;
-   OPCODE_REQUEST_ADDR_BLOCK	: constant VN_Opcode := 16#4C#;
+   OPCODE_REQUEST_ADDR_BLOCK	 : constant VN_Opcode := 16#4C#;
+   OPCODE_REQUEST_LS_PROBE       : constant VN_Opcode := 16#73#;
+   OPCODE_PROBE_REQUEST    : constant VN_Opcode := 16#78#;
+   OPCODE_PROBE_REPLY	   : constant VN_Opcode := 16#79#;
 
    LOCAL_ACK_OK      : constant integer := 0;
    LOCAL_ACK_ERRROR  : constant integer := 1;
@@ -140,10 +143,10 @@ package VN.Message is
       Header        at 0 range 0 .. (HEADER_SIZE * 8 - 1);
       Payload       at 0 range (HEADER_SIZE * 8) ..
                                (HEADER_SIZE * 8 + MAX_PAYLOAD_SIZE * 8 - 1);
-      Checksum      at 0 range (HEADER_SIZE + MAX_PAYLOAD_SIZE) * 8 .. 
+      Checksum      at 0 range (HEADER_SIZE + MAX_PAYLOAD_SIZE) * 8 ..
                                (HEADER_SIZE + MAX_PAYLOAD_SIZE + CHECKSUM_SIZE) * 8 - 1;
    end record;
-   
+
    for VN_Message_Basic'Alignment use 2;
 
 

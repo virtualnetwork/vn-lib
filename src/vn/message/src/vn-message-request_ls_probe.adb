@@ -17,7 +17,7 @@ package body VN.Message.Request_LS_Probe is
                                     REQUEST_LS_PROBE_UNKNOWN_PAYLOAD_SIZE);
    begin
       Request_LS_Probe_VN_Msg.Header.Message_Type    := Type_Request_LS_Probe;
-      Request_LS_Probe_VN_Msg.Header.Opcode          := OPCODE_REQUEST_ADDR_BLOCK;
+      Request_LS_Probe_VN_Msg.Header.Opcode          := OPCODE_REQUEST_LS_PROBE;
       Request_LS_Probe_VN_Msg.Header.Payload_Length  := Payload_Length;
    end To_Request_LS_Probe;
 
