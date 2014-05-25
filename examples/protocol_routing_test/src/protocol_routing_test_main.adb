@@ -42,7 +42,6 @@ procedure Protocol_Routing_Test_Main is
 
    msg : VN.Message.VN_Message_Basic;
    msgAssign : VN.Message.Assign_Address.VN_Message_Assign_Address;
---     msgReq    : VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
    msgRoute  : VN.Message.Distribute_Route.VN_Message_Distribute_Route;
 
    sendStatus : VN.Send_Status;
@@ -70,7 +69,7 @@ begin
      (VN.Message.Factory.Create(VN.Message.Type_Distribute_Route), msgRoute);
 
 
-   if Protocol_Routing_Test.Temp = 0 then
+   if Protocol_Routing_Test.Identifier = 0 then
       myAddress := 100 + VN.VN_Logical_Address(Protocol_Routing_Test.C1(1));
    end if;
 
@@ -103,7 +102,7 @@ begin
                VN.Text_IO.Put_Line("Other");
             end if;
 
-            if Protocol_Routing_Test.Temp = 0 then
+            if Protocol_Routing_Test.Identifier = 0 then
                msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
                VN.Message.Assign_Address.To_Assign_Address(msg, msgAssign);
 
@@ -157,7 +156,7 @@ begin
             VN.Text_IO.New_Line;
 
 
-            if Protocol_Routing_Test.Temp = 0 then
+            if Protocol_Routing_Test.Identifier = 0 then
 
                msgRoute.Header.Source := myAddress;
                msgRoute.Header.Destination := msg.Header.Source;
