@@ -1,5 +1,4 @@
 with Ada.Real_Time;
-with Ada.Text_IO;
 with Global_Settings;
 with VN.Application_Information;
 with VN.Message.Factory;
@@ -28,7 +27,7 @@ package body Central_Addressing_Service is
       CAS_Info.Component_Type := VN.Message.Other;
 
       Global_Settings.Start_Time.Get(Next_Period);
-      Ada.Text_IO.Put_Line("CAS  STAT: Starts.");
+      VN.Text_IO.Put_Line("CAS  STAT: Starts.");
 
       ----------------------------
       loop
@@ -40,11 +39,11 @@ package body Central_Addressing_Service is
          Global_Settings.Com_CAS.Receive(Basic_Msg, Recv_Status);
 
          if Recv_Status = VN.NO_MSG_RECEIVED then
-            Ada.Text_IO.Put_Line("CAS  RECV: Empty.");
+            VN.Text_IO.Put_Line("CAS  RECV: Empty.");
          elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
             Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
-            Ada.Text_IO.Put("CAS  RECV: ");
+            VN.Text_IO.Put("CAS  RECV: ");
             Global_Settings.Logger.Log(Basic_Msg);
 
             if Basic_Msg.Header.Opcode = VN.Message.OPCODE_REQUEST_ADDR_BLOCK then
@@ -67,12 +66,12 @@ package body Central_Addressing_Service is
            To_Assign_Address_Block(Basic_Msg, Assign_Address_Block_Msg);
            Assign_Address_Block_Msg.CUUID := (others => Temp_Uint8);
            Assign_Address_Block_Msg.Assigned_Base_Address := Assigned_Address_Block;
-           -- Assign_Address_Block_Msg.Response_Type := Assigned_Address_Block;
+           Assign_Address_Block_Msg.Response_Type := VN.Message.Valid;
            To_Basic(Assign_Address_Block_Msg, Basic_Msg);
 
            Assigned_Address_Block := Assigned_Address_Block + 65535;
 
-           Ada.Text_IO.Put("CAS  SEND: ");
+           VN.Text_IO.Put("CAS  SEND: ");
            Global_Settings.Logger.Log(Basic_Msg);
            Global_Settings.Com_CAS.Send(Basic_Msg, Send_Status);
 
@@ -85,11 +84,11 @@ package body Central_Addressing_Service is
       end loop;
       ----------------------------
 
-      Ada.Text_IO.Put_Line("CAS  STAT: Stop. Logical Address: " &
+      VN.Text_IO.Put_Line("CAS  STAT: Stop. Logical Address: " &
                                  CAS_Info.Logical_Address'Img);
 
    end CAS;
 
-   CAS1: CAS(20, 2500000, 10, 3);
+   CAS1: CAS(20, Global_Settings.Cycle_Time_Applications, 10, 3);
 
 end Central_Addressing_Service;

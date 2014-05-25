@@ -1,4 +1,3 @@
-with Ada.Text_IO;
 with VN.Message;
 use VN.Message;
 with VN.Message.Local_Hello;
@@ -10,7 +9,7 @@ package body Logging.Print_Out is
 
    procedure Log(This: in out Print_Out_Logger;
                  Message: out VN.Message.VN_Message_Basic) is
-      use Ada.Text_IO;
+      use VN.Text_IO;
       Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
       Assign_Address_Msg: VN.Message.Assign_Address.VN_Message_Assign_Address;
       Request_Address_Block_Msg:

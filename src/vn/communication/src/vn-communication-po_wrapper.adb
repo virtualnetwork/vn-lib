@@ -1,4 +1,3 @@
-with Ada.Text_IO;
 with VN.Message;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;

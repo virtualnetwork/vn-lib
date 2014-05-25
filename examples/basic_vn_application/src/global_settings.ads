@@ -26,6 +26,9 @@ package Global_Settings is
    CUUID_LS    : aliased VN.VN_CUUID := (others => 33);
    CUUID_App   : aliased VN.VN_CUUID := (others => 44);
 
+   Cycle_Time_Applications : constant Positive := 2110000;
+   Cycle_Time_SM_L         : constant Positive := 500000;
+
    -- Communication between Application, CAS, LS and SM-L
    PO_To_Application : aliased VN.Communication.PO.VN_PO;
    PO_To_CAS         : aliased VN.Communication.PO.VN_PO;

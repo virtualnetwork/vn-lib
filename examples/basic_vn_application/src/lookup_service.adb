@@ -1,5 +1,4 @@
 with Ada.Real_Time;
-with Ada.Text_IO;
 with Global_Settings;
 with VN.Application_Information;
 with VN.Message.Factory;
@@ -34,7 +33,7 @@ package body Lookup_Service is
       App_Info.Logical_Address := 2;
 
       Global_Settings.Start_Time.Get(Next_Period);
-      Ada.Text_IO.Put_Line("LS   STAT: Starts.");
+      VN.Text_IO.Put_Line("LS   STAT: Starts.");
 
       ----------------------------
       loop
@@ -46,11 +45,11 @@ package body Lookup_Service is
          Global_Settings.Com_LS.Receive(Basic_Msg, Recv_Status);
 
          if Recv_Status = VN.NO_MSG_RECEIVED then
-            Ada.Text_IO.Put_Line("LS   RECV: Empty.");
+            VN.Text_IO.Put_Line("LS   RECV: Empty.");
          elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
             Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
-            Ada.Text_IO.Put("LS   RECV: ");
+            VN.Text_IO.Put("LS   RECV: ");
             Global_Settings.Logger.Log(Basic_Msg);
 
             if Basic_Msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
@@ -76,11 +75,11 @@ package body Lookup_Service is
       end loop;
       ----------------------------
 
-      Ada.Text_IO.Put_Line("LS   STAT: Stop. Logical Address: " &
+      VN.Text_IO.Put_Line("LS   STAT: Stop. Logical Address: " &
                                  App_Info.Logical_Address'Img);
 
    end LS;
 
-   LS1: LS(30, 2500000, 30, 3);
+   LS1: LS(30, Global_Settings.Cycle_Time_Applications, 30, 3);
 
 end Lookup_Service;
