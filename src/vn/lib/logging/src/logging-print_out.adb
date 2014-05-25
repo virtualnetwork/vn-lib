@@ -3,6 +3,7 @@ with VN.Message;
 use VN.Message;
 with VN.Message.Local_Hello;
 with VN.Message.Assign_Address;
+with VN.Message.Request_Address_Block;
 
 package body Logging.Print_Out is
 
@@ -11,6 +12,8 @@ package body Logging.Print_Out is
       use Ada.Text_IO;
       Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
       Assign_Address_Msg: VN.Message.Assign_Address.VN_Message_Assign_Address;
+      Request_Address_Block_Msg:
+            VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
    begin
 
       if Message.Header.Opcode = OPCODE_LOCAL_HELLO then
@@ -39,6 +42,16 @@ package body Logging.Print_Out is
             Assign_Address_Msg.CUUID(1)'Img &
             " gets logical address " &
             Assign_Address_Msg.Assigned_Address'Img);
+         Put_Line("");
+
+      elsif Message.Header.Opcode = OPCODE_REQUEST_ADDR_BLOCK then
+         VN.Message.Request_Address_Block.To_Request_Address_Block(Message, Request_Address_Block_Msg);
+         Put("Request Address Block from:" &
+             VN.VN_Logical_Address'Image(Request_Address_Block_Msg.Header.Source) &
+            " to " &
+            VN.VN_Logical_Address'Image(Request_Address_Block_Msg.Header.Destination) &
+            " (logical addresses), from CUUID " &
+            Request_Address_Block_Msg.CUUID(1)'Img);
          Put_Line("");
 
       end if;

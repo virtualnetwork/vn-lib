@@ -7,6 +7,7 @@ with VN.Application_Information;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;
 with VN.Message.Assign_Address;
+with VN.Message.Request_Address_Block;
 with Interfaces;
 
 package Subnet_Manager_Local is

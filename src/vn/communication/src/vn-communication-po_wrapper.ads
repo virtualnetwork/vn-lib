@@ -22,6 +22,7 @@ package VN.Communication.PO_Wrapper is
 
    procedure Init(This: in out VN_PO_Wrapper);
    procedure Send_Local_Ack(This: in out VN_PO_Wrapper);
+   procedure Send_Request_Address_Block(This: in out VN_PO_Wrapper);
 
    type PO_Wrapper_Access is access all VN_PO_Wrapper'Class;
 

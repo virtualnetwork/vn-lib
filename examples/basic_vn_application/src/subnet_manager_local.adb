@@ -67,14 +67,14 @@ package body Subnet_Manager_Local is
          ----------------------------
          -- Send loop
          ----------------------------
-        if not Has_Received_Address_Block then
+        if not Has_Received_Address_Block and false then
            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Request_Address_Block);
            -- TODO: From where should SM-L request address block?
            -- Is the CUUID the CUUID of CAS requesting SM-L? (check
            -- standards at home)
            Basic_Msg.Header.Destination := 2;
            To_Request_Address_Block(Basic_Msg, Request_Address_Block_Msg);
-           Request_Address_Block_Msg.CUUID := App_Info.CUUID;
+           Request_Address_Block_Msg.CUUID := SM_L_Info.CUUID;
            To_Basic(Request_Address_Block_Msg, Basic_Msg);
 
            Ada.Text_IO.Put("SM-L SEND: ");
