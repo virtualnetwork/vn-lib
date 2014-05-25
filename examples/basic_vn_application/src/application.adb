@@ -81,6 +81,6 @@ package body Application is
 
    end VN_Application;
 
-   App: VN_Application(30, 5000000, 30, 3);
+   App: VN_Application(30, 2500000, 30, 3);
 
 end Application;

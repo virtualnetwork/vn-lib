@@ -90,6 +90,6 @@ package body Central_Addressing_Service is
 
    end CAS;
 
-   CAS1: CAS(20, 5000000, 10, 3);
+   CAS1: CAS(20, 2500000, 10, 3);
 
 end Central_Addressing_Service;

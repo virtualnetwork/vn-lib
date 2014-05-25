@@ -81,6 +81,6 @@ package body Lookup_Service is
 
    end LS;
 
-   LS1: LS(30, 5000000, 30, 3);
+   LS1: LS(30, 2500000, 30, 3);
 
 end Lookup_Service;

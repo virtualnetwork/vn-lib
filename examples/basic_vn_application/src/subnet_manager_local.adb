@@ -113,7 +113,7 @@ package body Subnet_Manager_Local is
    end SM_L;
 
    -- Start one instance of the SM-L
-   SM_L1: SM_L(20, 1000000, 80, 3);
+   SM_L1: SM_L(20, 500000, 80, 3);
 
    ----------------------------
    -- Helper functions below
