@@ -11,6 +11,9 @@ package VN.Message is
                             Type_Request_Address_Block,
                             Type_Assign_Address_Block,
                             Type_Assign_Address,
+                            Type_Request_LS_Probe,
+                            Type_Probe_Request,
+                            Type_Probe_Reply,
                             Type_Distribute_Route);
    for VN_Message_Type'Size use 8;
 
@@ -34,7 +37,7 @@ package VN.Message is
 
    type VN_Opcode is mod 2 ** 8;
    for VN_Opcode'Size use 8;
-   
+
    type VN_Payload is mod 2 ** 8;
    for VN_Payload'Size use 8;
 
