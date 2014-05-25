@@ -38,6 +38,15 @@ package VN.Message is
    type VN_Opcode is mod 2 ** 8;
    for VN_Opcode'Size use 8;
 
+   type VN_Dialog_Identifier is mod 2 ** 16;
+   for VN_Dialog_Identifier'Size use 16;
+
+   type VN_Reply_Count is mod 2 ** 16;
+   for VN_Reply_Count'Size use 16;
+
+   type VN_Reply_Period is mod 2 ** 16;
+   for VN_Reply_Period'Size use 16;
+
    type VN_Payload is mod 2 ** 8;
    for VN_Payload'Size use 8;
 
@@ -65,10 +74,13 @@ package VN.Message is
    STATUS_SIZE             : constant integer := 1;
    RESPONSE_TYPE_SIZE      : constant integer := 1;
    VN_LOGICAL_ADDRESS_SIZE : constant integer := 4;
+   REPLY_COUNT_SIZE        : constant integer := 2;
+   REPLY_PERIOD_SIZE       : constant integer := 2;
+   DIALOG_IDENTIFIER_SIZE  : constant integer := 2;
 
    OPCODE_LOCAL_HELLO 		: constant VN_Opcode := 16#20#;
-   OPCODE_LOCAL_ACK 		: constant VN_Opcode := 16#21#;  
-   OPCODE_DISTRIBUTE_ROUTE 	: constant VN_Opcode := 16#72#;  
+   OPCODE_LOCAL_ACK 		: constant VN_Opcode := 16#21#;
+   OPCODE_DISTRIBUTE_ROUTE 	: constant VN_Opcode := 16#72#;
    OPCODE_ASSIGN_ADDR_BLOCK	: constant VN_Opcode := 16#4D#;
    OPCODE_ASSIGN_ADDR		: constant VN_Opcode := 16#7B#;
    OPCODE_REQUEST_ADDR_BLOCK	: constant VN_Opcode := 16#4C#;
