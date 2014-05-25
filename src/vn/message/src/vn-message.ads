@@ -23,6 +23,12 @@ package VN.Message is
    type VN_Component_Type is (CAS, LS, SM_L, SM_x, SM_Gateway, Other);
    for VN_Component_Type'Size use 8;
 
+   type VN_Fault_Indicator is mod 2 ** 32;
+   for VN_Fault_Indicator'Size use 32;
+
+   type VN_Uptime is mod 2 ** 32;
+   for VN_Uptime'Size use 32;
+
    type VN_Version is mod 2 ** 8;
    for VN_Version'Size use 8;
 
@@ -77,6 +83,8 @@ package VN.Message is
    REPLY_COUNT_SIZE        : constant integer := 2;
    REPLY_PERIOD_SIZE       : constant integer := 2;
    DIALOG_IDENTIFIER_SIZE  : constant integer := 2;
+   FAULT_INDICATOR_SIZE    : constant integer := 4;
+   UPTIME_SIZE             : constant integer := 4;
 
    OPCODE_LOCAL_HELLO 		: constant VN_Opcode := 16#20#;
    OPCODE_LOCAL_ACK 		: constant VN_Opcode := 16#21#;
