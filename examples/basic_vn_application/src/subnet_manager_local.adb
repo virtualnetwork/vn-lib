@@ -27,7 +27,7 @@ package body Subnet_Manager_Local is
 
    begin
       SM_L_Info.Component_Type := VN.Message.SM_L;
-      SM_L_Info.Logical_Address := 2;
+      SM_L_Info.Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
       Global_Settings.Start_Time.Get(Next_Period);
       VN.Text_IO.Put_Line("SM-L STAT: Starts.");
@@ -40,9 +40,6 @@ package body Subnet_Manager_Local is
          -- Receive loop
          ----------------------------
          Global_Settings.Com_SM_L.Receive(Basic_Msg, Recv_Status);
-
-         --VN.Text_IO.Put_Line("SM-L RECV Status: " &
-         --                       VN.Receive_Status'Image(Recv_Status));
 
          if Recv_Status = VN.NO_MSG_RECEIVED then
             VN.Text_IO.Put_Line("SM-L RECV: Empty.");
@@ -81,8 +78,8 @@ package body Subnet_Manager_Local is
            -- TODO: This function should send out Request_Address_Blocks for
            -- other SM-x on the same local interconnect.
            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Request_Address_Block);
-           Basic_Msg.Header.Destination := 2;
-           Basic_Msg.Header.Source := 2;
+           Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
+           Basic_Msg.Header.Source := VN.LOGICAL_ADDRES_UNKNOWN;
            To_Request_Address_Block(Basic_Msg, Request_Address_Block_Msg);
            Request_Address_Block_Msg.CUUID := SM_L_Info.CUUID;
            To_Basic(Request_Address_Block_Msg, Basic_Msg);
@@ -98,7 +95,7 @@ package body Subnet_Manager_Local is
 
            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
            Basic_Msg.Header.Source := SM_L_Info.Logical_Address;
-           Basic_Msg.Header.Destination := 0;
+           Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
            To_Assign_Address(Basic_Msg, Assign_Address_Msg);
            Assign_Address_Msg.CUUID := (others => Temp_Uint8);
            Assign_Address_Msg.Assigned_Address := Get_Address_To_Assign(Temp_Uint8);

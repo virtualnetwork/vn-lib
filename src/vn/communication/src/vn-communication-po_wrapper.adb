@@ -93,11 +93,12 @@ package body VN.Communication.PO_Wrapper is
       Status            : VN.Send_Status;
    begin
       Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Request_Address_Block);
+      Basic_Msg.Header.Source := VN.LOGICAL_ADDRES_UNKNOWN;
+      Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
+
       VN.Message.Request_Address_Block.To_Request_Address_Block(Basic_Msg, Request_Address_Block_Msg);
       Request_Address_Block_Msg.CUUID := This.CUUID;
       VN.Message.Request_Address_Block.To_Basic(Request_Address_Block_Msg, Basic_Msg);
-      Basic_Msg.Header.Source := VN.LOGICAL_ADDRES_UNKNOWN;
-      Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
 
       This.PO_Access.Send_To_Other(Basic_Msg, Status);
 

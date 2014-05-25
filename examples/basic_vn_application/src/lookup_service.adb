@@ -30,7 +30,7 @@ package body Lookup_Service is
                            Ada.Real_Time.Microseconds(Cycle_Time);
    begin
       App_Info.Component_Type := VN.Message.Other;
-      App_Info.Logical_Address := 2;
+      App_Info.Logical_Address :=VN.LOGICAL_ADDRES_UNKNOWN;
 
       Global_Settings.Start_Time.Get(Next_Period);
       VN.Text_IO.Put_Line("LS   STAT: Starts.");
