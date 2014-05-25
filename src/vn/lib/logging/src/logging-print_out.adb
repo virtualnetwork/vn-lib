@@ -5,6 +5,8 @@ with VN.Message.Assign_Address;
 with VN.Message.Assign_Address_Block;
 with VN.Message.Request_Address_Block;
 with VN.Message.Request_LS_Probe;
+with VN.Message.Probe_Reply;
+with VN.Message.Probe_Request;
 
 package body Logging.Print_Out is
 
@@ -19,6 +21,10 @@ package body Logging.Print_Out is
             VN.Message.Assign_Address_Block.VN_Message_Assign_Address_Block;
       Request_LS_Probe_Msg:
             VN.Message.Request_LS_Probe.VN_Message_Request_LS_Probe;
+      Probe_Request_Msg:
+            VN.Message.Probe_Request.VN_Message_Probe_Request;
+      Probe_Reply_Msg:
+            VN.Message.Probe_Reply.VN_Message_Probe_Reply;
    begin
 
       if Message.Header.Opcode = OPCODE_LOCAL_HELLO then
@@ -83,6 +89,25 @@ package body Logging.Print_Out is
             " (logical addresses), for logical address " &
             Request_LS_Probe_Msg.Component_Address'Img);
          Put_Line("");
+
+      elsif Message.Header.Opcode = OPCODE_PROBE_REQUEST then
+         VN.Message.Probe_Request.To_Probe_Request(Message, Probe_Request_Msg);
+         Put("Probe Request from:" &
+             VN.VN_Logical_Address'Image(Probe_Request_Msg.Header.Source) &
+            " to " &
+            VN.VN_Logical_Address'Image(Probe_Request_Msg.Header.Destination) &
+            " (logical addresses)");
+         Put_Line("");
+
+      elsif Message.Header.Opcode = OPCODE_PROBE_REPLY then
+         VN.Message.Probe_Reply.To_Probe_Reply(Message, Probe_Reply_Msg);
+         Put("Probe Reply from:" &
+             VN.VN_Logical_Address'Image(Probe_Reply_Msg.Header.Source) &
+            " to " &
+            VN.VN_Logical_Address'Image(Probe_Reply_Msg.Header.Destination) &
+            " (logical addresses)");
+         Put_Line("");
+
       end if;
 
    end Log;

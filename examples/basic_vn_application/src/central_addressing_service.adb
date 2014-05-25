@@ -75,12 +75,13 @@ package body Central_Addressing_Service is
            Global_Settings.Logger.Log(Basic_Msg);
            Global_Settings.Com_CAS.Send(Basic_Msg, Send_Status);
 
+
         end if;
 
 
          Next_Period := Next_Period + Period;
          i := i + 1;
-         exit when i = 6;
+         exit when i = 10;
       end loop;
       ----------------------------
 
