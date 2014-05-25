@@ -7,6 +7,7 @@ with VN.Application_Information;
 with VN.Message.Factory;
 with VN.Message.Local_Hello;
 with VN.Message.Assign_Address;
+with VN.Message.Assign_Address_Block;
 with VN.Message.Request_Address_Block;
 with Interfaces;
 
@@ -32,6 +33,7 @@ package Subnet_Manager_Local is
       Basic_Msg: VN.Message.VN_Message_Basic;
       Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
       Assign_Address_Msg: VN.Message.Assign_Address.VN_Message_Assign_Address;
+      Assign_Address_Block_Msg: VN.Message.Assign_Address_Block.VN_Message_Assign_Address_Block;
       Request_Address_Block_Msg: VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
 
       Recv_Status: VN.Receive_Status;
@@ -41,8 +43,8 @@ package Subnet_Manager_Local is
 
       Temp_Uint8: Interfaces.Unsigned_8;
 
-      Received_Address_Block : VN.VN_Logical_Address := 0;
-      Assigned_Address : VN.VN_Logical_Address := 10;
+      Received_Address_Block : VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
+      Assigned_Address : VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
       -- TODO: Change this buffer to some kind of data store.
       Assign_Address_Buffer: Unsigned_8_Buffer.Buffer(10);

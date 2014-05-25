@@ -69,7 +69,7 @@ package body Central_Addressing_Service is
            Assign_Address_Block_Msg.Response_Type := VN.Message.Valid;
            To_Basic(Assign_Address_Block_Msg, Basic_Msg);
 
-           Assigned_Address_Block := Assigned_Address_Block + 65535;
+           Assigned_Address_Block := Assigned_Address_Block + 65536;
 
            VN.Text_IO.Put("CAS  SEND: ");
            Global_Settings.Logger.Log(Basic_Msg);

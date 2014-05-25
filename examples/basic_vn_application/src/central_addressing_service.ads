@@ -34,7 +34,7 @@ package Central_Addressing_Service is
       Send_Status: VN.Send_Status;
 
       Temp_Uint8: Interfaces.Unsigned_8;
-      Assigned_Address_Block : VN.VN_Logical_Address := 65535;
+      Assigned_Address_Block : VN.VN_Logical_Address := 65536;
 
       -- TODO: Change this buffer to some kind of data store.
       Assign_Address_Block_Buffer: Unsigned_8_Buffer.Buffer(10);
