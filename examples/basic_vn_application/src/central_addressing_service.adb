@@ -5,6 +5,8 @@ with VN.Message.Factory;
 with VN.Message.Local_Hello;
 with VN.Message.Request_Address_Block;
 with VN.Message.Assign_Address_Block;
+with VN.Message.Probe_Request;
+with VN.Message.Probe_Reply;
 
 package body Central_Addressing_Service is
 
@@ -15,6 +17,8 @@ package body Central_Addressing_Service is
       use VN.Message.Local_Hello;
       use VN.Message.Request_Address_Block;
       use VN.Message.Assign_Address_Block;
+      use VN.Message.Probe_Request;
+      use VN.Message.Probe_Reply;
 
       i: Integer := 1;
 
@@ -49,6 +53,11 @@ package body Central_Addressing_Service is
             if Basic_Msg.Header.Opcode = VN.Message.OPCODE_REQUEST_ADDR_BLOCK then
                To_Request_Address_Block(Basic_Msg, Request_Address_Block_Msg);
                Unsigned_8_Buffer.Insert(Request_Address_Block_Msg.CUUID(1), Assign_Address_Block_Buffer);
+
+            elsif Basic_Msg.Header.Opcode = VN.Message.OPCODE_PROBE_REQUEST then
+               To_Probe_Request(Basic_Msg, Probe_Request_Msg);
+               VN_Logical_Address_Buffer.Insert(Probe_Request_Msg.Header.Source, Probe_Reply_Buffer);
+
             end if;
 
          end if;
@@ -75,6 +84,16 @@ package body Central_Addressing_Service is
            Global_Settings.Logger.Log(Basic_Msg);
            Global_Settings.Com_CAS.Send(Basic_Msg, Send_Status);
 
+        elsif not VN_Logical_Address_Buffer.Empty(Probe_Reply_Buffer) then
+            VN_Logical_Address_Buffer.Remove(Temp_Logical_Address, Probe_Reply_Buffer);
+
+            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Probe_Reply);
+            Basic_Msg.Header.Source := CAS_Info.Logical_Address;
+            Basic_Msg.Header.Destination := Temp_Logical_Address;
+
+            VN.Text_IO.Put("CAS  SEND: ");
+            Global_Settings.Logger.Log(Basic_Msg);
+            Global_Settings.Com_Application.Send(Basic_Msg, Send_Status);
 
         end if;
 
