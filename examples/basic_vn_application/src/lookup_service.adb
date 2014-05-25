@@ -61,6 +61,7 @@ package body Lookup_Service is
                VN_Logical_Address_Buffer.Insert(Request_LS_Probe_Msg.Component_Address, Probe_Request_Buffer);
 
             elsif Basic_Msg.Header.Opcode = VN.Message.OPCODE_PROBE_REPLY then
+               -- TODO: Leave it at a print out (above) for now.
                null;
             end if;
 
