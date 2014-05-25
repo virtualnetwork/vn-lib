@@ -1,8 +1,13 @@
 package VN.Message.Probe_Reply is
 
+   -- CUUID_SIZE twice for XUUID
    PROBE_REPLY_UNKNOWN_PAYLOAD_SIZE :
-                                    constant integer := MAX_PAYLOAD_SIZE - CUUID_SIZE;
-
+                                    constant integer := MAX_PAYLOAD_SIZE -
+                                                         CUUID_SIZE -
+                                                         CUUID_SIZE -
+                                                         FAULT_INDICATOR_SIZE - 
+                                                         UPTIME_SIZE -
+                                                         DIALOG_IDENTIFIER_SIZE;
    type VN_Probe_Reply_Unknown_Payload is Array(1 ..
                               PROBE_REPLY_UNKNOWN_PAYLOAD_SIZE) of
                               Interfaces.Unsigned_8;
