@@ -6,7 +6,7 @@ package body VN.Application_Information is
    function Has_Logical_Address(App_Info: in VN_Application_Information)
                                     return Boolean is
    begin
-      if App_Info.Logical_Address /= 0 then
+      if App_Info.Logical_Address /= 0 and App_Info.Logical_Address /= 2 then
          return true; -- TODO: Fix correct response.
       else
          return false;

@@ -40,11 +40,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
        ### CPU and memory settings
        # Recommended settings
-       vb.customize ["modifyvm", :id, "--memory", "4096"]
-       vb.customize ["modifyvm", :id, "--cpus", "4"]
+       # vb.customize ["modifyvm", :id, "--memory", "4096"]
+       # vb.customize ["modifyvm", :id, "--cpus", "4"]
 
        # Low-end settings
-       # vb.customize ["modifyvm", :id, "--memory", "512"]
-       # vb.customize ["modifyvm", :id, "--cpus", "1"]
+       vb.customize ["modifyvm", :id, "--memory", "512"]
+       vb.customize ["modifyvm", :id, "--cpus", "1"]
      end
 end

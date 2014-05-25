@@ -1,74 +1,179 @@
 with Ada.Real_Time;
-with Ada.Text_IO;
+with Buffers;
 with Global_Settings;
 with VN.Application_Information;
+with VN.Message.Factory;
 with VN.Message.Local_Hello;
+with VN.Message.Assign_Address;
+with VN.Message.Assign_Address_Block;
+with VN.Message.Request_Address_Block;
+with Interfaces;
 
 package body Subnet_Manager_Local is
 
    task body SM_L is
       use Ada.Real_Time;
       use VN;
+      use VN.Message;
       use VN.Message.Local_Hello;
-      i: Integer := 1;
-
-      SM_L_Info: VN.Application_Information.VN_Application_Information;
-
-      Basic_Msg: VN.Message.VN_Message_Basic;
-      Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
-      Status: VN.Receive_Status;
-      Version: VN.Message.VN_Version;
+      use VN.Message.Assign_Address;
+      use VN.Message.Assign_Address_Block;
+      use VN.Message.Request_Address_Block;
+      use VN.Message.Request_LS_Probe;
+      use Interfaces;
+      Counter_For_Testing: Integer := 1;
 
       Next_Period : Ada.Real_Time.Time;
       Period : constant Ada.Real_Time.Time_Span :=
                            Ada.Real_Time.Microseconds(Cycle_Time);
+
    begin
       SM_L_Info.Component_Type := VN.Message.SM_L;
-      SM_L_Info.Logical_Address := 10;
-      --Ada.Text_IO.Put_Line("Task type SM_L - Start, ID: "
-      --                        & Integer'Image(Task_ID));
+      SM_L_Info.Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
       Global_Settings.Start_Time.Get(Next_Period);
+      VN.Text_IO.Put_Line("SM-L STAT: Starts.");
+
+      ----------------------------
       loop
          delay until Next_Period;
+
          ----------------------------
-         Ada.Text_IO.Put_Line("STAT SM-L: Runs");
+         -- Receive loop
+         ----------------------------
+         Global_Settings.Com_SM_L.Receive(Basic_Msg, Recv_Status);
 
-         -- TODO: This subprogram never returns. Debug Communication chain.
-         Global_Settings.Com_SM_L.Receive(Basic_Msg, Status);
+         if Recv_Status = VN.NO_MSG_RECEIVED then
+            VN.Text_IO.Put_Line("SM-L RECV: Empty.");
 
-         Ada.Text_IO.Put_Line("STAT SM-L: Message handling started.");
+         elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
+            Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
-         if Status = VN.NO_MSG_RECEIVED then
-            Ada.Text_IO.Put_Line("RECV SM-L: Empty.");
-         end if;
-
-         if Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
-            Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
-
-            Ada.Text_IO.Put("RECV SM-L: ");
+            -- Print debug text.
+            VN.Text_IO.Put("SM-L RECV: ");
             Global_Settings.Logger.Log(Basic_Msg);
 
-            -- TODO: Check OpCode and convert to correct type
-            To_Local_Hello(Basic_Msg, Local_Hello_Msg);
+            -- Process incoming message.
+            if Basic_Msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
+               To_Local_Hello(Basic_Msg, Local_Hello_Msg);
 
-            --Ada.Text_IO.Put("SM_L Received: " & VN.Message.VN_Component_Type'Image(Local_Hello_Msg.Component_Type));
-            --Ada.Text_IO.Put_Line("");
+               if (Local_Hello_Msg.Component_Type = VN.Message.Other or
+                  Local_Hello_Msg.Component_Type = VN.Message.LS) then
 
+                     Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Assign_Address_Buffer);
+
+                     if Local_Hello_Msg.Component_Type = VN.Message.LS then
+                        LS_CUUID := Local_Hello_Msg.CUUID(1);
+                     end if;
+
+               end if;
+
+            elsif Basic_Msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
+               To_Assign_Address_Block(Basic_Msg, Assign_Address_Block_Msg);
+
+               if Assign_Address_Block_Msg.Response_Type = VN.Message.Valid then
+                  Received_Address_Block := Assign_Address_Block_Msg.Assigned_Base_Address;
+                  SM_L_Info.Logical_Address := Received_Address_Block;
+                  -- Assigned_Address := Received_Address_Block; -- This is correct
+                  Assigned_Address := Received_Address_Block - 1; -- This is for debugging
+
+                  CAS_Logical_Address := Assign_Address_Block_Msg.Header.Source;
+               end if;
+            end if;
          end if;
 
          ----------------------------
-         Next_Period := Next_Period + Period;
-         i := i + 1;
-         exit when i = 40;
-      end loop;
+         -- Send loop
+         ----------------------------
+        if not Has_Received_Address_Block and false then
+           null;
+           -- TODO: This function should send out Request_Address_Blocks for
+           -- other SM-x on the same local interconnect.
 
-      Ada.Text_IO.Put_Line("STAT SM-L: Stops");
-      --Ada.Text_IO.Put_Line("Task type SM_L - End, ID:"
-       --                      & Integer'Image(Task_ID));
+         -- Assign Address
+        elsif not Unsigned_8_Buffer.Empty(Assign_Address_Buffer) and
+            Has_Received_Address_Block then
+           Unsigned_8_Buffer.Remove(Temp_Uint8, Assign_Address_Buffer);
+
+           Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address);
+           Basic_Msg.Header.Source := SM_L_Info.Logical_Address;
+           Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
+           To_Assign_Address(Basic_Msg, Assign_Address_Msg);
+           Assign_Address_Msg.CUUID := (others => Temp_Uint8);
+           Assign_Address_Msg.Assigned_Address := Get_Address_To_Assign(Temp_Uint8);
+
+           To_Basic(Assign_Address_Msg, Basic_Msg);
+
+           VN.Text_IO.Put("SM-L SEND: ");
+           Global_Settings.Logger.Log(Basic_Msg);
+           Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+
+           -- TODO: Fix proper lookup table to keep track of LS, CAS and
+           -- other SM-x
+            if Temp_Uint8 = LS_CUUID then
+                  LS_Logical_Address := Assign_Address_Msg.Assigned_Address;
+               else
+                  VN_Logical_Address_Buffer.Insert(Assign_Address_Msg.Assigned_Address, Request_LS_Probe_Buffer);
+            end if;
+
+            if Sent_CAS_Request_LS_Probe = false and
+               CAS_Logical_Address /= VN.LOGICAL_ADDRES_UNKNOWN then
+                  VN_Logical_Address_Buffer.Insert(CAS_Logical_Address, Request_LS_Probe_Buffer);
+                  Sent_CAS_Request_LS_Probe := true;
+            end if;
+
+        elsif not VN_Logical_Address_Buffer.Empty(Request_LS_Probe_Buffer) then
+            VN_Logical_Address_Buffer.Remove(Temp_Logical_Address, Request_LS_Probe_Buffer);
+
+            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Request_LS_Probe);
+            Basic_Msg.Header.Source := SM_L_Info.Logical_Address;
+            Basic_Msg.Header.Destination := LS_Logical_Address;
+            To_Request_LS_Probe(Basic_Msg, Request_LS_Probe_Msg);
+            Request_LS_Probe_Msg.Component_Address := Temp_Logical_Address;
+
+            To_Basic(Request_LS_Probe_Msg, Basic_Msg);
+
+            VN.Text_IO.Put("SM-L SEND: ");
+            Global_Settings.Logger.Log(Basic_Msg);
+            Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+
+        end if;
+
+         Next_Period := Next_Period + Period;
+         Counter_For_Testing := Counter_For_Testing + 1;
+         exit when Counter_For_Testing = 40;
+      end loop;
+      ----------------------------
+
+      VN.Text_IO.Put_Line("SM-L STAT: Stop. Logical Address: " &
+                                 SM_L_Info.Logical_Address'Img);
+
    end SM_L;
 
    -- Start one instance of the SM-L
-   SM_L1: SM_L(20, 100000, 80, 3);
+   SM_L1: SM_L(20, Global_Settings.Cycle_Time_SM_L, 80, 3);
+
+   ----------------------------
+   -- Helper functions below
+   ----------------------------
+   function Get_Address_To_Assign(CUUID_Uint8: in Interfaces.Unsigned_8)
+         return VN.VN_Logical_Address is
+      use VN;
+   begin
+      -- TODO: This function doesn't take into account the CUUID, which it
+      -- should.
+      Assigned_Address := Assigned_Address + 1;
+      return Assigned_Address + 1;
+   end Get_Address_To_Assign;
+
+   function Has_Received_Address_Block return Boolean is
+      use VN;
+   begin
+      if Received_Address_Block /= VN.LOGICAL_ADDRES_UNKNOWN then
+         return true;
+      else
+         return false;
+      end if;
+   end Has_Received_Address_Block;
 
 end Subnet_Manager_Local;
