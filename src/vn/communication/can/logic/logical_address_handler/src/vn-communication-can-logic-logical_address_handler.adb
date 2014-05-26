@@ -30,7 +30,7 @@ package body VN.Communication.CAN.Logic.Logical_Address_Handler is
                VN.Communication.CAN.Logic.Message_Utils.AddressAnswerToMessage(msgOut, 255, this.myCANAddress, 
                                                                                this.myCANAddress, address, 0);
 
-               VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img & " sent AddressAnswer about log addr " & address'Img, 4);
+               VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img & " sent AddressAnswer about log addr " & address'Img, 1);
                
                bWillSend := true;
                return;
@@ -43,7 +43,7 @@ package body VN.Communication.CAN.Logic.Logical_Address_Handler is
                   VN.Communication.CAN.Logic.Message_Utils.AddressAnswerToMessage(msgOut, 255, this.myCANAddress, this.myCANAddress, 
                                                                                   this.list(this.list'First), 0); 
                   
-                  VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img & " REsent AddressAnswer about log addr " & this.list(this.list'First)'Img, 4);
+                  VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img & " REsent AddressAnswer about log addr " & this.list(this.list'First)'Img, 1);
                   
                   bWillSend := true;
 
@@ -61,7 +61,7 @@ package body VN.Communication.CAN.Logic.Logical_Address_Handler is
                VN.Communication.CAN.Logic.Message_Utils.AddressAnswerToMessage(msgOut, 255, this.myCANAddress, this.myCANAddress,  
                                                                                this.list(this.distIndex), 0);
                
-               VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img & " distributed AddressAnswer about log addr " & this.list(this.distIndex)'Img, 4);
+               VN.Communication.CAN.Logic.DebugOutput("CAN address " & this.myCANAddress'Img & " distributed AddressAnswer about log addr " & this.list(this.distIndex)'Img, 1);
                
                this.distIndex := this.distIndex + 1;
                bWillSend := true;
@@ -123,4 +123,3 @@ package body VN.Communication.CAN.Logic.Logical_Address_Handler is
    end Activate;
  
 end VN.Communication.CAN.Logic.Logical_Address_Handler;
-

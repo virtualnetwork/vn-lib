@@ -126,9 +126,9 @@ private
 
          receiver : aliased VN.Communication.CAN.Logic.Receiver.Receiver_Duty;
 
-         cuuidResponder : aliased VN.Communication.CAN.Logic.ComponentType_Responder.ComponentType_Responder;
+         componentTypeResponder : aliased VN.Communication.CAN.Logic.ComponentType_Responder.ComponentType_Responder;
 
-         cuuidHandler : aliased VN.Communication.CAN.Logic.ComponentType_Handler.ComponentType_Handler;
+         componentTypeHandler 	: aliased VN.Communication.CAN.Logic.ComponentType_Handler.ComponentType_Handler(false);
 
          logAddrHandler : aliased VN.Communication.CAN.Logic.Logical_Address_Handler.Logical_Address_Handler;
 

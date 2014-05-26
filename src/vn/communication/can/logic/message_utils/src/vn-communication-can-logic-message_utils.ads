@@ -5,6 +5,9 @@
 -- Contains functions for coding and decoding CAN messages, i.e. putting
 -- information into CAN messages and retrieving information from CAN messages.
 
+-- Please note: The drivers currently used malfunction when 1 to 7 bytes are sent. 
+-- Therefore this code has been adapted to send CAN messages that contain either 0 
+-- or 8 bytes. 
 
 with VN.Communication.CAN.Logic;
 
@@ -46,10 +49,10 @@ package VN.Communication.CAN.Logic.Message_Utils is
                                     blockSize : out Interfaces.Unsigned_16);
 
    procedure StartTransmissionToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical; receiver : VN.Communication.CAN.CAN_Address_Receiver;
-                                        sender : VN.Communication.CAN.CAN_Address_Sender; numMessages : Interfaces.Unsigned_16);
+                                        sender : VN.Communication.CAN.CAN_Address_Sender; numBytes : Interfaces.Unsigned_16);
 
    procedure StartTransmissionFromMessage(msg : VN.Communication.CAN.CAN_Message_Logical; receiver : out VN.Communication.CAN.CAN_Address_Receiver;
-                                          sender : out VN.Communication.CAN.CAN_Address_Sender; numMessages : out Interfaces.Unsigned_16);
+                                          sender : out VN.Communication.CAN.CAN_Address_Sender; numBytes : out Interfaces.Unsigned_16);
 
    procedure AssignCANAddressToMessage(msg : out VN.Communication.CAN.CAN_Message_Logical;
                                        theUCID : VN.Communication.CAN.UCID; theCANAddr : VN.Communication.CAN.CAN_Address_Sender);
@@ -76,7 +79,7 @@ package VN.Communication.CAN.Logic.Message_Utils is
                       isLastMessage 	: out boolean);
 
    procedure DeFragment(seqNumber 	 : Interfaces.Unsigned_16;
-                        numMessages	 : Interfaces.Unsigned_16;
+                        NumBytes	 : Interfaces.Unsigned_16;
                         CANMessage 	 : VN.Communication.CAN.CAN_Message_Logical;
                         VNMessageContent : in out VN.Message.VN_Message_Byte_Array;
                         currentLength 	 : out Interfaces.Unsigned_16);

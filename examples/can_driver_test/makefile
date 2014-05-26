@@ -67,11 +67,13 @@ VPATH 		= 	$(dir $(ASRC))
 VPATH 		+= 	$(dir $(CSRC))
 
 ######## TEST ##############
-ifeq "$(PORT)" "1"
-	PRGTTY 	=	/dev/ttyUSB1
-else
-	PRGTTY 	=	/dev/ttyUSB0
-endif
+#ifeq "$(PORT)" "1"
+#	PRGTTY 	=	/dev/ttyUSB1
+#else
+#	PRGTTY 	=	/dev/ttyUSB0
+#endif
+
+PRGTTY 	=	/dev/ttyUSB$(PORT)
 
 ########################################
 # Must explicitly define target address

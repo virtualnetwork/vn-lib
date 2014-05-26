@@ -19,7 +19,7 @@ with VN.Communication.CAN.Logic.Sender;
 
 package VN.Communication.CAN.Logic.ComponentType_Handler is
 
-   type ComponentType_Handler is
+   type ComponentType_Handler(is_SM_Not_Node : Boolean) is
      new VN.Communication.CAN.Logic.Duty with private;
 
    type ComponentType_Handler_ptr is access all ComponentType_Handler'Class;
@@ -47,9 +47,9 @@ private
    type ComponentType_Handler_State is (Unactivated, Activated);
 
    --ToDO: Put this in a config file of some sort:
-   DELAY_TIME : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(5000);
+   DELAY_TIME : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(500);
 
-   type ComponentType_Handler is
+   type ComponentType_Handler(is_SM_Not_Node : Boolean) is
      new VN.Communication.CAN.Logic.Duty with
       record
          mySender 	: VN.Communication.CAN.Logic.Sender.Sender_Duty_ptr;

@@ -47,38 +47,42 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
                                                         this.myCANAddress, this.useFlowControl,
                                                         this.blockSize);
 
-            VN.Communication.CAN.Logic.DebugOutput("Receiver_Unit: FlowControl message sent, sequence no= "& this.sequenceNumber'Img, 4);
+            VN.Communication.CAN.Logic.DebugOutput("Receiver_Unit: FlowControl message sent to CAN addr " & this.sender'Img & ", sequence no= "& this.sequenceNumber'Img, 4);
 
          when Transmitting =>
 
-            if bMsgReceived and then msgIn.isNormal and then msgIn.msgType = VN.Communication.CAN.Logic.TRANSMISSION then
+            if bMsgReceived and then msgIn.isNormal and then msgIn.Sender = this.sender and then
+              msgIn.Receiver = this.myCANAddress then
 
 
-               if msgIn.Sender = this.sender and msgIn.Receiver = this.myCANAddress then
+               if msgIn.msgType = VN.Communication.CAN.Logic.TRANSMISSION then
 
-                  VN.Communication.CAN.Logic.DebugOutput("DeFragment. receiver= " & this.myCANAddress'img & " sender= " & this.sender'img & " sequence no= "& this.sequenceNumber'Img, 4);
-                  VN.Communication.CAN.Logic.Message_Utils.DeFragment(this.sequenceNumber, this.numMessages, msgIn, this.receivedData, currentLength);
+                  VN.Communication.CAN.Logic.DebugOutput("DeFragment. receiver= " & this.myCANAddress'img & " sender= " & this.sender'img &
+                                                           " sequence no= "& this.sequenceNumber'Img & " numBytes= " & this.numBytes'Img, 6);
+
+                  VN.Communication.CAN.Logic.Message_Utils.DeFragment(this.sequenceNumber, this.numBytes, msgIn, this.receivedData, currentLength);
 
 
                   this.sequenceNumber := this.sequenceNumber + 1;
                   this.blockCount     := this.blockCount + 1;
 
-                  VN.Communication.CAN.Logic.DebugOutput("Transmission message received by " &
+                  VN.Communication.CAN.Logic.DebugOutput("Receiver_Unit: Transmission message received by " &
                                          this.myCANAddress'Img & " from " & msgIn.Sender'img &
                                          "  blockCount= " & this.blockCount'Img & " blockSize=" & this.blockSize'img
                                        & " FlowCtrl= " & this.useFlowControl'Img & " sequence no= "& this.sequenceNumber'Img, 4);
 
-                  if this.useFlowControl and this.blockCount >= this.blockSize and this.sequenceNumber < this.numMessages then
+                  -- Flow control is used, block is full and we are not done receiving
+                  if this.useFlowControl and this.blockCount >= this.blockSize and this.sequenceNumber * 8 < this.numBytes then
 
                      VN.Communication.CAN.Logic.Message_Utils.FlowControlToMessage(msgOut, VN.Communication.CAN.Convert(this.sender),
                                                                  this.myCANAddress, false, this.blockSize);
                      bWillSend := true;
                      this.blockCount := 0;
-                     VN.Communication.CAN.Logic.DebugOutput("Receiver_Unit: Block full, FlowControl message sent" &
+                     VN.Communication.CAN.Logic.DebugOutput("Receiver_Unit: Block full, FlowControl message sent to CAN addr " & this.sender'Img &
                                                               " sequence no= "& this.sequenceNumber'Img, 4);
                      return;
 
-                  elsif this.sequenceNumber >= this.numMessages then
+                  elsif this.sequenceNumber * 8 >= this.numBytes then -- transmission done
 
                      VN.Communication.CAN.Logic.DebugOutput("Receiver unit on CAN address " & this.myCANAddress'Img &
                                                               ": Transmission from CAN address " & this.sender'Img & " complete,"  &
@@ -89,7 +93,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
 
                      VN.Communication.CAN.Logic.DebugOutput(" Opcode= " & VN_msg.Data.Header.Opcode'img, 3, false);
 
-                     VN_msg.NumBytes := currentLength;
+                     VN_msg.NumBytes := this.numBytes;
                      VN_msg.Receiver := VN.Communication.CAN.Convert(this.myCANAddress);
                      VN_msg.Sender   := this.sender;
 
@@ -100,7 +104,7 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
                      if not Pending_Senders_pack.Empty(this.pendingSenders.all) then
 
                         Pending_Senders_pack.Remove(tempSender, this.pendingSenders.all);
-                        this.Assign(tempSender.sender, tempSender.numMessages);
+                        this.Assign(tempSender.sender, tempSender.numBytes);
 
 
                         VN.Communication.CAN.Logic.DebugOutput(" started new transmission from CAN address " & tempSender.sender'img, 3);
@@ -111,6 +115,20 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
                         this.currentState := Idle;
                          VN.Communication.CAN.Logic.DebugOutput(" went idle.", 3);
                      end if;
+                  end if;
+
+               elsif msgIn.msgType = VN.Communication.CAN.Logic.START_TRANSMISSION then
+                  if this.sequenceNumber = 0 then
+                     VN.Communication.CAN.Logic.Message_Utils.FlowControlToMessage(msgOut, VN.Communication.CAN.Convert(this.sender),
+                                                        this.myCANAddress, this.useFlowControl,
+                                                        this.blockSize);
+
+                     VN.Communication.CAN.Logic.DebugOutput("Receiver_Unit: FlowControl message REsent to CAN addr " &
+                                                              this.sender'Img & ", sequence no= "& this.sequenceNumber'Img, 4);
+                     return;
+                  else
+                     VN.Communication.CAN.Logic.DebugOutput("Receiver_Unit: StartTransmission message received again from CAN addr " &
+                                                              this.sender'Img & "when sequence was nonzero = "& this.sequenceNumber'Img, 4);
                   end if;
                end if;
             end if;
@@ -130,13 +148,13 @@ package body VN.Communication.CAN.Logic.Receiver_Unit is
    end Activate;
 
    procedure Assign(this : in out Receiver_Unit_Duty; sender : VN.Communication.CAN.CAN_Address_Sender;
-                    numMessages	: Interfaces.Unsigned_16) is
+                    numBytes	: Interfaces.Unsigned_16) is
    begin
       this.currentState   := Started;
       this.Sender  	  := sender;
-      this.numMessages    := numMessages;
+      this.numBytes       := numBytes;
 
-      VN.Communication.CAN.Logic.DebugOutput("Reciever unit assigned, sender= " & this.Sender'Img & " numMessages= " & this.numMessages'img, 4);
+      VN.Communication.CAN.Logic.DebugOutput("Receiver_Unit: Reciever unit assigned, sender= " & this.Sender'Img & " numBytes= " & this.numBytes'img, 4);
    end Assign;
 
    function isActive(this : in Receiver_Unit_Duty) return boolean is

@@ -58,10 +58,10 @@ package body VN.Communication.CAN.Logic.SM is
 
                VN.Communication.CAN.Logic.Message_Utils.AddressAnswerFromMessage(msgIn, CANAddress, logAddress);
                
-               CAN_Routing.Insert(this.myTable, logAddress, CANAddress);
+               CAN_Routing.Insert(this.myTable, logAddress, CANAddress, true);
 
                VN.Communication.CAN.Logic.DebugOutput(this.myUCID'Img & ": AddresAnswer: Logical address " & logAddress'Img & 
-                                                        " exists on CAN address " & CANAddress'Img, 3);
+                                                        " exists on CAN address " & CANAddress'Img, 1);
                
             else
                for i in this.DutyArray'Range loop
@@ -90,8 +90,8 @@ package body VN.Communication.CAN.Logic.SM is
             this.sender.Activate(0);
             this.receiver.Activate(0);
             this.logAddrHandler.Activate(0);
-            this.cuuidResponder.Activate(this.myCUUID, 0, true);
-            this.cuuidHandler.Activate(this.myCUUID, 0, this.sender'Unchecked_Access);
+            this.componentTypeResponder.Activate(this.myCUUID, 0, true);
+            this.componentTypeHandler.Activate(this.myCUUID, 0, this.sender'Unchecked_Access);
 
             --Change CAN message filters, SM_CAN_MasterNegotioation longer wishes to receceive
             -- normal CAN messages, only RequestCANAddress messages:
@@ -119,8 +119,8 @@ package body VN.Communication.CAN.Logic.SM is
                this.sender.Activate(address);
                this.receiver.Activate(address);
                this.logAddrHandler.Activate(address);
-               this.cuuidResponder.Activate(this.myCUUID, address, true);
-               this.cuuidHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
+               this.componentTypeResponder.Activate(this.myCUUID, address, true);
+               this.componentTypeHandler.Activate(this.myCUUID, address, this.sender'Unchecked_Access);
 
                --Change CAN message filters, SM_CAN_MasterNegotioation does no longer wishe
                -- to receceive any CAN messages:
@@ -170,6 +170,8 @@ package body VN.Communication.CAN.Logic.SM is
 
       msgAssignAddr 	 : VN.Message.Assign_Address.VN_Message_Assign_Address;
       msgAssignAddrBlock : VN.Message.Assign_Address_Block.VN_Message_Assign_Address_Block;
+
+      isDirect : aliased Boolean;
    begin
       if not this.isInitialized then
          Init(this);
@@ -186,14 +188,27 @@ package body VN.Communication.CAN.Logic.SM is
       if msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
          VN.Message.Assign_Address.To_Assign_Address(msg, msgAssignAddr);
          CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddr.CUUID, receiver, found);
+         
+--           VN.Text_IO.Put_Line("CAN routing: OPCODE_ASSIGN_ADDR, CUUID(1)= " & msgAssignAddr.CUUID(1)'Img & 
+--                               ", address found = " & found'Img);
 
-      elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
+         -- Since we assign an logical address, we know that this logical address exists on this subnet
+         -- (We know that the receiver exists on that subnet because of the CUUID routing)
+         CAN_Routing.Insert(this.myTable, msgAssignAddr.Assigned_Address, receiver); --new
+
+      elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK  and 
+        msg.Header.Source = VN.LOGICAL_ADDRES_UNKNOWN then --new
 
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(msg, msgAssignAddrBlock);
          CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, receiver, found);
       else
 
-         CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found);
+         CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found, isDirect'Access);
+
+         if isDirect then
+            VN.Text_IO.Put_Line("CAN routing: Sending VN message via direct routing. Destination " & msg.Header.Destination'Img &
+                                  " CAN address = " & receiver'Img);
+         end if;
       end if;
 
       if found then
@@ -204,12 +219,15 @@ package body VN.Communication.CAN.Logic.SM is
                                                        VN.Message.HEADER_SIZE +
                                                          VN.Message.CHECKSUM_SIZE);
          this.sender.SendVNMessage(internal, result);
-         result := OK;
 
-         this.logAddrHandler.Sent_From_Address(msg.Header.Source);
+         if result /= VN.OK then
+            VN.Text_IO.Put_Line("CAN routing: Send-result /= VN.OK ");
+         end if;
+
+         this.logAddrHandler.Sent_From_Address(msg.Header.Source); 
       else
          result := ERROR_NO_ADDRESS_RECEIVED;
-         VN.Communication.CAN.Logic.DebugOutput("VN.Communication.CAN.Logic.SM.Send, Status := ERROR_NO_ADDRESS_RECEIVED;", 5);
+         VN.Communication.CAN.Logic.DebugOutput("VN.Communication.CAN.Logic.SM.Send, Status := ERROR_NO_ADDRESS_RECEIVED;", 3);
       end if;
    end Send;
 
@@ -278,8 +296,9 @@ package body VN.Communication.CAN.Logic.SM is
 
             VN.Communication.CAN.Logic.DebugOutput("CAN address " & internal.Receiver'Img &
                                                      " received LocalHello from CAN address " &
-                                                     internal.Sender'Img &
-                                                     " responded with LocalAck", 2);
+                                                     internal.Sender'Img & " CUUID(1)= " &
+                                                     msgLocalHello.CUUID(1)'Img &
+                                                     " responded with LocalAck", 0);
 
          elsif msg.Header.Opcode = VN.Message.OPCODE_LOCAL_ACK then
             -- ToDo: We should remember that our Local_Hello was acknowledged
@@ -330,8 +349,8 @@ package body VN.Communication.CAN.Logic.SM is
       this.DutyArray(this.DutyArray'First + 2) := this.assigner'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 3) := this.sender'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 4) := this.receiver'Unchecked_Access;
-      this.DutyArray(this.DutyArray'First + 5) := this.cuuidResponder'Unchecked_Access;
-      this.DutyArray(this.DutyArray'First + 6) := this.cuuidHandler'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 5) := this.componentTypeResponder'Unchecked_Access;
+      this.DutyArray(this.DutyArray'First + 6) := this.componentTypeHandler'Unchecked_Access;
       this.DutyArray(this.DutyArray'First + 7) := this.logAddrHandler'Unchecked_Access;
 
       -- Set CAN filters:
@@ -344,8 +363,8 @@ package body VN.Communication.CAN.Logic.SM is
       this.theFilter.Create_Transmission_Filter(this.selectiveBroadcastFilterID, 254);
 
       --ToDo: For testing only!!!!
-      CAN_Routing.Insert(this.myTable, 1337, 42);
-      CUUID_CAN_Routing.Insert(this.myCUUIDTable, testCUUID, 42);
+--        CAN_Routing.Insert(this.myTable, 1337, 42);
+--        CUUID_CAN_Routing.Insert(this.myCUUIDTable, testCUUID, 42);
    end Init;
 
 end VN.Communication.CAN.Logic.SM;

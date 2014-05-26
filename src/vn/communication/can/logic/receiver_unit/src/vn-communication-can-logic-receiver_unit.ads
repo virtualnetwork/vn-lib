@@ -23,7 +23,7 @@ package VN.Communication.CAN.Logic.Receiver_Unit is
    type Pending_Sender is
       record
          sender 	: VN.Communication.CAN.CAN_Address_Sender;
-         numMessages	: Interfaces.Unsigned_16;
+         numBytes	: Interfaces.Unsigned_16;
       end record;
 
    SIZE : constant Integer := 20;  --ToDO: Put this in a config file of some sort
@@ -46,7 +46,7 @@ package VN.Communication.CAN.Logic.Receiver_Unit is
 
 
    procedure Assign(this : in out Receiver_Unit_Duty; sender : VN.Communication.CAN.CAN_Address_Sender;
-                    numMessages	: Interfaces.Unsigned_16);
+                    numBytes	: Interfaces.Unsigned_16);
 
    function isActive(this : in Receiver_Unit_Duty) return boolean;
 
@@ -66,7 +66,7 @@ private
 
          sender 	: VN.Communication.CAN.CAN_Address_Sender;
          receivedData	: VN.Message.VN_Message_Byte_Array;
-         numMessages	: Interfaces.Unsigned_16;
+         numBytes	: Interfaces.Unsigned_16;
 
          useFlowControl : Boolean;
          blockSize  	: Interfaces.Unsigned_16;

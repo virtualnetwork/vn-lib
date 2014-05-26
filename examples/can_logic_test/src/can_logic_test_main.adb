@@ -128,6 +128,8 @@ begin
       for i in messagesOut'Range loop
          declare
             element : VN.Communication.CAN.CAN_Message_Logical;
+            INCORRECT_LENGTH : exception;
+            use VN.Communication.CAN;
          begin
             while not VN.Communication.CAN.CAN_Message_Buffers.Empty(messagesOut(i)) loop
 
@@ -135,6 +137,11 @@ begin
 
                for j in messagesIn'Range loop
                   if i /= j then
+
+                     if element.Length /= 0 and element.Length /= 8 then
+                        raise INCORRECT_LENGTH with "Length = " & element.Length'Img & " type= " & element.msgType'Img;
+                     end if;
+                     
                      if Utils.Filter_CAN_Message(element, CANFilters(j)) then
                         VN.Communication.CAN.CAN_Message_Buffers.Insert(element, messagesIn(j));
                      end if;
