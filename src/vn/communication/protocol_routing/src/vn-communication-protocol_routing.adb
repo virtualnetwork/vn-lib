@@ -50,7 +50,7 @@ package body VN.Communication.Protocol_Routing is
          Protocol_Router.Insert(this.myTable, msgAssignAddr.Assigned_Address, address); --new
 
       elsif Message.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK and
-        Message.Header.Source = VN.LOGICAL_ADDRES_UNKNOWN then --new
+        Message.Header.Destination = VN.LOGICAL_ADDRES_UNKNOWN then --new
 
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(Message, msgAssignAddrBlock);
          CUUID_Protocol_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, address, found);
