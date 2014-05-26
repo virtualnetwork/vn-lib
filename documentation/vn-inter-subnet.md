@@ -37,7 +37,7 @@ Discovery Units is not the responsibility of this protocol.
 
 #### For routes to overlying units
 Whenever a VN message is sent by the higher level protocol the sender address (a logical address) of the message shall be added to the routing table, setting the corresponding subnet address equal to “APPLICATION”. This way the information that VN messages sent to this logical address is to be delivered to the application layer is stored. <br/>
-Whenever a **Distribute Route** message is sent by the higher level protocol the logical address included in the payload of the **Distribute Route** message shall be added to the routing table, setting the corresponding subnet address equal to “APPLICATION”. This way the information that VN messages sent to this logical address is to be delivered to the application layer is stored.
+The above does not apply to **Local Hello** or **Local Ack** messages, which should not be sent by the application layer anyway.
 
 #### For routes to underlying units
 Whenever a VN message is received from an underlying subnet, it can be concluded that VN messages addressed to the sender address of this VN message can be routed via that particular subnet.  <br/>
@@ -52,8 +52,12 @@ Whenever a VN message is received from a subnet, or sent by the application laye
 Whenever a VN message is received from a subnet, or sent by the application layer, the receiver address of the message shall be looked up in the primary routing table. The routing table will tell which subnet that is to be used to send the message, or if it should be delivered to the application layer.  <br/>
 There exist the following exceptions from the above rule:
 
-1. If the message is a **AssignAddr** or **AssignAddrBlock** the CUUID in its payload shall be used for a lookup in the CUUID routing table, the primary routing table shall not be used.
+1. If the message is an **AssignAddrBlock** message or an **AssignAddr** message whose *Destination* address equals
+*VN.LOGICAL_ADDRES_UNKNOWN*, the CUUID in its payload shall be used for a lookup in the CUUID routing table as opposed to the primary routing table.
+2. Whenever a **LocalHello** or **LocalAck** message is sent by the higher level
+protocol the receiver address of the message is to be looked up in the CUUID
+routing table. The CUUID routing table will give the local address that is to
+be used to send the message over the subnet.
 
-If no match is found in the lookup in the routing table this shall be reported to the overlying protocol. <br/>
-If the VN message was addressed to logical address 0 it shall be discarded.  
+If no match is found in the lookup in the routing table this shall be reported to the overlying protocol.
 

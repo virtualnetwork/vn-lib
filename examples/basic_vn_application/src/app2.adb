@@ -8,7 +8,7 @@ with VN.Message.Assign_Address;
 with VN.Message.Probe_Request;
 with VN.Message.Probe_Reply;
 
-package body Application is
+package body App2 is
 
    task body VN_Application is
       use Ada.Real_Time;
@@ -48,7 +48,7 @@ package body Application is
       App_Info.Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
       Global_Settings.Start_Time.Get(Next_Period);
-      VN.Text_IO.Put_Line("APPL STAT: Starts.");
+      VN.Text_IO.Put_Line("APP2 STAT: Starts.");
 
       ----------------------------
       loop
@@ -57,14 +57,14 @@ package body Application is
          ----------------------------
          -- Receive loop
          ----------------------------
-         Global_Settings.Com_Application.Receive(Basic_Msg, Recv_Status);
+         Global_Settings.Com_App2.Receive(Basic_Msg, Recv_Status);
 
          if Recv_Status = VN.NO_MSG_RECEIVED then
-            VN.Text_IO.Put_Line("APPL RECV: Empty.");
+            VN.Text_IO.Put_Line("APP2 RECV: Empty.");
          elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
             Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
-            VN.Text_IO.Put("APPL RECV: ");
+            VN.Text_IO.Put("APP2 RECV: ");
             Global_Settings.Logger.Log(Basic_Msg);
 
             if Basic_Msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
@@ -90,9 +90,9 @@ package body Application is
             Basic_Msg.Header.Source := App_Info.Logical_Address;
             Basic_Msg.Header.Destination := Temp_Logical_Address;
 
-            VN.Text_IO.Put("APP  SEND: ");
+            VN.Text_IO.Put("APP2 SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
-            Global_Settings.Com_Application.Send(Basic_Msg, Send_Status);
+            Global_Settings.Com_App2.Send(Basic_Msg, Send_Status);
 
         end if;
 
@@ -103,11 +103,11 @@ package body Application is
       end loop;
       ----------------------------
 
-      VN.Text_IO.Put_Line("APPL STAT: Stop. Logical Address: " &
+      VN.Text_IO.Put_Line("APP2 STAT: Stop. Logical Address: " &
                                  App_Info.Logical_Address'Img);
 
    end VN_Application;
 
    App: VN_Application(30, Global_Settings.Cycle_Time_Applications, 30, 3);
 
-end Application;
+end App2;

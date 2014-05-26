@@ -42,6 +42,7 @@ package Central_Addressing_Service is
 
       Temp_Uint8: Interfaces.Unsigned_8;
       Assigned_Address_Block : VN.VN_Logical_Address := 65536;
+      SM_L_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
       -- TODO: Change this buffer to some kind of data store.
       Assign_Address_Block_Buffer: Unsigned_8_Buffer.Buffer(10);

@@ -14,12 +14,12 @@ with VN.Communication.CAN;
 
 package VN.Communication.CAN.CAN_Filtering is
 
-   MAX_NUM_FILTERS : constant Integer := 16; -- ToDo: Check this number
+   MAX_NUM_FILTERS : constant Integer := 6; -- ToDo: Check this number
 
    type CAN_Filter_Type is tagged limited private;
    type CAN_Filter_Access is access all CAN_Filter_Type;
 
-   type Filter_ID_Type is range 1 .. MAX_NUM_FILTERS;
+   type Filter_ID_Type is range 0 .. MAX_NUM_FILTERS - 1;
 
    procedure Create_Filter(this : in out CAN_Filter_Type;
                            filterID : out Filter_ID_Type;

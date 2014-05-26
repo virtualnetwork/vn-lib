@@ -10,7 +10,6 @@ package body VN.Communication.PO is
       procedure Send_To_Other(Message: in VN.Message.VN_Message_Basic;
                               Status: out VN.Send_Status) is
       begin
-         -- Ada.Text_IO.Put_Line("PO send_to_other runs");
          if VN_Message_Buffer.Full(Buffer_To_Other) then
             Status := VN.ERROR_BUFFER_FULL;
          else
@@ -40,7 +39,6 @@ package body VN.Communication.PO is
       procedure Send_To_SM_L(Message: in VN.Message.VN_Message_Basic;
                       Status: out VN.Send_Status) is
       begin
-         -- Ada.Text_IO.Put_Line("PO send_to_SM_L runs");
          if VN_Message_Buffer.Full(Buffer_To_SM_L) then
             Status := VN.ERROR_BUFFER_FULL;
          else

@@ -83,7 +83,7 @@ package body VN.Communication.CAN.CAN_Task is
 
          myAccess.Update(msgsIn, msgsOut);
 
-         CAN_Driver.Update_Filters(CANFilter);
+        -- CAN_Driver.Update_Filters(CANFilter);
 
 --           VN.Text_IO.Put_Line("CAN_Task update ended");
 

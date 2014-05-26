@@ -14,7 +14,7 @@ with VN.Message.Request_LS_Probe;
 with VN.Message.Distribute_Route;
 with Interfaces;
 
-package Subnet_Manager_Local is
+package SM_X is
 
    task type SM_L(Pri : System.Priority;
                      Cycle_Time : Positive;
@@ -34,7 +34,7 @@ package Subnet_Manager_Local is
       package Unsigned_8_Buffer is
          new Buffers(Interfaces.Unsigned_8);
 
-      SM_L_Info: VN.Application_Information.VN_Application_Information;
+      SM_x_Info: VN.Application_Information.VN_Application_Information;
 
       Basic_Msg: VN.Message.VN_Message_Basic;
       Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
@@ -56,8 +56,6 @@ package Subnet_Manager_Local is
       LS_CUUID: Interfaces.Unsigned_8;
       LS_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
-      SM_x_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
-
       Temp_Uint8: Interfaces.Unsigned_8;
       Temp_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
@@ -71,9 +69,6 @@ package Subnet_Manager_Local is
       Request_LS_Probe_Buffer: VN_Logical_Address_Buffer.Buffer(10);
 
       -- TODO: Change this buffer to some kind of data store.
-      Distribute_Route_Buffer: Unsigned_8_Buffer.Buffer(10);
-
-      -- TODO: Change this buffer to some kind of data store.
       Request_Address_Block_Buffer: Unsigned_8_Buffer.Buffer(10);
 
       function Get_Address_To_Assign(CUUID_Uint8: in Interfaces.Unsigned_8)
@@ -81,4 +76,4 @@ package Subnet_Manager_Local is
 
       function Has_Received_Address_Block return Boolean;
 
-end Subnet_Manager_Local;
+end SM_X;

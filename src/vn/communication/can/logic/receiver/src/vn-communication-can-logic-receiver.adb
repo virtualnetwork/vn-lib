@@ -22,7 +22,7 @@ package body VN.Communication.CAN.Logic.Receiver is
       pending  	: VN.Communication.CAN.Logic.Receiver_Unit.Pending_Sender;
       rec 	: VN.Communication.CAN.CAN_Address_Receiver;
 
-      alreadyReceiving : boolean := false;
+      alreadyReceiving : boolean := false; --not needed
    begin
 
       case this.currentState is
@@ -39,18 +39,20 @@ package body VN.Communication.CAN.Logic.Receiver is
                   for i in this.units'Range loop
                      if this.units(i).isActive and then this.units(i).Sender = msgIn.Sender then
                         alreadyReceiving := true;
-                        exit;
+
+                        this.units(i).Update(msgIn, bMsgReceived, msgOut, bWillSend);
+                        return;
                      end if;
                   end loop;
 
                   if (not alreadyReceiving) and (not Pending_Senders_pack.Full(this.pendingSenders)) then
-                     VN.Communication.CAN.Logic.Message_Utils.StartTransmissionFromMessage(msgIn, rec, pending.sender, pending.numMessages);
+                     VN.Communication.CAN.Logic.Message_Utils.StartTransmissionFromMessage(msgIn, rec, pending.sender, pending.numBytes);
 
-                        if rec = this.myCANAddress then
+                     if rec = this.myCANAddress then
 
                         VN.Communication.CAN.Logic.DebugOutput("StartTransmission message recieved by CAN address " & this.myCANAddress'Img &
                                                                  ", transmission pending. Sender = "
-                                                               & pending.sender'Img & " numMessages= " & pending.numMessages'img, 3);
+                                                               & pending.sender'Img & " numBytes= " & pending.numBytes'img, 3);
 
                         --Check whether this StartTransmission has been recieved eariler
                         -- (the sender might resend the StartTransmission message)
@@ -77,7 +79,7 @@ package body VN.Communication.CAN.Logic.Receiver is
                if freeUnit /= null then
                   Pending_Senders_pack.Remove(pending, this.pendingSenders);
 
-                  freeUnit.Assign(pending.sender, pending.numMessages);
+                  freeUnit.Assign(pending.sender, pending.numBytes);
                   freeUnit.Update(msgIn, false, msgOut, bWillSend);
              end if;
             end if;

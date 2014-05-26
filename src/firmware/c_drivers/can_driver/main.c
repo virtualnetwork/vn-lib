@@ -101,7 +101,7 @@ int test() {return 42;}
 int Send_CAN_Message(C_CAN_Message_Type *msg) {
 
    // printf("main.c: Send_CAN_Message run!\r\n");
-    int i;
+  //  int i;
 
     tx_msg.ID  = msg->ID;
     tx_msg.DLC = msg->data_length;
@@ -114,13 +114,14 @@ int Send_CAN_Message(C_CAN_Message_Type *msg) {
 
     while( MSS_CAN_send_message_ready(&g_can0) != CAN_OK); //wait until ready
 
-    return MSS_CAN_send_message_n(&g_can0, 6, &tx_msg);
+    //return MSS_CAN_send_message_n(&g_can0, 6, &tx_msg);
+    return MSS_CAN_send_message(&g_can0, &tx_msg);
 }
 
 int Receive_CAN_Message(C_CAN_Message_Type *msg) { //returns 1 if message was received, 0 otherwise
 
     CAN_MSGOBJECT rx_msg;
-    int i;
+   // int i;
    // printf("main.c: Receive_CAN_Message run!\r\n");
 
 

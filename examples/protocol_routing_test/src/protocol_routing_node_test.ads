@@ -31,8 +31,10 @@ package Protocol_Routing_Node_Test is
    theFilter : aliased VN.Communication.CAN.CAN_Filtering.CAN_Filter_Type;
 
    CANPeriod : aliased Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(100);
-   U1 : aliased VN.Communication.CAN.UCID := 1;
-   C1 : aliased VN.VN_CUUID := (1, others => 5);
+
+   identifier : constant Integer := 1;
+   U1 : aliased VN.Communication.CAN.UCID := VN.Communication.CAN.UCID(identifier * 10);
+   C1 : aliased VN.VN_CUUID := (Interfaces.Unsigned_8(1 + identifier * 10), others => 5);
 
    CANInterface : aliased VN.Communication.CAN.CAN_Interface.CAN_Interface_Type
      (U1'Unchecked_Access, C1'Unchecked_Access,
@@ -41,6 +43,6 @@ package Protocol_Routing_Node_Test is
    myCANTask : aliased VN.Communication.CAN.Can_Task.CAN_Task_Type
      (CANInterface'Access, System.Priority'Last, CANPeriod'Access, theFilter'Unchecked_Access);
 
-   mainTask : Protocol_Routing_Second_Task.Second_Task_Type(C1'Access, CANInterface'Access, System.Priority'Last, CANPeriod'Access);
+  -- mainTask : Protocol_Routing_Second_Task.Second_Task_Type(C1'Access, CANInterface'Access, System.Priority'Last, CANPeriod'Access);
 
 end Protocol_Routing_Node_Test;
