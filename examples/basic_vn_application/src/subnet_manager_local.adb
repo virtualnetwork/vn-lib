@@ -209,7 +209,7 @@ package body Subnet_Manager_Local is
 
          Next_Period := Next_Period + Period;
          Counter_For_Testing := Counter_For_Testing + 1;
-         exit when Counter_For_Testing = 40;
+         exit when Counter_For_Testing = 60;
       end loop;
       ----------------------------
 

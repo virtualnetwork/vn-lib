@@ -7,6 +7,7 @@ with VN.Message.Local_Hello;
 with VN.Message.Assign_Address;
 with VN.Message.Assign_Address_Block;
 with VN.Message.Request_Address_Block;
+with VN.Message.Distribute_Route;
 with Interfaces;
 
 package body SM_X is
@@ -20,6 +21,7 @@ package body SM_X is
       use VN.Message.Assign_Address_Block;
       use VN.Message.Request_Address_Block;
       use VN.Message.Request_LS_Probe;
+      use VN.Message.Distribute_Route;
       use Interfaces;
       Counter_For_Testing: Integer := 1;
 
@@ -100,6 +102,18 @@ package body SM_X is
 
                   end if;
 
+            elsif Basic_Msg.Header.Opcode = VN.Message.OPCODE_DISTRIBUTE_ROUTE then
+                  To_Distribute_Route(Basic_Msg, Distribute_Route_Msg);
+
+                  if Distribute_Route_Msg.Component_Type = VN.Message.CAS then
+                     CAS_Logical_Address := Distribute_Route_Msg.Component_Address;
+                     CAS_CUUID := Distribute_Route_Msg.CUUID(1);
+
+                  elsif Distribute_Route_Msg.Component_Type = VN.Message.LS then
+                     LS_Logical_Address := Distribute_Route_Msg.Component_Address;
+                     LS_CUUID := Distribute_Route_Msg.CUUID(1);
+                  end if;
+
             end if;
          end if;
 
@@ -153,22 +167,38 @@ package body SM_X is
                   VN_Logical_Address_Buffer.Insert(Assign_Address_Msg.Assigned_Address, Request_LS_Probe_Buffer);
             end if;
 
-            if Sent_CAS_Request_LS_Probe = false and
-               CAS_Logical_Address /= VN.LOGICAL_ADDRES_UNKNOWN then
-                  VN_Logical_Address_Buffer.Insert(CAS_Logical_Address, Request_LS_Probe_Buffer);
-                  Sent_CAS_Request_LS_Probe := true;
-            end if;
+            --if Sent_CAS_Request_LS_Probe = false and
+            --   CAS_Logical_Address /= VN.LOGICAL_ADDRES_UNKNOWN then
+            --      VN_Logical_Address_Buffer.Insert(CAS_Logical_Address, Request_LS_Probe_Buffer);
+            --      Sent_CAS_Request_LS_Probe := true;
+            --end if;
 
         elsif not VN_Logical_Address_Buffer.Empty(Request_LS_Probe_Buffer) and
             LS_Logical_Address /= VN.LOGICAL_ADDRES_UNKNOWN then
             VN_Logical_Address_Buffer.Remove(Temp_Logical_Address, Request_LS_Probe_Buffer);
 
+            -- Distribute Route temporary fix for presentation
+            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Distribute_Route);
+            Basic_Msg.Header.Source := SM_x_Info.Logical_Address;
+            Basic_Msg.Header.Destination := LS_Logical_Address;
+
+            To_Distribute_Route(Basic_Msg, Distribute_Route_Msg);
+            Distribute_Route_Msg.CUUID := (others => 42);
+            Distribute_Route_Msg.Component_Address := Temp_Logical_Address;
+            Distribute_Route_Msg.Component_Type := VN.Message.Other;
+            To_Basic(Distribute_Route_Msg, Basic_Msg);
+
+            VN.Text_IO.Put("SM-x SEND: ");
+            Global_Settings.Logger.Log(Basic_Msg);
+            Global_Settings.Com_SM_x.Send(Basic_Msg, Send_Status);
+
+            -- Request LS Probe
             Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Request_LS_Probe);
             Basic_Msg.Header.Source := SM_x_Info.Logical_Address;
             Basic_Msg.Header.Destination := LS_Logical_Address;
+
             To_Request_LS_Probe(Basic_Msg, Request_LS_Probe_Msg);
             Request_LS_Probe_Msg.Component_Address := Temp_Logical_Address;
-
             To_Basic(Request_LS_Probe_Msg, Basic_Msg);
 
             VN.Text_IO.Put("SM-x SEND: ");
@@ -179,7 +209,7 @@ package body SM_X is
 
          Next_Period := Next_Period + Period;
          Counter_For_Testing := Counter_For_Testing + 1;
-         exit when Counter_For_Testing = 40;
+         exit when Counter_For_Testing = 60;
       end loop;
       ----------------------------
 

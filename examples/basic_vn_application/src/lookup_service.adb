@@ -87,7 +87,7 @@ package body Lookup_Service is
 
          Next_Period := Next_Period + Period;
          i := i + 1;
-         exit when i = 10;
+         exit when i = 15;
       end loop;
       ----------------------------
 

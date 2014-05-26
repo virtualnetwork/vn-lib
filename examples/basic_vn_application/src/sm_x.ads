@@ -11,6 +11,7 @@ with VN.Message.Assign_Address;
 with VN.Message.Assign_Address_Block;
 with VN.Message.Request_Address_Block;
 with VN.Message.Request_LS_Probe;
+with VN.Message.Distribute_Route;
 with Interfaces;
 
 package SM_X is
@@ -41,6 +42,7 @@ package SM_X is
       Assign_Address_Block_Msg: VN.Message.Assign_Address_Block.VN_Message_Assign_Address_Block;
       Request_Address_Block_Msg: VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
       Request_LS_Probe_Msg: VN.Message.Request_LS_Probe.VN_Message_Request_LS_Probe;
+      Distribute_Route_Msg: VN.Message.Distribute_Route.VN_Message_Distribute_Route;
 
       Recv_Status: VN.Receive_Status;
       Send_Status: VN.Send_Status;
@@ -48,6 +50,7 @@ package SM_X is
       Version: VN.Message.VN_Version;
 
       Sent_CAS_Request_LS_Probe : boolean := false;
+      CAS_CUUID: Interfaces.Unsigned_8;
       CAS_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
       LS_CUUID: Interfaces.Unsigned_8;

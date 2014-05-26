@@ -90,7 +90,7 @@ package body App2 is
             Basic_Msg.Header.Source := App_Info.Logical_Address;
             Basic_Msg.Header.Destination := Temp_Logical_Address;
 
-            VN.Text_IO.Put("APP2  SEND: ");
+            VN.Text_IO.Put("APP2 SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
             Global_Settings.Com_App2.Send(Basic_Msg, Send_Status);
 
@@ -99,7 +99,7 @@ package body App2 is
 
          Next_Period := Next_Period + Period;
          i := i + 1;
-         exit when i = 10;
+         exit when i = 15;
       end loop;
       ----------------------------
 
