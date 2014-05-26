@@ -45,7 +45,12 @@ package body VN.Communication.Protocol_Routing is
 --           VN.Text_IO.Put_Line("Protocol routing: OPCODE_ASSIGN_ADDR, CUUID(1)= " & msgAssignAddr.CUUID(1)'Img &
 --                                 " address found = " & found'Img);
 
-      elsif Message.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
+         -- Since we assign an logical address, we know that this logical address exists on this subnet
+         -- (We know that the receiver exists on that subnet because of the CUUID routing)
+         Protocol_Router.Insert(this.myTable, msgAssignAddr.Assigned_Address, address); --new
+
+      elsif Message.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK and
+        Message.Header.Source = VN.LOGICAL_ADDRES_UNKNOWN then --new
 
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(Message, msgAssignAddrBlock);
          CUUID_Protocol_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, address, found);

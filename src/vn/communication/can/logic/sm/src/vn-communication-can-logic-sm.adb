@@ -192,7 +192,12 @@ package body VN.Communication.CAN.Logic.SM is
 --           VN.Text_IO.Put_Line("CAN routing: OPCODE_ASSIGN_ADDR, CUUID(1)= " & msgAssignAddr.CUUID(1)'Img & 
 --                               ", address found = " & found'Img);
 
-      elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
+         -- Since we assign an logical address, we know that this logical address exists on this subnet
+         -- (We know that the receiver exists on that subnet because of the CUUID routing)
+         CAN_Routing.Insert(this.myTable, msgAssignAddr.Assigned_Address, receiver); --new
+
+      elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK  and 
+        msg.Header.Source = VN.LOGICAL_ADDRES_UNKNOWN then --new
 
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(msg, msgAssignAddrBlock);
          CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, receiver, found);
