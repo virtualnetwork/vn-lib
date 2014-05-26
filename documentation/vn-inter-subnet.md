@@ -52,7 +52,12 @@ Whenever a VN message is received from a subnet, or sent by the application laye
 Whenever a VN message is received from a subnet, or sent by the application layer, the receiver address of the message shall be looked up in the primary routing table. The routing table will tell which subnet that is to be used to send the message, or if it should be delivered to the application layer.  <br/>
 There exist the following exceptions from the above rule:
 
-1. If the message is an **AssignAddrBlock** or **AssignAddr** and the S  the CUUID in its payload shall be used for a lookup in the CUUID routing table, the primary routing table shall not be used.
+1. If the message is an **AssignAddrBlock** message or an **AssignAddr** message whose *Destination* address equals
+*VN.LOGICAL_ADDRES_UNKNOWN*, the CUUID in its payload shall be used for a lookup in the CUUID routing table as opposed to the primary routing table.
+2. Whenever a **LocalHello** or **LocalAck** message is sent by the higher level
+protocol the receiver address of the message is to be looked up in the CUUID
+routing table. The CUUID routing table will give the local address that is to
+be used to send the message over the subnet.
 
 If no match is found in the lookup in the routing table this shall be reported to the overlying protocol.
 

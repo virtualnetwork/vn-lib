@@ -40,7 +40,7 @@ message** containing the unit's CUUID and type to each Subnet Manager it
 discovers.
 
 The sender and receiver (logical) addresses of the **LocalHello message** shall
-be set to 2. If no **LocalAck message** is received within a certain time the
+be set to *VN.LOGICAL_ADDRES_UNKNOWN*. If no **LocalAck message** is received within a certain time the
 **LocalHello message** shall be resent. _The responsibility to send the
 **LocalHello messages** lies on the subnet layer._
 
@@ -77,13 +77,16 @@ and the local address of the unit from which the message was received from
 shall be entered into the routing table.
 
 ### Transmission of VN messages
-Whenever a VN message, that is _not_ **LocalHello** or **LocalAck** message, is
+Whenever a VN message, that is *not* **LocalHello** or **LocalAck** message, is
 sent by the higher level protocol the receiver address of the message is to be
 looked up in the routing table. The routing table will give the local address
 that is to be used to send the message over the subnet.  If the VN message was
-addressed to logical address 0 it shall be discarded.
+addressed to logical address 0 it shall be discarded. <br/>
+There exist the following exceptions from the above rule:
 
-Whenever a **LocalHello** or **LocalAck** message is sent by the higher level
+1. If the message is an **AssignAddrBlock** message or an **AssignAddr** message whose *Destination* address equals
+*VN.LOGICAL_ADDRES_UNKNOWN*, the CUUID in its payload shall be used for a lookup in the CUUID routing table as opposed to the primary routing table.
+2. Whenever a **LocalHello** or **LocalAck** message is sent by the higher level
 protocol the receiver address of the message is to be looked up in the CUUID
 routing table. The CUUID routing table will give the local address that is to
 be used to send the message over the subnet.

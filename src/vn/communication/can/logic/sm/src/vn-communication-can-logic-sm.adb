@@ -201,6 +201,10 @@ package body VN.Communication.CAN.Logic.SM is
 
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(msg, msgAssignAddrBlock);
          CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, receiver, found);
+
+         -- Since we assign an logical address, we know that this logical address exists on this subnet
+         -- (We know that the receiver exists on that subnet because of the CUUID routing)
+         CAN_Routing.Insert(this.myTable, msgAssignAddr.Assigned_Base_Address, receiver); --new
       else
 
          CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found, isDirect'Access);
