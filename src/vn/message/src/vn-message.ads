@@ -11,6 +11,9 @@ package VN.Message is
                             Type_Request_Address_Block,
                             Type_Assign_Address_Block,
                             Type_Assign_Address,
+                            Type_Request_LS_Probe,
+                            Type_Probe_Request,
+                            Type_Probe_Reply,
                             Type_Distribute_Route);
    for VN_Message_Type'Size use 8;
 
@@ -19,6 +22,12 @@ package VN.Message is
 
    type VN_Component_Type is (CAS, LS, SM_L, SM_x, SM_Gateway, Other);
    for VN_Component_Type'Size use 8;
+
+   type VN_Fault_Indicator is mod 2 ** 32;
+   for VN_Fault_Indicator'Size use 32;
+
+   type VN_Uptime is mod 2 ** 32;
+   for VN_Uptime'Size use 32;
 
    type VN_Version is mod 2 ** 8;
    for VN_Version'Size use 8;
@@ -34,7 +43,16 @@ package VN.Message is
 
    type VN_Opcode is mod 2 ** 8;
    for VN_Opcode'Size use 8;
-   
+
+   type VN_Dialog_Identifier is mod 2 ** 16;
+   for VN_Dialog_Identifier'Size use 16;
+
+   type VN_Reply_Count is mod 2 ** 16;
+   for VN_Reply_Count'Size use 16;
+
+   type VN_Reply_Period is mod 2 ** 16;
+   for VN_Reply_Period'Size use 16;
+
    type VN_Payload is mod 2 ** 8;
    for VN_Payload'Size use 8;
 
@@ -50,8 +68,6 @@ package VN.Message is
    ACK_OK 	: constant VN_Status := 0;
    ACK_ERROR 	: constant VN_Status := 1;
 
-
-
    type VN_Response_Type is (Valid, Invalid);
    for VN_Response_Type'Size use 8;
 
@@ -64,13 +80,26 @@ package VN.Message is
    STATUS_SIZE             : constant integer := 1;
    RESPONSE_TYPE_SIZE      : constant integer := 1;
    VN_LOGICAL_ADDRESS_SIZE : constant integer := 4;
+   REPLY_COUNT_SIZE        : constant integer := 2;
+   REPLY_PERIOD_SIZE       : constant integer := 2;
+   DIALOG_IDENTIFIER_SIZE  : constant integer := 2;
+   FAULT_INDICATOR_SIZE    : constant integer := 4;
+   UPTIME_SIZE             : constant integer := 4;
 
-   OPCODE_LOCAL_HELLO 		: constant VN_Opcode := 16#20#; -- 32
-   OPCODE_LOCAL_ACK 		: constant VN_Opcode := 16#21#; -- 33
-   OPCODE_DISTRIBUTE_ROUTE 	: constant VN_Opcode := 16#72#; -- 114
-   OPCODE_ASSIGN_ADDR_BLOCK	: constant VN_Opcode := 16#4D#; -- 77
-   OPCODE_ASSIGN_ADDR		: constant VN_Opcode := 16#7B#; -- 123
-   OPCODE_REQUEST_ADDR_BLOCK	: constant VN_Opcode := 16#4C#; -- 76
+   OPCODE_LOCAL_HELLO 		: constant VN_Opcode := 16#20#;
+   OPCODE_LOCAL_ACK 		: constant VN_Opcode := 16#21#;
+   OPCODE_DISTRIBUTE_ROUTE 	: constant VN_Opcode := 16#72#;
+   OPCODE_ASSIGN_ADDR_BLOCK	: constant VN_Opcode := 16#4D#;
+   OPCODE_ASSIGN_ADDR		: constant VN_Opcode := 16#7B#;
+   OPCODE_REQUEST_ADDR_BLOCK	 : constant VN_Opcode := 16#4C#;
+   OPCODE_REQUEST_LS_PROBE       : constant VN_Opcode := 16#73#;
+   OPCODE_PROBE_REQUEST    : constant VN_Opcode := 16#78#;
+   OPCODE_PROBE_REPLY	   : constant VN_Opcode := 16#79#;
+
+   LOCAL_ACK_OK      : constant integer := 0;
+   LOCAL_ACK_ERRROR  : constant integer := 1;
+   LOCAL_ACK_INITIAL_ROUTE_RECVD : constant integer := 2;
+   LOCAL_ACK_BRIDGE_ONTO_PROCESSOR : constant integer := 3;
 
    type VN_Header is
       record
@@ -114,10 +143,10 @@ package VN.Message is
       Header        at 0 range 0 .. (HEADER_SIZE * 8 - 1);
       Payload       at 0 range (HEADER_SIZE * 8) ..
                                (HEADER_SIZE * 8 + MAX_PAYLOAD_SIZE * 8 - 1);
-      Checksum      at 0 range (HEADER_SIZE + MAX_PAYLOAD_SIZE) * 8 .. 
+      Checksum      at 0 range (HEADER_SIZE + MAX_PAYLOAD_SIZE) * 8 ..
                                (HEADER_SIZE + MAX_PAYLOAD_SIZE + CHECKSUM_SIZE) * 8 - 1;
    end record;
-   
+
    for VN_Message_Basic'Alignment use 2;
 
 

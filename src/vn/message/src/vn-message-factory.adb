@@ -11,6 +11,13 @@ use VN.Message.Request_Address_Block;
 with VN.Message.Distribute_Route;
 use VN.Message.Distribute_Route;
 
+with VN.Message.Request_LS_Probe;
+use VN.Message.Request_LS_Probe;
+with VN.Message.Probe_Request;
+use VN.Message.Probe_Request;
+with VN.Message.Probe_Reply;
+use VN.Message.Probe_Reply;
+
 package body VN.Message.Factory is
 
    function Create(VN_Msg_Type: in VN_Message_Type) return VN_Message_Basic is
@@ -58,6 +65,27 @@ package body VN.Message.Factory is
                Temp_Msg: VN_Message_Distribute_Route;
             begin
                To_Distribute_Route(VN_Msg, Temp_Msg);
+               To_Basic(Temp_Msg, VN_Msg);
+            end;
+         when Type_Request_LS_Probe => null;
+            declare
+               Temp_Msg: VN_Message_Request_LS_Probe;
+            begin
+               To_Request_LS_Probe(VN_Msg, Temp_Msg);
+               To_Basic(Temp_Msg, VN_Msg);
+            end;
+         when Type_Probe_Request => null;
+            declare
+               Temp_Msg: VN_Message_Probe_Request;
+            begin
+               To_Probe_Request(VN_Msg, Temp_Msg);
+               To_Basic(Temp_Msg, VN_Msg);
+            end;
+         when Type_Probe_Reply => null;
+            declare
+               Temp_Msg: VN_Message_Probe_Reply;
+            begin
+               To_Probe_Reply(VN_Msg, Temp_Msg);
                To_Basic(Temp_Msg, VN_Msg);
             end;
       end case;

@@ -7,7 +7,7 @@ with VN.Communication.Temp_CUUID_Routing;
 
 package VN.Communication.PO_Routing is
 
-   package Int_IO is new Ada.Text_IO.Integer_IO (Integer);
+   --package Int_IO is new Ada.Text_IO.Integer_IO (Integer);
 
    -- This PO_Router routes traffic between multiple PO_Wrappers
    type PO_Router is new Com with Private;
