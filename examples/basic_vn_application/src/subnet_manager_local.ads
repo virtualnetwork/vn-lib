@@ -65,6 +65,9 @@ package Subnet_Manager_Local is
       -- TODO: Change this buffer to some kind of data store.
       Request_LS_Probe_Buffer: VN_Logical_Address_Buffer.Buffer(10);
 
+      -- TODO: Change this buffer to some kind of data store.
+      Request_Address_Block_Buffer: Unsigned_8_Buffer.Buffer(10);
+
       function Get_Address_To_Assign(CUUID_Uint8: in Interfaces.Unsigned_8)
          return VN.VN_Logical_Address;
 

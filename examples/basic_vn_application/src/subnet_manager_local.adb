@@ -66,19 +66,26 @@ package body Subnet_Manager_Local is
                         LS_CUUID := Local_Hello_Msg.CUUID(1);
                      end if;
 
+               elsif (Local_Hello_Msg.Component_Type = VN.Message.SM_L or
+                     Local_Hello_Msg.Component_Type = VN.Message.SM_x) then
+                     Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Request_Address_Block_Buffer);
+
                end if;
 
             elsif Basic_Msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
-               To_Assign_Address_Block(Basic_Msg, Assign_Address_Block_Msg);
+               -- TODO: Add switch depending on if this current SM-x has a
+               -- logical adress or not already. (That is is CUUID for this
+               -- SM-x)
+                  To_Assign_Address_Block(Basic_Msg, Assign_Address_Block_Msg);
 
-               if Assign_Address_Block_Msg.Response_Type = VN.Message.Valid then
-                  Received_Address_Block := Assign_Address_Block_Msg.Assigned_Base_Address;
-                  SM_L_Info.Logical_Address := Received_Address_Block;
-                  -- Assigned_Address := Received_Address_Block; -- This is correct
-                  Assigned_Address := Received_Address_Block - 1; -- This is for debugging
+                  if Assign_Address_Block_Msg.Response_Type = VN.Message.Valid then
+                     Received_Address_Block := Assign_Address_Block_Msg.Assigned_Base_Address;
+                     SM_L_Info.Logical_Address := Received_Address_Block;
+                     -- Assigned_Address := Received_Address_Block; -- This is correct
+                     Assigned_Address := Received_Address_Block - 1; -- This is for debugging
 
-                  CAS_Logical_Address := Assign_Address_Block_Msg.Header.Source;
-               end if;
+                     CAS_Logical_Address := Assign_Address_Block_Msg.Header.Source;
+                  end if;
             end if;
          end if;
 
