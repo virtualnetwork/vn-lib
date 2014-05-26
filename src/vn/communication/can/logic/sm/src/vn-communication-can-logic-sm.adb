@@ -197,7 +197,7 @@ package body VN.Communication.CAN.Logic.SM is
          CAN_Routing.Insert(this.myTable, msgAssignAddr.Assigned_Address, receiver); --new
 
       elsif msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK  and 
-        msg.Header.Source = VN.LOGICAL_ADDRES_UNKNOWN then --new
+        msg.Header.Destination = VN.LOGICAL_ADDRES_UNKNOWN then --new
 
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(msg, msgAssignAddrBlock);
          CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, receiver, found);
