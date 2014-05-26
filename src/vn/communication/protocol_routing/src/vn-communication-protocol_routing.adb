@@ -54,6 +54,10 @@ package body VN.Communication.Protocol_Routing is
 
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(Message, msgAssignAddrBlock);
          CUUID_Protocol_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, address, found);
+
+         -- Since we assign an logical address, we know that this logical address exists on this subnet
+         -- (We know that the receiver exists on that subnet because of the CUUID routing)
+         Protocol_Router.Insert(this.myTable, msgAssignAddrBlock.Assigned_Base_Address, address); --new
       else
          Protocol_Router.Search(this.myTable, Message.Header.Destination, address, found);
 
