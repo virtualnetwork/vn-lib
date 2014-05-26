@@ -13,6 +13,7 @@ begin
    Global_Settings.Com_CAS.Init;
    Global_Settings.Com_LS.Init;
    Global_Settings.Com_App2.Init;
+   Global_Settings.PO_Wrapper_To_SM_L.Init;
 
    Global_Settings.Com_SM_L.Add_Interface(Global_Settings.PO_Router'Access);
    Global_Settings.PO_Router.Add_Interface(Global_Settings.PO_Wrapper_To_Application'Access);

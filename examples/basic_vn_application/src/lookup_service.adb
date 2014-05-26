@@ -78,7 +78,7 @@ package body Lookup_Service is
             Basic_Msg.Header.Destination := Temp_Logical_Address;
 
             -- TODO: Fix log output for Probe_Request
-            VN.Text_IO.Put("LS    SEND: ");
+            VN.Text_IO.Put("LS   SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
             Global_Settings.Com_LS.Send(Basic_Msg, Send_Status);
 

@@ -11,10 +11,9 @@ with VN.Message.Assign_Address;
 with VN.Message.Assign_Address_Block;
 with VN.Message.Request_Address_Block;
 with VN.Message.Request_LS_Probe;
-with VN.Message.Distribute_Route;
 with Interfaces;
 
-package Subnet_Manager_Local is
+package SM_X is
 
    task type SM_L(Pri : System.Priority;
                      Cycle_Time : Positive;
@@ -34,7 +33,7 @@ package Subnet_Manager_Local is
       package Unsigned_8_Buffer is
          new Buffers(Interfaces.Unsigned_8);
 
-      SM_L_Info: VN.Application_Information.VN_Application_Information;
+      SM_x_Info: VN.Application_Information.VN_Application_Information;
 
       Basic_Msg: VN.Message.VN_Message_Basic;
       Local_Hello_Msg: VN.Message.Local_Hello.VN_Message_Local_Hello;
@@ -42,7 +41,6 @@ package Subnet_Manager_Local is
       Assign_Address_Block_Msg: VN.Message.Assign_Address_Block.VN_Message_Assign_Address_Block;
       Request_Address_Block_Msg: VN.Message.Request_Address_Block.VN_Message_Request_Address_Block;
       Request_LS_Probe_Msg: VN.Message.Request_LS_Probe.VN_Message_Request_LS_Probe;
-      Distribute_Route_Msg: VN.Message.Distribute_Route.VN_Message_Distribute_Route;
 
       Recv_Status: VN.Receive_Status;
       Send_Status: VN.Send_Status;
@@ -50,7 +48,6 @@ package Subnet_Manager_Local is
       Version: VN.Message.VN_Version;
 
       Sent_CAS_Request_LS_Probe : boolean := false;
-      CAS_CUUID: Interfaces.Unsigned_8;
       CAS_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
       LS_CUUID: Interfaces.Unsigned_8;
@@ -69,9 +66,6 @@ package Subnet_Manager_Local is
       Request_LS_Probe_Buffer: VN_Logical_Address_Buffer.Buffer(10);
 
       -- TODO: Change this buffer to some kind of data store.
-      Distribute_Route_Buffer: Unsigned_8_Buffer.Buffer(10);
-
-      -- TODO: Change this buffer to some kind of data store.
       Request_Address_Block_Buffer: Unsigned_8_Buffer.Buffer(10);
 
       function Get_Address_To_Assign(CUUID_Uint8: in Interfaces.Unsigned_8)
@@ -79,4 +73,4 @@ package Subnet_Manager_Local is
 
       function Has_Received_Address_Block return Boolean;
 
-end Subnet_Manager_Local;
+end SM_X;

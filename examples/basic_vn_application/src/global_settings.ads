@@ -102,7 +102,7 @@ package Global_Settings is
    PO_Wrapper_To_SM_L: aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(
                                                             PO_To_SM_x'Access,
                                                             CUUID_SM_x'Access,
-                                                            VN.Message.Other,
+                                                            VN.Message.SM_x,
                                                             False);
 
    PO_Wrapper_To_App2: aliased VN.Communication.PO_Wrapper.VN_PO_Wrapper(

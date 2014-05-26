@@ -50,9 +50,15 @@ package body Central_Addressing_Service is
             VN.Text_IO.Put("CAS  RECV: ");
             Global_Settings.Logger.Log(Basic_Msg);
 
+
             if Basic_Msg.Header.Opcode = VN.Message.OPCODE_REQUEST_ADDR_BLOCK then
                To_Request_Address_Block(Basic_Msg, Request_Address_Block_Msg);
                Unsigned_8_Buffer.Insert(Request_Address_Block_Msg.CUUID(1), Assign_Address_Block_Buffer);
+
+               -- TODO: Temporary test.
+               if Basic_Msg.Header.Source /= VN.LOGICAL_ADDRES_UNKNOWN then
+                  SM_L_Address := Basic_Msg.Header.Source;
+               end if;
 
             elsif Basic_Msg.Header.Opcode = VN.Message.OPCODE_PROBE_REQUEST then
                To_Probe_Request(Basic_Msg, Probe_Request_Msg);
@@ -69,7 +75,7 @@ package body Central_Addressing_Service is
            Unsigned_8_Buffer.Remove(Temp_Uint8, Assign_Address_Block_Buffer);
 
            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Assign_Address_Block);
-           Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
+           Basic_Msg.Header.Destination := SM_L_Address;
            Basic_Msg.Header.Source := CAS_Info.Logical_Address;
 
            To_Assign_Address_Block(Basic_Msg, Assign_Address_Block_Msg);

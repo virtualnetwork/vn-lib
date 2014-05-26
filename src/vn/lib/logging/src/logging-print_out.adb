@@ -7,6 +7,7 @@ with VN.Message.Request_Address_Block;
 with VN.Message.Request_LS_Probe;
 with VN.Message.Probe_Reply;
 with VN.Message.Probe_Request;
+with VN.Message.Distribute_Route;
 
 package body Logging.Print_Out is
 
@@ -25,6 +26,8 @@ package body Logging.Print_Out is
             VN.Message.Probe_Request.VN_Message_Probe_Request;
       Probe_Reply_Msg:
             VN.Message.Probe_Reply.VN_Message_Probe_Reply;
+      Distribute_Route_Msg:
+            VN.Message.Distribute_Route.VN_Message_Distribute_Route;
    begin
 
       if Message.Header.Opcode = OPCODE_LOCAL_HELLO then
@@ -108,6 +111,19 @@ package body Logging.Print_Out is
             " (logical addresses)");
          Put_Line("");
 
+      elsif Message.Header.Opcode = OPCODE_DISTRIBUTE_ROUTE then
+         VN.Message.Distribute_Route.To_Distribute_Route(Message, Distribute_Route_Msg);
+         Put("Distribute Route from:" &
+             VN.VN_Logical_Address'Image(Distribute_Route_Msg.Header.Source) &
+            " to " &
+            VN.VN_Logical_Address'Image(Distribute_Route_Msg.Header.Destination) &
+            " (logical addresses), info: " &
+            Distribute_Route_Msg.CUUID(1)'Img &
+            " " &
+            VN.VN_Logical_Address'Image(Distribute_Route_Msg.Component_Address) &
+            " " &
+            VN.Message.VN_Component_Type'Image(Distribute_Route_Msg.Component_Type));
+         Put_Line("");
       end if;
 
    end Log;
