@@ -56,6 +56,8 @@ package Subnet_Manager_Local is
       LS_CUUID: Interfaces.Unsigned_8;
       LS_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
+      SM_x_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
+
       Temp_Uint8: Interfaces.Unsigned_8;
       Temp_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 

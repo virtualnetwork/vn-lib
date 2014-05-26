@@ -103,6 +103,9 @@ package body Subnet_Manager_Local is
                         Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
 
                         Unsigned_8_Buffer.Insert(Assign_Address_Block_Msg.CUUID(1), Distribute_Route_Buffer);
+
+                        -- TODO: Temporary fix for only one SM-x
+                        SM_x_Logical_Address := Assign_Address_Block_Msg.Assigned_Base_Address;
                   end if;
             end if;
          end if;
@@ -133,7 +136,7 @@ package body Subnet_Manager_Local is
             -- CAS
             Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Distribute_Route);
             Basic_Msg.Header.Source := SM_L_Info.Logical_Address;
-            Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
+            Basic_Msg.Header.Destination := SM_x_Logical_Address;
             To_Distribute_Route(Basic_Msg, Distribute_Route_Msg);
             Distribute_Route_Msg.CUUID := (others => CAS_CUUID);
             Distribute_Route_Msg.Component_Address := CAS_Logical_Address;
