@@ -46,8 +46,8 @@ package body SM_X is
          Global_Settings.Com_SM_x.Receive(Basic_Msg, Recv_Status);
 
          if Recv_Status = VN.NO_MSG_RECEIVED then
-            VN.Text_IO.Put_Line("SM-x RECV: Empty.");
-
+--              VN.Text_IO.Put_Line("SM-x RECV: Empty.");
+            null;
          elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
             Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
@@ -208,8 +208,8 @@ package body SM_X is
         end if;
 
          Next_Period := Next_Period + Period;
-         Counter_For_Testing := Counter_For_Testing + 1;
-         exit when Counter_For_Testing = 60;
+--           Counter_For_Testing := Counter_For_Testing + 1;
+--           exit when Counter_For_Testing = 60;
       end loop;
       ----------------------------
 
