@@ -42,6 +42,11 @@ package body VN.Communication.Routing_Table is
          end if;
       end loop;
 
+      VN.Text_IO.Put_Line("ROUTING_TABLE_OVERFLOW"); 
+      loop
+         null;
+      end loop;
+
       raise ROUTING_TABLE_OVERFLOW;
    end Insert;
 
