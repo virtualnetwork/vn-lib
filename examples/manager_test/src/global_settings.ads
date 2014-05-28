@@ -12,7 +12,7 @@ with VN.Communication.Protocol_Routing;
 with VN.Communication.CAN;
 with VN.Communication.CAN.CAN_Filtering;
 with VN.Communication.CAN.CAN_Interface;
-with VN.Communication.CAN.Can_Task;
+with VN.Communication.CAN.CAN_Task;
 
 with Ada.Real_Time;
 
