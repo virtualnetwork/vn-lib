@@ -37,7 +37,7 @@ package body Logging.Print_Out is
              VN.VN_Logical_Address'Image(Local_Hello_Msg.Header.Source) &
             " to " &
             VN.VN_Logical_Address'Image(Local_Hello_Msg.Header.Destination) &
-            " (logical addresses), Component_Type is " &
+          --  " (logical addresses), Component_Type is " &
           --  VN.Message.VN_Component_Type'Image(Local_Hello_Msg.Component_Type) &
             ", CUUID is " &
             Local_Hello_Msg.CUUID(1)'Img);
