@@ -1,6 +1,5 @@
 with VN.Message;
 with System;
-with Ada.Text_IO;
 with Buffers;
 with Global_Settings;
 with VN;
