@@ -8,6 +8,15 @@ with VN.Communication.PO_Routing;
 -- with VN.Communication.Temp_Protocol_Routing;
 with VN.Communication.Protocol_Routing;
 
+-- CAN
+with VN.Communication.CAN;
+with VN.Communication.CAN.CAN_Filtering;
+with VN.Communication.CAN.CAN_Interface;
+with VN.Communication.CAN.Can_Task;
+
+with Ada.Real_Time;
+
+
 package Global_Settings is
 
    -- Common start time for all applications.
@@ -113,5 +122,19 @@ package Global_Settings is
    -- 4. Add PO_Router to Protocol_Router (during run time, main.adb).
    -- 5. Add all PO_Wrappers to the PO_Router (during run time, main.adb).
 
+
+--- ************* CAN ****************************
+   theFilter : aliased VN.Communication.CAN.CAN_Filtering.CAN_Filter_Type;
+   CANPeriod : aliased Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(10);
+   U1 : aliased VN.Communication.CAN.UCID := VN.Communication.CAN.UCID(10);
+
+   CANInterface : aliased VN.Communication.CAN.CAN_Interface.CAN_Interface_Type
+     (U1'Unchecked_Access, CUUID_SM_x'Unchecked_Access,
+      theFilter'Unchecked_Access, VN.Communication.CAN.CAN_Interface.SM_CAN);
+
+   myTask : aliased VN.Communication.CAN.Can_Task.CAN_Task_Type
+     (CANInterface'Access, System.Priority'Last, CANPeriod'Access, theFilter'Unchecked_Access);
+
+-- ************************************************
 
 end Global_Settings;
