@@ -38,7 +38,7 @@ package body Logging.Print_Out is
             " to " &
             VN.VN_Logical_Address'Image(Local_Hello_Msg.Header.Destination) &
             " (logical addresses), Component_Type is " &
-            VN.Message.VN_Component_Type'Image(Local_Hello_Msg.Component_Type) &
+          --  VN.Message.VN_Component_Type'Image(Local_Hello_Msg.Component_Type) &
             ", CUUID is " &
             Local_Hello_Msg.CUUID(1)'Img);
          Put_Line("");
@@ -121,8 +121,8 @@ package body Logging.Print_Out is
             Distribute_Route_Msg.CUUID(1)'Img &
             " " &
             VN.VN_Logical_Address'Image(Distribute_Route_Msg.Component_Address) &
-            " " &
-            VN.Message.VN_Component_Type'Image(Distribute_Route_Msg.Component_Type));
+            " ");-- &
+         --   VN.Message.VN_Component_Type'Image(Distribute_Route_Msg.Component_Type));
          Put_Line("");
       end if;
 
