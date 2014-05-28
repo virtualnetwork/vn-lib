@@ -12,7 +12,7 @@ use Ada.Real_Time;
 
 
 procedure Manager is
-   myPeriod : Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(100);
+   myPeriod : Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(1000);
    Next_Period : Ada.Real_Time.Time;
 begin
    VN.Text_IO.Put_Line("Hello world!!");
@@ -33,13 +33,15 @@ begin
    Global_Settings.PO_Router_SM_x.Add_Interface(Global_Settings.PO_Wrapper_To_App2'Access);
    Global_Settings.PO_Router_SM_x.Add_Interface(Global_Settings.PO_Wrapper_To_SM_L'Access);
 
-   --Global_Settings.Com_SM_x.Add_Interface(Global_Settings.CANInterface'Access);
+   Global_Settings.Com_SM_x.Add_Interface(Global_Settings.CANInterface'Access);
 
    VN.Text_IO.Put_Line("Main entering infinte loop");
 
    Next_Period := Ada.Real_Time.Clock;
    loop
       Next_Period := Next_Period + myPeriod;
+
+--        VN.Text_IO.Put_Line("<Manager main function heartbeat>");
       delay until Next_Period;
    end loop;
 end Manager;
