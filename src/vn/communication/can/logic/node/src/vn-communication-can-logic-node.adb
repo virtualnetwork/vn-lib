@@ -111,7 +111,7 @@ package body VN.Communication.CAN.Logic.Node is
       msgAssignAddrBlock : VN.Message.Assign_Address_Block.VN_Message_Assign_Address_Block;
 
       isDirect : aliased Boolean;
-   begin
+   begin      
       if not this.isInitialized then
          Init(this);
       end if;
@@ -133,30 +133,30 @@ package body VN.Communication.CAN.Logic.Node is
          VN.Message.Assign_Address_Block.To_Assign_Address_Block(msg, msgAssignAddrBlock);
          CUUID_CAN_Routing.Search(this.myCUUIDTable, msgAssignAddrBlock.CUUID, receiver, found);
       else
-
-         CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found, isDirect'Access);
+         CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found, isDirect'Access); 
 
          if isDirect then
             VN.Communication.CAN.Logic.DebugOutput("CAN routing: Sending VN message via direct routing. Destination " & msg.Header.Destination'Img &
                                                      " CAN address = " & receiver'Img, 1);
          end if;
+
       end if;
 
       if found then
-         internal.Receiver := VN.Communication.CAN.Convert(receiver);
+         internal.Receiver := VN.Communication.CAN.Convert(receiver);         
          internal.Data := msg;
-
          internal.NumBytes := Interfaces.Unsigned_16(Integer(msg.Header.Payload_Length) +
                                                        VN.Message.HEADER_SIZE +
-                                                         VN.Message.CHECKSUM_SIZE);
+                                                         VN.Message.CHECKSUM_SIZE); 
+         
          this.sender.SendVNMessage(internal, result);
-
          this.logAddrHandler.Sent_From_Address(msg.Header.Source);
-
          result := OK;
       else
          result := ERROR_NO_ADDRESS_RECEIVED;
-         VN.Communication.CAN.Logic.DebugOutput("VN.Communication.CAN.Logic.Node.Send, Status := ERROR_NO_ADDRESS_RECEIVED;", 5);
+         VN.Communication.CAN.Logic.DebugOutput("VN.Communication.CAN.Logic.Node.Send, Status := ERROR_NO_ADDRESS_RECEIVED, " &
+                                                  "Destination address = " & msg.Header.Destination'Img & 
+                                                  ", Opcode = " & msg.Header.Opcode'Img, -1);
       end if;
    end Send;
 
