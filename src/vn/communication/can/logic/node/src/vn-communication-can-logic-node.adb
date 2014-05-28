@@ -137,8 +137,8 @@ package body VN.Communication.CAN.Logic.Node is
          CAN_Routing.Search(this.myTable, msg.Header.Destination, receiver, found, isDirect'Access);
 
          if isDirect then
-            VN.Text_IO.Put_Line("CAN routing: Sending VN message via direct routing. Destination " & msg.Header.Destination'Img &
-                                  " CAN address = " & receiver'Img);
+            VN.Communication.CAN.Logic.DebugOutput("CAN routing: Sending VN message via direct routing. Destination " & msg.Header.Destination'Img &
+                                                     " CAN address = " & receiver'Img, 1);
          end if;
       end if;
 
