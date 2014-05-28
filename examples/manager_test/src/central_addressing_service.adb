@@ -43,7 +43,8 @@ package body Central_Addressing_Service is
          Global_Settings.Com_CAS.Receive(Basic_Msg, Recv_Status);
 
          if Recv_Status = VN.NO_MSG_RECEIVED then
-            VN.Text_IO.Put_Line("CAS  RECV: Empty.");
+--              VN.Text_IO.Put_Line("CAS  RECV: Empty.");
+            null;
          elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
             Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
@@ -105,8 +106,8 @@ package body Central_Addressing_Service is
 
 
          Next_Period := Next_Period + Period;
-         i := i + 1;
-         exit when i = 15;
+--           i := i + 1;
+--           exit when i = 15;
       end loop;
       ----------------------------
 
