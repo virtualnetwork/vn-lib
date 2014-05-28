@@ -5,7 +5,7 @@ NAME	?=	manager
 
 ########################################
 # Ada project file
-ADAPRJ		?=	basic_vn_application_sf2.gpr
+ADAPRJ		?=	manager_test_sf2.gpr
 
 ########################################
 # Path to support folder

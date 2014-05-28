@@ -8,7 +8,7 @@ with "../../src/vn/communication/can/can_task/can_task.gpr";
 with "../../src/vn/communication/can/can_interface/can_interface.gpr";
 with "../../src/vn/communication/can/can.gpr";
 
-project Basic_VN_Application_SF2 is
+project Manager_Test_SF2 is
     for Source_Dirs use ("src");
     for Object_Dir use "obj";
     for Main use ("manager.adb");
@@ -69,4 +69,4 @@ Link_File := external
         );
     end Linker;
 
-end Basic_VN_Application_SF2;
+end Manager_Test_SF2;
