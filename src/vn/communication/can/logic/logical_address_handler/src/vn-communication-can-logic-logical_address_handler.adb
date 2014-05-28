@@ -103,10 +103,11 @@ package body VN.Communication.CAN.Logic.Logical_Address_Handler is
                this.numAddresses := this.numAddresses + 1;
             end if;
 
+            -- ToDo: An error occurs here, therefore this is commented out
             -- Add the address to be sent in a AddressAswer message as soon as possible
-            if not Address_Buffers.Full(this.sendBuffer) then 
-               Address_Buffers.Insert(Address, this.sendBuffer);
-            end if;
+--              if not Address_Buffers.Full(this.sendBuffer) then 
+--                 Address_Buffers.Insert(Address, this.sendBuffer);
+--              end if;
          end if;
       end if;
    end Sent_From_Address; 
