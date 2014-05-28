@@ -10,6 +10,9 @@
 -- Please note: This code will not compile unless it is compiled with the correct makefile,
 -- the BAP repository needs to be included.
 
+-- ToDo: The imported C-drivers are (at the time of writing) not very good or reliable.
+-- ToDo: The imported C-drivers do not support the CAN message filtering.
+
 
 with Interfaces;
 use Interfaces;
