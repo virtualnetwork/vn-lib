@@ -2,24 +2,43 @@
  *
  * This code is based on code from:
  * SmartFusion2 MSSCAN example demonstrating the Data transmission and Reception
- * using MSSCAN (FullCAN) by Microsemi SoC Products Group.
+ * using MSSCAN (FullCAN) by Microsemi SoC Products Group,
+ * as well as code written by Magnus Norgren
+ * 
  *
  * No rights reserved regarding this code file.
- */
+ * 
+ * Please note: This code does not work as intended, the following limitations exist:
+ * 
+ * * One can only send 0 or 8 bytes per CAN message. 1 to 7 bytes will cause data corruption 
+ *     on a majority of all CAN messages. Nobody has a clue about why.
+ * * The hardware filters for filtering out unwanted CAN messages does not work.
+ *     Do not use the Set_Filter function. This is because the "mss_can" drivers are run in 
+ *     "Basic CAN mode".
+ * * This code seems to Send CAN messages in the same order as the Send_CAN_Message function is called,
+ *    and CAN messages seem to be returned from the Receive_CAN_Message in the same order as 
+ *    they are received. However, this might not always be true, test this code 
+ *    thoroughly if you suspect such errors.
+ * 
+ * Please also note that this file is called "main.c" and will generate a "main.o" object file.
+ * Do not name any other file "main.<something>" (e.g. "main.adb") as this will cause two
+ * "main.o" files to be compiled and the linker will consequently not find one of the files,
+ * thus giving linker errors. Been there, done that...
+ * 
+ ********************************************************************************/
 
  /*----------------------------------------------------------------------------
  * include files
  */
 #include "mss_can.h"
 //#include "drivers/mss_can/mss_can.h"
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <stdint.h>
 
 CAN_MSGOBJECT tx_msg;
 
-
-typedef struct C_CAN_Msg_T {
+// This data structure represents a CAN message, the same data structure needs 
+// to exist in the Ada code (when importing the C-functions of this file to Ada).
+// The DATAHIGH and DATALOW variables take up the space of the 8 data bytes.
+typedef struct C_CAN_Msg_T { 
    uint32_t ID;
    uint32_t data_length;
    //int8_t DATA[8];
@@ -29,7 +48,7 @@ typedef struct C_CAN_Msg_T {
 
 
 
-int Init_CAN() {
+int Init_CAN() { //Don't forget to call this function before anything else, or nothing else will work (been there, done that...)
 
     int32_t err;
     CAN_CONFIG_REG CANReg;
@@ -96,7 +115,9 @@ int Init_CAN() {
     return ret;
 }
 
-int test() {return 42;}
+// Test function, returns the answer to life the universe and everything when you 
+// have correctly imported the C-functions to Ada. :)
+int test() {return 42;} 
 
 int Send_CAN_Message(C_CAN_Message_Type *msg) {
 
