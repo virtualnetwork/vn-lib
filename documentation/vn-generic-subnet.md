@@ -40,9 +40,9 @@ subnet, this is up to the specific subnet protocol to define.
 
 Each unit (node or Subnet Manager) on the subnet shall send a **LocalHello**
 message containing the unit's CUUID and type to each Subnet Manager it
-discovers. <br/>
-If no **LocalAck message** is received within a certain time the
-**LocalHello message** shall be resent. _The responsibility to send the
+discovers. If no **LocalAck message** is received within a certain time the
+**LocalHello message** shall be resent. <br/>
+_The responsibility to send the
 **LocalHello messages** lies on the subnet layer._ <br/>
 The sender and receiver (logical) addresses of any **LocalHello** or **LocalAck** message shall
 be set to *VN.LOGICAL_ADDRES_UNKNOWN*.
@@ -58,7 +58,7 @@ shall be done:
 
 ### Route discovery process
 ##### For routes to overlying units
-The subnet has no responsibilities regarding routing to overlying layers, all
+The VN generic subnet protocol assigns no responsibilities to the subnet protocol regarding routing to overlying layers, all
 received messages are passed on to the overlying layer.
 
 ##### For routes to underlying units

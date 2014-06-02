@@ -239,10 +239,14 @@ For this reason, the unit will send a **AddressAnswer** message containing the s
 The **AddressAnswer** message will inform all other units that VN messages addressed to this logical address shall be sent to this CAN address, thus the VN message can be sent directly to the receiver. <br/>
 If this is not done it is very likely that the only source of routing information that units will get is **DistributeRoute** messages, which will mean that VN messages will be sent via the unit that sent a **DistributeRoute** message rather than directly to the receiver. <br/>
 *Example:* Unit A is aware of units B and C and sends a **DistributeRoute** message to B about C, and vice versa. 
-B wil now know that if it wants to send a message to C it can do so by sending it to A, but it will not know on which CAN address that C 
+B will now know that if it wants to send a message to C it can do so by sending it to A, but it will not know on which CAN address that C 
 resides on and can therefore not send the message directly. <br/>
 When C sends an **AddressAnswer** message B will know to which CAN address it shall send the message, and it can therefore send the 
 message directly.
+
+*Routing information gotten from **AddressAnswer** messages is considered more reliable than other sources of routing information. Therefore, routing information from **AddressAnswer** messages
+shall replace routing information from other sources. For the same reason routing information from  **AddressAnswer** messages **shall not** be replaced by routing information from other sources, 
+such as **DistributeRoute** messages.*
 
 A unit may periodically resend **AddressAnswer** messages regarding all logical addresses that it has sent but not received messages from. 
 This will inform units that may not have been active when the first **AddressAnswer** messages were sent.
