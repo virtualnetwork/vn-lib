@@ -1,3 +1,8 @@
+-- Copyright (c) 2014 All Rights Reserved
+-- Author: Nils Brynedal Ignell
+-- Date: 2014-XX-XX
+-- Summary:
+-- Test implementation of VN.Communication.CUUID_Routing.
 
 pragma Profile (Ravenscar);
 
