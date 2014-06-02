@@ -2,7 +2,7 @@ VN CAN Subnet Protocol
 ==========================
 This protocol defines the communication for Virtual Network over the Controller Area Network.
 
-Copyright (c) 2014 All Rights Reserved
+Copyright (c) 2014 All Rights Reserved  <br/>
 Author: Nils Brynedal Ignell
 
 ## High level

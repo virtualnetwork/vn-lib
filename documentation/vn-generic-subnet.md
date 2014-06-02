@@ -5,7 +5,7 @@ subnet protocol is specific for the underlying communication protocol. Examples
 include the VN-CAN protocol for communication over the Controller Area Network
 (CAN).
 
-Copyright (c) 2014 All Rights Reserved
+Copyright (c) 2014 All Rights Reserved  <br/>
 Author: Nils Brynedal Ignell
 
 ### Addresses
