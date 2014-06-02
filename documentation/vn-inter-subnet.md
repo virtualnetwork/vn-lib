@@ -3,6 +3,9 @@ VN Inter Subnet Protocol
 This protocol defines the communication to and from the application layer and between different subnet protocols.
 A subnet protocol is specific for the underlying communication protocol. An example of subnet protocols is the VN-CAN protocol for communication over the Controller Area Network (CAN).
 
+Copyright (c) 2014 All Rights Reserved
+Author: Nils Brynedal Ignell
+
 ### Addresses
 **There exists two forms of addresses in this protocol:**
   * **The logical addresses.**  Defined in the VN protocol.

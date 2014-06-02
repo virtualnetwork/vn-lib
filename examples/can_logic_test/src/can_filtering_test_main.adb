@@ -1,4 +1,8 @@
-
+-- Copyright (c) 2014 All Rights Reserved
+-- Author: Nils Brynedal Ignell
+-- Date: 2014-XX-XX
+-- Summary:
+-- Test implementation of VN.Communication.CAN.CAN_Filtering.
 
 with Utils;
 with VN;
