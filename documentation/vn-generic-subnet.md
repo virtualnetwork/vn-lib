@@ -38,22 +38,22 @@ Author: Nils Brynedal Ignell
 This protocol does not specify how the discovery process is to be done on the
 subnet, this is up to the specific subnet protocol to define.
 
-Each unit (node or Subnet Manager) on the subnet shall send a **LocalHello
-message** containing the unit's CUUID and type to each Subnet Manager it
-discovers.
-
-The sender and receiver (logical) addresses of the **LocalHello message** shall
-be set to *VN.LOGICAL_ADDRES_UNKNOWN*. If no **LocalAck message** is received within a certain time the
+Each unit (node or Subnet Manager) on the subnet shall send a **LocalHello**
+message containing the unit's CUUID and type to each Subnet Manager it
+discovers. <br/>
+If no **LocalAck message** is received within a certain time the
 **LocalHello message** shall be resent. _The responsibility to send the
-**LocalHello messages** lies on the subnet layer._
+**LocalHello messages** lies on the subnet layer._ <br/>
+The sender and receiver (logical) addresses of any **LocalHello** or **LocalAck** message shall
+be set to *VN.LOGICAL_ADDRES_UNKNOWN*.
 
-This way the higher level protocols on the Subnet Managers discover which units
+The **LocalHello** messages enable the higher level protocols on the Subnet Managers to discover which units
 (their type and CUUID) that exist on the subnet.
 
 When a **LocalHello message** is received over the subnet the following
 shall be done:
   * Actions according to Route discovery process.
-  * Respond with a **LocalAck message**.
+  * A **LocalAck message** shall be sent in response.
   * The **LocalHello message** shall be passed on to the overlying protocol.
 
 ### Route discovery process
@@ -66,25 +66,35 @@ Whenever a VN message is received from another unit on the subnet (i.e. is to
 be added to the Receive buffer), it can be concluded that this unit can route
 VN messages to the source address of the VN message. Consequently, the source
 address (a logical address) of the VN message and the local address of the unit
-from which the VN message was received from shall be entered into the routing
-table. _The above does not apply to **LocalHello** and **LocalAck** messages.
+from which the VN message was received from shall be entered into the Primary routing
+table. <br/>
+_The above does not apply to **LocalHello** and **LocalAck** messages.
 No routing information regarding logical addresses shall be retrieved from
 **LocalHello** and **LocalAck** messages._
 
-Whenever a **Distribute Route Message** is received from another unit on the
+Whenever a **DistributeRoute** message is received from another unit on the
 subnet, it can be concluded that this unit can route VN messages to the logical
-address contained in the **Distribute Route Message**.
-
-Consequently, the logical address contained in the **Distribute Route Message**
+address contained in the **DistributeRoute** message. <br/>
+Consequently, the logical address contained in the **DistributeRoute** message
 and the local address of the unit from which the message was received from
-shall be entered into the routing table.
+shall be entered into the Primary routing table.
+
+this section is only relevant for subnet managers, not nodes: <br/>
+If the unit sends a **AssignAddr** message 
+to another unit on the subnet, this unit's low level address and the logical address it gets
+assigned shall be entered to the Primary routing table.  <br/>
+If the unit sends a **AssignAddrBlock** message with the Receiver address set equal to
+*VN.LOGICAL_ADDRES_UNKNOWN* to another on the subnet, this unit's low level address and the
+base address for the assigned address block shall be into the Primary routing table.
+
 
 ### Transmission of VN messages
-Whenever a VN message, that is *not* **LocalHello** or **LocalAck** message, is
+If a VN message is addressed to logical address 0 it shall be discarded. 
+
+Whenever a VN message is
 sent by the higher level protocol the receiver address of the message is to be
-looked up in the routing table. The routing table will give the local address
-that is to be used to send the message over the subnet.  If the VN message was
-addressed to logical address 0 it shall be discarded. <br/>
+looked up in the Primary routing table. The Primary routing table will give the local address
+that is to be used to send the message over the subnet.   <br/>
 There exist the following exceptions from the above rule:
 
 1. If the message is an **AssignAddrBlock** message or an **AssignAddr** message whose *Destination* address equals
