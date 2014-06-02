@@ -78,7 +78,7 @@ The message ID is divided according to:
 *Please note:* Even though CAN addresses are 8 bit, addresses over 127 will never be used as a sender address since the maximum number of allowed CAN nodes on a CAN network is 128 one only needs addresses 0 through 127. This means that only 7 bits are needed for the Sender address.
 
 #### Message priority
-To be determined, set by higher protocols?
+The message priority field is not used in the current implementation. Currently, the highest priority is always used.
 
 #### Message type
 The types of messages present are listed below. Please note that in the case of two messages having equal priory fields the message type field will determine priority. A lower Message type number will give a higher priority.

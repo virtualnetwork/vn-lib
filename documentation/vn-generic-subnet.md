@@ -79,7 +79,7 @@ Consequently, the logical address contained in the **DistributeRoute** message
 and the local address of the unit from which the message was received from
 shall be entered into the Primary routing table.
 
-this section is only relevant for subnet managers, not nodes: <br/>
+This section is only relevant for subnet managers, not nodes: <br/>
 If the unit sends a **AssignAddr** message 
 to another unit on the subnet, this unit's low level address and the logical address it gets
 assigned shall be entered to the Primary routing table.  <br/>
