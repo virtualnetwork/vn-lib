@@ -143,7 +143,7 @@ begin
 
             VN.Message.Request_Address_Block.To_Basic(msgReqAddrBlock, msg);
 
-            VN.Text_IO.Put_Line("Responds (just for testing) with Request_Address_Block message");
+            VN.Text_IO.Put_Line("Responds with Request_Address_Block message");
             Protocol_Routing_Test.myInterface.Send(msg, sendStatus);
 
          elsif msg.Header.Opcode = VN.Message.OPCODE_REQUEST_ADDR_BLOCK then
