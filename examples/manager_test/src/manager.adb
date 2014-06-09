@@ -33,7 +33,7 @@ begin
    Global_Settings.PO_Router_SM_x.Add_Interface(Global_Settings.PO_Wrapper_To_App2'Access);
    Global_Settings.PO_Router_SM_x.Add_Interface(Global_Settings.PO_Wrapper_To_SM_L'Access);
 
-   Global_Settings.Com_SM_x.Add_Interface(Global_Settings.CANInterface'Access);
+--     Global_Settings.Com_SM_x.Add_Interface(Global_Settings.CANInterface'Access);
 
    VN.Text_IO.Put_Line("Main entering infinte loop");
 
