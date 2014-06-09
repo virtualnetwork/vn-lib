@@ -34,7 +34,7 @@ package Global_Settings is
    CUUID_SM    : aliased VN.VN_CUUID := (others => 22);
    CUUID_LS    : aliased VN.VN_CUUID := (others => 33);
    CUUID_App   : aliased VN.VN_CUUID := (others => 44);
-   CUUID_SM_x  : aliased VN.VN_CUUID := (others => 55);
+   CUUID_SM_X  : aliased VN.VN_CUUID := (others => 55);
    CUUID_App2  : aliased VN.VN_CUUID := (others => 66);
 
    Cycle_Time_Applications : constant Positive := 2110000;

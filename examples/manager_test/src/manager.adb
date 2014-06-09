@@ -1,10 +1,12 @@
 with Global_Settings;
 with Subnet_Manager_Local;
-with SM_X;
+with Subnet_Manager_Local_X;
+--  with SM_X;
+
 with Central_Addressing_Service;
 with Lookup_Service;
 with Application;
-with App2;
+with AppX;
 with VN;
 
 with Ada.Real_Time;

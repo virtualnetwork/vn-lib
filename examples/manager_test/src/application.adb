@@ -91,7 +91,7 @@ package body Application is
             Basic_Msg.Header.Source := App_Info.Logical_Address;
             Basic_Msg.Header.Destination := Temp_Logical_Address;
 
-            VN.Text_IO.Put("APP  SEND: ");
+            VN.Text_IO.Put("APPL SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
             Global_Settings.Com_Application.Send(Basic_Msg, Send_Status);
 
