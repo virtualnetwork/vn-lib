@@ -46,7 +46,7 @@ package body Subnet_Manager_Local is
          Global_Settings.Com_SM_L.Receive(Basic_Msg, Recv_Status);
 
          if Recv_Status = VN.NO_MSG_RECEIVED then
-            --              VN.Text_IO.Put_Line("SM-L RECV: Empty.");
+            VN.Text_IO.Put_Line("SM-L RECV: Empty.");
             null;
          elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
            Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
@@ -238,6 +238,13 @@ package body Subnet_Manager_Local is
             VN.Text_IO.Put("SM-L  SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
             Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+
+            if Send_Status = VN.OK then
+               VN.Text_IO.Put("OK");
+            else
+               VN.Text_IO.Put("Send ERROR! Distribute_Route_Msg");
+            end if;
+
             -- **************
 
             Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Request_LS_Probe);
@@ -251,6 +258,12 @@ package body Subnet_Manager_Local is
             VN.Text_IO.Put("SM-L SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
             Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+
+            if Send_Status = VN.OK then
+               VN.Text_IO.Put("OK");
+            else
+               VN.Text_IO.Put("Send ERROR! Request_LS_Probe_Msg");
+            end if;
 
          end if;
 
