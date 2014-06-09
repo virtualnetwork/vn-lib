@@ -1,6 +1,8 @@
 with "../../src/vn/communication/communication.gpr";
+with "../../src/vn/communication/protocol_routing/protocol_routing.gpr";
 with "../../src/vn/message/message.gpr";
 with "../../src/vn/lib/logging/logging.gpr";
+
 with "../../src/vn/application_information/application_information.gpr";
 with "../../src/vn/communication/can/can_task/can_task.gpr";
 with "../../src/vn/communication/can/can_interface/can_interface.gpr";
@@ -9,8 +11,8 @@ with "../../src/vn/communication/can/can.gpr";
 project Node_Test is
 
    for Source_Dirs use ("src");
-   for Object_Dir use "obj";
-   for Main use ("manager.adb");
+   for Object_Dir use "obj_pc";
+   for Main use ("node.adb");
 
    package Compiler is
       for Local_Configuration_Pragmas use "project_pragmas";

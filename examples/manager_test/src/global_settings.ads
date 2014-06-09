@@ -9,10 +9,10 @@ with VN.Communication.PO_Routing;
 with VN.Communication.Protocol_Routing;
 
 -- CAN
---  with VN.Communication.CAN;
---  with VN.Communication.CAN.CAN_Filtering;
---  with VN.Communication.CAN.CAN_Interface;
---  with VN.Communication.CAN.CAN_Task;
+with VN.Communication.CAN;
+with VN.Communication.CAN.CAN_Filtering;
+with VN.Communication.CAN.CAN_Interface;
+with VN.Communication.CAN.CAN_Task;
 
 with Ada.Real_Time;
 
@@ -142,16 +142,16 @@ package Global_Settings is
 
 
 --- ************* CAN ****************************
---     theFilter : aliased VN.Communication.CAN.CAN_Filtering.CAN_Filter_Type;
---     CANPeriod : aliased Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(10);
---     U1 : aliased VN.Communication.CAN.UCID := VN.Communication.CAN.UCID(10);
---
---     CANInterface : aliased VN.Communication.CAN.CAN_Interface.CAN_Interface_Type
---       (U1'Unchecked_Access, CUUID_SM_x'Unchecked_Access,
---        theFilter'Unchecked_Access, VN.Communication.CAN.CAN_Interface.SM_CAN);
---
---     myTask : aliased VN.Communication.CAN.Can_Task.CAN_Task_Type
---       (CANInterface'Access, System.Priority'Last, CANPeriod'Access, theFilter'Unchecked_Access);
+   theFilter : aliased VN.Communication.CAN.CAN_Filtering.CAN_Filter_Type;
+   CANPeriod : aliased Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds(10);
+   U1 : aliased VN.Communication.CAN.UCID := VN.Communication.CAN.UCID(10);
+
+   CANInterface : aliased VN.Communication.CAN.CAN_Interface.CAN_Interface_Type
+     (U1'Unchecked_Access, CUUID_SM_x'Unchecked_Access,
+      theFilter'Unchecked_Access, VN.Communication.CAN.CAN_Interface.SM_CAN);
+
+   myTask : aliased VN.Communication.CAN.Can_Task.CAN_Task_Type
+     (CANInterface'Access, System.Priority'Last, CANPeriod'Access, theFilter'Unchecked_Access);
 
 -- ************************************************
 

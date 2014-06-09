@@ -10,7 +10,7 @@ with VN.Message.Request_Address_Block;
 with VN.Message.Distribute_Route;
 with Interfaces;
 
-package body Subnet_Manager_Local is
+package body Subnet_Manager_Local_CAN is
 
    task body SM_L is
       use Ada.Real_Time;
@@ -34,7 +34,7 @@ package body Subnet_Manager_Local is
       SM_L_Info.Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
       Global_Settings.Start_Time.Get(Next_Period);
-      VN.Text_IO.Put_Line("SM-L STAT: Starts.");
+      VN.Text_IO.Put_Line("SM-CAN STAT: Starts.");
 
       ----------------------------
       loop
@@ -43,16 +43,16 @@ package body Subnet_Manager_Local is
          ----------------------------
          -- Receive loop
          ----------------------------
-         Global_Settings.Com_SM_L.Receive(Basic_Msg, Recv_Status);
+         Global_Settings.Com_SM_CAN.Receive(Basic_Msg, Recv_Status);
 
          if Recv_Status = VN.NO_MSG_RECEIVED then
-            --              VN.Text_IO.Put_Line("SM-L RECV: Empty.");
+--              VN.Text_IO.Put_Line("SM-CAN RECV: Empty.");
             null;
          elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
            Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
             -- Print debug text.
-            VN.Text_IO.Put("SM-L RECV: ");
+            VN.Text_IO.Put("SM-CAN RECV: ");
             Global_Settings.Logger.Log(Basic_Msg);
 
             -- Process incoming message.
@@ -80,7 +80,7 @@ package body Subnet_Manager_Local is
                To_Assign_Address_Block(Basic_Msg, Assign_Address_Block_Msg);
 
                if Assign_Address_Block_Msg.Response_Type = VN.Message.Valid and
-                 Assign_Address_Block_Msg.CUUID = Global_Settings.CUUID_SM then
+                 Assign_Address_Block_Msg.CUUID = Global_Settings.CUUID_SM_CAN then
 
                   Received_Address_Block := Assign_Address_Block_Msg.Assigned_Base_Address;
                   SM_L_Info.Logical_Address := Received_Address_Block;
@@ -92,7 +92,7 @@ package body Subnet_Manager_Local is
                   end if;
 
                elsif Assign_Address_Block_Msg.Response_Type = VN.Message.Valid and
-                 Assign_Address_Block_Msg.CUUID /= Global_Settings.CUUID_SM then
+                 Assign_Address_Block_Msg.CUUID /= Global_Settings.CUUID_SM_CAN then
 
                   -- TODO: Remove this send so it's not coupled with
                   -- receive.
@@ -100,9 +100,9 @@ package body Subnet_Manager_Local is
                   Basic_Msg.Header.Destination := VN.LOGICAL_ADDRES_UNKNOWN;
                   Basic_Msg.Header.Source := SM_L_Info.Logical_Address;
 
-                  VN.Text_IO.Put("SM-L SEND: ");
+                  VN.Text_IO.Put("SM-CAN SEND: ");
                   Global_Settings.Logger.Log(Basic_Msg);
-                  Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+                  Global_Settings.Com_SM_CAN.Send(Basic_Msg, Send_Status);
 
                   Unsigned_8_Buffer.Insert(Assign_Address_Block_Msg.CUUID(1), Distribute_Route_Buffer);
 
@@ -145,9 +145,9 @@ package body Subnet_Manager_Local is
             Request_Address_Block_Msg.CUUID := (others => Temp_Uint8);
             To_Basic(Request_Address_Block_Msg, Basic_Msg);
 
-            VN.Text_IO.Put("SM-L SEND: ");
+            VN.Text_IO.Put("SM-CAN SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
-            Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+            Global_Settings.Com_SM_CAN.Send(Basic_Msg, Send_Status);
 
             -- Distribute route, assumes that the LS and CAS are co-located.
          elsif not Unsigned_8_Buffer.Empty(Distribute_Route_Buffer) and
@@ -168,9 +168,9 @@ package body Subnet_Manager_Local is
 
             To_Basic(Distribute_Route_Msg, Basic_Msg);
 
-            VN.Text_IO.Put("SM-L SEND: ");
+            VN.Text_IO.Put("SM-CAN SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
-            Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+            Global_Settings.Com_SM_CAN.Send(Basic_Msg, Send_Status);
 
             -- LS
             Distribute_Route_Msg.CUUID := (others => LS_CUUID);
@@ -179,9 +179,9 @@ package body Subnet_Manager_Local is
 
             To_Basic(Distribute_Route_Msg, Basic_Msg);
 
-            VN.Text_IO.Put("SM-L SEND: ");
+            VN.Text_IO.Put("SM-CAN SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
-            Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+            Global_Settings.Com_SM_CAN.Send(Basic_Msg, Send_Status);
 
          elsif not Unsigned_8_Buffer.Empty(Assign_Address_Buffer) and
            Has_Received_Address_Block then
@@ -198,9 +198,9 @@ package body Subnet_Manager_Local is
 
             To_Basic(Assign_Address_Msg, Basic_Msg);
 
-            VN.Text_IO.Put("SM-L SEND: ");
+            VN.Text_IO.Put("SM-CAN SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
-            Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+            Global_Settings.Com_SM_CAN.Send(Basic_Msg, Send_Status);
 
             -- TODO: Fix proper lookup table to keep track of LS, CAS and
             -- other SM-x
@@ -222,6 +222,24 @@ package body Subnet_Manager_Local is
 
             VN_Logical_Address_Buffer.Remove(Temp_Logical_Address, Request_LS_Probe_Buffer);
 
+            -- Send Distribute route message to LS so that LS can route its LS Probe Request message to
+            -- the application:
+            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Distribute_Route);
+            Basic_Msg.Header.Source := SM_L_Info.Logical_Address;
+            Basic_Msg.Header.Destination := LS_Logical_Address;
+            To_Distribute_Route(Basic_Msg, Distribute_Route_Msg);
+
+            Distribute_Route_Msg.CUUID := (others => 42); -- ToDo: This is not correct, however this is probably ok anyways
+            Distribute_Route_Msg.Component_Address := Temp_Logical_Address;
+            Distribute_Route_Msg.Component_Type:= VN.Message.Other;
+
+            To_Basic(Distribute_Route_Msg, Basic_Msg);
+
+            VN.Text_IO.Put("SM-CAN SEND: ");
+            Global_Settings.Logger.Log(Basic_Msg);
+            Global_Settings.Com_SM_CAN.Send(Basic_Msg, Send_Status);
+            -- **************
+
             Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Request_LS_Probe);
             Basic_Msg.Header.Source := SM_L_Info.Logical_Address;
             Basic_Msg.Header.Destination := LS_Logical_Address;
@@ -230,9 +248,9 @@ package body Subnet_Manager_Local is
 
             To_Basic(Request_LS_Probe_Msg, Basic_Msg);
 
-            VN.Text_IO.Put("SM-L SEND: ");
+            VN.Text_IO.Put("SM-CAN SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
-            Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+            Global_Settings.Com_SM_CAN.Send(Basic_Msg, Send_Status);
 
          end if;
 
@@ -242,7 +260,7 @@ package body Subnet_Manager_Local is
       end loop;
       ----------------------------
 
-      VN.Text_IO.Put_Line("SM-L STAT: Stop. Logical Address: " &
+      VN.Text_IO.Put_Line("SM-CAN STAT: Stop. Logical Address: " &
                             SM_L_Info.Logical_Address'Img);
 
    end SM_L;
@@ -273,4 +291,4 @@ package body Subnet_Manager_Local is
       end if;
    end Has_Received_Address_Block;
 
-end Subnet_Manager_Local;
+end Subnet_Manager_Local_CAN;

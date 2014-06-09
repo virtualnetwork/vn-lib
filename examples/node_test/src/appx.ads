@@ -1,7 +1,7 @@
 with VN.Message;
 with System;
 
-package Application is
+package AppX is
 
    task type VN_Application(Pri : System.Priority;
                      Cycle_Time : Positive;
@@ -10,4 +10,4 @@ package Application is
       pragma Priority(Pri);
    end VN_Application;
 
-end Application ;
+end AppX;

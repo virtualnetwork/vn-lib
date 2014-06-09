@@ -40,7 +40,7 @@ begin
 
    Global_Settings.Com_SM_CAN.Add_Interface(Global_Settings.PO_Router_SM_CAN'Access);
    Global_Settings.PO_Router_SM_CAN.Add_Interface(Global_Settings.PO_Wrapper_SM_CAN_To_SM_L'Access);
---     Global_Settings.PO_Router_SM_CAN.Add_Interface(Global_Settings.CANInterface'Access);
+   Global_Settings.PO_Router_SM_CAN.Add_Interface(Global_Settings.CANInterface'Access);
 
    VN.Text_IO.Put_Line("Main entering infinte loop");
    Next_Period := Ada.Real_Time.Clock;
