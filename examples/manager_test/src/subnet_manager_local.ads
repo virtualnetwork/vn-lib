@@ -58,12 +58,17 @@ package Subnet_Manager_Local is
       SM_x_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
       Temp_Uint8: Interfaces.Unsigned_8;
-      Temp_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
+   Temp_Logical_Address: VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
-      Received_Address_Block : VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
-      Assigned_Address : VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
+   Received_Address_Block : VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
+   Assigned_Address : VN.VN_Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
-      -- TODO: Change this buffer to some kind of data store.
+   -- TODO: Change this buffer to some kind of data store.
+   -- Map Logical address to CUUID. Only maping now is that they are
+   -- added and removed at the same time from separate FIFO queues.
+   Distribute_Route_Buffer_Addresses: VN_Logical_Address_Buffer.Buffer(10);
+
+   -- TODO: Change this buffer to some kind of data store.
       Assign_Address_Buffer: Unsigned_8_Buffer.Buffer(10);
 
       -- TODO: Change this buffer to some kind of data store.
