@@ -222,6 +222,24 @@ package body Subnet_Manager_Local is
 
             VN_Logical_Address_Buffer.Remove(Temp_Logical_Address, Request_LS_Probe_Buffer);
 
+            -- Send Distribute route message to LS so that LS can route its LS Probe Request message to
+            -- the application:
+            Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Distribute_Route);
+            Basic_Msg.Header.Source := SM_L_Info.Logical_Address;
+            Basic_Msg.Header.Destination := LS_Logical_Address;
+            To_Distribute_Route(Basic_Msg, Distribute_Route_Msg);
+
+            Distribute_Route_Msg.CUUID := (others => 42); -- ToDo: This is not correct, however this is probably ok anyways
+            Distribute_Route_Msg.Component_Address := Temp_Logical_Address;
+            Distribute_Route_Msg.Component_Type:= VN.Message.Other;
+
+            To_Basic(Distribute_Route_Msg, Basic_Msg);
+
+            VN.Text_IO.Put("SM-L  SEND: ");
+            Global_Settings.Logger.Log(Basic_Msg);
+            Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
+            -- **************
+
             Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Request_LS_Probe);
             Basic_Msg.Header.Source := SM_L_Info.Logical_Address;
             Basic_Msg.Header.Destination := LS_Logical_Address;
