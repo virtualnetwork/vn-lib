@@ -235,7 +235,7 @@ package body Subnet_Manager_Local is
 
             To_Basic(Distribute_Route_Msg, Basic_Msg);
 
-            VN.Text_IO.Put("SM-L  SEND: ");
+            VN.Text_IO.Put("SM-L SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
             Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
             -- **************

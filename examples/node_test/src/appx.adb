@@ -48,7 +48,7 @@ package body AppX is
       App_Info.Logical_Address := VN.LOGICAL_ADDRES_UNKNOWN;
 
       Global_Settings.Start_Time.Get(Next_Period);
-      VN.Text_IO.Put_Line("APPX STAT: Starts.");
+      VN.Text_IO.Put_Line("APP  STAT: Starts.");
 
       ----------------------------
       loop
@@ -60,12 +60,12 @@ package body AppX is
          Global_Settings.Com_App2.Receive(Basic_Msg, Recv_Status);
 
          if Recv_Status = VN.NO_MSG_RECEIVED then
-            --              VN.Text_IO.Put_Line("APPX RECV: Empty.");
+            --              VN.Text_IO.Put_Line("APP  RECV: Empty.");
             null;
          elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
             Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
 
-            VN.Text_IO.Put("APPX RECV: ");
+            VN.Text_IO.Put("APP  RECV: ");
             Global_Settings.Logger.Log(Basic_Msg);
 
             if Basic_Msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR then
@@ -91,7 +91,7 @@ package body AppX is
             Basic_Msg.Header.Source := App_Info.Logical_Address;
             Basic_Msg.Header.Destination := Temp_Logical_Address;
 
-            VN.Text_IO.Put("APPX SEND: ");
+            VN.Text_IO.Put("APP  SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
             Global_Settings.Com_App2.Send(Basic_Msg, Send_Status);
 
@@ -104,7 +104,7 @@ package body AppX is
       end loop;
       ----------------------------
 
-      VN.Text_IO.Put_Line("APPX STAT: Stop. Logical Address: " &
+      VN.Text_IO.Put_Line("APP  STAT: Stop. Logical Address: " &
                                  App_Info.Logical_Address'Img);
 
    end VN_Application;
