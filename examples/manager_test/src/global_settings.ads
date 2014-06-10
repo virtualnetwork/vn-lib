@@ -147,7 +147,7 @@ package Global_Settings is
    U1 : aliased VN.Communication.CAN.UCID := VN.Communication.CAN.UCID(10);
 
    CANInterface : aliased VN.Communication.CAN.CAN_Interface.CAN_Interface_Type
-     (U1'Unchecked_Access, CUUID_SM_x'Unchecked_Access,
+     (U1'Unchecked_Access, CUUID_SM_CAN'Unchecked_Access,
       theFilter'Unchecked_Access, VN.Communication.CAN.CAN_Interface.SM_CAN);
 
    myTask : aliased VN.Communication.CAN.Can_Task.CAN_Task_Type

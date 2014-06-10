@@ -214,6 +214,17 @@ package body VN.Communication.CAN.Logic.SM is
                                                      " CAN address = " & receiver'Img, 1);
          end if;
       end if;
+      
+--        if msg.Header.Opcode = 16#73# then
+--           VN.Text_IO.Put_Line("Sent REQUEST_LS_PROBE from " & msg.Header.Source'img &
+--                                 " sent to " & msg.Header.Destination'Img &
+--                                 " rerouted to CAN address " & receiver'Img);
+--  
+--        elsif msg.Header.Opcode = 16#78# then
+--           VN.Text_IO.Put_Line("Sent PROBE_REQUEST from " & msg.Header.Source'img &
+--                                 " sent to " & msg.Header.Destination'Img &
+--                                 " rerouted to CAN address " & receiver'Img);
+--        end if;
 
       if found then
          internal.Receiver := VN.Communication.CAN.Convert(receiver);
@@ -222,6 +233,7 @@ package body VN.Communication.CAN.Logic.SM is
          internal.NumBytes := Interfaces.Unsigned_16(Integer(msg.Header.Payload_Length) +
                                                        VN.Message.HEADER_SIZE +
                                                          VN.Message.CHECKSUM_SIZE);
+
          this.sender.SendVNMessage(internal, result);
 
          if result /= VN.OK then
@@ -231,7 +243,7 @@ package body VN.Communication.CAN.Logic.SM is
          this.logAddrHandler.Sent_From_Address(msg.Header.Source); 
       else
          result := ERROR_NO_ADDRESS_RECEIVED;
-         VN.Communication.CAN.Logic.DebugOutput("VN.Communication.CAN.Logic.SM.Send, Status := ERROR_NO_ADDRESS_RECEIVED;", 3);
+         VN.Communication.CAN.Logic.DebugOutput("VN.Communication.CAN.Logic.SM.Send, Status := ERROR_NO_ADDRESS_RECEIVED;", 0);
       end if;
    end Send;
 
@@ -288,6 +300,16 @@ package body VN.Communication.CAN.Logic.SM is
         status = VN.MSG_RECEIVED_MORE_AVAILABLE then
 
          msg := internal.Data;
+
+--           if msg.Header.Opcode = 16#73# then
+--              VN.Text_IO.Put_Line("Received REQUEST_LS_PROBE from " & msg.Header.Source'img &
+--                                    " sent to " & msg.Header.Destination'Img &
+--                                    " from CAN address " & internal.Sender'Img);
+--           elsif msg.Header.Opcode = 16#78# then
+--              VN.Text_IO.Put_Line("Received PROBE_REQUEST from " & msg.Header.Source'img &
+--                                    " sent to " & msg.Header.Destination'Img &
+--                                    " from CAN address " & internal.Sender'Img); 
+--           end if;
 
          -- ToDo: Add more special cases
          -- Some special cases:

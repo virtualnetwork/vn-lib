@@ -71,6 +71,17 @@ package body VN.Communication.Protocol_Routing is
             Status := ERROR_UNKNOWN; -- ToDo, what do we do if this happens!!???
          else
 
+--              if Message.Header.Opcode = 16#73# then
+--                 VN.Text_IO.Put_Line("Sent REQUEST_LS_PROBE from " & Message.Header.Source'img &
+--                                       " sent to " & Message.Header.Destination'Img &
+--                                       " rerouted onto subnet " & address'Img & " numberOfInterfaces= " & this.numberOfInterfaces'Img);
+--
+--              elsif Message.Header.Opcode = 16#78# then
+--                 VN.Text_IO.Put_Line("Sent PROBE_REQUEST from " & Message.Header.Source'img &
+--                                       " sent to " & Message.Header.Destination'Img &
+--                                       " rerouted onto subnet " & address'Img & " numberOfInterfaces= " & this.numberOfInterfaces'Img);
+--              end if;
+
             if Message.Header.Opcode /= VN.Message.OPCODE_LOCAL_HELLO and
               Message.Header.Opcode /= VN.Message.OPCODE_LOCAL_ACK then
                -- Add routing info,
@@ -82,6 +93,8 @@ package body VN.Communication.Protocol_Routing is
          end if;
       else
          Status := ERROR_NO_ADDRESS_RECEIVED; --should not really happen?
+         VN.Text_IO.Put_Line("Error no address received for message sent from " & Message.Header.Source'Img &
+                               " to " & Message.Header.Destination'Img);
       end if;
    end Send;
 
@@ -159,6 +172,18 @@ package body VN.Communication.Protocol_Routing is
                   Protocol_Router.Search(this.myTable, tempMsg.Header.Destination, address, found);
 
                   if found and address /= 0 then --  address = 0 means send to Application layer
+
+--                       if tempMsg.Header.Opcode = 16#73# then
+--                          VN.Text_IO.Put_Line("Received REQUEST_LS_PROBE from " & tempMsg.Header.Source'img &
+--                                           " sent to " & tempMsg.Header.Destination'Img
+--                                              & " rerouted onto subnet " & address'Img & " numberOfInterfaces= " & this.numberOfInterfaces'Img);
+--
+--                       elsif Message.Header.Opcode = 16#78# then
+--                          VN.Text_IO.Put_Line("Sent PROBE_REQUEST rom " & tempMsg.Header.Source'img &
+--                                                " sent to " & tempMsg.Header.Destination'Img
+--                                              & " rerouted onto subnet " & address'Img & " numberOfInterfaces= " & this.numberOfInterfaces'Img);
+--                       end if;
+
                      this.myInterfaces(address).Send(tempMsg, sendStatus); --Pass the message on to another subnet
                      tempStatus := VN.NO_MSG_RECEIVED;
 

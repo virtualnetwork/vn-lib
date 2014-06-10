@@ -46,7 +46,7 @@ package body Subnet_Manager_Local is
          Global_Settings.Com_SM_L.Receive(Basic_Msg, Recv_Status);
 
          if Recv_Status = VN.NO_MSG_RECEIVED then
-            VN.Text_IO.Put_Line("SM-L RECV: Empty.");
+--              VN.Text_IO.Put_Line("SM-L RECV: Empty.");
             null;
          elsif Recv_Status = VN.MSG_RECEIVED_NO_MORE_AVAILABLE or
            Recv_Status = VN.MSG_RECEIVED_MORE_AVAILABLE    then
@@ -59,22 +59,22 @@ package body Subnet_Manager_Local is
             if Basic_Msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
                To_Local_Hello(Basic_Msg, Local_Hello_Msg);
 
-               if (Local_Hello_Msg.Component_Type = VN.Message.Other or
-                     Local_Hello_Msg.Component_Type = VN.Message.LS) then
+                  if (Local_Hello_Msg.Component_Type = VN.Message.Other or
+                        Local_Hello_Msg.Component_Type = VN.Message.LS) then
 
-                  Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Assign_Address_Buffer);
+                     Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Assign_Address_Buffer);
 
-                  if Local_Hello_Msg.Component_Type = VN.Message.LS then
-                     LS_CUUID := Local_Hello_Msg.CUUID(1);
+                     if Local_Hello_Msg.Component_Type = VN.Message.LS then
+                        LS_CUUID := Local_Hello_Msg.CUUID(1);
+                     end if;
+
+                  elsif (Local_Hello_Msg.Component_Type = VN.Message.SM_L or
+                           Local_Hello_Msg.Component_Type = VN.Message.SM_x) then
+                     Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Request_Address_Block_Buffer);
+
+                  elsif (Local_Hello_Msg.Component_Type = VN.Message.CAS) then
+                     CAS_CUUID := Local_Hello_Msg.CUUID(1);
                   end if;
-
-               elsif (Local_Hello_Msg.Component_Type = VN.Message.SM_L or
-                        Local_Hello_Msg.Component_Type = VN.Message.SM_x) then
-                  Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Request_Address_Block_Buffer);
-
-               elsif (Local_Hello_Msg.Component_Type = VN.Message.CAS) then
-                  CAS_CUUID := Local_Hello_Msg.CUUID(1);
-               end if;
 
             elsif Basic_Msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
                To_Assign_Address_Block(Basic_Msg, Assign_Address_Block_Msg);
@@ -240,9 +240,9 @@ package body Subnet_Manager_Local is
             Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
 
             if Send_Status = VN.OK then
-               VN.Text_IO.Put("OK");
+               VN.Text_IO.Put_Line("OK");
             else
-               VN.Text_IO.Put("Send ERROR! Distribute_Route_Msg");
+               VN.Text_IO.Put_Line("Send ERROR! Distribute_Route_Msg");
             end if;
 
             -- **************
@@ -260,9 +260,9 @@ package body Subnet_Manager_Local is
             Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
 
             if Send_Status = VN.OK then
-               VN.Text_IO.Put("OK");
+               VN.Text_IO.Put_Line("OK");
             else
-               VN.Text_IO.Put("Send ERROR! Request_LS_Probe_Msg");
+               VN.Text_IO.Put_Line("Send ERROR! Request_LS_Probe_Msg");
             end if;
 
          end if;

@@ -59,22 +59,24 @@ package body Subnet_Manager_Local_CAN is
             if Basic_Msg.Header.Opcode = VN.Message.OPCODE_LOCAL_HELLO then
                To_Local_Hello(Basic_Msg, Local_Hello_Msg);
 
-               if (Local_Hello_Msg.Component_Type = VN.Message.Other or
-                     Local_Hello_Msg.Component_Type = VN.Message.LS) then
+               if Local_Hello_Msg.CUUID(1) /= 77 then -- Just testing
+                  if (Local_Hello_Msg.Component_Type = VN.Message.Other or
+                        Local_Hello_Msg.Component_Type = VN.Message.LS) then
 
-                  Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Assign_Address_Buffer);
+                     Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Assign_Address_Buffer);
 
-                  if Local_Hello_Msg.Component_Type = VN.Message.LS then
-                     LS_CUUID := Local_Hello_Msg.CUUID(1);
+                     if Local_Hello_Msg.Component_Type = VN.Message.LS then
+                        LS_CUUID := Local_Hello_Msg.CUUID(1);
+                     end if;
+
+                  elsif (Local_Hello_Msg.Component_Type = VN.Message.SM_L or
+                           Local_Hello_Msg.Component_Type = VN.Message.SM_x) then
+                     Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Request_Address_Block_Buffer);
+
+                  elsif (Local_Hello_Msg.Component_Type = VN.Message.CAS) then
+                     CAS_CUUID := Local_Hello_Msg.CUUID(1);
                   end if;
-
-               elsif (Local_Hello_Msg.Component_Type = VN.Message.SM_L or
-                        Local_Hello_Msg.Component_Type = VN.Message.SM_x) then
-                  Unsigned_8_Buffer.Insert(Local_Hello_Msg.CUUID(1), Request_Address_Block_Buffer);
-
-               elsif (Local_Hello_Msg.Component_Type = VN.Message.CAS) then
-                  CAS_CUUID := Local_Hello_Msg.CUUID(1);
-               end if;
+               end if;-- Just testing
 
             elsif Basic_Msg.Header.Opcode = VN.Message.OPCODE_ASSIGN_ADDR_BLOCK then
                To_Assign_Address_Block(Basic_Msg, Assign_Address_Block_Msg);
