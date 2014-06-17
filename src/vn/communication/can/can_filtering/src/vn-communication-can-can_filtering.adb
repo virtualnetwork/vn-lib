@@ -8,6 +8,8 @@
 -- Please note: The use of the hasChanged variable assumes that the
 -- Get_Filter procedure is only read by one thread.
 
+-- ToDo: CAN_Filtering has not yet been tested on acctual hardware due to problems with CAN drivers
+
 with Interfaces;
 use Interfaces;
 
