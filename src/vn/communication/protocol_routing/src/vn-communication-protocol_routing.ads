@@ -1,7 +1,22 @@
+------------------------------------------------------------------------------
+--  This file is part of VN-Lib.
+--
+--  VN-Lib is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  VN-Lib is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with VN-Lib.  If not, see <http://www.gnu.org/licenses/>.
+--
+--  Copyright 2014, Nils Brynedal Ignell (nils.brynedal@gmail.com)
+------------------------------------------------------------------------------
 
--- Copyright (c) 2014 All Rights Reserved
--- Author: Nils Brynedal Ignell
--- Date: 2014-XX-XX
 -- Summary:
 -- Protocol_Routing is a middle layer between the subnets and the
 -- application layer. The Protocol_Routing package will decide on
@@ -9,6 +24,8 @@
 -- and whether a VN message received via a subnet shall be
 -- delivered to the application layer or sent to another
 -- subnet, and if so, which one.
+
+-- ToDo: This implementation only handles one route between to points.
 
 with VN;
 with VN.Communication;
