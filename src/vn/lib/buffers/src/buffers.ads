@@ -26,6 +26,9 @@
 
 --  Non-blocking circular bounded buffers
 
+-- Please note: This file has been partially changed during the development 
+-- of the VN-Lib.
+
 generic
    type Element is private;
 package Buffers is

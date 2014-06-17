@@ -24,6 +24,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+-- Please note: This file has been partially changed during the development 
+-- of the VN-Lib.
+
 package body Buffers is
 
    ------------
