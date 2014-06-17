@@ -2,7 +2,7 @@
 -- Copyright (c) 2014 All Rights Reserved
 -- Author: Nils Brynedal Ignell
 -- Date: 2014-XX-XX
--- Summary:
+-- Summary: This is an old test of Ada Tasks. May not work.
 
 
 pragma Profile(Ravenscar);
