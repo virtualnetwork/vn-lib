@@ -12,11 +12,11 @@ ADAPRJ		?=	protocol_routing_test_sf2.gpr
 
 ########################################
 # Path to support folder
-SPTPATH		=	$(shell pwd)/../../../../bap-arm-ravenscar-repository-rev280/support
+SPTPATH		=	$(shell pwd)/../../bap/support
 # Path to Microsemi drivers
 DRVPATH		=	$(SPTPATH)/microsemi-drivers
 # Path to Ada RTS
-RTS_DIR		=	$(shell pwd)/../../../../bap-arm-ravenscar-repository-rev280/rts/boards/sf2-starter-kit-010
+RTS_DIR		=	$(shell pwd)/../../bap/rts/boards/sf2-starter-kit-010
 
 ########################################
 # Link command file, set defaults
