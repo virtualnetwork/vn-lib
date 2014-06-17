@@ -1,6 +1,22 @@
--- Copyright (c) 2014 All Rights Reserved
--- Author: Nils Brynedal Ignell
--- Date: 2014-XX-XX
+------------------------------------------------------------------------------
+--  This file is part of VN-Lib.
+--
+--  VN-Lib is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  VN-Lib is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with VN-Lib.  If not, see <http://www.gnu.org/licenses/>.
+--
+--  Copyright 2014, Nils Brynedal Ignell (nils.brynedal@gmail.com)
+------------------------------------------------------------------------------
+
 -- Summary:
 -- CAN_Task is the lowlevel task that accesses the CAN_Interface object.
 -- It reads CAN messages from the lowlevel read buffer, runs the Update
@@ -14,7 +30,6 @@ with VN;
 with VN.Communication.CAN;
 with VN.Communication.CAN.Logic.SM;
 with VN.Communication.CAN.CAN_Driver;
---  with BBB_CAN;
 
 with Ada.Exceptions;
 
@@ -37,7 +52,6 @@ package body VN.Communication.CAN.CAN_Task is
          msgLog  : VN.Communication.CAN.CAN_Message_Logical;
       begin
 
-         --  BBB_CAN.Get(msgPhys, hasReceived, b);
        CAN_Driver.Receive(msgLog, status);
 
          while not buf.Full(msgsIn) and
@@ -45,7 +59,6 @@ package body VN.Communication.CAN.CAN_Task is
 
             buf.Insert(msgLog, msgsIn);
 
-            --   BBB_CAN.Get(msgPhys, hasReceived, b);
             CAN_Driver.Receive(msgLog, status);
          end loop;
       end Input;
@@ -57,7 +70,6 @@ package body VN.Communication.CAN.CAN_Task is
 
          while not buf.Empty(msgsOut) and not CAN_Driver.Send_Buffer_Full loop
             buf.Remove(msgLog, msgsOut);
-            --       BBB_CAN.Send(msgPhys);
             CAN_Driver.Send(msgLog, status);
          end loop;
       end Output;
@@ -69,17 +81,11 @@ package body VN.Communication.CAN.CAN_Task is
       myPeriod := thePeriod.all;
       Next_Period := Ada.Real_Time.Clock;
 
-      --  BBB_CAN.Init(port.all, UartWrapper.B115200);
-
       loop
          Next_Period := Next_Period + myPeriod;
          delay until Next_Period;
 
---           VN.Text_IO.Put_Line("CAN_Task input start");
-
          Input;
-
---           VN.Text_IO.Put_Line("CAN_Task input ended, update start");
 
          myAccess.Update(msgsIn, msgsOut);
 
