@@ -1,7 +1,22 @@
+------------------------------------------------------------------------------
+--  This file is part of VN-Lib.
+--
+--  VN-Lib is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  VN-Lib is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with VN-Lib.  If not, see <http://www.gnu.org/licenses/>.
+--
+--  Copyright 2014, Nils Brynedal Ignell (nils.brynedal@gmail.com)
+------------------------------------------------------------------------------
 
--- Copyright (c) 2014 All Rights Reserved
--- Author: Nils Brynedal Ignell
--- Date: 2014-XX-XX
 -- Summary: 
 -- VN.Communication.CAN is the subnet specific layer for CAN. It
 -- resides under the Protocol_Routing layer. The VN.Communication.CAN 
