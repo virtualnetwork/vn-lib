@@ -1,6 +1,22 @@
--- Copyright (c) 2014 All Rights Reserved
--- Author: Nils Brynedal Ignell
--- Date: 2014-XX-XX
+------------------------------------------------------------------------------
+--  This file is part of VN-Lib.
+--
+--  VN-Lib is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  VN-Lib is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with VN-Lib.  If not, see <http://www.gnu.org/licenses/>.
+--
+--  Copyright 2014, Nils Brynedal Ignell (nils.brynedal@gmail.com)
+------------------------------------------------------------------------------
+
 -- Summary:
 -- This package contains procedures for sending and receiving CAN messages
 -- as well as for conversion between logical and physical representations
@@ -29,26 +45,7 @@ package body VN.Communication.CAN.CAN_Driver is
 
       use Interfaces.C;
    begin
-
-
-
-      -- ToDo: This is just for testing, right now the CAN drivers don't work so we'll have to pretend we sent the message without doing so:
---        status := VN.OK;
---        return;
-
       Physical_Logical.LogicalToPhysical(message, physicalMessage);
-
---        if message.isNormal and message.msgType = VN.Communication.CAN.CAN_Message_Type(1) then
---           GNAT.IO.Put_Line("Sent Assign_CAN_Address, address= " & physicalMessage.Data(4)'Img);
---           GNAT.IO.Put_Line("ID= " & physicalMessage.ID'Img);
---           GNAT.IO.Put_Line("Length= " & physicalMessage.Length'Img);
---
---           GNAT.IO.Put_Line("Data= " & physicalMessage.Data(0)'Img & physicalMessage.Data(1)'Img & physicalMessage.Data(2)'Img
---                            & physicalMessage.Data(3)'Img& physicalMessage.Data(4)'Img & physicalMessage.Data(5)'Img
---                            & physicalMessage.Data(6)'Img & physicalMessage.Data(7)'Img);
---
---        end if;
-
 
       if SendPhysical(physicalMessage'Unchecked_Access) = 1 then
          status := VN.OK;
@@ -78,29 +75,9 @@ package body VN.Communication.CAN.CAN_Driver is
       use Interfaces.C;
    begin
 
-
-      -- ToDo: This is just for testing, right now the CAN drivers don't work so we'll have to pretend we just didn't receive a message
---        status := VN.NO_MSG_RECEIVED;
---        return;
-
       if ReceivePhysical(physicalMessage'Unchecked_Access) = 1 then
          status := VN.MSG_RECEIVED_NO_MORE_AVAILABLE;
          Physical_Logical.PhysicalToLogical(physicalMessage, message);
-
---           if message.isNormal then
---              GNAT.IO.Put_Line("message.isNormal, receiver= " & message.Receiver'Img);
---           end if;
-
---           if message.isNormal and message.msgType = VN.Communication.CAN.CAN_Message_Type(1) then
---              GNAT.IO.Put_Line("Received Assign_CAN_Address, address= " & physicalMessage.Data(4)'Img);
---              GNAT.IO.Put_Line("ID= " & physicalMessage.ID'Img);
---              GNAT.IO.Put_Line("Length= " & physicalMessage.Length'Img);
---
---              GNAT.IO.Put_Line("Data= " & physicalMessage.Data(0)'Img & physicalMessage.Data(1)'Img & physicalMessage.Data(2)'Img
---                               & physicalMessage.Data(3)'Img& physicalMessage.Data(4)'Img & physicalMessage.Data(5)'Img
---                               & physicalMessage.Data(6)'Img & physicalMessage.Data(7)'Img);
---
---           end if;
       else
          status := VN.NO_MSG_RECEIVED;
       end if;
@@ -143,52 +120,19 @@ package body VN.Communication.CAN.CAN_Driver is
       end loop;
    end Update_Filters;
 
-
-
-
--- Remove this when compiling for PC, keep when compiling for SmartFusion2:
---     procedure CANHandler(ID : System.BB.Interrupts.Interrupt_ID) is
---     begin
---        null; --ToDo: Implement this...
---     end CANHandler;
-
    procedure Init is
       ret : Interfaces.Integer_32;
    begin
-      ret := Interfaces.Integer_32(CAN_Init); -- Remove this when compiling for PC, keep when compiling for SmartFusion2
+      ret := Interfaces.Integer_32(CAN_Init); 
 
       GNAT.IO.New_Line(2);
 
       if ret = 0 then
          GNAT.IO.Put_Line("CAN initiated successfully");
       else
-
          GNAT.IO.Put_Line("CAN initiated with error code= " & ret'Img);
       end if;
-    --  System.BB.Interrupts.Attach_Handler(CANHandler'Access, System.BB.Interrupts.Interrupt_ID(32));
    end Init;
-
-
-   -- ToDo: This is just for testing, to make sure the C-code does not interfere:
---     function SendPhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int is
---     begin
---        return 1;
---     end SendPhysical;
---
---     function ReceivePhysical(msg : CAN_Message_Physical_Access) return Interfaces.C.int is
---     begin
---        return 0;
---     end ReceivePhysical;
---
---     procedure Test_CAN_Send is
---     begin
---        null;
---     end Test_CAN_Send;
---
---     function Test return Interfaces.C.int is
---     begin
---        null;
---     end Test;
 
 begin
    Init;

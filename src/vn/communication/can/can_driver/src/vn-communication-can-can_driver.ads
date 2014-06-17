@@ -1,6 +1,22 @@
--- Copyright (c) 2014 All Rights Reserved
--- Author: Nils Brynedal Ignell
--- Date: 2014-XX-XX
+------------------------------------------------------------------------------
+--  This file is part of VN-Lib.
+--
+--  VN-Lib is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  VN-Lib is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with VN-Lib.  If not, see <http://www.gnu.org/licenses/>.
+--
+--  Copyright 2014, Nils Brynedal Ignell (nils.brynedal@gmail.com)
+------------------------------------------------------------------------------
+
 -- Summary:
 -- This package contains procedures for sending and receiving CAN messages
 -- as well as for conversion between logical and physical representations
@@ -46,12 +62,10 @@ package VN.Communication.CAN.CAN_Driver is
    function ReceivePhysical(msg : Physical_Logical.CAN_Message_Physical_Access) return Interfaces.C.int;
    pragma Import(C, ReceivePhysical, "Receive_CAN_Message");
 
-
-   -- Remove this when compiling for PC, keep when compiling for SmartFusion2:
    procedure Test_CAN_Send;
    pragma Import(C, Test_CAN_Send, "Test_Send");
 
-   function Test return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
+   function Test return Interfaces.C.int; 
    pragma Import(C, Test, "test");
 
 private
@@ -59,17 +73,15 @@ private
    package CANPack renames VN.Communication.CAN;
    package CAN_Message_Buffers is new Buffers(Physical_Logical.CAN_Message_Physical);
 
-   function CAN_Init return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
+   function CAN_Init return Interfaces.C.int; 
    pragma Import(C, CAN_Init, "Init_CAN");
 
 
    --Will return 1 on success
    function Set_CAN_Filter(mailbox_number : Interfaces.C.unsigned_char;
                            mask : Interfaces.C.unsigned; template : Interfaces.C.unsigned)
-                           return Interfaces.C.int; -- Remove this when compiling for PC, keep when compiling for SmartFusion2
+                           return Interfaces.C.int; 
    pragma Import(C, Set_CAN_Filter, "Set_Filter");
-
-   --  procedure CANHandler(ID : System.BB.Interrupts.Interrupt_ID); -- Remove this when compiling for PC, keep when compiling for SmartFusion2
 
    procedure Init;
 
