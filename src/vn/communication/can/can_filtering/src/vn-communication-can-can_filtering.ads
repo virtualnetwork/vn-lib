@@ -1,6 +1,22 @@
--- Copyright (c) 2014 All Rights Reserved
--- Author: Nils Brynedal Ignell
--- Date: 2014-XX-XX
+------------------------------------------------------------------------------
+--  This file is part of VN-Lib.
+--
+--  VN-Lib is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  VN-Lib is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with VN-Lib.  If not, see <http://www.gnu.org/licenses/>.
+--
+--  Copyright 2014, Nils Brynedal Ignell (nils.brynedal@gmail.com)
+------------------------------------------------------------------------------
+
 -- Summary:
 -- CAN_Filtering keeps track of what the hardware filters of the CAN controller should be.
 -- The purpose of this is to filter out all CAN messages that are not needed.
@@ -8,7 +24,7 @@
 -- Please note: The use of the hasChanged variable assumes that the
 -- Get_Filter procedure is only read by one thread.
 
--- ToDo: CAN_Filtering has not yet been tested on acctual hardware due to problems with CAN drivers
+-- ToDo: CAN_Filtering has not yet been tested on acctual hardware due to problems with CAN drivers.
 
 with VN;
 with VN.Communication;
