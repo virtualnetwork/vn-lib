@@ -239,12 +239,6 @@ package body Subnet_Manager_Local is
             Global_Settings.Logger.Log(Basic_Msg);
             Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
 
-            if Send_Status = VN.OK then
-               VN.Text_IO.Put_Line("OK");
-            else
-               VN.Text_IO.Put_Line("Send ERROR! Distribute_Route_Msg");
-            end if;
-
             -- **************
 
             Basic_Msg := VN.Message.Factory.Create(VN.Message.Type_Request_LS_Probe);
@@ -258,12 +252,6 @@ package body Subnet_Manager_Local is
             VN.Text_IO.Put("SM-L SEND: ");
             Global_Settings.Logger.Log(Basic_Msg);
             Global_Settings.Com_SM_L.Send(Basic_Msg, Send_Status);
-
-            if Send_Status = VN.OK then
-               VN.Text_IO.Put_Line("OK");
-            else
-               VN.Text_IO.Put_Line("Send ERROR! Request_LS_Probe_Msg");
-            end if;
 
          end if;
 
