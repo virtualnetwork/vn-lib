@@ -1,6 +1,22 @@
--- Copyright (c) 2014 All Rights Reserved
--- Author: Nils Brynedal Ignell
--- Date: 2014-XX-XX
+------------------------------------------------------------------------------
+--  This file is part of VN-Lib.
+--
+--  VN-Lib is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  VN-Lib is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with VN-Lib.  If not, see <http://www.gnu.org/licenses/>.
+--
+--  Copyright 2014, Nils Brynedal Ignell (nils.brynedal@gmail.com)
+------------------------------------------------------------------------------
+
 -- Summary:
 -- VN.Communication.CAN.Logic is a package that implements the logic
 -- of the VN-CAN protocol itself.
@@ -32,11 +48,6 @@ package VN.Communication.CAN.Logic is
    TRANSMISSION 	: CAN_Message_Type := 9;
    DISCOVERY_REQUEST    : CAN_Message_Type := 10;
    COMPONENT_TYPE	: CAN_Message_Type := 11;
-
---     REQUEST_CUUID	: CAN_Message_Type := 9;
---     FIRST_CUUID_HALF 	: CAN_Message_Type := 10;
---     SECOND_CUUID_HALF 	: CAN_Message_Type := 11;
---     ASSIGN_LOGICAL_ADDR	: CAN_Message_Type := 13;
 
    type VN_Message_Internal is
       record
