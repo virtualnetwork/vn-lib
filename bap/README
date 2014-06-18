@@ -1,0 +1,89 @@
+                    ARM Ada Ravenscar RTS and Programs
+                    ----------------------------------
+        Developed by Magnus Norgren <magnus@adv.bruhnspace.com> and
+                     Fredrik Bruhn <f@adv.bruhnspace.com> 
+        Copyright (c) Bruhnspace Advanced Projects AB (BAP) 2014.
+        
+        In collaboration with Malardalen University, Sweden.
+                     Fredrik Bruhn <fredrik.bruhn@mdh.se>
+
+-------------------------------------------------------------------------------
+Legal
+    Derived from Lego NXT Ada ravenscar for arm7tdmi written by UPM.
+    Inspired by work from Luke A. Guest and David Rees in Ada Microkernel.
+    Inspired by work from Robert Klezek on Ada Ravenscar.    
+-------------------------------------------------------------------------------
+Supported Devices:
+    * ARM Cortex-M3 Family
+        Microsemi SmartFusion2 FPGA
+        Texas Instruments Stellaris lm3s811 (QEMU simulation)
+-------------------------------------------------------------------------------
+
+Supported Tool chain
+BAP ARM GCC cross compiler, v4.8.3 with newlib 2.0.0.
+
+-------------------------------------------------------------------------------
+
+CONTENT:
+
+/apps		// Directory for applications
+/externals	// specific includes
+/rts		// Realtime specific files for each platform
+/scripts	// Scripts to render RTS
+/support	// Support files, mainly link files and start-up.
+/tools 		// Just symlinks
+README		// This file
+TODO        // Fixed bugs, ToDos stil to
+-------------------------------------------------------------------------------
+
+USAGE: 
+
+Build board specific RTS
+
+With the BAP supported toolchain, you must build a suitable runtime library for the
+board you intend to build Ada for.
+
+This is done with the following commands
+
+	cd scripts/
+	./build-rts.sh <boardname> rebuild
+
+Where <boardname> is one of the following:
+	* sf2-starter-kit-010  	// Hard Cortex-M3 in Microsemi SmartFusion2 FPGA. 166 MHz, XX kB eSRAM, XX kB eNVM, 64 MB DDR (Starter-kit) 
+	* sf2-starter-kit-050  	// Hard Cortex-M3 in Microsemi SmartFusion2 FPGA. 166 MHz, 64 kB eSRAM, 256 kB eNVM, 64 MB DDR (Starter-kit) 
+	* sf2-dev-kit		// Hard Cortex-M3 in Microsemi
+	* sf2-unibap-e2000	//
+	* lm3s811			// BAP QEMU ARM virtualizer.
+
+rebuild
+
+	./build-rts.sh <boardname> rebuild
+
+clean
+	./build-rts.sh clean
+
+-------------------------------------------------------------------------------
+
+Pre-requisistes
+
+1. BAP ARM GCC cross compiling toolchain for 64 bit Linux, installed in /opt/gcc-4.8-arm
+	Download from: 
+
+2. QEMU ARM virtualizer for 64 bit Linux
+	Install in ubuntu with 
+	sudo apt-get install qemu-system
+	
+3. BAP ARM ada development repository files
+	Download from: http://adv.bruhnspace.com/downloads/bap-arm-ada-ravenscar-repository.zip
+
+Generate Ada RTS for TI Stellaris lm3s811.
+
+cd script/
+./build-rts lm3s811 cortex-m rebuild.
+
+usage: 
+	go to apps
+	cd apps/lm3s811-qemu-test
+
+	make - compile program
+	make qemu - compile and launch program in QEMU.

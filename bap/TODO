@@ -1,0 +1,67 @@
+/*
+* TODO, Bugfix list for BAP ARM Ada ravenscar
+*
+* /
+
+---------------------------------------
+- RTS related errors and fixes
+---------------------------------------
+
+///////////////////
+
+OPEN ISSUES
+
+///////////////////
+
+- TITLE
+    Description
+
+\\\\\\\\\\\\\\\\\\\\
+
+CLOSED ISSUES
+
+\\\\\\\\\\\\\\\\\\\\
+
+
+- Board specific hardware registers etc.
+	System.BB.Board_Support.<BOARDNAME> which resides 
+	in RTS file <s-bbsulm.ads> should be updated for each board type.
+Update:
+    -- MADE EXAMPLE FOR LM3s811 in rts/src/board/lm3s811
+    
+- Ravenscar context switching must be checked.
+	context_switch-bb-arm.s (currently for ARM7TDMI). Verify if changes
+	must be made for Cortex-M3.
+
+Update: 
+    -- Assembler code changed.
+    
+- System.BB.CPU.Primitives must be adopted to Cortex-M3 for all board types.
+	s-bbcppr.ads and s-bbcppr.adb
+	Errors temporary patched.
+	arm-none-eabi-gcc ....... ./boards/sf2-starter-kit-050/adainclude/s-bbcppr.adb
+	/tmp/ccMaby1m.s: Assembler messages:
+	/tmp/ccMaby1m.s:92: Error: selected processor does not support requested special purpose register -- `mrs r3,cpsr'
+	/tmp/ccMaby1m.s:105: Error: selected processor does not support requested special purpose register -- `msr cpsr_c,r3'
+	/tmp/ccMaby1m.s:134: Error: selected processor does not support requested special purpose register -- `mrs r3,cpsr'
+	/tmp/ccMaby1m.s:147: Error: selected processor does not support requested special purpose register -- `msr cpsr_c,r3'
+	make: *** [boards/sf2-starter-kit-050/adalib/s-bbcppr.o] Error 1
+	) 
+    
+Update, changed the assembler code.
+
+- System.BB.Threads have a error message.
+	s-bbthre.ads and s-bbthre.adb
+	Errors temporary patched.
+	Environment_Thread.Top_Of_Stack will be out of bounds during execution. 
+	Environment_Thread.Bottom_Of_Stack will be out of bounds during execution. 
+
+ Update, fixed with adding stack bottom, stack top to linked file.
+    
+- Ada.Synchronous_Task_Control
+	a-sytaco.ads and a-sytaco.adb
+	Errors temporary patched.
+	line 113, 
+	a-sytaco.adb:113:08: missing argument for parameter "Mode" in call to "Protected_Single_Entry_Call" declared at s-tposen.ads:219 
+
+Update. Solved automatically by the other issues.    
