@@ -46,12 +46,12 @@ The above does not apply to **LocalHello** or **LocalAck** messages, which shoul
 #### For routes to underlying units
 Whenever a VN message is received from an underlying subnet, it can be concluded that VN messages addressed to the sender address of this VN message can be routed via that particular subnet. 
 Consequently, the logical address of the VN message shall be entered into the Primary routing table with corresponding subnet address set according to the subnet from which the message was received. <br/>
-_The above does not apply to **LocalHello** and **LocalAck** messages. No routing information regarding logical addresses shall be retrieved from **LocalHello** and **LocalAck** messages._ <br/>
-_This source of routing information shall not be changed using based on **DistributeRoute** messages._
+_This source of routing information shall not be changed using based on **DistributeRoute** messages._ <br/>
+_The above does not apply to **LocalHello** and **LocalAck** messages. No routing information regarding logical addresses shall be retrieved from **LocalHello** and **LocalAck** messages._ 
 
 Whenever a **DistributeRoute** message is received from an underlying subnet, it can be concluded that VN messages addressed to the logical address contained in the **DistributeRoute** message can be routed via this subnet.
 Consequently, the logical address contained in the **DistributeRoute** message shall be entered into the Primary routing table with corresponding subnet address set according to the subnet from which the message was received. <br/>
-_**DistributeRoute** messages are the least reliable source of routing information. Hence, routing information regarding a particular logical address shall only be retrieved from **DistributeRoute** messages if no previous routing information regarding this logical address. _
+_Since **DistributeRoute** messages are the least reliable source of routing information, routing information regarding a particular logical address shall only be retrieved from **DistributeRoute** messages if no previous routing information regarding this logical address. _
 
 Whenever a **LocalHello** message is received from a particular subnet, the CUUID contained in its payload shall be entered into the CUUID routing table. 
 This saves the information that **AssignAddr** and **AssignAddrBlock** messages sent to this CUUID shall be sent via this subnet.

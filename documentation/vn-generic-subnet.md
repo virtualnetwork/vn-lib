@@ -78,9 +78,8 @@ address contained in the **DistributeRoute** message. <br/>
 Consequently, the logical address contained in the **DistributeRoute** message
 and the local address of the unit from which the message was received from
 shall be entered into the Primary routing table. <br/>
-_**DistributeRoute** messages are the least reliable source of routing information. 
-Hence, routing information regarding a particular logical address shall only be retrieved 
-from **DistributeRoute** messages if no previous routing information regarding this logical address. _
+_Since **DistributeRoute** messages are the least reliable source of routing information, 
+routing information regarding a particular logical address shall only be retrieved from **DistributeRoute** messages if no previous routing information regarding this logical address. _
 
 
 This section is only relevant for subnet managers, not nodes: <br/>
