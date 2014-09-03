@@ -244,9 +244,9 @@ resides on and can therefore not send the message directly. <br/>
 When C sends an **AddressAnswer** message B will know to which CAN address it shall send the message, and it can therefore send the 
 message directly.
 
-*Routing information gotten from **AddressAnswer** messages is considered more reliable than other sources of routing information. Therefore, routing information from **AddressAnswer** messages
+_Routing information gotten from **AddressAnswer** messages is considered more reliable than other sources of routing information. Therefore, routing information from **AddressAnswer** messages
 shall replace routing information from other sources. For the same reason routing information from  **AddressAnswer** messages **shall not** be replaced by routing information from other sources, 
-such as **DistributeRoute** messages.*
+such as **DistributeRoute** messages._
 
 A unit may periodically resend **AddressAnswer** messages regarding all logical addresses that it has sent but not received messages from. 
 This will inform units that may not have been active when the first **AddressAnswer** messages were sent.
@@ -262,7 +262,7 @@ If there is no **FlowControl** message in response the sending unit shall retry 
 3. Once the sending node receives the **FlowControl** message it will send **Transmission** messages according to: <br/>
 	3.1.    If the FlowControl message did not indicate the use of flow control, or if the Block Size is smaller than the number of **Transmission** messages needed to send the VN message, all **Transmission** messages will be sent. <br/>
 	3.2.    Otherwise, the sender will send as many **Transmission** messages as specified in the **FlowControl** message.<br/>
-4. Once the sender receives another FlowControl message it will send another block size of Transmission messages, or the remaining **Transmission** messages if the number of remaining **Transmission** messages is smaller than the block size.
+4. Once the sender receives another **FlowControl** message it will send another block size of Transmission messages, or the remaining **Transmission** messages if the number of remaining **Transmission** messages is smaller than the block size.
 This will continue until all **Transmission** messages have been sent.
 5. Once a sender has sent a **StartTransmission** message to a receiver regarding a particular VN message it shall not send another  **StartTransmission** message regarding another VN message to that receiver before having transferred all of the previous VN message (all **Transmission** messages). <br/>
 Hence, the transmission a VN message cannot be interrupted by the transmission of another VN message that is sent from the same sender to the same receiver. <br/>
