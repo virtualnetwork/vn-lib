@@ -48,11 +48,10 @@ Whenever a VN message is received from an underlying subnet, it can be concluded
 Consequently, the logical address of the VN message shall be entered into the Primary routing table with corresponding subnet address set according to the subnet from which the message was received. <br/>
 *The above does not apply to LocalHello and LocalAck messages. No routing information regarding logical addresses shall be retrieved from LocalHello and LocalAck messages.*
 
-Whenever a **Distribute
-Route** message is received from an underlying subnet, it can be concluded that VN messages addressed to the logical address contained in the **DistributeRoute** message can be routed via this subnet.
+Whenever a **DistributeRoute** message is received from an underlying subnet, it can be concluded that VN messages addressed to the logical address contained in the **DistributeRoute** message can be routed via this subnet.
 Consequently, the logical address contained in the **DistributeRoute** message shall be entered into the Primary routing table with corresponding subnet address set according to the subnet from which the message was received.
 
-Whenever a **Local Hello** message is received from a particular subnet, the CUUID contained in its payload shall be entered into the CUUID routing table. 
+Whenever a **LocalHello** message is received from a particular subnet, the CUUID contained in its payload shall be entered into the CUUID routing table. 
 This saves the information that **AssignAddr** and **AssignAddrBlock** messages sent to this CUUID shall be sent via this subnet.
 
 #### Transmission of VN messages
