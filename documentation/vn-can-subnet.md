@@ -262,7 +262,7 @@ If there is no **FlowControl** message in response the sending unit shall retry 
 3. Once the sending node receives the **FlowControl** message it will send **Transmission** messages according to: <br/>
 	3.1.    If the FlowControl message did not indicate the use of flow control, or if the Block Size is smaller than the number of **Transmission** messages needed to send the VN message, all **Transmission** messages will be sent. <br/>
 	3.2.    Otherwise, the sender will send as many **Transmission** messages as specified in the **FlowControl** message.<br/>
-4. Once the sender receives another FlowControl message it will send another block size of Transmission messages, or the remaining **Transmission** messages if the number of remaining **Transmission** messages is smaller than the block size.
+4. Once the sender receives another **FlowControl** message it will send another block size of Transmission messages, or the remaining **Transmission** messages if the number of remaining **Transmission** messages is smaller than the block size.
 This will continue until all **Transmission** messages have been sent.
 5. Once a sender has sent a **StartTransmission** message to a receiver regarding a particular VN message it shall not send another  **StartTransmission** message regarding another VN message to that receiver before having transferred all of the previous VN message (all **Transmission** messages). <br/>
 Hence, the transmission a VN message cannot be interrupted by the transmission of another VN message that is sent from the same sender to the same receiver. <br/>
