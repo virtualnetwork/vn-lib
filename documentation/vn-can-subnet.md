@@ -244,9 +244,9 @@ resides on and can therefore not send the message directly. <br/>
 When C sends an **AddressAnswer** message B will know to which CAN address it shall send the message, and it can therefore send the 
 message directly.
 
-*Routing information gotten from **AddressAnswer** messages is considered more reliable than other sources of routing information. Therefore, routing information from **AddressAnswer** messages
+_Routing information gotten from **AddressAnswer** messages is considered more reliable than other sources of routing information. Therefore, routing information from **AddressAnswer** messages
 shall replace routing information from other sources. For the same reason routing information from  **AddressAnswer** messages **shall not** be replaced by routing information from other sources, 
-such as **DistributeRoute** messages.*
+such as **DistributeRoute** messages._
 
 A unit may periodically resend **AddressAnswer** messages regarding all logical addresses that it has sent but not received messages from. 
 This will inform units that may not have been active when the first **AddressAnswer** messages were sent.
