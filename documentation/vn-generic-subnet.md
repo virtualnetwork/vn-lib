@@ -68,9 +68,11 @@ VN messages to the source address of the VN message. Consequently, the source
 address (a logical address) of the VN message and the local address of the unit
 from which the VN message was received from shall be entered into the Primary routing
 table. <br/>
+_This source of routing information shall not be changed using based on **DistributeRoute** messages._ <br/>
 _The above does not apply to **LocalHello** and **LocalAck** messages.
 No routing information regarding logical addresses shall be retrieved from
 **LocalHello** and **LocalAck** messages._
+
 
 Whenever a **DistributeRoute** message is received from another unit on the
 subnet, it can be concluded that this unit can route VN messages to the logical
@@ -79,7 +81,7 @@ Consequently, the logical address contained in the **DistributeRoute** message
 and the local address of the unit from which the message was received from
 shall be entered into the Primary routing table. <br/>
 _Since **DistributeRoute** messages are the least reliable source of routing information, 
-routing information regarding a particular logical address shall only be retrieved from **DistributeRoute** messages if no previous routing information regarding this logical address._
+routing information regarding a particular logical address shall only be retrieved from **DistributeRoute** messages if there was no previous routing information regarding this logical address._
 
 
 This section is only relevant for subnet managers, not nodes: <br/>
